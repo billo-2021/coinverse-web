@@ -1,0 +1,55 @@
+@use './palette/palette' as palette;
+
+@import './resets/resets';
+@import './variables/variables';
+@import './mixin/mixin';
+@import './typography/typography';
+@import './layout/layout';
+
+body {
+  // background-color: palette.$background-color
+}
+
+.mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+  top: 24px;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+  --mat-mdc-form-field-label-transform: translateY(-30.75px) scale(var(--mat-mdc-form-field-floating-label-scale, 0.75));
+}
+
+.mat-mdc-form-field-infix {
+  min-height: 46px;
+}
+
+.mat-mdc-card-header {
+  width: 100%;
+  margin-bottom: 22px;
+  text-align: center;
+  flex-wrap: wrap;
+
+  .mat-mdc-card-header-text {
+    width: 100%;
+  }
+}
+
+.bg-primary {
+  background-color: palette.$primary-color;
+}
+
+.text-primary {
+  color: palette.$primary-color;
+}
+
+a {
+  text-decoration: none;
+  color: palette.$primary-color;
+}
+
+ul, li {
+  list-style: none;
+}
+
+div {
+  word-wrap: break-word;
+}

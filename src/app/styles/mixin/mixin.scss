@@ -1,0 +1,51 @@
+@use '../variables/variables' as variables;
+
+@mixin col($width) {
+  max-width: $width;
+  flex-basis: $width;
+}
+
+@mixin create-break-point($break-point, $min-or-max) {
+  @if ($break-point == 0) {
+    @content;
+  } @else {
+    @media screen and (#{$min-or-max}-width: $break-point * 1px) {
+      @content;
+    }
+  }
+}
+
+@mixin create-col-class($modifier, $grid-cols) {
+  @for $i from 1 through $grid_cols {
+    $max-width: calc(100 / ($grid-cols / $i) * 1%);
+
+    &#{$modifier}-#{$i} {
+      max-width: $max-width;
+      flex-basis: $max-width;
+    }
+
+    &#{$modifier}-offset-#{$i} {
+      margin-left: $max-width;
+    }
+
+    &#{$modifier}-#{$i}-hidden {
+      display: none !important;
+    }
+  }
+}
+
+@mixin create-col-classes($modifier, $grid-cols, $break-point) {
+  $min-or-max: 'min';
+
+  @if ($modifier == '-lg') {
+    $min-or-max: 'max'
+  }
+
+  @if ($modifier == '') {
+    @include create-col-class($modifier, $grid-cols);
+  } @else {
+    @include create-break-point($break-point, $min-or-max) {
+      @include create-col-class($modifier, $grid-cols);
+    }
+  }
+}

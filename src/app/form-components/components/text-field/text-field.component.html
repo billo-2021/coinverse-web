@@ -1,0 +1,22 @@
+<mat-form-field #materialFormField
+                [appearance]="appearance"
+                class="full-width">
+  <ng-container *ngIf="prefix.type == 'icon'">
+    <span class="icon-prefix" matPrefix>
+        <app-icon [name]="prefix.iconName"></app-icon>
+    </span>
+  </ng-container>
+
+  <mat-label>{{label}}</mat-label>
+
+  <!--  <input [formControlName]="name" [id]="name" [placeholder]="placeholder" class="text-field-input" matInput-->
+  <!--         type="text"/>-->
+  <ng-container *ngIf="postFix.type == 'icon'">
+      <span class="icon-postfix" matSuffix>
+        <app-icon [name]="postFix.iconName"></app-icon>
+      </span>
+  </ng-container>
+
+  <!--  <mat-error *ngIf="control?.invalid">Is required</mat-error>-->
+</mat-form-field>
+

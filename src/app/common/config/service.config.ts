@@ -1,0 +1,3 @@
+const serviceConfig = {}
+
+export {serviceConfig}

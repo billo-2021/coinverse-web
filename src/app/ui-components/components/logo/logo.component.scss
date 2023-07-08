@@ -1,0 +1,13 @@
+@use '../../../styles/palette/palette' as palette;
+
+.logo-icon-container {
+  width: 100%;
+}
+
+.mat-icon.icon {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 40px;
+  color: palette.$primary-color;
+}

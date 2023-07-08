@@ -1,0 +1,16 @@
+<form [formGroup]="formGroup" class="form">
+  <app-heading *ngIf="title" [level]="3" [ngClass]="'form-title'" [text]="title"></app-heading>
+  <ng-content></ng-content>
+  <app-row>
+    <app-col *ngIf="isCancelShown">
+      <app-button [isDisabled]="true" [text]="cancelText" type="reset" variant="secondary"></app-button>
+    </app-col>
+    <button appearance="primary" class="full-width" size="m" tuiButton type="button">
+      Login
+    </button>
+    <!--    <app-col [ngClass]="{'full-width': !isCancelShown}">-->
+    <!--      <app-button [isDisabled]="!formGroup.valid" [isLoading]="isLoading" [showLoadingIndicator]="true" [text]="saveText"-->
+    <!--                  type="button" variant="primary"></app-button>-->
+    <!--    </app-col>-->
+  </app-row>
+</form>
