@@ -1,5 +1,9 @@
-<mat-progress-spinner [color]="variant"
-                      [diameter]="diameter"
-                      [strokeWidth]="strokeWidth"
-                      mode="indeterminate">
-</mat-progress-spinner>
+<!--<mat-progress-spinner [color]="variant"-->
+<!--                      [diameter]="diameter"-->
+<!--                      [strokeWidth]="strokeWidth"-->
+<!--                      mode="indeterminate">-->
+<!--</mat-progress-spinner>-->
+
+<tui-loader [overlay]="overlay" [showLoader]="showLoader">
+  <ng-content></ng-content>
+</tui-loader>

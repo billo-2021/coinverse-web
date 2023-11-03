@@ -8,7 +8,16 @@
 
 body {
   // background-color: palette.$background-color
+  font-size: 13px;
+  //position: relative;
+  //height: auto;
+  //min-height: 100%;
+  // background: var(--tui-base-02);
 }
+
+//* {
+//  outline: 1px solid red;
+//}
 
 .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
   top: 24px;
@@ -53,3 +62,4 @@ ul, li {
 div {
   word-wrap: break-word;
 }
+

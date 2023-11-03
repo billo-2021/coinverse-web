@@ -1,0 +1,13 @@
+<div *ngIf="formGroup" [formGroup]="formGroup" class="flex-col mb-4">
+  <tui-input-number [decimal]="decimal" [formControlName]="name"
+                    [precision]="precision"
+                    [tuiTextfieldCleaner]="hasClear"
+                    [tuiTextfieldPrefix]="prefix"
+                    [tuiTextfieldSize]="size"
+  >
+    {{label}}
+  </tui-input-number>
+  <tui-error [error]="[] | tuiFieldError | async"
+             [formControlName]="name">
+  </tui-error>
+</div>

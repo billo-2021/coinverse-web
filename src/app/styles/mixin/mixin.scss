@@ -1,7 +1,7 @@
 @use '../variables/variables' as variables;
 
 @mixin col($width) {
-  max-width: $width;
+  width: $width;
   flex-basis: $width;
 }
 
@@ -17,15 +17,15 @@
 
 @mixin create-col-class($modifier, $grid-cols) {
   @for $i from 1 through $grid_cols {
-    $max-width: calc(100 / ($grid-cols / $i) * 1%);
+    $width: calc(100 / ($grid-cols / $i) * 1%);
 
     &#{$modifier}-#{$i} {
-      max-width: $max-width;
-      flex-basis: $max-width;
+      width: $width;
+      flex-basis: $width;
     }
 
     &#{$modifier}-offset-#{$i} {
-      margin-left: $max-width;
+      margin-left: $width;
     }
 
     &#{$modifier}-#{$i}-hidden {
@@ -37,9 +37,9 @@
 @mixin create-col-classes($modifier, $grid-cols, $break-point) {
   $min-or-max: 'min';
 
-  @if ($modifier == '-lg') {
-    $min-or-max: 'max'
-  }
+  //@if ($modifier == '-lg') {
+  //  $min-or-max: 'max'
+  //}
 
   @if ($modifier == '') {
     @include create-col-class($modifier, $grid-cols);
@@ -47,5 +47,50 @@
     @include create-break-point($break-point, $min-or-max) {
       @include create-col-class($modifier, $grid-cols);
     }
+  }
+}
+
+@mixin add-table-styles {
+  .table {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  th, td {
+    padding: 1rem;
+  }
+
+  td, th {
+    white-space: nowrap;
+    border-color: transparent;
+    border-right-color: var(--tui-base-04);
+
+    &:last-child {
+      border-right-color: transparent;
+    }
+  }
+
+  tbody {
+    border-color: transparent;
+  }
+
+  tr:nth-child(even) td {
+    background: var(--tui-base-02);
+  }
+
+  .filters {
+    display: flex;
+  }
+
+  .input {
+    flex: 1;
+  }
+
+  //.columns {
+  //  width: 10.625rem;
+  //}
+
+  .match {
+    background: var(--tui-selection);
   }
 }

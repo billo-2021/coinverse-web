@@ -1,21 +1,7 @@
-<mat-card class="card full-width">
-  <mat-card-header *ngIf="title" class="text-center">
-    <mat-card-title class="full-width">
-      <app-row>
-        <app-col class="text-primary full-width">
-          {{title}}
-        </app-col>
-      </app-row>
-    </mat-card-title>
-    <mat-card-subtitle *ngIf="subtitle">
-      <app-row>
-        <app-col class="full-width">
-          {{subtitle}}
-        </app-col>
-      </app-row>
-    </mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
+<div class="flex-col">
+  <tui-island size="s">
+    <h3 *ngIf="title" class="mb-4 tui-island__title">{{title}}</h3>
+    <p *ngIf="subtitle" class="mb-8 tui-island__category">{{subtitle}}</p>
     <ng-content></ng-content>
-  </mat-card-content>
-</mat-card>
+  </tui-island>
+</div>

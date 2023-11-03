@@ -1,0 +1,41 @@
+<div *ngIf="mode$ | async as mode" class="flex-col">
+  <div class="flex-row justify-space-between border-bottom mb-10">
+    <app-header [subtitle]="subtitle" [title]="title"></app-header>
+    <div class="flex-row">
+      <app-button (click)="onViewTransactions()" appearance="primary"
+                  icon="tuiIconShuffle" size="s" text="Transaction History"></app-button>
+    </div>
+  </div>
+  <div class="flex-col">
+    <app-card *ngIf="currentStepIndex !== TRANSACT_STEPS.TRANSACT_CONFIRMATION" class="col-sm-12 col-md-6 col-lg-6">
+      <div class="mt-6">
+        <app-stepper
+          (currentStepIndexChange)="onStepChanged($event)"
+          [currentStepIndex]="currentStepIndex"
+          [steps]="transactSteps">
+
+        </app-stepper>
+      </div>
+      <app-transact-form
+        (actionClicked)="onRequestTransaction($event)"
+        *ngIf="currentStepIndex === TRANSACT_STEPS.TRANSACT_REQUEST"
+        [(activeTabIndex)]="activeTabIndex"
+        [currencyCode]="currencyCode"
+      >
+
+      </app-transact-form>
+      <app-transact-bank-details-form
+        (saveClicked)="onSaveBankingDetails()"
+        *ngIf="currentStepIndex === TRANSACT_STEPS.BANK_DETAILS">
+      </app-transact-bank-details-form>
+    </app-card>
+    <app-card *ngIf="currentStepIndex === TRANSACT_STEPS.TRANSACT_CONFIRMATION"
+              class="col-sm-12 col-md-6 col-lg-6"
+    >
+      <app-transact-confirmation
+        (payAgainClicked)="onPayAgain()"
+        (viewPaymentsClicked)="onViewPayments()"
+        [paymentResponse]="paymentResponse"></app-transact-confirmation>
+    </app-card>
+  </div>
+</div>

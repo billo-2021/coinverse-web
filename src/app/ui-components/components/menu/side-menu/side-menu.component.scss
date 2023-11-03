@@ -1,0 +1,58 @@
+@use "@taiga-ui/core/styles/mixins/mixins" as mixins;
+
+.box {
+  height: 100px;
+  @include mixins.shadow(6);
+  border-bottom: 1px solid var(--tui-base-02);
+  // background: var(--tui-primary);
+}
+
+.link {
+  padding: 1rem;
+  background: var(--tui-base-02);
+}
+
+.side-menu-content {
+  margin-top: 1px;
+  row-gap: 1px;
+}
+
+.link.selected {
+  background: var(--tui-base-03);
+}
+
+
+.menu-toggle {
+  height: 3.4rem;
+  background: var(--tui-base-02);
+}
+
+.side-menu-header {
+  height: 3.4rem;
+  background: var(--tui-base-02);
+}
+
+.side-menu-over {
+  width: 100%;
+  @include mixins.shadow(6);
+}
+
+.side-menu-push {
+  width: 12rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  height: 3.4rem;
+}
+
+
+//.t-icon {
+//  color: var(--tui-primary);
+//}
+
+.active {
+  color: var(--tui-primary) !important;
+}

@@ -1,0 +1,33 @@
+
+.ng-otp-input-wrapper {
+  padding: 0.4rem;
+  display: flex;
+}
+
+.otp-input {
+  flex-grow: 1;
+  background: var(--tui-clear);
+  box-shadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, 0.1);
+  transition: box-shadow .01s;
+  line-height: inherit;
+  font-weight: 400;
+  caret-color: currentColor;
+  appearance: none;
+  word-break: keep-all;
+  border-width: 0 !important;
+  text-indent: var(--text-indent);
+  text-align: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-transform: inherit;
+  resize: none;
+}
+
+.otp-input:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.otp-input:focus-visible {
+  background: none;
+  outline: 2px solid var(--tui-primary);
+}

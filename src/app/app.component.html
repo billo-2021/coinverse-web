@@ -1,8 +1,8 @@
 <!--<tui-theme-night></tui-theme-night>-->
-<tui-root tuiMode="onLight">
-  <main>
-    <app-login></app-login>
-  </main>
-  <router-outlet></router-outlet>
-
+<tui-root *ngIf="viewModel$ | async as viewModel" class="tui-root h-100" tuiMode="onLight">
+  <app-global-routing>
+    <app-menu [user]="viewModel.userPrincipal">
+      <router-outlet></router-outlet>
+    </app-menu>
+  </app-global-routing>
 </tui-root>

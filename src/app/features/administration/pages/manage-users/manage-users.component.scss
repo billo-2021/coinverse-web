@@ -1,0 +1,51 @@
+.table {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+th, td {
+  // display: flex;
+
+  // height: 3rem;
+  // text-align: left;
+  padding: 1rem;
+  // vertical-align: center;
+}
+
+td, th {
+  white-space: nowrap;
+  border-color: transparent;
+  border-right-color: var(--tui-base-04);
+
+  &:last-child {
+    border-right-color: transparent;
+  }
+}
+
+tbody {
+  border-color: transparent;
+}
+
+tr:nth-child(even) td {
+  background: var(--tui-base-02);
+}
+
+.filters {
+  display: flex;
+}
+
+.input {
+  flex: 1;
+}
+
+.columns {
+  width: 10.625rem;
+}
+
+.match {
+  background: var(--tui-selection);
+}
+
+.border-bottom {
+  border-bottom: 1px solid var(--tui-base-03);
+}

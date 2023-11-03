@@ -1,0 +1,12 @@
+<app-item *ngIf="formGroup" [formGroup]="formGroup" class="mb-6">
+  <tui-input-phone [countryCode]="countryCode" [formControlName]="name"
+                   [phoneMaskAfterCountryCode]="phoneMaskAfterCountryCode" [tuiTextfieldCleaner]="hasClear"
+                   [tuiTextfieldSize]="size">
+    {{label}}
+    <input [disabled]="isDisabled || ((loading$ | async) || false)" [placeholder]="placeholder" autocomplete="tel"
+           tuiTextfield/>
+  </tui-input-phone>
+  <tui-error [error]="[] | tuiFieldError | async"
+             [formControlName]="name">
+  </tui-error>
+</app-item>

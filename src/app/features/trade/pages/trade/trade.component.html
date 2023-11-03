@@ -1,0 +1,39 @@
+<div *ngIf="mode$ | async as mode" class="flex-col">
+  <div class="flex-row justify-space-between border-bottom mb-10">
+    <app-header [subtitle]="subtitle" [title]="title"></app-header>
+    <div class="flex-row">
+      <app-button (click)="onTradeHistory()" appearance="primary"
+                  icon="tuiIconShuffle" size="s" text="Trade History"></app-button>
+    </div>
+  </div>
+  <div class="flex-col">
+    <app-card *ngIf="currentStepIndex !== TRADE_STEPS.TRADE_CONFIRMATION" class="col-sm-12 col-md-9 col-lg-5">
+      <div class="mt-6">
+        <app-stepper
+          (currentStepIndexChange)="onStepChanged($event)"
+          [currentStepIndex]="currentStepIndex"
+          [steps]="formSteps">
+
+        </app-stepper>
+      </div>
+      <app-trade-form (actionClicked)="onRequestTrade($event)" *ngIf="currentStepIndex === TRADE_STEPS.TRADE_REQUEST"
+                      [(activeTabIndex)]="activeTabIndex"
+                      [CurrencyPairName]="currencyPairName"
+      >
+
+      </app-trade-form>
+      <app-trade-quote (acceptQuoteClicked)="onAcceptQuote($event)"
+                       (declineQuoteClicked)="onDeclineQuote()"
+                       *ngIf="currentStepIndex === TRADE_STEPS.TRADE_QUOTE"
+                       [currencyPairName]="trade.currencyPairName"
+      ></app-trade-quote>
+    </app-card>
+    <app-card *ngIf="currentStepIndex === TRADE_STEPS.TRADE_CONFIRMATION" class="col-sm-12 col-md-9 col-lg-5">
+      <app-trade-confirmation
+        (tradeAgainClicked)="onTradeAgainClicked()"
+        (viewTradesClicked)="onViewTradesClicked()"
+        [tradeResponse]="tradeResponse"
+      ></app-trade-confirmation>
+    </app-card>
+  </div>
+</div>

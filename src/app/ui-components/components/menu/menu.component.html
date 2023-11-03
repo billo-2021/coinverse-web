@@ -1,0 +1,21 @@
+<div (tuiActiveZoneChange)="onClickOutside($event)" *ngIf="viewModel$ | async as viewModel">
+  <header *ngIf="viewModel.isMenuShown" [ngStyle]="{'margin-left.rem': viewModel.sideMenuWidth}"
+          class="menu-header">
+    <app-menu-header (toggleMenuClicked)="onToggleMenu($event)"
+                     [isMobile]="viewModel.isMobile"
+                     [user]="viewModel.user">
+    </app-menu-header>
+  </header>
+  <nav *ngIf="viewModel.isMenuShown" [ngStyle]="{'width.rem': viewModel.sideMenuWidth}"
+       class="side-menu">
+    <app-side-menu></app-side-menu>
+  </nav>
+  <main
+    [ngStyle]="{'margin-left.rem': viewModel.isMenuShown ? viewModel.sideMenuWidth : 0}"
+    class="main flex-col grow">
+    <app-logo *ngIf="!viewModel.user || !viewModel.isMenuShown" class="mt-12"></app-logo>
+    <div class="main-content page full-width">
+      <ng-content></ng-content>
+    </div>
+  </main>
+</div>

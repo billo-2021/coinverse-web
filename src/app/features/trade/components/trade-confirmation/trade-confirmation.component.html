@@ -1,0 +1,48 @@
+<div *ngIf="tradeResponse" class="flex-col border-top pt-8">
+  <div class="flex-col flex-center">
+    <app-avatar avatarUrl="tuiIconCheckLarge" class="mb-10" size="l"></app-avatar>
+    <app-text class="mb-10">Your trade has been created successfully</app-text>
+  </div>
+  <div class="flex-row justify-space-between items-center p-4">
+    <p class="col-8 row-item-title">Id</p>
+    <p class="col-3 ml-4 row-item-description">{{tradeResponse.id}}</p>
+  </div>
+  <div class="flex-row justify-space-between items-center p-4">
+    <p class="col-8 row-item-title">Amount</p>
+    <p class="col-3 ml-4 row-item-description">
+      <app-money [currency]="tradeResponse.currency" [precision]="6" [value]="tradeResponse.amount"></app-money>
+  </div>
+
+  <div class="flex-row justify-space-between items-center p-4">
+    <p class="col-8 row-item-title">Source Wallet Currency</p>
+    <p class="col-3 ml-4 row-item-description">{{tradeResponse.sourceWallet.currency.code}}</p>
+  </div>
+  <div class="flex-row justify-space-between items-center p-4">
+    <p class="col-8 row-item-title">Source Wallet</p>
+    <p class="col-3 ml-4 row-item-description">{{tradeResponse.sourceWallet.address}}</p>
+  </div>
+  <div class="flex-row justify-space-between items-center p-4">
+    <p class="col-8 row-item-title">Destination Wallet Currency</p>
+    <p class="col-3 ml-4 row-item-description">{{tradeResponse.destinationWallet.currency.code}}</p>
+  </div>
+  <div class="flex-row justify-space-between items-center p-4">
+    <p class="col-8 row-item-title">Destination Wallet</p>
+    <p class="col-3 ml-4 row-item-description">{{tradeResponse.destinationWallet.address}}</p>
+  </div>
+  <div class="flex-row justify-space-between items-center p-4">
+    <p class="col-8 row-item-title">Action</p>
+    <p class="col-3 ml-4 row-item-description">{{tradeResponse.action}}</p>
+  </div>
+  <div class="flex-row justify-space-between items-center p-4">
+    <p class="col-8 row-item-title">Status</p>
+    <p class="col-3 ml-4 row-item-description">{{tradeResponse.status}}</p>
+  </div>
+  <div class="flex-row justify-space-between items-center p-4">
+    <p class="col-8 row-item-title">Created At</p>
+    <p class="col-3 ml-4 row-item-description">{{tradeResponse.createdAt | date: 'dd/MM/yy HH:mm'}}</p>
+  </div>
+  <div class="flex-row justify-space-between mt-2">
+    <app-button (click)="onViewTradesClicked()" appearance="accent" class="grow" text="View Trades"></app-button>
+    <app-button (click)="onTradeClicked()" class="grow ml-4" text="Trade Again"></app-button>
+  </div>
+</div>

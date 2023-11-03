@@ -1,0 +1,20 @@
+.stepper-scrollbar {
+  // max-width: 350px;
+  // overflow-x: scroll;
+}
+
+//.stepper-mobile {
+//  max-width: 350px;
+//}
+//
+//.stepper-desktop {
+//  max-width: 500px;
+//}
+
+.stepper-desktop, .stepper-mobile {
+  overflow-x: auto;
+}
+
+//.stepper-content {
+//  white-space: nowrap;
+//}

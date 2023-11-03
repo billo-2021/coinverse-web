@@ -1,0 +1,30 @@
+<div
+  *ngIf="user"
+  class="app-bar-wrapper color gray p-2 flex-row items-center text-center">
+  <!--  <button (click)="onMenuToggle(true)" (tuiActiveZoneChange)="onMenuToggle($event)" *ngIf="isMobile"-->
+  <!--          [icon]="'tuiIconMenuLarge'"-->
+  <!--          appearance="icon" class="white ml-6" size="m" title="Menu" tuiIconButton>-->
+  <!--  </button>-->
+  <tui-marker-icon (click)="onMenuToggle(true)" *ngIf="isMobile"
+                   [src]="'tuiIconMenuLarge'"
+                   class="mx-5" mode="primary" size="s"></tui-marker-icon>
+  <app-text *ngIf="isMobile">Coinverse</app-text>
+  <div class="ml-auto flex-row items-center text-center">
+    <app-button (click)="onSignOut()" appearance="primary" class="mr-5" icon="tuiIconLogOut" size="s"
+                text="Signout"></app-button>
+    <tui-avatar (click)="onGotoProfile()" [rounded]="true" [text]="user.firstName + ' ' + user.lastName"
+                [tuiHintAppearance]="'onLight'"
+                [tuiHintDirection]="'bottom-left'"
+                [tuiHint]="tooltip"
+                class="custom user-avatar my-auto mr-5" size="s"></tui-avatar>
+  </div>
+</div>
+
+<ng-template #tooltip>
+  <ng-container *ngIf="user">
+    <div class="flex-col">
+      <app-text class="ml-5">{{user.firstName + ' '}}{{user.lastName}}</app-text>
+      <app-text class="ml-5">{{user.username}}</app-text>
+    </div>
+  </ng-container>
+</ng-template>

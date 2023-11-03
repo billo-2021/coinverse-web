@@ -1,6 +1,6 @@
-<a *ngIf="to"
-   [routerLink]="to"
-   class="primary-text"
-   routerLinkActive="active-link">
+<a
+  [mode]="isDisabled ? 'negative' : null"
+  [routerLink]="[to]"
+  routerLinkActive="active-link" tuiLink>
   {{text}}
 </a>

@@ -1,95 +1,83 @@
 import {Inject, Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {map, Observable} from "rxjs";
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
-import {HttpOptions, HttpOptionsBuilder} from "../../types/http-options";
-import {baseUrlToken, httpHeadersConfig} from "../../config/service.config";
-import {ValueTypeIs} from "../../types/when";
-import {Nullable} from "../../types/nullable";
+import {HttpOptions, HttpOptionsBuilder} from '../../types/http-options';
+import {apiBaseUrlToken, httpHeadersConfigToken} from '../../config';
+import {ObjectUtils} from '../../utils';
+import {LocalStorageService} from '../local-storage/local-storage.service';
+import {StorageKey} from '../../constants';
+
+interface Credentials {
+  accessToken: string
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpCrudService {
-  public static readonly HEADERS: HttpHeaders = new HttpHeaders(httpHeadersConfig);
+  private readonly headers: HttpHeaders;
 
   constructor(private httpClient: HttpClient,
-              @Inject(baseUrlToken) private baseUrl: string
+              @Inject(apiBaseUrlToken) private readonly baseUrl: string,
+              @Inject(httpHeadersConfigToken) private readonly httpHeadersConfig: Record<string, string | number>,
+              @Inject(LocalStorageService) private readonly localStorage: LocalStorageService
   ) {
+    this.headers = new HttpHeaders(httpHeadersConfig);
   }
 
-  public static buildOptions(params?: HttpParams): HttpOptions {
-    const httpOptionsBuilder = new HttpOptionsBuilder();
-    httpOptionsBuilder.addHeaders(this.HEADERS);
+  public buildOptions(params?: HttpParams): HttpOptions {
+    const credentials = this.localStorage.get<Credentials>(StorageKey.USER_CREDENTIALS);
 
-    Nullable.andThen((param) => {
-      httpOptionsBuilder.addParams(param);
-    }, params);
+    const headers = new HttpHeaders({'Authorization': `Bearer ${credentials?.accessToken}`});
+
+    const httpOptionsBuilder = new HttpOptionsBuilder();
+    httpOptionsBuilder.addHeaders(headers);
+
+    if (ObjectUtils.isObject(params)) {
+      httpOptionsBuilder.addParams(params);
+    }
 
     return httpOptionsBuilder.build();
   }
 
-  public find<TResponse>(path: string, valueTypeIs?: ValueTypeIs<TResponse>): Observable<TResponse> {
+  public find<TResponse = void>(path: string): Observable<TResponse> {
     const url = this.getUrl(path);
-    const options = HttpCrudService.buildOptions();
+    const options = this.buildOptions();
 
-    return Nullable.isNone(valueTypeIs) ?
-      this.httpClient
-        .get<TResponse>(url, options) :
-      this.httpClient
-        .get<unknown>(this.getUrl(path), HttpCrudService.buildOptions())
-        .pipe(map((response) => this.mapResponseToType(response, valueTypeIs)));
+    return this.httpClient
+      .get<TResponse>(url, options);
   }
 
-  public create<TRequest, TResponse>(path: string, data: TRequest, valueTypeIs?: ValueTypeIs<TResponse>): Observable<TResponse> {
+  public create<TRequest, TResponse = void>(path: string, data?: TRequest): Observable<TResponse> {
     const url = this.getUrl(path);
-    const options = HttpCrudService.buildOptions();
+    const options = this.buildOptions();
 
-    return Nullable.isNone(valueTypeIs) ?
-      this.httpClient.post<TResponse>(url, data, options) :
-      this.httpClient.post<unknown>(url, data, options)
-        .pipe(map((response) => this.mapResponseToType(response, valueTypeIs)));
+    return this.httpClient.post<TResponse>(url, data, options);
   }
 
-  public update<TRequest, TResponse>(path: string, data: TRequest, valueTypeIs?: ValueTypeIs<TResponse>): Observable<TResponse> {
+  public update<TRequest, TResponse = void>(path: string, data?: TRequest): Observable<TResponse> {
     const url = this.getUrl(path);
-    const options = HttpCrudService.buildOptions();
+    const options = this.buildOptions();
 
-    return Nullable.isNone(valueTypeIs) ?
-      this.httpClient.put<TResponse>(url, data, options) :
-      this.httpClient.put<unknown>(url, data, options)
-        .pipe(map((response) => this.mapResponseToType(response, valueTypeIs)));
+    return this.httpClient.put<TResponse>(url, data, options);
   }
 
-  public patch<TRequest, TResponse>(path: string, data: TRequest, valueTypeIs?: ValueTypeIs<TResponse>): Observable<TResponse> {
+  public patch<TRequest, TResponse = void>(path: string, data?: TRequest): Observable<TResponse> {
     const url = this.getUrl(path);
-    const options = HttpCrudService.buildOptions();
+    const options = this.buildOptions();
 
-    return Nullable.isNone(valueTypeIs) ?
-      this.httpClient.patch<TResponse>(url, data, options) :
-      this.httpClient.patch<unknown>(url, data, options)
-        .pipe(map((response) => this.mapResponseToType(response, valueTypeIs)));
+    return this.httpClient.patch<TResponse>(url, data, options);
   }
 
-  public remove<TResponse>(path: string, valueTypeIs?: ValueTypeIs<TResponse>): Observable<TResponse> {
+  public remove<TResponse = void>(path: string): Observable<TResponse> {
     const url = this.getUrl(path);
-    const options = HttpCrudService.buildOptions();
+    const options = this.buildOptions();
 
-    return Nullable.isNone(valueTypeIs) ?
-      this.httpClient.delete<TResponse>(url, options) :
-      this.httpClient.delete<unknown>(url, options)
-        .pipe(map((response) => this.mapResponseToType(response, valueTypeIs)));
+    return this.httpClient.delete<TResponse>(url, options);
   }
 
   private getUrl(path: string): string {
     return `${this.baseUrl}${path}`
-  }
-
-  private mapResponseToType<T>(response: unknown, valueTypeIs: ValueTypeIs<T>): T {
-    if (!valueTypeIs(response)) {
-      throw new Error("Mapping exception");
-    }
-
-    return response;
   }
 }

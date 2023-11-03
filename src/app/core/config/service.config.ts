@@ -1,10 +1,9 @@
-import {InjectionToken} from "@angular/core";
+import {httpHeadersConfig} from './api-request.config';
+import {environment} from '../../../environments/environment';
 
-const httpHeadersConfig = {
-  'Content-Type': 'application/json',
-  Accept: 'application/json;charset=UTF-8',
+const coreServiceConfig = {
+  httpHeadersConfig: httpHeadersConfig,
+  apiUrl: environment.baseApiUrl
 } as const;
 
-const baseUrlToken = new InjectionToken<string>('baseUrl');
-
-export {httpHeadersConfig, baseUrlToken};
+export {coreServiceConfig}

@@ -4,10 +4,10 @@
   width: 100%;
 }
 
-.mat-icon.icon {
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  font-size: 40px;
-  color: palette.$primary-color;
+tui-svg.icon {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 32px;
+  color: var(--tui-primary)
 }

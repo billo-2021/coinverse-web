@@ -9,7 +9,7 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   host: {'class': 'icon-wrapper'}
 })
 export class IconComponent {
-  @Input() public name: string | undefined;
+  @Input() public src = '';
 
   public constructor() {
   }

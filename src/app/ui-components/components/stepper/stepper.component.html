@@ -1,0 +1,17 @@
+<ng-container *ngIf="breakpoint$ | async as breakpoint">
+  <tui-scrollbar [ngClass]="breakpoint === 'mobile' ? 'stepper-mobile' : 'stepper-desktop'"
+                 class="flex-col stepper-scrollbar mb-10">
+    <tui-stepper
+      #tuiStepper
+      (activeItemIndexChange)="onCurrentStepChanged($event)" [activeItemIndex]="currentStepIndex"
+      class="stepper-content"
+    >
+      <button *ngFor="let step of steps" [disabled]="step.isDisabled"
+              [stepState]="step.state"
+              tuiStep>
+        {{step.title}}
+      </button>
+    </tui-stepper>
+  </tui-scrollbar>
+</ng-container>
+<ng-content></ng-content>

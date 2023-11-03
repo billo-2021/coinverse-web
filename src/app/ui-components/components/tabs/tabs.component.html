@@ -1,0 +1,11 @@
+<tui-tabs (activeItemIndexChange)="onActiveItemIndexChange($event)"
+          [activeItemIndex]="activeItemIndex">
+  <button (click)="onActiveItemIndexChange(index)" *ngFor="let tab of tabs; let index = index"
+          [disabled]="tab.isDisabled" class="tab" tuiTab>
+    <tui-svg *ngIf="tab.icon"
+             [src]="tab.icon" class="tui-space_right-2" tuiTextfieldSize="s">
+    </tui-svg>
+    <span class="tui-text_body-s">{{tab.text}}</span>
+  </button>
+</tui-tabs>
+<ng-content></ng-content>

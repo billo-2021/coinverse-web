@@ -1,0 +1,12 @@
+<!--<app-item *ngIf="formGroup" [formGroup]="formGroup" class="otp-wrapper mb-10">-->
+<!--  <app-label [text]="label"></app-label>-->
+
+<!--  <ng-otp-input #ngOtpInput *ngIf="formControl" [config]="{length: length,-->
+<!--  allowNumbersOnly: allowNumbersOnly,-->
+<!--  inputClass: 'otp-input tui-text_body-s'}" [formCtrl]="formControl">-->
+
+<!--  </ng-otp-input>-->
+<!--</app-item>-->
+<div *ngIf="formControl" class="flex-col mb-10">
+  <tui-input-card-grouped [formControl]="formControl"></tui-input-card-grouped>
+</div>

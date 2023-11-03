@@ -1,0 +1,36 @@
+<div class="flex-col">
+  <div *ngIf="userProfileResponse$ | async as userProfileResponse" class="flex-row justify-space-between">
+    <app-header [subtitle]="subtitle" [title]="title"></app-header>
+    <div class="flex-row mb-6">
+      <app-avatar [text]="userProfileResponse.firstName + ' ' + userProfileResponse.lastName" size="m"></app-avatar>
+      <app-col class="ml-6">
+        <app-text>{{userProfileResponse.firstName + ' '}}{{userProfileResponse.lastName}}</app-text>
+        <app-text>{{userProfileResponse.emailAddress}}</app-text>
+      </app-col>
+    </div>
+  </div>
+  <app-tabs [(activeItemIndex)]="activeTabIndex" [tabs]="tabs"></app-tabs>
+  <div class="flex-row">
+    <div *ngIf="activeTabIndex === TABS.Profile" class="mt-12 flex-col col-lg-6 col-md-6 col-sm-12">
+      <app-profile-form (saveClicked)="onSaveClicked()">
+      </app-profile-form>
+      <!--      <app-button appearance="outline" class="mt-6" text="Delete my Account"></app-button>-->
+    </div>
+
+    <app-address-details-form (saveClicked)="onSaveClicked()"
+                              *ngIf="activeTabIndex === TABS.AddressDetails"
+                              class="mt-12 flex-col col-lg-6 col-md-6 col-sm-12">
+    </app-address-details-form>
+    <app-preference-details-form (saveClicked)="onSaveClicked()"
+                                 *ngIf="activeTabIndex === TABS.Preferences"
+                                 class="mt-12 flex-col col-lg-6 col-md-6 col-sm-12">
+    </app-preference-details-form>
+    <app-change-password-form (passwordChanged)="onSaveClicked()"
+                              *ngIf="activeTabIndex === TABS.ChangePassword"
+                              class="mt-12 flex-col col-lg-6 col-md-6 col-sm-12">
+
+    </app-change-password-form>
+    <app-account-activity *ngIf="activeTabIndex === TABS.AccountActivity"
+                          class="mt-12 flex-col col-lg-9 col-md-9 col-sm-12"></app-account-activity>
+  </div>
+</div>

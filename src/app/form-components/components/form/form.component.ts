@@ -1,26 +1,31 @@
-import {AfterContentInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormGroup} from "@angular/forms";
-import {Maybe} from "../../../core/types/maybe";
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {LoadingService} from "../../../core/services/loading/loading.service";
 
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss']
+  styleUrls: ['./form.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {'class': 'form'}
 })
-export class FormComponent implements OnInit, AfterContentInit {
-  @Input() public formGroup = new FormGroup({});
-  @Input() public title: Maybe<string>;
+export class FormComponent {
+  @Input() public isValid = false;
+  @Input() public title?: string;
+  @Input() public subtitle?: string;
   @Input() public isCancelShown = false;
   @Input() public cancelText = 'Cancel';
   @Input() public saveText = 'Save';
   @Input() public isCancelDisabled = false;
   @Input() public isSaveDisabled = false;
-  @Input() public isLoading = false;
 
   @Output() public cancelClicked = new EventEmitter<void>();
   @Output() public saveClicked = new EventEmitter<void>();
 
-  public constructor() {
+  protected loading$ = this.loadingService.loading$;
+
+  public constructor(private readonly loadingService: LoadingService) {
+
   }
 
   public onCancelClicked(): void {
@@ -29,13 +34,5 @@ export class FormComponent implements OnInit, AfterContentInit {
 
   public onSaveClicked(): void {
     this.saveClicked.emit();
-  }
-
-  ngOnInit(): void {
-    console.log('Form', this.formGroup.controls);
-  }
-
-  ngAfterContentInit(): void {
-    console.log('After content Form', this.formGroup.controls);
   }
 }

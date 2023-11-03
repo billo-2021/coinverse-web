@@ -1,16 +1,17 @@
-<form [formGroup]="formGroup" class="form">
-  <app-heading *ngIf="title" [level]="3" [ngClass]="'form-title'" [text]="title"></app-heading>
-  <ng-content></ng-content>
-  <app-row>
-    <app-col *ngIf="isCancelShown">
-      <app-button [isDisabled]="true" [text]="cancelText" type="reset" variant="secondary"></app-button>
-    </app-col>
-    <button appearance="primary" class="full-width" size="m" tuiButton type="button">
-      Login
-    </button>
-    <!--    <app-col [ngClass]="{'full-width': !isCancelShown}">-->
-    <!--      <app-button [isDisabled]="!formGroup.valid" [isLoading]="isLoading" [showLoadingIndicator]="true" [text]="saveText"-->
-    <!--                  type="button" variant="primary"></app-button>-->
-    <!--    </app-col>-->
-  </app-row>
-</form>
+<app-card [subtitle]="subtitle" [title]="title">
+  <form class="form flex-col">
+    <ng-content></ng-content>
+    <div class="flex-row justify-space-between mt-6">
+      <app-button (click)="onCancelClicked()"
+                  *ngIf="isCancelShown"
+                  [isDisabled]="(loading$ | async) || false"
+                  [text]="cancelText"
+                  appearance="outline"
+                  type="reset">
+      </app-button>
+      <app-loading-indicator [ngClass]="{'col-4': isCancelShown}" [showLoader]="(loading$ | async) || false">
+        <app-button (click)="onSaveClicked()" [isDisabled]="!isValid" [text]="saveText"></app-button>
+      </app-loading-indicator>
+    </div>
+  </form>
+</app-card>

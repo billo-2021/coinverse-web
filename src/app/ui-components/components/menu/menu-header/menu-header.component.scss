@@ -1,0 +1,64 @@
+// @import '@taiga-ui/core/styles/taiga-ui-local';
+@use "@taiga-ui/core/styles/mixins/mixins" as mixins;
+
+.app-bar-wrapper {
+  // @include mixins.shadow(6);
+  //  .shadow
+  //
+  //(6);
+  // width: 20rem;
+  //margin-left: 12rem;
+  height: 3.4rem;
+  //width: calc(100% - 12rem);
+  // margin-bottom: 1rem;
+  border: solid var(--tui-base-01);
+  border-bottom: .375rem;
+  // border-width: 1 .375rem;
+  font-weight: bold;
+  color: var(--tui-text-01);
+  font: var(--tui-font-text-m);
+}
+
+.app-bar-wrapper .custom {
+  // background: var(--tui-base-01);
+  background: var(--tui-base-05);
+}
+
+.custom .t-text {
+  --tui-text-01: var(--tui-base-01);
+}
+
+//.app-bar-wrapper {
+//  --tui-padding: .625rem;
+//  position: relative;
+//  display: flex;
+//  height: 3rem;
+//  align-items: center;
+//  justify-content: space-between;
+//  border: solid transparent;
+//  border-width: 0 .375rem;
+//  box-sizing: border-box;
+//  font: var(--tui-font-text-m);
+//  font-weight: bold;
+//  color: var(--tui-text-01);
+//  background: var(--tui-base-01);
+//}
+
+.color {
+  // color: var(--tui-text-03-night);
+}
+
+.gray {
+  background: var(--tui-base-02);
+  // color: var(--tui-base-01);
+  //box-shadow: none;
+  //background: var(--tui-base-02);
+}
+
+.user-avatar {
+  cursor: pointer;
+}
+
+.user-avatar:hover {
+  outline: 2px solid var(--tui-base-06);
+}

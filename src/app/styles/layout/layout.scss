@@ -4,10 +4,10 @@
 .page {
   // min-height: 100vh;
   padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  //display: flex;
+  //flex-direction: column;
+  //align-items: center;
+  //justify-content: center;
 }
 
 .full-width {
@@ -16,7 +16,7 @@
 
 .container {
   max-width: variables.$card_width_md * 1px;
-  margin: 0 auto;
+  // margin: 0 auto;
 
   &-fluid {
     margin: 0;
@@ -26,6 +26,24 @@
 
 .row {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  row-gap: 1rem;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.flex-col {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -57,14 +75,28 @@
   margin-right: auto;
 }
 
+.ml-auto {
+  margin-left: auto;
+}
+
+mr-auto {
+  margin-right: auto;
+}
+
 .my-auto {
   margin-top: auto;
   margin-bottom: auto;
 }
 
+
 @each $index, $value in variables.$sizes {
   .p-#{$index} {
     padding: $value;
+  }
+
+  .px-#{$index} {
+    padding-left: $value;
+    padding-right: $value;
   }
 
   .pl-#{$index} {
@@ -73,6 +105,11 @@
 
   .pr-#{$index} {
     padding-right: $value;
+  }
+
+  .py-#{$index} {
+    padding-top: $value;
+    padding-bottom: $value;
   }
 
   .pt-#{$index} {
@@ -87,12 +124,22 @@
     margin: $value;
   }
 
+  .mx-#{$index} {
+    margin-left: $value;
+    margin-right: $value;
+  }
+
   .ml-#{ $index} {
     margin-left: $value;
   }
 
   .mr-#{$index} {
     margin-right: $value;
+  }
+
+  .my-#{$index} {
+    margin-top: $value;
+    margin-bottom: $value;
   }
 
   .mt-#{$index} {
@@ -107,4 +154,75 @@
 
 .text-center {
   text-align: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-space-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.self-end {
+  align-self: flex-end;
+}
+
+.justify-self-end {
+  justify-self: flex-end;
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.self-stretch {
+  align-self: stretch;
+}
+
+.items-stretch {
+  align-items: stretch;
+}
+
+.block {
+  display: block;
+}
+
+.border-bottom {
+  border-bottom: 1px solid var(--tui-base-03);
+}
+
+.border-top {
+  border-top: 1px solid var(--tui-base-03);
+}
+
+.row-item-title {
+  font-weight: 400;
+  color: var(--tui-base-09);
+  line-height: 100%;
+}
+
+.row-item-description {
+  color: var(--tui-text-02);
+  line-height: 100%;
+}
+
+.border-none {
+  border: none;
 }

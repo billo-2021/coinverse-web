@@ -1,0 +1,14 @@
+<div class="flex-col">
+  <div class="flex-row justify-space-between">
+    <app-header [subtitle]="subtitle" [title]="title"></app-header>
+    <div class="mb-6">
+      <app-button (click)="onNewCurrency()" appearance="primary" icon="tuiIconUserPlus" shape="rounded" size="s"
+                  text="New crypto"></app-button>
+    </div>
+  </div>
+  <app-tabs [(activeItemIndex)]="activeTabIndex" [tabs]="tabs">
+    <app-crypto-currencies (editCurrencyClicked)="onEditCurrency($event)"
+                           *ngIf="activeTabIndex === TABS.CryptoCurrencies"></app-crypto-currencies>
+    <app-fiat-currencies *ngIf="activeTabIndex === TABS.FiatCurrencies"></app-fiat-currencies>
+  </app-tabs>
+</div>

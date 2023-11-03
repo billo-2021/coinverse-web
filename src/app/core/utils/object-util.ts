@@ -10,17 +10,23 @@ function map<A extends object, B extends object>(
   keysMap: ObjectKeysMap<A, B>,
   a: A): B {
 
-  return (Object.keys(a) as (keyof typeof a)[]).reduce((prev, currValue) => {
+  return (Object.keys(keysMap) as (keyof typeof keysMap)[]).reduce((prev, currValue) => {
+
     return {
       ...prev,
-      [keysMap[currValue]]: a[currValue]
+      [currValue]: a[currValue]
     }
-  }, {} as B);
+  }, {} as B) as B;
+}
+
+function isObject(value: unknown): value is {} {
+  return value != null || typeof value === 'object';
 }
 
 const ObjectUtils = {
   map,
-  hasKeys
+  hasKeys,
+  isObject
 }
 
 export {ObjectUtils, ObjectKeysMap, KeysMap};

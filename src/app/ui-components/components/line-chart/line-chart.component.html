@@ -1,0 +1,20 @@
+<tui-axes
+  [tuiLineChartHint]="hintContent"
+  axisX="none"
+  axisY="none"
+  class="axes"
+>
+  <tui-line-chart
+    [dots]="true"
+    [filled]="true"
+    [height]="200"
+    [smoothingFactor]="50"
+    [value]="data"
+    [width]="400"
+    [xStringify]="stringify"
+    [x]="0"
+    [yStringify]="stringify"
+    [y]="0"
+  >
+  </tui-line-chart>
+</tui-axes>

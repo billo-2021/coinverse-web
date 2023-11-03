@@ -1,0 +1,13 @@
+<app-form (saveClicked)="onSaveChanges()" *ngIf="form"
+          [formGroup]="form"
+          [isValid]="form.valid"
+          [saveText]="saveText"
+          subtitle="Edit your preferences."
+          title="Preferences and Notifications">
+  <app-combo-box [options]="(currencyOptions$ | async ) ?? []" label="Currency"
+                 name="currency"></app-combo-box>
+  <app-label [formGroup]="getFormGroup(form.controls['notificationMethods'])" text="Notification Methods">
+    <app-check-box label="Sms" name="sms"></app-check-box>
+    <app-check-box label="Email" name="email"></app-check-box>
+  </app-label>
+</app-form>

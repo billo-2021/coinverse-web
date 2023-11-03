@@ -1,0 +1,14 @@
+.side-menu {
+  height: 100%;
+  width: 12rem;
+  background: var(--tui-base-01);
+  position: fixed;
+  top: 0;
+  border-right: 1px solid var(--tui-base-03);
+  z-index: 100;
+}
+
+.side-menu, .menu-header {
+  transition-timing-function: ease-in;
+  transition: width 500ms;
+}

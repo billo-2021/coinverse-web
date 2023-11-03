@@ -1,25 +1,16 @@
-import {ModuleWithProviders, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HttpClientModule} from "@angular/common/http";
-
-import {baseUrlToken} from "./config/service.config";
-import {HttpCrudService} from "./services";
+import {TuiAlertModule} from "@taiga-ui/core";
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    HttpClientModule
-  ]
+    HttpClientModule,
+    TuiAlertModule
+  ],
+  providers: []
 })
 export class CoreModule {
-  public static forRoot(baseUrl: string): ModuleWithProviders<CoreModule> {
-    return {
-      ngModule: CoreModule,
-      providers: [
-        {provide: baseUrlToken, useValue: baseUrl},
-        HttpCrudService
-      ]
-    }
-  }
 }
