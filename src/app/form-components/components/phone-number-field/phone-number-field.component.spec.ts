@@ -8,7 +8,7 @@ describe('PhoneNumberFieldComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PhoneNumberFieldComponent]
+      declarations: [PhoneNumberFieldComponent],
     });
     fixture = TestBed.createComponent(PhoneNumberFieldComponent);
     component = fixture.componentInstance;

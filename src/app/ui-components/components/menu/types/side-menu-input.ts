@@ -1,3 +1,1 @@
-export interface SideMenuInput {
-
-}
+export interface SideMenuInput {}

@@ -5,21 +5,21 @@ import {
   Input,
   OnInit,
   Output,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {FormGroup} from "@angular/forms";
-import {LookupService} from "../../../../common/domain-services/lookup/lookup.service";
-import {map, Observable} from "rxjs";
-import {BaseComponent} from "../../../../common/components";
-import {ListOption} from "../../../../form-components/types";
-import {ListOptionUtils} from "../../../../form-components/utils";
+import { FormGroup } from '@angular/forms';
+import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
+import { map, Observable } from 'rxjs';
+import { BaseComponent } from '../../../../common/components';
+import { ListOption } from '../../../../form-components/types';
+import { ListOptionUtils } from '../../../../form-components/utils';
 
 @Component({
   selector: 'app-address-details-form',
   templateUrl: './address-details-form.component.html',
   styleUrls: ['./address-details-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressDetailsFormComponent extends BaseComponent implements OnInit {
   @Input() public form?: FormGroup;
@@ -34,15 +34,15 @@ export class AddressDetailsFormComponent extends BaseComponent implements OnInit
     super();
 
     this.countryOptions$ = this.lookupService.getAllCountries().pipe(
-      map(res => {
+      map((res) => {
         return res.map(ListOptionUtils.toListOption);
-      }));
+      })
+    );
   }
 
   public onSaveClicked(): void {
     this.saveClicked.emit(this.form);
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }

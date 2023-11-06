@@ -1,5 +1,5 @@
-import {UserAddressResponse} from "./user-address-response";
-import {UserAccountResponse} from "./user-account-response";
+import { UserAddressResponse } from './user-address-response';
+import { UserAccountResponse } from './user-account-response';
 
 export interface UserResponse {
   readonly emailAddress: string;

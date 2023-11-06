@@ -1,33 +1,28 @@
 <div class="flex-col">
   <div class="mt-6 col-sm-12 col-md-10 col-lg-10">
-    <tui-loader
-      [overlay]="true"
-      [showLoader]="!!(loading$ | async)">
-      <table
-        *ngIf="currencies$ | async as currencies"
-        [columns]="columns"
-        class="table" tuiTable>
+    <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">
+      <table *ngIf="currencies$ | async as currencies" [columns]="columns" class="table" tuiTable>
         <thead>
-        <tr tuiThGroup>
-          <ng-container *ngFor="let column of columns">
-            <th *tuiHead="column" [sorter]="null" tuiTh>
-              {{keys[column]}}
-            </th>
-          </ng-container>
-        </tr>
+          <tr tuiThGroup>
+            <ng-container *ngFor="let column of columns">
+              <th *tuiHead="column" [sorter]="null" tuiTh>
+                {{ keys[column] }}
+              </th>
+            </ng-container>
+          </tr>
         </thead>
         <tbody [data]="currencies" class="tbody" tuiTbody>
-        <tr *ngFor="let currency of currencies" tuiTr>
-          <td *tuiCell="'code'" [class.match]="isMatch(currency.code)" tuiTd>
-            {{ currency.code }}
-          </td>
-          <td *tuiCell="'name'" [class.match]="isMatch(currency.name)" tuiTd>
-            {{ currency.name}}
-          </td>
-          <td *tuiCell="'symbol'" [class.match]="isMatch(currency.symbol)" class="td" tuiTd>
-            {{ currency.symbol }}
-          </td>
-        </tr>
+          <tr *ngFor="let currency of currencies" tuiTr>
+            <td *tuiCell="'code'" [class.match]="isMatch(currency.code)" tuiTd>
+              {{ currency.code }}
+            </td>
+            <td *tuiCell="'name'" [class.match]="isMatch(currency.name)" tuiTd>
+              {{ currency.name }}
+            </td>
+            <td *tuiCell="'symbol'" [class.match]="isMatch(currency.symbol)" class="td" tuiTd>
+              {{ currency.symbol }}
+            </td>
+          </tr>
         </tbody>
         <ng-container *ngTemplateOutlet="tableFoot"></ng-container>
       </table>
@@ -37,17 +32,18 @@
 
 <ng-template #tableFoot>
   <tfoot class="tfoot">
-  <tr class="tr">
-    <td [colSpan]="columns.length" class="td">
-      <ng-container *ngIf="pagination$ | async as pagination">
-        <tui-table-pagination
-          (paginationChange)="onPagination($event)"
-          [page]="pagination.page"
-          [size]="pagination.size"
-          [total]="(total$ | async) || 0"
-          class="tui_space-top-2"></tui-table-pagination>
-      </ng-container>
-    </td>
-  </tr>
+    <tr class="tr">
+      <td [colSpan]="columns.length" class="td">
+        <ng-container *ngIf="pagination$ | async as pagination">
+          <tui-table-pagination
+            (paginationChange)="onPagination($event)"
+            [page]="pagination.page"
+            [size]="pagination.size"
+            [total]="(total$ | async) || 0"
+            class="tui_space-top-2"
+          ></tui-table-pagination>
+        </ng-container>
+      </td>
+    </tr>
   </tfoot>
 </ng-template>

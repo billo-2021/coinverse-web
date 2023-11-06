@@ -1,28 +1,34 @@
 <app-item *ngIf="formGroup" [formGroup]="formGroup" class="mb-6">
-  <tui-combo-box (searchChange)="onSearch($event)"
-                 *tuiLet="options$ | async as filteredOptions"
-                 [formControlName]="name"
-                 [tuiTextfieldSize]="size"
-                 [valueContent]="content"
-                 class="combo-box-content"
+  <tui-combo-box
+    (searchChange)="onSearch($event)"
+    *tuiLet="options$ | async as filteredOptions"
+    [formControlName]="name"
+    [tuiTextfieldSize]="size"
+    [valueContent]="content"
+    class="combo-box-content"
   >
-    {{label}}
-    <input (input)="onSearch(extractValueFromEvent($event))" [disabled]="isDisabled || ((loading$ | async) || false)"
-           class="search-input"
-           placeholder="Type something" tuiTextfield/>
+    {{ label }}
+    <input
+      (input)="onSearch(extractValueFromEvent($event))"
+      [disabled]="isDisabled || (loading$ | async) || false"
+      class="search-input"
+      placeholder="Type something"
+      tuiTextfield
+    />
 
     <ng-container *tuiDataList>
       <cdk-virtual-scroll-viewport
         (scrolledIndexChange)="list.handleFocusLossIfNecessary()"
         [itemSize]="44"
         [style.height.px]="(height$ | async) || 44"
-        tuiScrollable>
+        tuiScrollable
+      >
         <tui-data-list #list>
-          <button *cdkVirtualFor="let filteredOption of filteredOptions"
-                  [value]="filteredOption"
-                  tuiOption>
-            <ng-container [ngTemplateOutletContext]="{$implicit: filteredOption}"
-                          [ngTemplateOutlet]="content"></ng-container>
+          <button *cdkVirtualFor="let filteredOption of filteredOptions" [value]="filteredOption" tuiOption>
+            <ng-container
+              [ngTemplateOutletContext]="{ $implicit: filteredOption }"
+              [ngTemplateOutlet]="content"
+            ></ng-container>
           </button>
         </tui-data-list>
       </cdk-virtual-scroll-viewport>
@@ -36,8 +42,7 @@
       <tui-avatar [autoColor]="true" [text]="item.code" size="xs"></tui-avatar>
     </app-col>
     <app-col class="ml-4">
-      <span>{{item.name}}</span>
+      <span>{{ item.name }}</span>
     </app-col>
   </app-row>
 </ng-template>
-

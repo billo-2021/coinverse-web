@@ -1,23 +1,33 @@
 <div *ngIf="exchangeRate && exchangeRateData" class="flex-col border-top pt-8">
   <div class="flex-row justify-space-between">
     <p class="col-8 row-item-title">Currency Pair</p>
-    <p class="col-3 ml-4 row-item-description">{{exchangeRate.currencyPairName}}</p>
+    <p class="col-3 ml-4 row-item-description">
+      {{ exchangeRate.currencyPairName }}
+    </p>
   </div>
   <div class="flex-row justify-space-between">
     <p class="col-8 row-item-title">Currency Pair Type</p>
-    <p class="col-3 ml-4 row-item-description">{{exchangeRate.currencyPairType}}</p>
+    <p class="col-3 ml-4 row-item-description">
+      {{ exchangeRate.currencyPairType }}
+    </p>
   </div>
   <div class="flex-row justify-space-between">
     <p class="col-8 row-item-title">Ask Rate</p>
-    <p class="col-3 ml-4 row-item-description">{{exchangeRateData.askRate}}</p>
+    <p class="col-3 ml-4 row-item-description">
+      {{ exchangeRateData.askRate }}
+    </p>
   </div>
   <div class="flex-row justify-space-between">
     <p class="col-8 row-item-title">Bid Rate</p>
-    <p class="col-3 ml-4 row-item-description">{{exchangeRateData.bidRate}}</p>
+    <p class="col-3 ml-4 row-item-description">
+      {{ exchangeRateData.bidRate }}
+    </p>
   </div>
   <div class="flex-row justify-space-between">
     <p class="col-8 row-item-title">Time to Live</p>
-    <p class="col-3 ml-4 row-item-description">{{exchangeRateData.timeToLive}}</p>
+    <p class="col-3 ml-4 row-item-description">
+      {{ exchangeRateData.timeToLive }}
+    </p>
   </div>
   <div class="flex-row justify-space-between mt-2">
     <app-button (click)="onDeclineQuote()" appearance="accent" class="grow" text="Decline"></app-button>

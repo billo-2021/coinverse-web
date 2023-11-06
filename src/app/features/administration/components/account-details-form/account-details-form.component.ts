@@ -1,16 +1,16 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormGroup} from "@angular/forms";
-import {ListOptionUtils} from "../../../../form-components/utils";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { ListOptionUtils } from '../../../../form-components/utils';
 
 const roles = [
-  {code: 'CS', name: 'customer'},
-  {code: 'AD', name: 'admin'}
+  { code: 'CS', name: 'customer' },
+  { code: 'AD', name: 'admin' },
 ];
 
 @Component({
   selector: 'app-account-details-form',
   templateUrl: './account-details-form.component.html',
-  styleUrls: ['./account-details-form.component.scss']
+  styleUrls: ['./account-details-form.component.scss'],
 })
 export class AccountDetailsFormComponent {
   @Input() public form?: FormGroup;
@@ -20,8 +20,7 @@ export class AccountDetailsFormComponent {
 
   protected readonly roleOptions = roles.map(ListOptionUtils.toListOption);
 
-  public constructor() {
-  }
+  public constructor() {}
 
   ngOnInit(): void {
     if (!this.roleOptions.length) {

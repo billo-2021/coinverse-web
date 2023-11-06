@@ -12,4 +12,4 @@ interface CurrencyExchangeRateDto {
   data: readonly CurrencyExchangeRateDtoData[];
 }
 
-export {CurrencyExchangeRateDtoData, CurrencyExchangeRateDto};
+export { CurrencyExchangeRateDtoData, CurrencyExchangeRateDto };

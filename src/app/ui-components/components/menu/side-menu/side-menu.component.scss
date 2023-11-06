@@ -1,4 +1,4 @@
-@use "@taiga-ui/core/styles/mixins/mixins" as mixins;
+@use '@taiga-ui/core/styles/mixins/mixins' as mixins;
 
 .box {
   height: 100px;
@@ -20,7 +20,6 @@
 .link.selected {
   background: var(--tui-base-03);
 }
-
 
 .menu-toggle {
   height: 3.4rem;
@@ -47,7 +46,6 @@
   text-align: center;
   height: 3.4rem;
 }
-
 
 //.t-icon {
 //  color: var(--tui-primary);

@@ -1,6 +1,6 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ReactiveFormsModule} from "@angular/forms";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import {
   TuiAvatarModule,
   TuiCheckboxLabeledModule,
@@ -11,40 +11,40 @@ import {
   TuiInputModule,
   TuiInputNumberModule,
   TuiInputPasswordModule,
-  TuiInputPhoneModule
-} from "@taiga-ui/kit";
+  TuiInputPhoneModule,
+} from '@taiga-ui/kit';
 import {
   TuiDataListModule,
   TuiErrorModule,
   TuiGroupModule,
   TuiLabelModule,
   TuiScrollbarModule,
-  TuiTextfieldControllerModule
-} from "@taiga-ui/core";
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/core';
 
 import {
   TuiInputCardGroupedModule,
   TuiInputCardModule,
   TuiInputCVCModule,
-  TuiInputExpireModule
-} from "@taiga-ui/addon-commerce";
+  TuiInputExpireModule,
+} from '@taiga-ui/addon-commerce';
 
-import {UiComponentsModule} from "../ui-components/ui-components.module";
-import {NgOtpInputModule} from "ng-otp-input";
-import {TextFieldComponent} from './components/text-field/text-field.component';
-import {FormFieldComponent} from './components/form-field/form-field.component';
-import {FormComponent} from './components/form/form.component';
-import {PasswordFieldComponent} from './components/password-field/password-field.component';
-import {PhoneNumberFieldComponent} from './components/phone-number-field/phone-number-field.component';
-import {ComboBoxComponent} from './components/combo-box/combo-box.component';
-import {CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
-import {TuiLetModule} from "@taiga-ui/cdk";
-import {CheckBoxComponent} from './components/check-box/check-box.component';
-import {LabelComponent} from './components/label/label.component';
-import {OtpInputComponent} from './components/otp-input/otp-input.component';
-import {InputNumberComponent} from "./components/input-number/input-number.component";
-import {InputCardComponent} from './components/input-card/input-card.component';
-import {InputCardGroupedComponent} from './components/input-card-grouped/input-card-grouped.component';
+import { UiComponentsModule } from '../ui-components/ui-components.module';
+import { NgOtpInputModule } from 'ng-otp-input';
+import { TextFieldComponent } from './components/text-field/text-field.component';
+import { FormFieldComponent } from './components/form-field/form-field.component';
+import { FormComponent } from './components/form/form.component';
+import { PasswordFieldComponent } from './components/password-field/password-field.component';
+import { PhoneNumberFieldComponent } from './components/phone-number-field/phone-number-field.component';
+import { ComboBoxComponent } from './components/combo-box/combo-box.component';
+import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { TuiLetModule } from '@taiga-ui/cdk';
+import { CheckBoxComponent } from './components/check-box/check-box.component';
+import { LabelComponent } from './components/label/label.component';
+import { OtpInputComponent } from './components/otp-input/otp-input.component';
+import { InputNumberComponent } from './components/input-number/input-number.component';
+import { InputCardComponent } from './components/input-card/input-card.component';
+import { InputCardGroupedComponent } from './components/input-card-grouped/input-card-grouped.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +59,7 @@ import {InputCardGroupedComponent} from './components/input-card-grouped/input-c
     OtpInputComponent,
     InputNumberComponent,
     InputCardComponent,
-    InputCardGroupedComponent
+    InputCardGroupedComponent,
   ],
   imports: [
     CommonModule,
@@ -90,7 +90,7 @@ import {InputCardGroupedComponent} from './components/input-card-grouped/input-c
     TuiInputCardModule,
     TuiInputCardGroupedModule,
     TuiInputExpireModule,
-    TuiInputCVCModule
+    TuiInputCVCModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -105,8 +105,7 @@ import {InputCardGroupedComponent} from './components/input-card-grouped/input-c
     OtpInputComponent,
     InputNumberComponent,
     InputCardGroupedComponent,
-    InputCardComponent
-  ]
+    InputCardComponent,
+  ],
 })
-export class FormComponentsModule {
-}
+export class FormComponentsModule {}

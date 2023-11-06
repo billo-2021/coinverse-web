@@ -1,19 +1,16 @@
-import {Injectable} from '@angular/core';
-import {AccountVerification} from "../../domain-models";
-import {BehaviorSubject} from "rxjs";
+import { Injectable } from '@angular/core';
+import { AccountVerification } from '../../domain-models';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccountVerificationStoreService {
-  private readonly _accountVerification
-    = new BehaviorSubject<AccountVerification | null>(null);
+  private readonly _accountVerification = new BehaviorSubject<AccountVerification | null>(null);
 
-  public readonly accountVerification$
-    = this._accountVerification.asObservable();
+  public readonly accountVerification$ = this._accountVerification.asObservable();
 
-  public constructor() {
-  }
+  public constructor() {}
 
   public get accountVerification() {
     return this._accountVerification.getValue();

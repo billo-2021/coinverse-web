@@ -8,7 +8,7 @@ describe('RingChartComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [RingChartComponent]
+      declarations: [RingChartComponent],
     });
     fixture = TestBed.createComponent(RingChartComponent);
     component = fixture.componentInstance;

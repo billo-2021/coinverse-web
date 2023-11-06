@@ -1,4 +1,4 @@
-import {CryptoCurrencyDto} from "../lookup";
+import { CryptoCurrencyDto } from '../lookup';
 
 export interface WalletDto {
   readonly id: number;

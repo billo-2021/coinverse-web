@@ -1,4 +1,4 @@
-import {CurrencyDto} from "./currency-dto.model";
+import { CurrencyDto } from './currency-dto.model';
 
 export interface CurrencyPairDto {
   id: number;

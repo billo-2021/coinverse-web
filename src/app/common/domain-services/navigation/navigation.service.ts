@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {Location} from '@angular/common';
-import {ActivatedRoute, Event, NavigationEnd, Router} from "@angular/router";
-import {filter, map, Observable, shareReplay, Subject} from "rxjs";
-import {RouteType} from "../../types/route";
+import { Injectable } from '@angular/core';
+import { Location } from '@angular/common';
+import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
+import { filter, map, Observable, shareReplay, Subject } from 'rxjs';
+import { RouteType } from '../../types/route';
 
 type NavigationPage<T = undefined> = {
   path: string;
@@ -18,19 +18,18 @@ type NavigationRoute = {
   params: NavigationParams;
 };
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NavigationService {
   public readonly navigation$: Observable<NavigationRoute> = this.router.events.pipe(
-    filter((e: Event): e is NavigationEnd =>
-      e instanceof NavigationEnd && !!e.url), map((e) => e.url),
+    filter((e: Event): e is NavigationEnd => e instanceof NavigationEnd && !!e.url),
+    map((e) => e.url),
     map((url) => {
       return {
         url,
-        params: this.activatedRoute.snapshot.params
-      }
+        params: this.activatedRoute.snapshot.params,
+      };
     }),
     shareReplay(1)
   );
@@ -39,14 +38,15 @@ export class NavigationService {
   private readonly currentRoute = new Subject<NavigationRoute>();
   public readonly currentRoute$ = this.currentRoute.asObservable();
 
-  constructor(private readonly router: Router,
-              private readonly activatedRoute: ActivatedRoute,
-              private location: Location) {
-  }
+  constructor(
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
+    private location: Location
+  ) {}
 
   private _history: NavigationRoute[] = [];
 
-  private readonly history$ = this.navigation$.subscribe(route => {
+  private readonly history$ = this.navigation$.subscribe((route) => {
     if (this._history.length === this.MAX_HISTORY_ITEMS) {
       this._history = this._history.slice(1);
     }
@@ -66,7 +66,6 @@ export class NavigationService {
 
     try {
       await this.router.navigate([route.path]);
-
     } catch (e) {
       console.error(e);
     }

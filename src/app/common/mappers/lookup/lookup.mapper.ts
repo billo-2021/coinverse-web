@@ -5,11 +5,11 @@ import {
   CryptoCurrencyResponse,
   CurrencyDto,
   CurrencyPairDto,
-  CurrencyResponse
-} from "../../domain-models";
-import {ObjectKeysMap} from "../../../core/types";
-import {ObjectUtils} from "../../../core/utils";
-import {CurrencyPairResponse} from "../../domain-models/lookup/currency-pair-response";
+  CurrencyResponse,
+} from '../../domain-models';
+import { ObjectKeysMap } from '../../../core/types';
+import { ObjectUtils } from '../../../core/utils';
+import { CurrencyPairResponse } from '../../domain-models/lookup/currency-pair-response';
 
 type CurrencyKeys = 'id' | 'type' | 'code' | 'name' | 'symbol';
 
@@ -19,7 +19,7 @@ type CurrencyResponseType = Pick<CurrencyResponse, CurrencyKeys>;
 const countryKeysMap: ObjectKeysMap<CountryDto, CountryResponse> = {
   id: 'id',
   code: 'code',
-  name: 'name'
+  name: 'name',
 };
 
 const currencyKeysMap: ObjectKeysMap<CurrencyDtoType, CurrencyResponseType> = {
@@ -27,7 +27,7 @@ const currencyKeysMap: ObjectKeysMap<CurrencyDtoType, CurrencyResponseType> = {
   type: 'type',
   code: 'code',
   name: 'name',
-  symbol: 'symbol'
+  symbol: 'symbol',
 };
 
 type CurrencyPairKeys = 'id' | 'type' | 'name';
@@ -45,22 +45,27 @@ function currencyDtoToCurrencyResponse(currencyDto: CurrencyDto): CurrencyRespon
     ObjectUtils.map<CountryDto, CountryResponse>(countryKeysMap, countryDto)
   );
 
-  const currencyResponse = ObjectUtils.map<CurrencyDtoType, CurrencyResponseType>(currencyKeysMap, currencyDto);
+  const currencyResponse = ObjectUtils.map<CurrencyDtoType, CurrencyResponseType>(
+    currencyKeysMap,
+    currencyDto
+  );
 
   return {
     ...currencyResponse,
-    countries: countriesResponse
+    countries: countriesResponse,
   };
 }
 
-function cryptoCurrencyDtoToCryptoCurrencyResponse(cryptoCurrencyDto: CryptoCurrencyDto): CryptoCurrencyResponse {
+function cryptoCurrencyDtoToCryptoCurrencyResponse(
+  cryptoCurrencyDto: CryptoCurrencyDto
+): CryptoCurrencyResponse {
   const cryptoCurrencyKeysMap: ObjectKeysMap<CryptoCurrencyDto, CryptoCurrencyResponse> = {
     id: 'id',
     code: 'code',
     name: 'name',
     symbol: 'symbol',
-    circulatingSupply: 'circulatingSupply'
-  }
+    circulatingSupply: 'circulatingSupply',
+  };
 
   return ObjectUtils.map(cryptoCurrencyKeysMap, cryptoCurrencyDto);
 }
@@ -80,4 +85,8 @@ function cryptoCurrencyDtoToCryptoCurrencyResponse(cryptoCurrencyDto: CryptoCurr
 //   }
 // }
 
-export {countryDtoToCountryResponse, currencyDtoToCurrencyResponse, cryptoCurrencyDtoToCryptoCurrencyResponse};
+export {
+  countryDtoToCountryResponse,
+  currencyDtoToCurrencyResponse,
+  cryptoCurrencyDtoToCryptoCurrencyResponse,
+};

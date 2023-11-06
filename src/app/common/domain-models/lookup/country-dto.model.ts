@@ -1,5 +1,5 @@
-import {KeysMap} from "../../../core/types";
-import {ObjectUtils} from "../../../core/utils";
+import { KeysMap } from '../../../core/types';
+import { ObjectUtils } from '../../../core/utils';
 
 interface CountryDto {
   id: number;
@@ -10,11 +10,11 @@ interface CountryDto {
 const countryKeysMap: KeysMap<CountryDto, boolean> = {
   id: true,
   code: true,
-  name: true
+  name: true,
 };
 
 function isCountryDto(value: unknown): value is CountryDto {
   return ObjectUtils.hasKeys(value, countryKeysMap);
 }
 
-export {CountryDto, isCountryDto};
+export { CountryDto, isCountryDto };

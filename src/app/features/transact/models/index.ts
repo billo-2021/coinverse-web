@@ -1,3 +1,3 @@
-import {PaymentModel} from "./payment-model";
+import { PaymentModel } from './payment-model';
 
-export {PaymentModel};
+export { PaymentModel };

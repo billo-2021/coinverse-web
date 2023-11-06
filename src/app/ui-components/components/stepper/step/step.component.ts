@@ -6,9 +6,9 @@ import {
   Inject,
   Input,
   OnInit,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {TuiStepperComponent} from "@taiga-ui/kit";
+import { TuiStepperComponent } from '@taiga-ui/kit';
 
 @Component({
   selector: 'app-step',
@@ -16,15 +16,18 @@ import {TuiStepperComponent} from "@taiga-ui/kit";
   styleUrls: ['./step.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {'class': 'step'}
+  host: { class: 'step' },
 })
 export class StepComponent implements OnInit, AfterViewInit {
   @Input() public title = '';
   @Input() public state: 'error' | 'normal' | 'pass' = 'normal';
   @Input() public isDisabled = false;
 
-  public constructor(@Inject(TuiStepperComponent)
-                     @Host() private readonly stepper: TuiStepperComponent) {
+  public constructor(
+    @Inject(TuiStepperComponent)
+    @Host()
+    private readonly stepper: TuiStepperComponent
+  ) {
     console.log('Stepper', this.stepper);
   }
 

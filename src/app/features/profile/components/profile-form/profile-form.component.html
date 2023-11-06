@@ -1,16 +1,21 @@
-<app-form (saveClicked)="onSaveChanges()"
-          [formGroup]="form"
-          [isValid]="form.valid"
-          [saveText]="saveText"
-          subtitle="Edit your profile."
-          title="Edit Profile">
+<app-form
+  (saveClicked)="onSaveChanges()"
+  [formGroup]="form"
+  [isValid]="form.valid"
+  [saveText]="saveText"
+  subtitle="Edit your profile."
+  title="Edit Profile"
+>
   <app-text-field autocomplete="given-name" label="First Name" name="firstName" placeholder="i.e. John">
   </app-text-field>
   <app-text-field autocomplete="family-name" label="Last Name" name="lastName" placeholder="i.e. Doe">
   </app-text-field>
-  <app-text-field autocomplete="email" label="Email Address" name="emailAddress" placeholder="john@gmail.com"
-                  type="email"
-
+  <app-text-field
+    autocomplete="email"
+    label="Email Address"
+    name="emailAddress"
+    placeholder="john@gmail.com"
+    type="email"
   >
   </app-text-field>
 

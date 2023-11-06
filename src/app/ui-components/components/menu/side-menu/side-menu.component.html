@@ -1,12 +1,15 @@
 <div *ngIf="viewModel$ | async as viewModel" class="flex-row menu-toggle items-center">
-  <div
-    *tuiSidebar="viewModel.isMobile && viewModel.isShown; direction: 'left'">
-    <ng-container [ngTemplateOutletContext]="{$implicit: viewModel.menuItems}"
-                  [ngTemplateOutlet]="menuContent"></ng-container>
+  <div *tuiSidebar="viewModel.isMobile && viewModel.isShown; direction: 'left'">
+    <ng-container
+      [ngTemplateOutletContext]="{ $implicit: viewModel.menuItems }"
+      [ngTemplateOutlet]="menuContent"
+    ></ng-container>
   </div>
   <ng-container *ngIf="!viewModel.isMobile">
-    <ng-container [ngTemplateOutletContext]="{$implicit: viewModel.menuItems}"
-                  [ngTemplateOutlet]="menuContent"></ng-container>
+    <ng-container
+      [ngTemplateOutletContext]="{ $implicit: viewModel.menuItems }"
+      [ngTemplateOutlet]="menuContent"
+    ></ng-container>
   </ng-container>
 </div>
 
@@ -16,9 +19,15 @@
   </div>
   <ul class="side-menu-content row">
     <li *ngFor="let menuItem of data" class="link">
-      <a [icon]="menuItem.icon" [routerLinkActiveOptions]="{exact: true}" [routerLink]="menuItem.link" iconAlign="left"
-         routerLinkActive="active"
-         tuiLink>{{menuItem.text}}</a>
+      <a
+        [icon]="menuItem.icon"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="menuItem.link"
+        iconAlign="left"
+        routerLinkActive="active"
+        tuiLink
+        >{{ menuItem.text }}</a
+      >
     </li>
   </ul>
 </ng-template>

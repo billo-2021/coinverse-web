@@ -8,7 +8,7 @@ describe('ComboBoxComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ComboBoxComponent]
+      declarations: [ComboBoxComponent],
     });
     fixture = TestBed.createComponent(ComboBoxComponent);
     component = fixture.componentInstance;

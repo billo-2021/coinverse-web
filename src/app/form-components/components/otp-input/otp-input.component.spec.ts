@@ -8,7 +8,7 @@ describe('OtpInputComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OtpInputComponent]
+      declarations: [OtpInputComponent],
     });
     fixture = TestBed.createComponent(OtpInputComponent);
     component = fixture.componentInstance;

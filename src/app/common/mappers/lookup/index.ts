@@ -1,3 +1,5 @@
 export {
-  countryDtoToCountryResponse, currencyDtoToCurrencyResponse, cryptoCurrencyDtoToCryptoCurrencyResponse
+  countryDtoToCountryResponse,
+  currencyDtoToCurrencyResponse,
+  cryptoCurrencyDtoToCryptoCurrencyResponse,
 } from './lookup.mapper';

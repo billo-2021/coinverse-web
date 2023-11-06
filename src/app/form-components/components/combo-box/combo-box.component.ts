@@ -6,14 +6,14 @@ import {
   OnInit,
   Optional,
   SimpleChanges,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {FormGroup, FormGroupDirective} from "@angular/forms";
-import {TUI_VALIDATION_ERRORS} from "@taiga-ui/kit";
-import {ListOption} from '../../types';
-import {BehaviorSubject, filter, merge, Observable, Subject} from "rxjs";
-import {TUI_DEFAULT_MATCHER} from "@taiga-ui/cdk";
-import {LoadingService} from "../../../core/services/loading/loading.service";
+import { FormGroup, FormGroupDirective } from '@angular/forms';
+import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
+import { ListOption } from '../../types';
+import { BehaviorSubject, filter, merge, Observable, Subject } from 'rxjs';
+import { TUI_DEFAULT_MATCHER } from '@taiga-ui/cdk';
+import { LoadingService } from '../../../core/services/loading/loading.service';
 
 export type SizeType = 's' | 'm' | 'l';
 
@@ -23,16 +23,16 @@ export type SizeType = 's' | 'm' | 'l';
   styleUrls: ['./combo-box.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {'class': 'combo-box'},
+  host: { class: 'combo-box' },
   providers: [
     {
       provide: TUI_VALIDATION_ERRORS,
       useValue: {
         required: 'This is required',
-        email: 'Email is invalid'
-      }
-    }
-  ]
+        email: 'Email is invalid',
+      },
+    },
+  ],
 })
 export class ComboBoxComponent implements OnInit, OnChanges {
   @Input() size: SizeType = 'm';
@@ -48,11 +48,11 @@ export class ComboBoxComponent implements OnInit, OnChanges {
   private readonly _height = new BehaviorSubject((this.options.length && this.options.length * 44) || 44);
   public readonly height$ = this._height.asObservable();
 
-  public constructor(private readonly loadingService: LoadingService,
-                     @Optional() private formGroupDirective: FormGroupDirective) {
-    const a = merge(this._options,
-      this.search$.pipe(filter(value => value !== null))
-    )
+  public constructor(
+    private readonly loadingService: LoadingService,
+    @Optional() private formGroupDirective: FormGroupDirective
+  ) {
+    const a = merge(this._options, this.search$.pipe(filter((value) => value !== null)));
   }
 
   public ngOnInit(): void {
@@ -74,14 +74,13 @@ export class ComboBoxComponent implements OnInit, OnChanges {
 
   public onSearch(query: string | null) {
     this.search$.next(query);
-    const filteredOptions = this.options
-      .filter(option => TUI_DEFAULT_MATCHER(option, query || ''));
+    const filteredOptions = this.options.filter((option) => TUI_DEFAULT_MATCHER(option, query || ''));
 
     this._options.next(filteredOptions);
     this._height.next((filteredOptions.length && filteredOptions.length * 44) || 44);
   }
 
   public extractValueFromEvent(event: Event): string | null {
-    return (event.target as HTMLInputElement)?.value
+    return (event.target as HTMLInputElement)?.value;
   }
 }

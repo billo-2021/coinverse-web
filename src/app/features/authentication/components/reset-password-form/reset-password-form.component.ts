@@ -1,12 +1,19 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
-import {FormGroup} from "@angular/forms";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-reset-password-form',
   templateUrl: './reset-password-form.component.html',
   styleUrls: ['./reset-password-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordFormComponent {
   @Input() public form?: FormGroup;
@@ -14,8 +21,7 @@ export class ResetPasswordFormComponent {
 
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
-  public constructor() {
-  }
+  public constructor() {}
 
   public onSaveClicked(): void {
     this.saveClicked.emit(this.form);

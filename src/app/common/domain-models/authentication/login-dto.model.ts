@@ -1,6 +1,6 @@
-import {isUserDto, UserDto} from "../user-dto.model";
-import {KeysMap} from "../../../core/types";
-import {ObjectUtils} from "../../../core/utils";
+import { isUserDto, UserDto } from '../user-dto.model';
+import { KeysMap } from '../../../core/types';
+import { ObjectUtils } from '../../../core/utils';
 
 interface LoginDto {
   accessToken: string;
@@ -11,11 +11,11 @@ interface LoginDto {
 const loginKeysMap: KeysMap<LoginDto, boolean> = {
   accessToken: true,
   refreshToken: true,
-  user: true
+  user: true,
 };
 
 function isLoginDto(value: unknown): value is LoginDto {
   return ObjectUtils.hasKeys(value, loginKeysMap) && isUserDto(value.user);
 }
 
-export {LoginDto, isLoginDto};
+export { LoginDto, isLoginDto };

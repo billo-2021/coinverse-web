@@ -1,4 +1,4 @@
-import {CurrencyResponse} from "./currency-response";
+import { CurrencyResponse } from './currency-response';
 
 export interface CurrencyPairResponse {
   id: number;

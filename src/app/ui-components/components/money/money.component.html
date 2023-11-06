@@ -1,10 +1,12 @@
 <div class="flex-row money-wrapper">
-  <tui-money [colored]="colored"
-             [decimal]="decimal"
-             [precision]="precision"
-             [sign]="sign"
-             [singleColor]="singleColor"
-             [value]="value"
-             currency=""></tui-money>
-  <app-text class="ml-2">{{currency}}</app-text>
+  <tui-money
+    [colored]="colored"
+    [decimal]="decimal"
+    [precision]="precision"
+    [sign]="sign"
+    [singleColor]="singleColor"
+    [value]="value"
+    currency=""
+  ></tui-money>
+  <app-text class="ml-2">{{ currency }}</app-text>
 </div>

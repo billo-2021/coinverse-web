@@ -1,4 +1,4 @@
-import {WalletResponse} from "../wallet";
+import { WalletResponse } from '../wallet';
 
 export interface CurrencyTransactionResponse {
   readonly id: number;

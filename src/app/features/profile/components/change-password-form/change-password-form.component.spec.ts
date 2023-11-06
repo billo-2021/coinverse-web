@@ -8,7 +8,7 @@ describe('ChangePasswordFormComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ChangePasswordFormComponent]
+      declarations: [ChangePasswordFormComponent],
     });
     fixture = TestBed.createComponent(ChangePasswordFormComponent);
     component = fixture.componentInstance;

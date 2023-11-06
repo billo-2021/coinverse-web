@@ -2,14 +2,19 @@
   <form class="form flex-col">
     <ng-content></ng-content>
     <div class="flex-row justify-space-between mt-6">
-      <app-button (click)="onCancelClicked()"
-                  *ngIf="isCancelShown"
-                  [isDisabled]="(loading$ | async) || false"
-                  [text]="cancelText"
-                  appearance="outline"
-                  type="reset">
+      <app-button
+        (click)="onCancelClicked()"
+        *ngIf="isCancelShown"
+        [isDisabled]="(loading$ | async) || false"
+        [text]="cancelText"
+        appearance="outline"
+        type="reset"
+      >
       </app-button>
-      <app-loading-indicator [ngClass]="{'col-4': isCancelShown}" [showLoader]="(loading$ | async) || false">
+      <app-loading-indicator
+        [ngClass]="{ 'col-4': isCancelShown }"
+        [showLoader]="(loading$ | async) || false"
+      >
         <app-button (click)="onSaveClicked()" [isDisabled]="!isValid" [text]="saveText"></app-button>
       </app-loading-indicator>
     </div>

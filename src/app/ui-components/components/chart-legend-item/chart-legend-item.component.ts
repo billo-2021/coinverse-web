@@ -1,11 +1,18 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 
 @Component({
   selector: 'app-chart-legend-item',
   templateUrl: './chart-legend-item.component.html',
   styleUrls: ['./chart-legend-item.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartLegendItemComponent {
   @Input() public isActive = false;
@@ -14,8 +21,7 @@ export class ChartLegendItemComponent {
 
   @Output() public hoveredChange = new EventEmitter<boolean>();
 
-  public constructor() {
-  }
+  public constructor() {}
 
   public onHover(hovered: boolean): void {
     this.hoveredChange.emit(hovered);

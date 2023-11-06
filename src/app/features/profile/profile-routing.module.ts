@@ -1,15 +1,14 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {ManageProfileComponent} from "./pages/manage-profile/manage-profile.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { ManageProfileComponent } from './pages/manage-profile/manage-profile.component';
 
 const routes: Routes = [
-  {path: '', component: ManageProfileComponent},
-  {path: '**', redirectTo: ''}
+  { path: '', component: ManageProfileComponent },
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ProfileRoutingModule {
-}
+export class ProfileRoutingModule {}

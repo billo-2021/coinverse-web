@@ -56,11 +56,13 @@
     margin-top: 1rem;
   }
 
-  th, td {
+  th,
+  td {
     padding: 1rem;
   }
 
-  td, th {
+  td,
+  th {
     white-space: nowrap;
     border-color: transparent;
     border-right-color: var(--tui-base-04);

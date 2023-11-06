@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {AccountDetailsFormComponent} from './account-details-form.component';
+import { AccountDetailsFormComponent } from './account-details-form.component';
 
 describe('AccountDetailsComponent', () => {
   let component: AccountDetailsFormComponent;
@@ -8,7 +8,7 @@ describe('AccountDetailsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AccountDetailsFormComponent]
+      declarations: [AccountDetailsFormComponent],
     });
     fixture = TestBed.createComponent(AccountDetailsFormComponent);
     component = fixture.componentInstance;

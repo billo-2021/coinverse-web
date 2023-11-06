@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {TUI_DEFAULT_MATCHER, tuiDefaultSort, tuiIsFalsy, tuiIsPresent} from "@taiga-ui/cdk";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TUI_DEFAULT_MATCHER, tuiDefaultSort, tuiIsFalsy, tuiIsPresent } from '@taiga-ui/cdk';
 import {
   BehaviorSubject,
   combineLatest,
@@ -10,10 +10,10 @@ import {
   share,
   startWith,
   switchMap,
-  timer
-} from "rxjs";
-import {TUI_ARROW} from "@taiga-ui/kit";
-import {TuiComparator} from "@taiga-ui/addon-table";
+  timer,
+} from 'rxjs';
+import { TUI_ARROW } from '@taiga-ui/kit';
+import { TuiComparator } from '@taiga-ui/addon-table';
 
 interface Currency {
   readonly name: string;
@@ -25,23 +25,28 @@ interface Currency {
 type Key = 'name' | 'price' | 'change' | 'circulatingSupply';
 
 const DATA: readonly Currency[] = [
-  {name: 'Bitcoin', price: 20000, change: 4, circulatingSupply: 200000},
-  {name: 'Ethereum', price: 1999, change: 4, circulatingSupply: 40000000},
-  {name: 'Shiba Inu', price: 0.0000567, change: 3.67, circulatingSupply: 2000000},
+  { name: 'Bitcoin', price: 20000, change: 4, circulatingSupply: 200000 },
+  { name: 'Ethereum', price: 1999, change: 4, circulatingSupply: 40000000 },
+  {
+    name: 'Shiba Inu',
+    price: 0.0000567,
+    change: 3.67,
+    circulatingSupply: 2000000,
+  },
 ];
 
 const KEYS: Record<string, Key> = {
   Name: 'name',
   Price: 'price',
   '24hr %': 'change',
-  'Circulating Supply': 'circulatingSupply'
+  'Circulating Supply': 'circulatingSupply',
 };
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent {
   public readonly sorter$ = new BehaviorSubject<Key>('name');
@@ -55,30 +60,26 @@ export class TableComponent {
   protected readonly data$: Observable<readonly Currency[]>;
   private readonly size$ = new BehaviorSubject(10);
   private readonly page$ = new BehaviorSubject(0);
-  protected readonly request$ = combineLatest(
-    [
-      this.sorter$,
-      this.page$,
-      this.size$])
-    .pipe(
-      debounceTime(0),
-      switchMap(query =>
-        this.getData(...query).pipe(startWith(null))),
-      share()
-    );
+  protected readonly request$ = combineLatest([this.sorter$, this.page$, this.size$]).pipe(
+    debounceTime(0),
+    switchMap((query) => this.getData(...query).pipe(startWith(null))),
+    share()
+  );
 
   public constructor() {
     this.loading$ = this.request$.pipe(map(tuiIsFalsy));
 
     this.total$ = this.request$.pipe(
       filter(tuiIsPresent),
-      map(({length}) => length),
-      startWith(1));
+      map(({ length }) => length),
+      startWith(1)
+    );
 
-    this.data$ = this.request$
-      .pipe(filter(tuiIsPresent),
-        map(users => users.filter(tuiIsPresent)),
-        startWith([]));
+    this.data$ = this.request$.pipe(
+      filter(tuiIsPresent),
+      map((users) => users.filter(tuiIsPresent)),
+      startWith([])
+    );
   }
 
   public onSize(size: number): void {
@@ -95,14 +96,14 @@ export class TableComponent {
 
   public onEnabled(enabled: readonly string[]): void {
     this.enabled = enabled;
-    this.columns = this.initial
-      .filter(column => enabled.includes(column))
-      .map(column => KEYS[column]);
+    this.columns = this.initial.filter((column) => enabled.includes(column)).map((column) => KEYS[column]);
   }
 
-  private getData(key: 'name' | 'price' | 'change' | 'circulatingSupply',
-                  page: number,
-                  size: number): Observable<ReadonlyArray<Currency | null>> {
+  private getData(
+    key: 'name' | 'price' | 'change' | 'circulatingSupply',
+    page: number,
+    size: number
+  ): Observable<ReadonlyArray<Currency | null>> {
     const start = page * size;
     const end = start + size;
     const result = [...DATA]

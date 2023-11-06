@@ -8,7 +8,7 @@ describe('TransactResultComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TransactResultComponent]
+      declarations: [TransactResultComponent],
     });
     fixture = TestBed.createComponent(TransactResultComponent);
     component = fixture.componentInstance;

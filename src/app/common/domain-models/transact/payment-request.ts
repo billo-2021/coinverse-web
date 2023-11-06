@@ -3,5 +3,5 @@ export interface PaymentRequest {
   readonly amountCurrencyCode: string;
   readonly fromCurrencyCode: string;
   readonly toCurrencyCode: string;
-  readonly  paymentMethod: string;
+  readonly paymentMethod: string;
 }

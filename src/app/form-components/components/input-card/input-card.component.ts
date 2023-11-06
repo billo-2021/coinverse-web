@@ -1,13 +1,13 @@
-import {Component, Input, Optional} from '@angular/core';
-import {FormGroup, FormGroupDirective} from "@angular/forms";
-import {LoadingService} from "../../../core/services/loading/loading.service";
+import { Component, Input, Optional } from '@angular/core';
+import { FormGroup, FormGroupDirective } from '@angular/forms';
+import { LoadingService } from '../../../core/services/loading/loading.service';
 
 export type SizeType = 's' | 'm' | 'l';
 
 @Component({
   selector: 'app-input-card',
   templateUrl: './input-card.component.html',
-  styleUrls: ['./input-card.component.scss']
+  styleUrls: ['./input-card.component.scss'],
 })
 export class InputCardComponent {
   @Input() public type: 'text' | 'email' = 'text';
@@ -25,9 +25,10 @@ export class InputCardComponent {
   protected formGroup?: FormGroup;
   protected readonly loading$ = this.loadingService.loading$;
 
-  public constructor(private loadingService: LoadingService,
-                     @Optional() private formGroupDirective: FormGroupDirective) {
-  }
+  public constructor(
+    private loadingService: LoadingService,
+    @Optional() private formGroupDirective: FormGroupDirective
+  ) {}
 
   public ngOnInit(): void {
     if (!this.formGroupDirective) {

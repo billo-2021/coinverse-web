@@ -1,4 +1,4 @@
-import {KeysMap, ObjectKeysMap} from "./object";
-import {HttpMessageResponse} from "./http-message-response";
+import { KeysMap, ObjectKeysMap } from './object';
+import { HttpMessageResponse } from './http-message-response';
 
-export {ObjectKeysMap, KeysMap, HttpMessageResponse};
+export { ObjectKeysMap, KeysMap, HttpMessageResponse };

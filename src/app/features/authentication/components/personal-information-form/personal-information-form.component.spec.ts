@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {PersonalInformationFormComponent} from './personal-information-form.component';
+import { PersonalInformationFormComponent } from './personal-information-form.component';
 
 describe('PersonalInformationComponent', () => {
   let component: PersonalInformationFormComponent;
@@ -8,7 +8,7 @@ describe('PersonalInformationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PersonalInformationFormComponent]
+      declarations: [PersonalInformationFormComponent],
     });
     fixture = TestBed.createComponent(PersonalInformationFormComponent);
     component = fixture.componentInstance;

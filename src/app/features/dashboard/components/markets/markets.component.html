@@ -1,52 +1,65 @@
 <app-card class="mt-4" subtitle="Latest market prices" title="Markets">
   <div class="flex-col">
     <div class="mt-6 col-sm-12 col-md-12 col-lg-12">
-      <tui-loader
-        [overlay]="true"
-        [showLoader]="(loading$ | async) ?? false">
+      <tui-loader [overlay]="true" [showLoader]="(loading$ | async) ?? false">
         <table
           *ngIf="cryptoCurrencies$ | async as cryptoCurrencies"
           [columns]="columns"
           class="table"
-          tuiTable>
+          tuiTable
+        >
           <thead class="thead">
-          <tr class="tr" tuiThGroup>
-            <ng-container *ngFor="let column of columns">
-              <th *tuiHead="column"
-                  [sorter]="null"
-                  class="th"
-                  tuiTh>
-                <div class="flex-col flex-center">{{keys[column]}}</div>
-              </th>
-            </ng-container>
-          </tr>
+            <tr class="tr" tuiThGroup>
+              <ng-container *ngFor="let column of columns">
+                <th *tuiHead="column" [sorter]="null" class="th" tuiTh>
+                  <div class="flex-col flex-center">{{ keys[column] }}</div>
+                </th>
+              </ng-container>
+            </tr>
           </thead>
           <tbody [data]="cryptoCurrencies" class="tbody" tuiTbody>
-          <tr *ngFor="let cryptoCurrency of cryptoCurrencies" class="tr" tuiTr>
-            <td *tuiCell="'name'" [class.match]="isMatch(cryptoCurrency.name)" tuiTd>
-              {{ cryptoCurrency.name }}
-            </td>
-            <td *tuiCell="'currencyPairName'" [class.match]="isMatch(cryptoCurrency.currencyPairName)" tuiTd>
-              {{ cryptoCurrency.currencyPairName }}
-            </td>
-            <td *tuiCell="'price'" [class.match]="isMatch(cryptoCurrency.price)" tuiTd>
-              <div class="flex-row justify-end">{{ cryptoCurrency.price }}</div>
-            </td>
-            <td *tuiCell="'change'" [class.match]="isMatch(cryptoCurrency.price)" tuiTd>
-              <div class="flex-row justify-end">0</div>
-            </td>
-            <td *tuiCell="'circulatingSupply'" [class.match]="isMatch(cryptoCurrency.circulatingSupply)" tuiTd>
-              <div
-                class="flex-row justify-end"> {{ cryptoCurrency.circulatingSupply + ' '}} {{cryptoCurrency.code}}</div>
-            </td>
-            <td *tuiCell="'actions'">
-              <div class="flex-row justify-end">
-                <app-button (click)="onBuy(cryptoCurrency.code)" size="s" text="BUY"></app-button>
-                <app-button (click)="onSell(cryptoCurrency.code)" appearance="accent" class="ml-4" size="s"
-                            text="SELL"></app-button>
-              </div>
-            </td>
-          </tr>
+            <tr *ngFor="let cryptoCurrency of cryptoCurrencies" class="tr" tuiTr>
+              <td *tuiCell="'name'" [class.match]="isMatch(cryptoCurrency.name)" tuiTd>
+                {{ cryptoCurrency.name }}
+              </td>
+              <td
+                *tuiCell="'currencyPairName'"
+                [class.match]="isMatch(cryptoCurrency.currencyPairName)"
+                tuiTd
+              >
+                {{ cryptoCurrency.currencyPairName }}
+              </td>
+              <td *tuiCell="'price'" [class.match]="isMatch(cryptoCurrency.price)" tuiTd>
+                <div class="flex-row justify-end">
+                  {{ cryptoCurrency.price }}
+                </div>
+              </td>
+              <td *tuiCell="'change'" [class.match]="isMatch(cryptoCurrency.price)" tuiTd>
+                <div class="flex-row justify-end">0</div>
+              </td>
+              <td
+                *tuiCell="'circulatingSupply'"
+                [class.match]="isMatch(cryptoCurrency.circulatingSupply)"
+                tuiTd
+              >
+                <div class="flex-row justify-end">
+                  {{ cryptoCurrency.circulatingSupply + ' ' }}
+                  {{ cryptoCurrency.code }}
+                </div>
+              </td>
+              <td *tuiCell="'actions'">
+                <div class="flex-row justify-end">
+                  <app-button (click)="onBuy(cryptoCurrency.code)" size="s" text="BUY"></app-button>
+                  <app-button
+                    (click)="onSell(cryptoCurrency.code)"
+                    appearance="accent"
+                    class="ml-4"
+                    size="s"
+                    text="SELL"
+                  ></app-button>
+                </div>
+              </td>
+            </tr>
           </tbody>
           <ng-container *ngTemplateOutlet="tableFoot"></ng-container>
         </table>
@@ -56,16 +69,17 @@
 
   <ng-template #tableFoot>
     <tfoot *ngIf="pagination$ | async as pagination" class="tfoot">
-    <tr class="tr">
-      <td [colSpan]="columns.length" class="td">
-        <tui-table-pagination
-          (paginationChange)="onPagination($event)"
-          [page]="pagination.page"
-          [size]="pagination.size"
-          [total]="(total$ | async) || 0"
-          class="tui_space-top-2"></tui-table-pagination>
-      </td>
-    </tr>
+      <tr class="tr">
+        <td [colSpan]="columns.length" class="td">
+          <tui-table-pagination
+            (paginationChange)="onPagination($event)"
+            [page]="pagination.page"
+            [size]="pagination.size"
+            [total]="(total$ | async) || 0"
+            class="tui_space-top-2"
+          ></tui-table-pagination>
+        </td>
+      </tr>
     </tfoot>
   </ng-template>
 </app-card>

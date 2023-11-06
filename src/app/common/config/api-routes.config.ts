@@ -5,7 +5,7 @@ const apiRoutesConfig = {
     login: '/login',
     verifyAccount: '/verify',
     requestToken: '/request-token',
-    resetPassword: '/reset-password'
+    resetPassword: '/reset-password',
   },
   lookup: {
     root: '/lookup',
@@ -18,23 +18,23 @@ const apiRoutesConfig = {
     allCurrencyPairs: '/all/currency-pairs',
     currencyPairs: '/currency-pairs',
     allPaymentMethods: '/all/payment-methods',
-    paymentMethods: '/payment-methods'
+    paymentMethods: '/payment-methods',
   },
   quotes: {
     root: '/quotes',
-    currencyPairs: '/currency-pair'
+    currencyPairs: '/currency-pair',
   },
   balances: {
-    root: '/balances'
+    root: '/balances',
   },
   trades: {
-    root: '/trades'
+    root: '/trades',
   },
   transact: {
     root: '/transfers',
     transactions: '/transactions',
     withdraw: '/withdraw',
-    deposit: '/deposit'
+    deposit: '/deposit',
   },
   administration: {
     root: '/administration',
@@ -43,19 +43,19 @@ const apiRoutesConfig = {
       disableAccount: '/disable-account',
       enableAccount: '/enable-account',
     },
-    cryptoCurrencies: '/crypto'
+    cryptoCurrencies: '/crypto',
   },
   account: {
     root: '/account',
     changePassword: '/change-password',
-    activity: '/activity'
+    activity: '/activity',
   },
   profile: {
     root: '/profile',
     personalInformation: '/personal-information',
     address: '/address',
-    preference: '/preference'
-  }
+    preference: '/preference',
+  },
 } as const;
 
-export {apiRoutesConfig}
+export { apiRoutesConfig };

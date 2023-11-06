@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-ring-chart',
@@ -6,7 +6,7 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   styleUrls: ['./ring-chart.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {'class': 'full-width'}
+  host: { class: 'full-width' },
 })
 export class RingChartComponent {
   @Input() public value: number[] = [];
@@ -17,11 +17,10 @@ export class RingChartComponent {
   protected activeItemIndex = NaN;
   protected readonly NaN = NaN;
 
-  public constructor() {
-  }
+  public constructor() {}
 
   public getColor(index: number): string {
-    return `var(--tui-chart-${index})`
+    return `var(--tui-chart-${index})`;
   }
 
   public isItemActive(index: number): boolean {

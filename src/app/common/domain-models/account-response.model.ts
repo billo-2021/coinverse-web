@@ -4,4 +4,4 @@ interface AccountResponse {
   roles: string[];
 }
 
-export {AccountResponse};
+export { AccountResponse };

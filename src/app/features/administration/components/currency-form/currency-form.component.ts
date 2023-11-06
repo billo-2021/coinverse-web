@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormGroup} from "@angular/forms";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-currency-form',
   templateUrl: './currency-form.component.html',
-  styleUrls: ['./currency-form.component.scss']
+  styleUrls: ['./currency-form.component.scss'],
 })
 export class CurrencyFormComponent {
   @Input() public form?: FormGroup;
@@ -13,8 +13,7 @@ export class CurrencyFormComponent {
   @Input() public saveText = '';
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
-  public constructor() {
-  }
+  public constructor() {}
 
   public onSaveClicked(): void {
     this.saveClicked.emit(this.form);

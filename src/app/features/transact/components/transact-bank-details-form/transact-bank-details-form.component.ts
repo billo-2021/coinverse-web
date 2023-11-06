@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-transact-bank-details-form',
   templateUrl: './transact-bank-details-form.component.html',
-  styleUrls: ['./transact-bank-details-form.component.scss']
+  styleUrls: ['./transact-bank-details-form.component.scss'],
 })
 export class TransactBankDetailsFormComponent {
   @Input() public form: FormGroup;
@@ -25,7 +25,7 @@ export class TransactBankDetailsFormComponent {
       name: ['', [Validators.required]],
       cardNumber: ['', [Validators.required]],
       expiryDate: ['', [Validators.required]],
-      securityCode: ['', [Validators.required]]
+      securityCode: ['', [Validators.required]],
     });
   }
 }

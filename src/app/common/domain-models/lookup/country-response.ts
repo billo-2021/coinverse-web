@@ -4,4 +4,4 @@ interface CountryResponse {
   name: string;
 }
 
-export {CountryResponse};
+export { CountryResponse };

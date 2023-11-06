@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {LoadingService} from "../../../../core/services/loading/loading.service";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { LoadingService } from '../../../../core/services/loading/loading.service';
 
 @Component({
   selector: 'app-reset-password-request-result',
   templateUrl: './reset-password-request-result.component.html',
-  styleUrls: ['./reset-password-request-result.component.scss']
+  styleUrls: ['./reset-password-request-result.component.scss'],
 })
 export class ResetPasswordRequestResultComponent {
   @Input() public username: string = '';
@@ -15,8 +15,7 @@ export class ResetPasswordRequestResultComponent {
 
   protected readonly loading$ = this.loadingService.loading$;
 
-  public constructor(private readonly loadingService: LoadingService) {
-  }
+  public constructor(private readonly loadingService: LoadingService) {}
 
   public onResend(): void {
     this.resendClicked.emit();

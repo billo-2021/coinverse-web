@@ -1,4 +1,4 @@
-import {UserProfileCountryResponse} from "./user-profile-country-response";
+import { UserProfileCountryResponse } from './user-profile-country-response';
 
 export interface UserProfileAddressResponse {
   readonly addressLine: string;

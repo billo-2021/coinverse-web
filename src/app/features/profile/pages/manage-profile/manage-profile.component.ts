@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import {ProfileService} from "../../../../common/domain-services";
-import {BehaviorSubject, Observable, switchMap} from "rxjs";
-import {UserProfileResponse} from "../../../../common/domain-models/profile";
+import { Component } from '@angular/core';
+import { ProfileService } from '../../../../common/domain-services';
+import { BehaviorSubject, Observable, switchMap } from 'rxjs';
+import { UserProfileResponse } from '../../../../common/domain-models/profile';
 
 type Tab = {
   text: string;
@@ -14,23 +14,23 @@ enum Tabs {
   AddressDetails,
   Preferences,
   ChangePassword,
-  AccountActivity
+  AccountActivity,
 }
 
 @Component({
   selector: 'app-manage-profile',
   templateUrl: './manage-profile.component.html',
-  styleUrls: ['./manage-profile.component.scss']
+  styleUrls: ['./manage-profile.component.scss'],
 })
 export class ManageProfileComponent {
   protected readonly title = 'Account';
   protected readonly subtitle = 'Set your account settings down below';
   protected readonly tabs: Tab[] = [
-    {text: 'Profile', icon: 'tuiIconEdit2', isDisabled: false},
-    {text: 'Address', icon: 'tuiIconCompass', isDisabled: false},
-    {text: 'Preferences', icon: 'tuiIconBell', isDisabled: false},
-    {text: 'Password', icon: 'tuiIconUserCheck', isDisabled: false},
-    {text: 'Activity', icon: 'tuiIconActivity', isDisabled: false}
+    { text: 'Profile', icon: 'tuiIconEdit2', isDisabled: false },
+    { text: 'Address', icon: 'tuiIconCompass', isDisabled: false },
+    { text: 'Preferences', icon: 'tuiIconBell', isDisabled: false },
+    { text: 'Password', icon: 'tuiIconUserCheck', isDisabled: false },
+    { text: 'Activity', icon: 'tuiIconActivity', isDisabled: false },
   ];
   protected readonly TABS = Tabs;
   protected activeTabIndex = 0;
@@ -38,9 +38,7 @@ export class ManageProfileComponent {
   protected reload$ = new BehaviorSubject<boolean>(true);
 
   public constructor(private readonly profileService: ProfileService) {
-
-    this.userProfileResponse$ = this.reload$.pipe(
-      switchMap(() => profileService.getProfile()));
+    this.userProfileResponse$ = this.reload$.pipe(switchMap(() => profileService.getProfile()));
   }
 
   public onPasswordChanged(): void {

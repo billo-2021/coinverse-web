@@ -1,30 +1,36 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthenticationService} from "../../../../common/domain-services";
-import {finalize} from "rxjs";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  ViewEncapsulation,
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthenticationService } from '../../../../common/domain-services';
+import { finalize } from 'rxjs';
 import {
   RegisterAccountRequest,
   RegisterAddressRequest,
   RegisterPreferenceRequest,
-  RegisterRequest
-} from "../../../../common/domain-models";
+  RegisterRequest,
+} from '../../../../common/domain-models';
 
 type FormStateType = 'error' | 'normal' | 'pass';
 
 type FormState = {
-  state: FormStateType
-  isDisabled: boolean
-}
+  state: FormStateType;
+  isDisabled: boolean;
+};
 
 type FormStep = {
-  title: string
-} & FormState
+  title: string;
+} & FormState;
 
 enum FormSteps {
   PERSONAL_INFORMATION,
   ADDRESS_DETAILS,
   PREFERENCE_DETAILS,
-  ACCOUNT_DETAILS
+  ACCOUNT_DETAILS,
 }
 
 @Component({
@@ -33,7 +39,7 @@ enum FormSteps {
   styleUrls: ['./register.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {'class': 'full-width flex-col justify-center items-center'}
+  host: { class: 'full-width flex-col justify-center items-center' },
 })
 export class RegisterComponent {
   protected readonly personalInformationForm: FormGroup;
@@ -45,9 +51,12 @@ export class RegisterComponent {
   protected currentStepIndex = 0;
   protected formSteps: FormStep[];
 
-  public constructor(private readonly changeDetectorRef: ChangeDetectorRef,
-                     private formBuilder: FormBuilder,
-                     private authenticationService: AuthenticationService
+  public constructor(
+    @Inject(ChangeDetectorRef)
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    @Inject(FormBuilder) private readonly formBuilder: FormBuilder,
+    @Inject(AuthenticationService)
+    private readonly authenticationService: AuthenticationService
   ) {
     this.personalInformationForm = this.getPersonalInformationForm(formBuilder);
     this.addressDetailsForm = this.getAddressForm(formBuilder);
@@ -62,17 +71,37 @@ export class RegisterComponent {
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       emailAddress: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required]]
+      phoneNumber: ['', [Validators.required]],
     });
   }
 
   public getFormSteps(): FormStep[] {
     return [
-      this.getFormStep('Personal Information', this.personalInformationForm, FormSteps.PERSONAL_INFORMATION, this.personalInformationForm),
-      this.getFormStep('Address', this.addressDetailsForm, FormSteps.ADDRESS_DETAILS, this.personalInformationForm),
-      this.getFormStep('Preference', this.preferenceDetailsForm, FormSteps.PREFERENCE_DETAILS, this.addressDetailsForm),
-      this.getFormStep('Account', this.accountDetailsForm, FormSteps.ACCOUNT_DETAILS, this.preferenceDetailsForm)
-    ]
+      this.getFormStep(
+        'Personal Information',
+        this.personalInformationForm,
+        FormSteps.PERSONAL_INFORMATION,
+        this.personalInformationForm
+      ),
+      this.getFormStep(
+        'Address',
+        this.addressDetailsForm,
+        FormSteps.ADDRESS_DETAILS,
+        this.personalInformationForm
+      ),
+      this.getFormStep(
+        'Preference',
+        this.preferenceDetailsForm,
+        FormSteps.PREFERENCE_DETAILS,
+        this.addressDetailsForm
+      ),
+      this.getFormStep(
+        'Account',
+        this.accountDetailsForm,
+        FormSteps.ACCOUNT_DETAILS,
+        this.preferenceDetailsForm
+      ),
+    ];
   }
 
   public updateFormSteps(): void {
@@ -92,7 +121,7 @@ export class RegisterComponent {
       country: [null, [Validators.required]],
       province: ['', [Validators.required]],
       city: ['', [Validators.required]],
-      postalCode: ['', [Validators.required]]
+      postalCode: ['', [Validators.required]],
     });
   }
 
@@ -101,22 +130,21 @@ export class RegisterComponent {
       currency: [null, [Validators.required]],
       notificationMethods: formBuilder.group({
         sms: [false],
-        email: [true]
-      })
+        email: [true],
+      }),
     });
   }
 
   public getAccountForm(formBuilder: FormBuilder): FormGroup {
     return formBuilder.group({
       username: ['', [Validators.required]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
     });
   }
 
   public onStepChanged(nextStepIndex: number) {
     if (nextStepIndex === FormSteps.ACCOUNT_DETAILS) {
-      const emailAddress
-        = this.personalInformationForm.controls['emailAddress'].value;
+      const emailAddress = this.personalInformationForm.controls['emailAddress'].value;
 
       this.accountDetailsForm.controls['username'].setValue(emailAddress);
     }
@@ -133,10 +161,9 @@ export class RegisterComponent {
   public getFormStep(title: string, form: FormGroup, formStep: FormSteps, previousForm: FormGroup): FormStep {
     return {
       title,
-      state: (!form.touched && formStep >= this.currentStepIndex)
-        ? 'normal' : (form.valid ? 'pass' : 'error'),
-      isDisabled: !previousForm.valid || formStep >= this.currentStepIndex
-    }
+      state: !form.touched && formStep >= this.currentStepIndex ? 'normal' : form.valid ? 'pass' : 'error',
+      isDisabled: !previousForm.valid || formStep >= this.currentStepIndex,
+    };
   }
 
   public onRegister(): void {
@@ -149,10 +176,11 @@ export class RegisterComponent {
       phoneNumber: personalInformationFormValue.phoneNumber,
       address: this.getRegisterAddressRequest(),
       preference: this.getRegisterPreferenceRequest(),
-      account: this.getRegisterAccountRequest()
+      account: this.getRegisterAccountRequest(),
     };
 
-    this.authenticationService.register(registerRequest)
+    this.authenticationService
+      .register(registerRequest)
       .pipe(finalize(() => this.resetForms()))
       .subscribe();
   }
@@ -161,21 +189,21 @@ export class RegisterComponent {
     const accountDetailsFormValue = this.accountDetailsForm.value;
     return {
       username: accountDetailsFormValue.username.trim().toLowerCase(),
-      password: accountDetailsFormValue.password
-    }
+      password: accountDetailsFormValue.password,
+    };
   }
 
   public getRegisterPreferenceRequest(): RegisterPreferenceRequest {
     const preferenceDetailsValue = this.preferenceDetailsForm.value;
     const notificationMethodsValue = preferenceDetailsValue.notificationMethods;
 
-    const notificationMethods = [notificationMethodsValue.email,
-      notificationMethodsValue.sms].filter(item => !!item)
-      .map((item, index) => index === 0 ? 'email' : 'sms');
+    const notificationMethods = [notificationMethodsValue.email, notificationMethodsValue.sms]
+      .filter((item) => !!item)
+      .map((item, index) => (index === 0 ? 'email' : 'sms'));
 
     return {
       currencyCode: preferenceDetailsValue.currency.value.code,
-      notificationMethods
+      notificationMethods,
     };
   }
 
@@ -187,7 +215,7 @@ export class RegisterComponent {
       countryCode: addressDetailsFormValue.country.value.code,
       province: addressDetailsFormValue.province,
       city: addressDetailsFormValue.city,
-      postalCode: addressDetailsFormValue.postalCode
+      postalCode: addressDetailsFormValue.postalCode,
     };
   }
 

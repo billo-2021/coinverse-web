@@ -2,17 +2,17 @@
   <tui-ring-chart [(activeItemIndex)]="activeItemIndex" [value]="value">
     <div class="flex-col flex-center justify-space-between">
       <p>Total</p>
-      <p>{{total | number}}</p>
+      <p>{{ total | number }}</p>
     </div>
     <!--    <app-money [singleColor]="true" [value]="total"></app-money>-->
   </tui-ring-chart>
   <div class="legend flex-col">
-    <app-chart-legend-item (hoveredChange)="onHover(index, $event)"
-                           *ngFor="let label of labels; let index = index"
-                           [color]="getColor(index)"
-                           [isActive]="isItemActive(index)"
-                           [text]="label"
-
+    <app-chart-legend-item
+      (hoveredChange)="onHover(index, $event)"
+      *ngFor="let label of labels; let index = index"
+      [color]="getColor(index)"
+      [isActive]="isItemActive(index)"
+      [text]="label"
     >
       <app-money [currency]="extraLabels[index]" [singleColor]="true" [value]="value[index]"></app-money>
     </app-chart-legend-item>

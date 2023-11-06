@@ -1,7 +1,7 @@
-import {WalletDto, WalletResponse} from "../../domain-models/wallet";
-import {ObjectKeysMap} from "../../../core/types";
-import {ObjectUtils} from "../../../core/utils";
-import {cryptoCurrencyDtoToCryptoCurrencyResponse} from "../lookup";
+import { WalletDto, WalletResponse } from '../../domain-models/wallet';
+import { ObjectKeysMap } from '../../../core/types';
+import { ObjectUtils } from '../../../core/utils';
+import { cryptoCurrencyDtoToCryptoCurrencyResponse } from '../lookup';
 
 type WalletKeys = 'id' | 'address' | 'balance';
 type WalletType = Pick<WalletResponse, WalletKeys>;
@@ -11,13 +11,13 @@ function walletDtoToWalletResponse(walletDto: WalletDto): WalletResponse {
   const walletKeys: ObjectKeysMap<WalletDtoType, WalletType> = {
     id: 'id',
     address: 'address',
-    balance: 'balance'
+    balance: 'balance',
   };
 
   return {
     ...ObjectUtils.map(walletKeys, walletDto),
-    currency: cryptoCurrencyDtoToCryptoCurrencyResponse(walletDto.currency)
-  }
+    currency: cryptoCurrencyDtoToCryptoCurrencyResponse(walletDto.currency),
+  };
 }
 
-export {walletDtoToWalletResponse};
+export { walletDtoToWalletResponse };

@@ -1,4 +1,4 @@
-import {CurrencyExchangeRateDto} from "../quote";
+import { CurrencyExchangeRateDto } from '../quote';
 
 export interface PaymentDto {
   id: number;

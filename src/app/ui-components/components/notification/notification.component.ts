@@ -1,4 +1,11 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 
 type StatusType = 'info' | 'error' | 'warning' | 'success';
 
@@ -7,7 +14,7 @@ type StatusType = 'info' | 'error' | 'warning' | 'success';
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationComponent {
   @Input() public status: StatusType = 'info';
@@ -15,8 +22,7 @@ export class NotificationComponent {
 
   @Output() public closeClicked = new EventEmitter<void>();
 
-  public constructor() {
-  }
+  public constructor() {}
 
   public onClose() {
     this.closeClicked.emit();

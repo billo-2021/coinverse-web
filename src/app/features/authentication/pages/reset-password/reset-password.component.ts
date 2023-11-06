@@ -1,26 +1,26 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {finalize, map, switchMap, take} from "rxjs";
-import {AlertService, NavigationService} from "../../../../core/services";
-import {PasswordResetService} from "../../../../common/domain-services";
-import {PasswordTokenUserResponse, ResetPasswordRequest} from "../../../../common/domain-models";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {webRoutesConfig} from "../../../../common/config/web-routes-config";
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { finalize, map, switchMap, take } from 'rxjs';
+import { AlertService, NavigationService } from '../../../../core/services';
+import { PasswordResetService } from '../../../../common/domain-services';
+import { PasswordTokenUserResponse, ResetPasswordRequest } from '../../../../common/domain-models';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { webRoutesConfig } from '../../../../common/config/web-routes-config';
 
 type StateType = 'error' | 'normal' | 'pass';
 
 type StepState = {
-  state: StateType,
-  isDisabled: boolean
-}
+  state: StateType;
+  isDisabled: boolean;
+};
 
 type StepType = {
-  title: string,
-} & StepState
+  title: string;
+} & StepState;
 
 enum Steps {
   PASSWORD_RESET,
-  PASSWORD_RESET_RESULT
+  PASSWORD_RESET_RESULT,
 }
 
 @Component({
@@ -29,11 +29,14 @@ enum Steps {
   styleUrls: ['./reset-password.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {'class': 'full-width flex-col justify-center items-center'}
+  host: { class: 'full-width flex-col justify-center items-center' },
 })
 export class ResetPasswordComponent implements OnInit {
   protected readonly STEPS = Steps;
-  protected readonly DEFAULT_STEP_STATE: StepState = {state: 'normal', isDisabled: true};
+  protected readonly DEFAULT_STEP_STATE: StepState = {
+    state: 'normal',
+    isDisabled: true,
+  };
   protected currentStepIndex = 0;
   protected readonly steps: StepType[];
 
@@ -43,13 +46,15 @@ export class ResetPasswordComponent implements OnInit {
   protected isLoading = false;
   protected passwordTokenUser?: PasswordTokenUserResponse;
 
-  public constructor(private readonly alertService: AlertService,
-                     private readonly activatedRoute: ActivatedRoute,
-                     private readonly navigationService: NavigationService,
-                     private readonly formBuilder: FormBuilder,
-                     private readonly passwordResetService: PasswordResetService) {
+  public constructor(
+    private readonly alertService: AlertService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly navigationService: NavigationService,
+    private readonly formBuilder: FormBuilder,
+    private readonly passwordResetService: PasswordResetService
+  ) {
     this.resetPasswordForm = formBuilder.group({
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
     });
 
     this.steps = this.getSteps();
@@ -58,41 +63,44 @@ export class ResetPasswordComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
 
-    this.activatedRoute.params.pipe(
-      take(1),
-      map((params) => {
-        const passwordToken = params['passwordToken'] as string;
+    this.activatedRoute.params
+      .pipe(
+        take(1),
+        map((params) => {
+          const passwordToken = params['passwordToken'] as string;
 
-        if (!passwordToken) {
-          const message = 'Invalid password link';
-          this.alertService.showErrorMessage(message);
-          throw new Error(message);
-        }
+          if (!passwordToken) {
+            const message = 'Invalid password link';
+            this.alertService.showErrorMessage(message);
+            throw new Error(message);
+          }
 
-        this.passwordLinkToken = passwordToken;
+          this.passwordLinkToken = passwordToken;
 
-        return passwordToken;
-      }),
-      switchMap((passwordToken) =>
-        this.passwordResetService.requestPasswordTokenUser(passwordToken)),
-      finalize(() => {
-        this.isLoading = false
-      })
-    ).subscribe({
-      next: (response) => {
-        this.passwordTokenUser = response;
-      },
-      error: async () => {
-        await this.navigationService.to({path: webRoutesConfig.authentication.login})
-      }
-    });
+          return passwordToken;
+        }),
+        switchMap((passwordToken) => this.passwordResetService.requestPasswordTokenUser(passwordToken)),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          this.passwordTokenUser = response;
+        },
+        error: async () => {
+          await this.navigationService.to({
+            path: webRoutesConfig.authentication.login,
+          });
+        },
+      });
   }
 
   public getSteps(): StepType[] {
     return [
-      {title: 'Set a new Password', ...this.DEFAULT_STEP_STATE},
-      {title: 'Reset password result', ...this.DEFAULT_STEP_STATE}
-    ]
+      { title: 'Set a new Password', ...this.DEFAULT_STEP_STATE },
+      { title: 'Reset password result', ...this.DEFAULT_STEP_STATE },
+    ];
   }
 
   public onStepChanged(nextStep: number): void {
@@ -110,13 +118,14 @@ export class ResetPasswordComponent implements OnInit {
     const resetPasswordRequest: ResetPasswordRequest = {
       username: this.passwordTokenUser.username,
       token: this.passwordLinkToken,
-      password: password
+      password: password,
     };
 
-    this.passwordResetService.resetPassword(resetPasswordRequest)
+    this.passwordResetService
+      .resetPassword(resetPasswordRequest)
       .pipe(finalize(() => this.resetForm()))
       .subscribe((response) => {
-        this.alertService.showMessage(response.message)
+        this.alertService.showMessage(response.message);
         this.currentStepIndex = Steps.PASSWORD_RESET_RESULT;
       });
   }

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
 type Decimal = 'always' | 'never' | 'not-zero';
 type MoneySign = 'always' | 'force-negative' | 'force-positive' | 'negative-only' | 'never';
@@ -8,7 +8,7 @@ type MoneySign = 'always' | 'force-negative' | 'force-positive' | 'negative-only
   templateUrl: './money.component.html',
   styleUrls: ['./money.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MoneyComponent {
   @Input() public colored = false;
@@ -19,6 +19,5 @@ export class MoneyComponent {
   @Input() public singleColor = false;
   @Input() public value: number = 0;
 
-  public constructor() {
-  }
+  public constructor() {}
 }

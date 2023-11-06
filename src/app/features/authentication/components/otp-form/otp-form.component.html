@@ -1,13 +1,14 @@
-<app-form (cancelClicked)="onCancelClicked()"
-          (saveClicked)="onSaveClicked()"
-          *ngIf="form"
-          [cancelText]="cancelText"
-          [formGroup]="form"
-          [isCancelShown]="true"
-          [isValid]="form.valid"
-          [saveText]="saveText"
-          [subtitle]="'An Otp has been sent to: ' + otpRecipient"
-          title="OTP"
+<app-form
+  (cancelClicked)="onCancelClicked()"
+  (saveClicked)="onSaveClicked()"
+  *ngIf="form"
+  [cancelText]="cancelText"
+  [formGroup]="form"
+  [isCancelShown]="true"
+  [isValid]="form.valid"
+  [saveText]="saveText"
+  [subtitle]="'An Otp has been sent to: ' + otpRecipient"
+  title="OTP"
 >
   <app-otp-input #otpInput label="Please enter OTP" name="otp"></app-otp-input>
 </app-form>

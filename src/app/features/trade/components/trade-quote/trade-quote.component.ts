@@ -1,14 +1,17 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {QuoteService} from "../../../../common/domain-services";
-import {tap} from "rxjs";
-import {CurrencyExchangeRateResponse, CurrencyExchangeResponseData} from "../../../../common/domain-models/quote";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { QuoteService } from '../../../../common/domain-services';
+import { tap } from 'rxjs';
+import {
+  CurrencyExchangeRateResponse,
+  CurrencyExchangeResponseData,
+} from '../../../../common/domain-models/quote';
 
 type ActionType = 'buy' | 'sell';
 
 @Component({
   selector: 'app-trade-quote',
   templateUrl: './trade-quote.component.html',
-  styleUrls: ['./trade-quote.component.scss']
+  styleUrls: ['./trade-quote.component.scss'],
 })
 export class TradeQuoteComponent implements OnInit {
   @Input() public currencyPairName: string = '';
@@ -18,15 +21,18 @@ export class TradeQuoteComponent implements OnInit {
   protected exchangeRate: CurrencyExchangeRateResponse | null = null;
   protected exchangeRateData: CurrencyExchangeResponseData | null = null;
 
-  constructor(private readonly quoteService: QuoteService) {
-  }
+  constructor(private readonly quoteService: QuoteService) {}
 
   ngOnInit(): void {
-    this.quoteService.getCurrencyExchangeRateByCurrencyPairName(this.currencyPairName)
-      .pipe(tap(response => {
-        this.exchangeRate = response;
-        this.exchangeRateData = response.data[0];
-      })).subscribe();
+    this.quoteService
+      .getCurrencyExchangeRateByCurrencyPairName(this.currencyPairName)
+      .pipe(
+        tap((response) => {
+          this.exchangeRate = response;
+          this.exchangeRateData = response.data[0];
+        })
+      )
+      .subscribe();
   }
 
   public onAcceptQuote(): void {

@@ -1,66 +1,65 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {authenticationGuard} from "./common/guards/authentication/authentication.guard";
-import {roleGuardGuard} from "./common/guards/role-guard/role-guard.guard";
-import {loggedInGuard} from "./common/guards/logged-in/logged-in.guard";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { adminRoleGuard } from './common/guards/role-guard/role.guard';
+import { GlobalRoutingComponent } from './global-routing/pages/global-routing/global-routing.component';
+import { webRoutesConfig } from './common/config/web-routes-config';
+import { isAuthenticatedGuard, unAuthenticatedGuard } from './common/guards/logged-in/auth.guard';
 
 const routes: Routes = [
   {
-    path: 'authentication',
-    loadChildren: () => import('./features/authentication/authentication.module')
-      .then((module) => module.AuthenticationModule),
-    canActivate: [loggedInGuard]
+    path: webRoutesConfig.authentication.root,
+    loadChildren: () =>
+      import('./features/authentication/authentication.module').then((module) => module.AuthenticationModule),
+    canActivate: [unAuthenticatedGuard],
+    runGuardsAndResolvers: 'always',
   },
   {
-    path: 'dashboard',
-    loadChildren: () => import('./features/dashboard/dashboard.module')
-      .then((module) => module.DashboardModule),
-    canActivate: [authenticationGuard],
+    path: webRoutesConfig.dashboard.root,
+    loadChildren: () =>
+      import('./features/dashboard/dashboard.module').then((module) => module.DashboardModule),
+    canActivate: [() => isAuthenticatedGuard(webRoutesConfig.dashboard.root)],
+    runGuardsAndResolvers: 'always',
   },
   {
-    path: 'wallets',
-    loadChildren: () => import('./features/wallets/wallets.module')
-      .then((module) => module.WalletsModule),
-    canActivate: [authenticationGuard]
+    path: webRoutesConfig.wallets,
+    loadChildren: () => import('./features/wallets/wallets.module').then((module) => module.WalletsModule),
+    canActivate: [() => isAuthenticatedGuard(webRoutesConfig.wallets)],
+    runGuardsAndResolvers: 'always',
   },
   {
-    path: 'transact',
-    loadChildren: () => import('./features/transact/transact.module')
-      .then((module) => module.TransactModule),
-    canActivate: [authenticationGuard]
+    path: webRoutesConfig.transact.root,
+    loadChildren: () => import('./features/transact/transact.module').then((module) => module.TransactModule),
+    canActivate: [() => isAuthenticatedGuard(webRoutesConfig.transact.root)],
+    runGuardsAndResolvers: 'always',
   },
   {
-    path: 'trade',
-    loadChildren: () => import('./features/trade/trade.module')
-      .then((module) => module.TradeModule),
-    canActivate: [authenticationGuard]
+    path: webRoutesConfig.trade.root,
+    loadChildren: () => import('./features/trade/trade.module').then((module) => module.TradeModule),
+    canActivate: [() => isAuthenticatedGuard(webRoutesConfig.trade.root)],
+    runGuardsAndResolvers: 'always',
   },
   {
-    path: 'profile',
-    loadChildren: () => import('./features/profile/profile.module')
-      .then((module) => module.ProfileModule),
-    canActivate: [authenticationGuard],
-    runGuardsAndResolvers: 'always'
+    path: webRoutesConfig.profile.root,
+    loadChildren: () => import('./features/profile/profile.module').then((module) => module.ProfileModule),
+    canActivate: [() => isAuthenticatedGuard(webRoutesConfig.profile.root)],
+    runGuardsAndResolvers: 'always',
   },
   {
-    path: 'administration',
-    loadChildren: () => import('./features/administration/administration.module')
-      .then((module) => module.AdministrationModule),
-    canActivate: [authenticationGuard, roleGuardGuard],
-    runGuardsAndResolvers: 'always'
+    path: webRoutesConfig.administration.root,
+    loadChildren: () =>
+      import('./features/administration/administration.module').then((module) => module.AdministrationModule),
+    canActivate: [() => isAuthenticatedGuard(webRoutesConfig.administration.root), adminRoleGuard],
+    runGuardsAndResolvers: 'always',
   },
   {
-    path: '',
-    loadChildren: () => import('./global-routing/global-routing-routing.module')
-      .then((module) => module.GlobalRoutingRoutingModule),
-    pathMatch: 'full',
+    path: webRoutesConfig.root,
+    component: GlobalRoutingComponent,
   },
-  {path: "**", redirectTo: ''}
+  { path: '**', redirectTo: webRoutesConfig.root },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

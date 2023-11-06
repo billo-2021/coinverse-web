@@ -1,6 +1,6 @@
-import {isNone, None} from './none';
-import {Mapper} from "./mapper";
-import {ValueTypeIs} from "./when";
+import { isNone, None } from './none';
+import { Mapper } from './mapper';
+import { ValueTypeIs } from './when';
 
 type Nothing = Extract<None, null>;
 
@@ -21,9 +21,7 @@ function isNotNull<T>(nullable: Nullable<T>): nullable is NonNullable<T> {
 const nothing = null;
 
 function withDefault<T>(defaultValue: NonNullable<T>, nullable: Nullable<T>): T {
-  return isNotNull(nullable)
-    ? nullable :
-    defaultValue;
+  return isNotNull(nullable) ? nullable : defaultValue;
 }
 
 function map<A, B>(mapper: Mapper, nullable: Nullable<A>): Nullable<B> {
@@ -42,15 +40,13 @@ function andThen<T>(fn: (value: NonNullable<T>) => void, nullable: Nullable<T>):
   fn(nullable as NonNullable<T>);
 }
 
-function getWhenValueTypeIs<T>(nullable: Nullable<unknown>,
-                               valueTypeIs: ValueTypeIs<T>): Nullable<T> {
+function getWhenValueTypeIs<T>(nullable: Nullable<unknown>, valueTypeIs: ValueTypeIs<T>): Nullable<T> {
   if (isNone(nullable) || !valueTypeIs(nullable)) {
     return nothing;
   }
 
   return nullable;
 }
-
 
 const Nullable = {
   of,
@@ -60,7 +56,7 @@ const Nullable = {
   getWhenValueTypeIs,
   nothing,
   withDefault,
-  andThen
-}
+  andThen,
+};
 
-export {Nullable};
+export { Nullable };

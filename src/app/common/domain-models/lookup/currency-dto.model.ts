@@ -1,6 +1,6 @@
-import {CountryDto} from "./country-dto.model";
-import {KeysMap} from "../../../core/types";
-import {ObjectUtils} from "../../../core/utils";
+import { CountryDto } from './country-dto.model';
+import { KeysMap } from '../../../core/types';
+import { ObjectUtils } from '../../../core/utils';
 
 interface CurrencyDto {
   id: number;
@@ -17,11 +17,11 @@ const currencyKeysMap: KeysMap<CurrencyDto, boolean> = {
   code: true,
   name: true,
   symbol: true,
-  countries: true
+  countries: true,
 };
 
 function isCurrencyDto(value: unknown): value is CurrencyDto {
   return ObjectUtils.hasKeys(value, currencyKeysMap) && Array.isArray(value.countries);
 }
 
-export {CurrencyDto, isCurrencyDto};
+export { CurrencyDto, isCurrencyDto };

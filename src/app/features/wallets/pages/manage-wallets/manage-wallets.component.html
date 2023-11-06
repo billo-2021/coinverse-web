@@ -3,49 +3,57 @@
     <app-header [subtitle]="subtitle" [title]="title"></app-header>
   </div>
   <div class="mt-6 col-sm-12 col-md-10 col-lg-10">
-    <tui-loader
-      [overlay]="true"
-      [showLoader]="!!(loading$ | async)">
-      <table
-        *ngIf="wallets$ | async as wallets"
-        [columns]="columns"
-        class="table" tuiTable>
+    <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">
+      <table *ngIf="wallets$ | async as wallets" [columns]="columns" class="table" tuiTable>
         <thead>
-        <tr tuiThGroup>
-          <ng-container *ngFor="let column of columns">
-            <th *tuiHead="column" [sorter]="null" tuiTh>
-              <ng-container *ngIf="column !== 'actions'">{{keys[column]}}</ng-container>
-            </th>
-          </ng-container>
-        </tr>
+          <tr tuiThGroup>
+            <ng-container *ngFor="let column of columns">
+              <th *tuiHead="column" [sorter]="null" tuiTh>
+                <ng-container *ngIf="column !== 'actions'">{{ keys[column] }}</ng-container>
+              </th>
+            </ng-container>
+          </tr>
         </thead>
         <tbody [data]="wallets" class="tbody" tuiTbody>
-        <tr *ngFor="let wallet of wallets" tuiTr>
-          <td *tuiCell="'id'" [class.match]="isMatch(wallet.id)" class="td" tuiTd>
-            {{wallet.id}}
-          </td>
-          <td *tuiCell="'address'" [class.match]="isMatch(wallet.address)" class="td" tuiTd>
-            {{wallet.address}}
-          </td>
-          <td *tuiCell="'code'" [class.match]="isMatch(wallet.currency.code)" tuiTd>
-            {{ wallet.currency.code }}
-          </td>
-          <td *tuiCell="'name'" [class.match]="isMatch(wallet.currency.name)" tuiTd>
-            {{ wallet.currency.name}}
-          </td>
-          <td *tuiCell="'balance'" [class.match]="isMatch(wallet.balance)" class="td" tuiTd>
-            <app-money [currency]="wallet.currency.symbol" [precision]="6" [value]="wallet.balance"></app-money>
-            <!--            {{ wallet.balance + ' '}} {{wallet.currency.symbol}}-->
-          </td>
-          <td *tuiCell="'actions'" tuiTd>
-            <div class="flex-row">
-              <app-button (click)="onDeposit(wallet.currency.code)" appearance="primary" size="s"
-                          text="Deposit"></app-button>
-              <app-button (click)="onWithdraw(wallet.currency.code)" appearance="accent" class="ml-4"
-                          size="s" text="Withdraw"></app-button>
-            </div>
-          </td>
-        </tr>
+          <tr *ngFor="let wallet of wallets" tuiTr>
+            <td *tuiCell="'id'" [class.match]="isMatch(wallet.id)" class="td" tuiTd>
+              {{ wallet.id }}
+            </td>
+            <td *tuiCell="'address'" [class.match]="isMatch(wallet.address)" class="td" tuiTd>
+              {{ wallet.address }}
+            </td>
+            <td *tuiCell="'code'" [class.match]="isMatch(wallet.currency.code)" tuiTd>
+              {{ wallet.currency.code }}
+            </td>
+            <td *tuiCell="'name'" [class.match]="isMatch(wallet.currency.name)" tuiTd>
+              {{ wallet.currency.name }}
+            </td>
+            <td *tuiCell="'balance'" [class.match]="isMatch(wallet.balance)" class="td" tuiTd>
+              <app-money
+                [currency]="wallet.currency.symbol"
+                [precision]="6"
+                [value]="wallet.balance"
+              ></app-money>
+              <!--            {{ wallet.balance + ' '}} {{wallet.currency.symbol}}-->
+            </td>
+            <td *tuiCell="'actions'" tuiTd>
+              <div class="flex-row">
+                <app-button
+                  (click)="onDeposit(wallet.currency.code)"
+                  appearance="primary"
+                  size="s"
+                  text="Deposit"
+                ></app-button>
+                <app-button
+                  (click)="onWithdraw(wallet.currency.code)"
+                  appearance="accent"
+                  class="ml-4"
+                  size="s"
+                  text="Withdraw"
+                ></app-button>
+              </div>
+            </td>
+          </tr>
         </tbody>
         <ng-container *ngTemplateOutlet="tableFoot"></ng-container>
       </table>
@@ -55,17 +63,18 @@
 
 <ng-template #tableFoot>
   <tfoot class="tfoot">
-  <tr class="tr">
-    <td [colSpan]="columns.length" class="td">
-      <ng-container *ngIf="pagination$ | async as pagination">
-        <tui-table-pagination
-          (paginationChange)="onPagination($event)"
-          [page]="pagination.page"
-          [size]="pagination.size"
-          [total]="(total$ | async) || 0"
-          class="tui_space-top-2"></tui-table-pagination>
-      </ng-container>
-    </td>
-  </tr>
+    <tr class="tr">
+      <td [colSpan]="columns.length" class="td">
+        <ng-container *ngIf="pagination$ | async as pagination">
+          <tui-table-pagination
+            (paginationChange)="onPagination($event)"
+            [page]="pagination.page"
+            [size]="pagination.size"
+            [total]="(total$ | async) || 0"
+            class="tui_space-top-2"
+          ></tui-table-pagination>
+        </ng-container>
+      </td>
+    </tr>
   </tfoot>
 </ng-template>

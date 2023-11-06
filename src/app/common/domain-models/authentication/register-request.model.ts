@@ -1,6 +1,6 @@
-import {RegisterAddressRequest} from "./register-address-request.model";
-import {RegisterPreferenceRequest} from "./register-preference-request.model";
-import {RegisterAccountRequest} from "./register-account-request.model";
+import { RegisterAddressRequest } from './register-address-request.model';
+import { RegisterPreferenceRequest } from './register-preference-request.model';
+import { RegisterAccountRequest } from './register-account-request.model';
 
 export interface RegisterRequest {
   firstName: string;
@@ -9,5 +9,5 @@ export interface RegisterRequest {
   phoneNumber: string;
   address: RegisterAddressRequest;
   preference: RegisterPreferenceRequest;
-  account: RegisterAccountRequest
+  account: RegisterAccountRequest;
 }

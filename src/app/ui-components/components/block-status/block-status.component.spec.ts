@@ -8,7 +8,7 @@ describe('BlockStatusComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [BlockStatusComponent]
+      declarations: [BlockStatusComponent],
     });
     fixture = TestBed.createComponent(BlockStatusComponent);
     component = fixture.componentInstance;

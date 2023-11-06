@@ -1,9 +1,9 @@
-import {httpHeadersConfig} from './api-request.config';
-import {environment} from '../../../environments/environment';
+import { httpHeadersConfig } from './api-request.config';
+import { environment } from '../../../environments/environment';
 
 const coreServiceConfig = {
   httpHeadersConfig: httpHeadersConfig,
-  apiUrl: environment.baseApiUrl
+  apiUrl: environment.baseApiUrl,
 } as const;
 
-export {coreServiceConfig}
+export { coreServiceConfig };

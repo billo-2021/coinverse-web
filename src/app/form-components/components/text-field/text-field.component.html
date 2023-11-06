@@ -1,11 +1,13 @@
 <app-item *ngIf="formGroup" [formGroup]="formGroup" class="mb-4">
   <tui-input [formControlName]="name" [tuiTextfieldCleaner]="hasClear" [tuiTextfieldSize]="size">
     {{ label }}
-    <input [autocomplete]="autocomplete" [disabled]="isDisabled || ((loading$ | async) || false)"
-           [placeholder]="placeholder" [type]="type"
-           tuiTextfield/>
+    <input
+      [autocomplete]="autocomplete"
+      [disabled]="isDisabled || (loading$ | async) || false"
+      [placeholder]="placeholder"
+      [type]="type"
+      tuiTextfield
+    />
   </tui-input>
-  <tui-error [error]="[] | tuiFieldError | async"
-             [formControlName]="name">
-  </tui-error>
+  <tui-error [error]="[] | tuiFieldError | async" [formControlName]="name"> </tui-error>
 </app-item>

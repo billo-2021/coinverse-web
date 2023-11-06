@@ -4,10 +4,13 @@
     [currentStepIndex]="currentStepIndex"
     [steps]="formSteps"
   >
-    <app-personal-information-form (saveClicked)="onStepChanged(FORM_STEPS.ADDRESS_DETAILS)"
-                                   *ngIf="currentStepIndex === FORM_STEPS.PERSONAL_INFORMATION"
-                                   [form]="personalInformationForm" class="cont"
-                                   saveText="Next">
+    <app-personal-information-form
+      (saveClicked)="onStepChanged(FORM_STEPS.ADDRESS_DETAILS)"
+      *ngIf="currentStepIndex === FORM_STEPS.PERSONAL_INFORMATION"
+      [form]="personalInformationForm"
+      class="cont"
+      saveText="Next"
+    >
     </app-personal-information-form>
     <app-address-details-form
       (saveClicked)="onStepChanged(FORM_STEPS.PREFERENCE_DETAILS)"
@@ -21,14 +24,16 @@
       (saveClicked)="onStepChanged(FORM_STEPS.ACCOUNT_DETAILS)"
       *ngIf="currentStepIndex === FORM_STEPS.PREFERENCE_DETAILS"
       [form]="preferenceDetailsForm"
-      saveText="Next">
+      saveText="Next"
+    >
     </app-preference-details-form>
 
     <app-account-details-form
       (saveClicked)="onStepChanged(MAX_NUMBER_OF_STEPS)"
       *ngIf="currentStepIndex === FORM_STEPS.ACCOUNT_DETAILS"
       [form]="accountDetailsForm"
-      saveText="Sign up">
+      saveText="Sign up"
+    >
     </app-account-details-form>
   </app-stepper>
 </div>

@@ -3,7 +3,8 @@
   margin-top: 1rem;
 }
 
-th, td {
+th,
+td {
   // display: flex;
 
   // height: 3rem;
@@ -12,7 +13,8 @@ th, td {
   // vertical-align: center;
 }
 
-td, th {
+td,
+th {
   white-space: nowrap;
   border-color: transparent;
   border-right-color: var(--tui-base-04);

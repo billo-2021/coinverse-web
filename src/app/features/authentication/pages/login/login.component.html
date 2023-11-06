@@ -1,11 +1,13 @@
 <div class="col-sm-12 col-md-6 col-lg-4">
-  <app-form (saveClicked)="onLogin()" [formGroup]="loginForm" [isValid]="loginForm.valid"
-            saveText="Sign in" subtitle="Please sign in to continue."
-            title="Welcome back!">
-    <app-text-field label="Username" name="username" placeholder="john@gmail.com"
-                    type="email"
-
-    >
+  <app-form
+    (saveClicked)="onLogin()"
+    [formGroup]="loginForm"
+    [isValid]="loginForm.valid"
+    saveText="Sign in"
+    subtitle="Please sign in to continue."
+    title="Welcome back!"
+  >
+    <app-text-field label="Username" name="username" placeholder="john@gmail.com" type="email">
     </app-text-field>
     <app-password-field label="Password" name="password"></app-password-field>
     <app-item class="mb-6">
@@ -15,7 +17,8 @@
 
   <app-card class="full-width mt-6">
     <app-item class="flex-center text-center">
-      <app-text> New here?
+      <app-text>
+        New here?
         <app-link text="Create an account." to="../register"></app-link>
       </app-text>
     </app-item>

@@ -8,7 +8,7 @@ describe('InputCardGroupedComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [InputCardGroupedComponent]
+      declarations: [InputCardGroupedComponent],
     });
     fixture = TestBed.createComponent(InputCardGroupedComponent);
     component = fixture.componentInstance;

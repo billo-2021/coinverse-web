@@ -1,4 +1,4 @@
-import {CryptoCurrencyResponse} from "../lookup";
+import { CryptoCurrencyResponse } from '../lookup';
 
 export interface WalletResponse {
   readonly id: number;

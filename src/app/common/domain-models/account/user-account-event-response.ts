@@ -1,4 +1,4 @@
-import {AccountEventResponse} from "./account-event-response";
+import { AccountEventResponse } from './account-event-response';
 
 export interface UserAccountEventResponse {
   readonly event: AccountEventResponse;

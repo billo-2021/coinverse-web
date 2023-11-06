@@ -8,7 +8,7 @@ describe('LinkComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LinkComponent]
+      declarations: [LinkComponent],
     });
     fixture = TestBed.createComponent(LinkComponent);
     component = fixture.componentInstance;

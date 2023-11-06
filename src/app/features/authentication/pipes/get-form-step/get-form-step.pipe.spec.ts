@@ -1,4 +1,4 @@
-import {GetFormStepPipe} from './get-form-step.pipe';
+import { GetFormStepPipe } from './get-form-step.pipe';
 
 describe('GetFormStepsPipe', () => {
   it('create an instance', () => {

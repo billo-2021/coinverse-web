@@ -8,7 +8,7 @@ describe('ManageCurrenciesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ManageCurrenciesComponent]
+      declarations: [ManageCurrenciesComponent],
     });
     fixture = TestBed.createComponent(ManageCurrenciesComponent);
     component = fixture.componentInstance;

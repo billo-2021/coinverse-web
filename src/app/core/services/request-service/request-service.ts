@@ -1,3 +1,1 @@
-interface RequestService {
-    
-}
+interface RequestService {}

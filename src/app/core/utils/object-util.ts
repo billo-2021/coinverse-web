@@ -1,21 +1,19 @@
-import {KeysMap, ObjectKeysMap} from "../types";
+import { KeysMap, ObjectKeysMap } from '../types';
 
 function hasKeys<T extends object>(value: unknown, keysMap: KeysMap<T, boolean>): value is T {
-  return typeof value === 'object' && value != null &&
-    (Object.keys(keysMap) as (keyof typeof keysMap)[]).every((key) =>
-      keysMap[key] && key in value);
+  return (
+    typeof value === 'object' &&
+    value != null &&
+    (Object.keys(keysMap) as (keyof typeof keysMap)[]).every((key) => keysMap[key] && key in value)
+  );
 }
 
-function map<A extends object, B extends object>(
-  keysMap: ObjectKeysMap<A, B>,
-  a: A): B {
-
+function map<A extends object, B extends object>(keysMap: ObjectKeysMap<A, B>, a: A): B {
   return (Object.keys(keysMap) as (keyof typeof keysMap)[]).reduce((prev, currValue) => {
-
     return {
       ...prev,
-      [currValue]: a[currValue]
-    }
+      [currValue]: a[currValue],
+    };
   }, {} as B) as B;
 }
 
@@ -26,7 +24,7 @@ function isObject(value: unknown): value is {} {
 const ObjectUtils = {
   map,
   hasKeys,
-  isObject
-}
+  isObject,
+};
 
-export {ObjectUtils, ObjectKeysMap, KeysMap};
+export { ObjectUtils, ObjectKeysMap, KeysMap };

@@ -8,7 +8,7 @@ describe('BalanceHistoryComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [BalanceHistoryComponent]
+      declarations: [BalanceHistoryComponent],
     });
     fixture = TestBed.createComponent(BalanceHistoryComponent);
     component = fixture.componentInstance;

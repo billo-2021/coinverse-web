@@ -8,7 +8,7 @@ describe('OtpFormComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OtpFormComponent]
+      declarations: [OtpFormComponent],
     });
     fixture = TestBed.createComponent(OtpFormComponent);
     component = fixture.componentInstance;

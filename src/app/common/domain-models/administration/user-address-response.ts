@@ -1,4 +1,4 @@
-import {CountryResponse} from "./country-response";
+import { CountryResponse } from './country-response';
 
 export interface UserAddressResponse {
   readonly addressLine: string;

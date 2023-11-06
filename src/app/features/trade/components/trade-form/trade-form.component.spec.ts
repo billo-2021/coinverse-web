@@ -8,7 +8,7 @@ describe('TradeFormComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TradeFormComponent]
+      declarations: [TradeFormComponent],
     });
     fixture = TestBed.createComponent(TradeFormComponent);
     component = fixture.componentInstance;

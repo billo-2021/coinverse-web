@@ -1,5 +1,5 @@
-import {UserAddressDto} from "./user-address-dto";
-import {UserAccountDto} from "./user-account-dto";
+import { UserAddressDto } from './user-address-dto';
+import { UserAccountDto } from './user-account-dto';
 
 export interface UserDto {
   readonly emailAddress: string;

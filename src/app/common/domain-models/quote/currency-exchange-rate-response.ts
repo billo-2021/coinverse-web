@@ -12,4 +12,4 @@ interface CurrencyExchangeRateResponse {
   data: readonly CurrencyExchangeResponseData[];
 }
 
-export {CurrencyExchangeResponseData, CurrencyExchangeRateResponse}
+export { CurrencyExchangeResponseData, CurrencyExchangeRateResponse };

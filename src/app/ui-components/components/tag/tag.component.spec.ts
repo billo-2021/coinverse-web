@@ -8,7 +8,7 @@ describe('TagComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TagComponent]
+      declarations: [TagComponent],
     });
     fixture = TestBed.createComponent(TagComponent);
     component = fixture.componentInstance;

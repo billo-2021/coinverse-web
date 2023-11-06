@@ -1,11 +1,10 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CurrencyTransactionResponse} from "../../../../common/domain-models/trade/currency-transaction-response";
-
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CurrencyTransactionResponse } from '../../../../common/domain-models/trade/currency-transaction-response';
 
 @Component({
   selector: 'app-trade-confirmation',
   templateUrl: './trade-confirmation.component.html',
-  styleUrls: ['./trade-confirmation.component.scss']
+  styleUrls: ['./trade-confirmation.component.scss'],
 })
 export class TradeConfirmationComponent {
   @Input() public quoteId: number | null = null;
@@ -14,8 +13,7 @@ export class TradeConfirmationComponent {
   @Output() public viewTradesClicked = new EventEmitter<void>();
   @Output() public tradeAgainClicked = new EventEmitter<void>();
 
-  public constructor() {
-  }
+  public constructor() {}
 
   public onViewTradesClicked(): void {
     this.viewTradesClicked.emit();

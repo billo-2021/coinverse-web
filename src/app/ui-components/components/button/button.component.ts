@@ -1,7 +1,15 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-export type AppearanceType = 'primary' | 'secondary' | 'secondary-destructive'
-  | 'accent' | 'flat' | 'outline' | 'icon' | 'whiteblock' | 'whiteblock-active';
+export type AppearanceType =
+  | 'primary'
+  | 'secondary'
+  | 'secondary-destructive'
+  | 'accent'
+  | 'flat'
+  | 'outline'
+  | 'icon'
+  | 'whiteblock'
+  | 'whiteblock-active';
 
 export type SizeType = 'xs' | 's' | 'm' | 'l' | 'xl';
 
@@ -12,7 +20,7 @@ type ShapeType = 'square' | 'rounded' | null;
 @Component({
   selector: 'app-button',
   templateUrl: './button.component.html',
-  styleUrls: ['./button.component.scss']
+  styleUrls: ['./button.component.scss'],
 })
 export class ButtonComponent {
   @Input() public type: ButtonType = 'button';
@@ -28,8 +36,7 @@ export class ButtonComponent {
 
   @Output() public click = new EventEmitter<void>();
 
-  public constructor() {
-  }
+  public constructor() {}
 
   public onClick() {
     this.click.emit();

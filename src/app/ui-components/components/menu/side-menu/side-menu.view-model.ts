@@ -1,4 +1,4 @@
-import {MenuItem} from '../../../../common/types';
+import { MenuItem } from '../../../../common/types';
 
 export interface SideMenuViewModel {
   readonly isShown: boolean;

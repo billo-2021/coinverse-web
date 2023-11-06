@@ -1,4 +1,4 @@
-import {InjectionToken} from '@angular/core';
+import { InjectionToken } from '@angular/core';
 
 const httpHeadersConfig = {
   'Content-Type': 'application/json',
@@ -8,5 +8,4 @@ const httpHeadersConfig = {
 const apiBaseUrlToken = new InjectionToken<string>('apiBaseUrl');
 const httpHeadersConfigToken = new InjectionToken<Record<string, string | number>>('httpHeadersConfig');
 
-
-export {httpHeadersConfig, apiBaseUrlToken, httpHeadersConfigToken};
+export { httpHeadersConfig, apiBaseUrlToken, httpHeadersConfigToken };

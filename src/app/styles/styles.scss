@@ -23,8 +23,11 @@ body {
   top: 24px;
 }
 
-.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
-  --mat-mdc-form-field-label-transform: translateY(-30.75px) scale(var(--mat-mdc-form-field-floating-label-scale, 0.75));
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined
+  .mdc-notched-outline--upgraded
+  .mdc-floating-label--float-above {
+  --mat-mdc-form-field-label-transform: translateY(-30.75px)
+    scale(var(--mat-mdc-form-field-floating-label-scale, 0.75));
 }
 
 .mat-mdc-form-field-infix {
@@ -55,11 +58,11 @@ a {
   color: palette.$primary-color;
 }
 
-ul, li {
+ul,
+li {
   list-style: none;
 }
 
 div {
   word-wrap: break-word;
 }
-

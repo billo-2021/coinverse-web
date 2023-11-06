@@ -1,4 +1,4 @@
-import {CurrencyExchangeRateResponse} from "../quote";
+import { CurrencyExchangeRateResponse } from '../quote';
 
 export interface PaymentResponse {
   id: number;

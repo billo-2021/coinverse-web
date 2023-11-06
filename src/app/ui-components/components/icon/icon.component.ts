@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-icon',
@@ -6,11 +6,10 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   styleUrls: ['./icon.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {'class': 'icon-wrapper'}
+  host: { class: 'icon-wrapper' },
 })
 export class IconComponent {
   @Input() public src = '';
 
-  public constructor() {
-  }
+  public constructor() {}
 }

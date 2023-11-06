@@ -1,4 +1,4 @@
-import {AccountEventDto} from "./account-event-dto";
+import { AccountEventDto } from './account-event-dto';
 
 export interface UserAccountEventDto {
   readonly event: AccountEventDto;

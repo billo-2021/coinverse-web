@@ -1,4 +1,4 @@
-import {CountryResponse} from "./country-response";
+import { CountryResponse } from './country-response';
 
 interface CurrencyResponse {
   id: number;
@@ -9,4 +9,4 @@ interface CurrencyResponse {
   countries: CountryResponse[];
 }
 
-export {CurrencyResponse};
+export { CurrencyResponse };

@@ -5,25 +5,31 @@
   </div>
   <div class="flex-row justify-space-between">
     <p class="col-8 row-item-title">Id</p>
-    <p class="col-3 ml-4 row-item-description">{{paymentResponse.id}}</p>
+    <p class="col-3 ml-4 row-item-description">{{ paymentResponse.id }}</p>
   </div>
   <div class="flex-row justify-space-between">
     <p class="col-8 row-item-title">Amount</p>
     <p class="col-3 ml-4 row-item-description">
-      <app-money [currency]="paymentResponse.currency" [precision]="6" [value]="paymentResponse.amount"></app-money>
+      <app-money
+        [currency]="paymentResponse.currency"
+        [precision]="6"
+        [value]="paymentResponse.amount"
+      ></app-money>
     </p>
   </div>
   <div class="flex-row justify-space-between">
     <p class="col-8 row-item-title">Method</p>
-    <p class="col-3 ml-4 row-item-description">{{paymentResponse.method}}</p>
+    <p class="col-3 ml-4 row-item-description">{{ paymentResponse.method }}</p>
   </div>
   <div class="flex-row justify-space-between">
     <p class="col-8 row-item-title">Status</p>
-    <p class="col-3 ml-4 row-item-description">{{paymentResponse.status}}</p>
+    <p class="col-3 ml-4 row-item-description">{{ paymentResponse.status }}</p>
   </div>
   <div class="flex-row justify-space-between">
     <p class="col-8 row-item-title">Created At</p>
-    <p class="col-3 ml-4 row-item-description">{{paymentResponse.createdAt | date: 'dd/MM/yy HH:mm'}}</p>
+    <p class="col-3 ml-4 row-item-description">
+      {{ paymentResponse.createdAt | date: 'dd/MM/yy HH:mm' }}
+    </p>
   </div>
   <div class="flex-row justify-space-between">
     <app-button (click)="onViewPayments()" appearance="accent" class="grow" text="View Payments"></app-button>

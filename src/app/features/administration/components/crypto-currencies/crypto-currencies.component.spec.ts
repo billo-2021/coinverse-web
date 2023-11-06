@@ -8,7 +8,7 @@ describe('CryptoCurrenciesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CryptoCurrenciesComponent]
+      declarations: [CryptoCurrenciesComponent],
     });
     fixture = TestBed.createComponent(CryptoCurrenciesComponent);
     component = fixture.componentInstance;

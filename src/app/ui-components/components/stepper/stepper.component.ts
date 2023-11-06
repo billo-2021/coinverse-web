@@ -6,16 +6,16 @@ import {
   Input,
   Output,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {TuiBreakpointService} from "@taiga-ui/core";
-import {TuiStepperComponent} from "@taiga-ui/kit";
+import { TuiBreakpointService } from '@taiga-ui/core';
+import { TuiStepperComponent } from '@taiga-ui/kit';
 
 type StepType = {
-  title: string,
-  state: 'error' | 'normal' | 'pass',
-  isDisabled: boolean
-}
+  title: string;
+  state: 'error' | 'normal' | 'pass';
+  isDisabled: boolean;
+};
 
 @Component({
   selector: 'app-stepper',
@@ -23,7 +23,7 @@ type StepType = {
   styleUrls: ['./stepper.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {'class': 'stepper'}
+  host: { class: 'stepper' },
 })
 export class StepperComponent {
   @Input() currentStepIndex = 0;
@@ -33,8 +33,10 @@ export class StepperComponent {
 
   @ViewChild('tuiStepper') private tuiStepper?: TuiStepperComponent;
 
-  public constructor(@Inject(TuiBreakpointService) protected readonly breakpoint$: TuiBreakpointService) {
-  }
+  public constructor(
+    @Inject(TuiBreakpointService)
+    protected readonly breakpoint$: TuiBreakpointService
+  ) {}
 
   public onCurrentStepChanged(currentStep: number) {
     this.currentStepIndexChange.emit(currentStep);

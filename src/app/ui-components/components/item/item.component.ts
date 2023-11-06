@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-item',
@@ -6,9 +6,8 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   styleUrls: ['./item.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {'class': 'row item'}
+  host: { class: 'row item' },
 })
 export class ItemComponent {
-  public constructor() {
-  }
+  public constructor() {}
 }

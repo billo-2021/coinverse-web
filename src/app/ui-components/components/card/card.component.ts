@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-card',
@@ -6,13 +6,12 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   styleUrls: ['./card.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {'class': 'block'}
+  host: { class: 'block' },
 })
 export class CardComponent {
   public class: string | null = null;
   @Input() title?: string;
   @Input() subtitle?: string;
 
-  public constructor() {
-  }
+  public constructor() {}
 }

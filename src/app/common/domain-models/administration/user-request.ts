@@ -1,6 +1,6 @@
-import {UserAddressRequest} from "./user-address-request";
-import {UserPreferenceRequest} from "./user-preference-request";
-import {UserAccountRequest} from "./user-account-request";
+import { UserAddressRequest } from './user-address-request';
+import { UserPreferenceRequest } from './user-preference-request';
+import { UserAccountRequest } from './user-account-request';
 
 export interface UserRequest {
   firstName: string;

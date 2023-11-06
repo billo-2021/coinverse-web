@@ -1,3 +1,3 @@
-import {menuItems} from './menu-items.constant';
+import { menuItems } from './menu-items.constant';
 
-export {menuItems};
+export { menuItems };

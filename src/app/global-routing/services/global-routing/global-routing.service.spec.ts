@@ -1,6 +1,6 @@
-import {TestBed} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import {GlobalRoutingService} from './global-routing.service';
+import { GlobalRoutingService } from './global-routing.service';
 
 describe('GlobalRoutingService', () => {
   let service: GlobalRoutingService;

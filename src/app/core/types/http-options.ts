@@ -1,4 +1,4 @@
-import {HttpHeaders, HttpParams} from "@angular/common/http";
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 
 interface HttpOptions {
   headers?: HttpHeaders;
@@ -9,8 +9,7 @@ class HttpOptionsBuilder {
   private headers?: HttpHeaders;
   private params?: HttpParams;
 
-  public constructor() {
-  }
+  public constructor() {}
 
   public addHeaders(headers: HttpHeaders): HttpOptionsBuilder {
     this.headers = headers;
@@ -25,9 +24,9 @@ class HttpOptionsBuilder {
   public build(): HttpOptions {
     return {
       headers: this.headers,
-      params: this.params
-    }
+      params: this.params,
+    };
   }
 }
 
-export {HttpOptions, HttpOptionsBuilder};
+export { HttpOptions, HttpOptionsBuilder };

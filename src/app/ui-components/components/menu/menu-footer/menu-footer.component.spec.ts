@@ -8,7 +8,7 @@ describe('MenuFooterComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [MenuFooterComponent]
+      declarations: [MenuFooterComponent],
     });
     fixture = TestBed.createComponent(MenuFooterComponent);
     component = fixture.componentInstance;

@@ -8,7 +8,7 @@ describe('TablePaginationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TablePaginationComponent]
+      declarations: [TablePaginationComponent],
     });
     fixture = TestBed.createComponent(TablePaginationComponent);
     component = fixture.componentInstance;

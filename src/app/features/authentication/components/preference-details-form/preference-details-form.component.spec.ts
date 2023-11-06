@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {PreferenceDetailsFormComponent} from './preference-details-form.component';
+import { PreferenceDetailsFormComponent } from './preference-details-form.component';
 
 describe('PreferenceDetailsComponent', () => {
   let component: PreferenceDetailsFormComponent;
@@ -8,7 +8,7 @@ describe('PreferenceDetailsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PreferenceDetailsFormComponent]
+      declarations: [PreferenceDetailsFormComponent],
     });
     fixture = TestBed.createComponent(PreferenceDetailsFormComponent);
     component = fixture.componentInstance;

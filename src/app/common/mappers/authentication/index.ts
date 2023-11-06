@@ -1,1 +1,1 @@
-export {loginDtoToLoginResponse} from './authentication.mapper';
+export { loginDtoToLoginResponse } from './authentication.mapper';

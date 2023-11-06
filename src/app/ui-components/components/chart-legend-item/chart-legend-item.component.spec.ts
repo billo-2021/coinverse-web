@@ -8,7 +8,7 @@ describe('ChartLegendItemComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ChartLegendItemComponent]
+      declarations: [ChartLegendItemComponent],
     });
     fixture = TestBed.createComponent(ChartLegendItemComponent);
     component = fixture.componentInstance;

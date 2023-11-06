@@ -1,5 +1,5 @@
 const pagesConfig = {
-  dashboard: {path: '', title: 'Dashboard'}
+  dashboard: { path: '', title: 'Dashboard' },
 } as const;
 
-export {pagesConfig};
+export { pagesConfig };

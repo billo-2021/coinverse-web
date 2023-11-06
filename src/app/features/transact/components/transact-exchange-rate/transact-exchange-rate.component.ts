@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 type TransactionType = 'buy' | 'sell';
 
 @Component({
   selector: 'app-transact-exchange-rate',
   templateUrl: './transact-exchange-rate.component.html',
-  styleUrls: ['./transact-exchange-rate.component.scss']
+  styleUrls: ['./transact-exchange-rate.component.scss'],
 })
 export class TransactExchangeRateComponent {
   @Input() public currencyPairName: string | null = null;
@@ -14,11 +14,9 @@ export class TransactExchangeRateComponent {
   @Output() public acceptRateClicked = new EventEmitter<void>();
   @Output() public declineRateClicked = new EventEmitter<void>();
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   public onAcceptRate(): void {
     this.acceptRateClicked.emit();

@@ -1,3 +1,3 @@
-import {currencyExchangeRateDtoToCurrencyExchangeRateResponse} from './quote.mapper';
+import { currencyExchangeRateDtoToCurrencyExchangeRateResponse } from './quote.mapper';
 
-export {currencyExchangeRateDtoToCurrencyExchangeRateResponse};
+export { currencyExchangeRateDtoToCurrencyExchangeRateResponse };

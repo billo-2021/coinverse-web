@@ -1,11 +1,11 @@
-import {Inject, Injectable} from '@angular/core';
-import {apiRoutesConfig} from "../../config";
-import {HttpCrudService} from "../../../core/services";
-import {Observable} from "rxjs";
-import {PageResponse} from "../../../core/types/crud";
-import {PaymentResponse} from "../../domain-models/transact/payment-response";
-import {PaymentDto} from "../../domain-models/transact/payment-dto";
-import {PaymentRequest} from "../../domain-models/transact/payment-request";
+import { Inject, Injectable } from '@angular/core';
+import { apiRoutesConfig } from '../../config';
+import { HttpCrudService } from '../../../core/services';
+import { Observable } from 'rxjs';
+import { PageResponse } from '../../../core/types/crud';
+import { PaymentResponse } from '../../domain-models/transact/payment-response';
+import { PaymentDto } from '../../domain-models/transact/payment-dto';
+import { PaymentRequest } from '../../domain-models/transact/payment-request';
 
 interface PageRequest {
   page: number;
@@ -13,7 +13,7 @@ interface PageRequest {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TransactService {
   public readonly BASE_PATH = apiRoutesConfig.transact.root;
@@ -21,11 +21,12 @@ export class TransactService {
   public readonly DEPOSIT_PATH = apiRoutesConfig.transact.deposit;
   public readonly WITHDRAW_PATH = apiRoutesConfig.transact.withdraw;
 
-  constructor(@Inject(HttpCrudService) private httpService: HttpCrudService) {
-  }
+  constructor(@Inject(HttpCrudService) private httpService: HttpCrudService) {}
 
   public getTransactions(pageRequest: PageRequest): Observable<PageResponse<PaymentResponse>> {
-    const url = `${this.getFullPath(this.TRANSACTIONS_PATH)}?pageNumber=${pageRequest.page}&pageSize=${pageRequest.size}`;
+    const url = `${this.getFullPath(this.TRANSACTIONS_PATH)}?pageNumber=${pageRequest.page}&pageSize=${
+      pageRequest.size
+    }`;
     return this.httpService.find<PageResponse<PaymentDto>>(url);
   }
 

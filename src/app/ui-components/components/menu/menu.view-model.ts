@@ -1,4 +1,4 @@
-import {UserPrincipal} from "../../../common/domain-models";
+import { UserPrincipal } from '../../../common/domain-models';
 
 export interface MenuViewModel {
   readonly isMobile: boolean;

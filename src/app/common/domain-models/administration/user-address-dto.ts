@@ -1,4 +1,4 @@
-import {CountryDto} from "./country-dto";
+import { CountryDto } from './country-dto';
 
 export interface UserAddressDto {
   readonly addressLine: string;

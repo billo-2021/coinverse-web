@@ -1,17 +1,23 @@
 <div *ngIf="formGroup" [formGroup]="formGroup" class="mb-4" tuiGroup>
-  <tui-input-card [autocompleteEnabled]="autocompleteEnabled"
-                  [formControlName]="cardNumberName" [tuiTextfieldSize]="size">
-    {{cardNumberLabel}}
-  </tui-input-card>
-  <tui-input-expire [autocompleteEnabled]="autocompleteEnabled"
-                    [formControlName]="expireName"
-                    [tuiTextfieldSize]="size"
+  <tui-input-card
+    [autocompleteEnabled]="autocompleteEnabled"
+    [formControlName]="cardNumberName"
+    [tuiTextfieldSize]="size"
   >
-    {{expireLabel}}
+    {{ cardNumberLabel }}
+  </tui-input-card>
+  <tui-input-expire
+    [autocompleteEnabled]="autocompleteEnabled"
+    [formControlName]="expireName"
+    [tuiTextfieldSize]="size"
+  >
+    {{ expireLabel }}
   </tui-input-expire>
-  <tui-input-cvc [autocompleteEnabled]="autocompleteEnabled"
-                 [formControlName]="cvcName"
-                 [tuiTextfieldSize]="size">
-    {{cvcLabel}}
+  <tui-input-cvc
+    [autocompleteEnabled]="autocompleteEnabled"
+    [formControlName]="cvcName"
+    [tuiTextfieldSize]="size"
+  >
+    {{ cvcLabel }}
   </tui-input-cvc>
 </div>

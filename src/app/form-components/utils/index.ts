@@ -1,3 +1,3 @@
-import {ListOptionUtils} from "./list-option-util";
+import { ListOptionUtils } from './list-option-util';
 
-export {ListOptionUtils};
+export { ListOptionUtils };

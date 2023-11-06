@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-logo',
@@ -6,9 +6,8 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   styleUrls: ['./logo.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {'class': 'logo-icon-container'}
+  host: { class: 'logo-icon-container' },
 })
 export class LogoComponent {
-  public constructor() {
-  }
+  public constructor() {}
 }

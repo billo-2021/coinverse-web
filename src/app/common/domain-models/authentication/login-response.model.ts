@@ -1,4 +1,4 @@
-import {UserResponse} from "../user-response.model";
+import { UserResponse } from '../user-response.model';
 
 export interface LoginResponse {
   accessToken: string;

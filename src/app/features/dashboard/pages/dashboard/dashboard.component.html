@@ -2,8 +2,12 @@
   <div class="flex-row justify-center">
     <div class="col-sm-12 col-md-7 col-lg-6">
       <app-card subtitle="Balance in ZAR" title="Estimated Balance">
-        <app-ring-chart [extraLabels]="(currencyCodes$ | async) ?? []" [labels]="(labels$ | async) ?? []"
-                        [total]="(total$ | async) ?? 0" [value]="(values$ | async) ?? []"></app-ring-chart>
+        <app-ring-chart
+          [extraLabels]="(currencyCodes$ | async) ?? []"
+          [labels]="(labels$ | async) ?? []"
+          [total]="(total$ | async) ?? 0"
+          [value]="(values$ | async) ?? []"
+        ></app-ring-chart>
       </app-card>
     </div>
     <div class="ml-5 grow">

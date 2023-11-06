@@ -1,4 +1,4 @@
-import {WalletDto} from "../wallet";
+import { WalletDto } from '../wallet';
 
 export interface CurrencyTransactionDto {
   readonly id: number;

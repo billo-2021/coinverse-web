@@ -1,13 +1,23 @@
-import {Component, Inject} from '@angular/core';
-import {BaseComponent} from "../../../../common/components";
-import {BehaviorSubject, combineLatest, filter, map, Observable, shareReplay, startWith, switchMap, tap} from "rxjs";
-import {TUI_DEFAULT_MATCHER, tuiIsPresent} from "@taiga-ui/cdk";
-import {Router} from "@angular/router";
-import {webRoutesConfig} from "../../../../common/config/web-routes-config";
-import {UserResponse} from "../../../../common/domain-models/administration";
-import {AdministrationService} from "../../../../common/domain-services";
-import {LoadingService} from "../../../../core/services/loading/loading.service";
-import {AlertService} from "../../../../core/services";
+import { Component, Inject } from '@angular/core';
+import { BaseComponent } from '../../../../common/components';
+import {
+  BehaviorSubject,
+  combineLatest,
+  filter,
+  map,
+  Observable,
+  shareReplay,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
+import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
+import { Router } from '@angular/router';
+import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+import { UserResponse } from '../../../../common/domain-models/administration';
+import { AdministrationService } from '../../../../common/domain-services';
+import { LoadingService } from '../../../../core/services/loading/loading.service';
+import { AlertService } from '../../../../core/services';
 
 interface Pagination {
   page: number;
@@ -15,7 +25,14 @@ interface Pagination {
 }
 
 type Key =
-  'emailAddress' | 'firstName' | 'lastName' | 'username' | 'roles' | 'status' | 'createdAt' | 'actions';
+  | 'emailAddress'
+  | 'firstName'
+  | 'lastName'
+  | 'username'
+  | 'roles'
+  | 'status'
+  | 'createdAt'
+  | 'actions';
 
 const KEYS: Record<Key, string> = {
   emailAddress: 'Email Address',
@@ -25,13 +42,13 @@ const KEYS: Record<Key, string> = {
   roles: 'Roles',
   status: 'Status',
   createdAt: 'Created At',
-  actions: 'Actions'
+  actions: 'Actions',
 };
 
 @Component({
   selector: 'app-manage-users',
   templateUrl: './manage-users.component.html',
-  styleUrls: ['./manage-users.component.scss']
+  styleUrls: ['./manage-users.component.scss'],
 })
 export class ManageUsersComponent extends BaseComponent {
   protected readonly manageUsersUrl = webRoutesConfig.administration.manageUsers;
@@ -40,37 +57,51 @@ export class ManageUsersComponent extends BaseComponent {
   protected readonly title = 'Manage Users';
 
   protected readonly subtitle = 'Manage users here.';
-  protected readonly columns: Key[] = ['emailAddress', 'firstName', 'lastName',
-    'username', 'roles', 'status', 'createdAt', 'actions'];
+  protected readonly columns: Key[] = [
+    'emailAddress',
+    'firstName',
+    'lastName',
+    'username',
+    'roles',
+    'status',
+    'createdAt',
+    'actions',
+  ];
   protected readonly keys = KEYS;
 
   protected search = '';
 
   protected readonly reload$ = new BehaviorSubject(true);
-  protected readonly pagination$ = new BehaviorSubject<Pagination>({page: 0, size: 5});
-  protected readonly request$ = combineLatest([this.reload$, this.pagination$])
-    .pipe(switchMap(query =>
-        this.administrationService.getUsers(query[1])
-          .pipe(startWith(null))),
-      shareReplay(1));
+  protected readonly pagination$ = new BehaviorSubject<Pagination>({
+    page: 0,
+    size: 5,
+  });
+  protected readonly request$ = combineLatest([this.reload$, this.pagination$]).pipe(
+    switchMap((query) => this.administrationService.getUsers(query[1]).pipe(startWith(null))),
+    shareReplay(1)
+  );
 
   protected readonly users$: Observable<UserResponse[]> = this.request$.pipe(
     filter(tuiIsPresent),
-    map(userPage => userPage.data),
+    map((userPage) => userPage.data),
     startWith([])
   );
 
-  protected total$: Observable<number> = this.request$
-    .pipe(filter(tuiIsPresent),
-      map(paymentPage => paymentPage.total),
-      startWith(1));
+  protected total$: Observable<number> = this.request$.pipe(
+    filter(tuiIsPresent),
+    map((paymentPage) => paymentPage.total),
+    startWith(1)
+  );
 
   protected readonly loading$ = this.loadingService.loading$;
 
-  public constructor(@Inject(Router) private readonly router: Router,
-                     @Inject(LoadingService) private readonly loadingService: LoadingService,
-                     @Inject(AlertService) private readonly alertService: AlertService,
-                     @Inject(AdministrationService) private administrationService: AdministrationService) {
+  public constructor(
+    @Inject(Router) private readonly router: Router,
+    @Inject(LoadingService) private readonly loadingService: LoadingService,
+    @Inject(AlertService) private readonly alertService: AlertService,
+    @Inject(AdministrationService)
+    private administrationService: AdministrationService
+  ) {
     super();
   }
 
@@ -92,18 +123,26 @@ export class ManageUsersComponent extends BaseComponent {
   }
 
   public onDisableAccount(username: string): void {
-    this.administrationService.disableAccount(username)
-      .pipe(tap(response => {
-        this.alertService.showMessage(response.message);
-        this.reload$.next(true);
-      })).subscribe();
+    this.administrationService
+      .disableAccount(username)
+      .pipe(
+        tap((response) => {
+          this.alertService.showMessage(response.message);
+          this.reload$.next(true);
+        })
+      )
+      .subscribe();
   }
 
   public onEnableAccount(username: string): void {
-    this.administrationService.enableAccount(username)
-      .pipe(tap(response => {
-        this.alertService.showMessage(response.message);
-        this.reload$.next(true);
-      })).subscribe();
+    this.administrationService
+      .enableAccount(username)
+      .pipe(
+        tap((response) => {
+          this.alertService.showMessage(response.message);
+          this.reload$.next(true);
+        })
+      )
+      .subscribe();
   }
 }

@@ -1,25 +1,46 @@
 <div class="flex-col">
-  <app-tabs (activeItemIndexChange)="onActiveTabIndexChange($event)" [activeItemIndex]="activeTabIndex"
-            [tabs]="tabs"></app-tabs>
+  <app-tabs
+    (activeItemIndexChange)="onActiveTabIndexChange($event)"
+    [activeItemIndex]="activeTabIndex"
+    [tabs]="tabs"
+  ></app-tabs>
   <form [formGroup]="form" class="flex-col mt-10">
-    <app-combo-box [options]="(paymentMethodOptions$ | async) ?? []" label="Payment Method"
-                   name="paymentMethod"></app-combo-box>
-    <app-combo-box [label]="walletLabel[activeTabIndex]" [options]="(walletOptions$ | async) ?? []"
-                   name="wallet"></app-combo-box>
+    <app-combo-box
+      [options]="(paymentMethodOptions$ | async) ?? []"
+      label="Payment Method"
+      name="paymentMethod"
+    ></app-combo-box>
+    <app-combo-box
+      [label]="walletLabel[activeTabIndex]"
+      [options]="(walletOptions$ | async) ?? []"
+      name="wallet"
+    ></app-combo-box>
     <div *ngIf="selectedWallet$ | async as selectedWallet" class="flex-col justify-end border mb-6">
       <div class="flex-row justify-space-between items-center p-4">
         <p class="col-8 row-item-title">Available Balance</p>
         <p class="col-3 ml-4 row-item-description">
-          <app-money [currency]="selectedWallet.currency.symbol" [precision]="6"
-                     [value]="selectedWallet.balance"></app-money>
+          <app-money
+            [currency]="selectedWallet.currency.symbol"
+            [precision]="6"
+            [value]="selectedWallet.balance"
+          ></app-money>
+        </p>
       </div>
     </div>
     <div class="flex-row justify-space-between mb-4">
-      <app-combo-box [options]="(currencyOptions$ | async) ?? []" class="col-4" label="Currency"
-                     name="amountCurrency"></app-combo-box>
+      <app-combo-box
+        [options]="(currencyOptions$ | async) ?? []"
+        class="col-4"
+        label="Currency"
+        name="amountCurrency"
+      ></app-combo-box>
       <app-input-number class="col-6" label="Amount" name="amount" size="l"></app-input-number>
     </div>
-    <app-button (click)="onAction()" [isDisabled]="!form.valid" [text]="action[activeTabIndex]"
-                class="mt-4"></app-button>
+    <app-button
+      (click)="onAction()"
+      [isDisabled]="!form.valid"
+      [text]="action[activeTabIndex]"
+      class="mt-4"
+    ></app-button>
   </form>
 </div>

@@ -1,5 +1,5 @@
-import {isNone, None} from './none';
-import {Nullable} from "./nullable";
+import { isNone, None } from './none';
+import { Nullable } from './nullable';
 
 type Nothing = Extract<None, null | undefined>;
 
@@ -32,7 +32,7 @@ const Maybe = {
   isNothing,
   isSome,
   nothing,
-  andThen
-}
+  andThen,
+};
 
-export {Maybe};
+export { Maybe };

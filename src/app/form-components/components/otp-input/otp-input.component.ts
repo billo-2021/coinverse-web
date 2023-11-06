@@ -1,15 +1,23 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, Optional, ViewChild, ViewEncapsulation} from '@angular/core';
-import {FormControl, FormGroup, FormGroupDirective} from "@angular/forms";
-import {NgOtpInputComponent} from "ng-otp-input";
-import {LoadingService} from "../../../core/services/loading/loading.service";
-import {tap} from "rxjs";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  Optional,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
+import { NgOtpInputComponent } from 'ng-otp-input';
+import { LoadingService } from '../../../core/services/loading/loading.service';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-otp-input',
   templateUrl: './otp-input.component.html',
   styleUrls: ['./otp-input.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OtpInputComponent implements OnInit {
   @Input() public name = '';
@@ -22,9 +30,10 @@ export class OtpInputComponent implements OnInit {
   protected formGroup?: FormGroup;
   protected formControl?: FormControl;
 
-  public constructor(private loadingService: LoadingService,
-                     @Optional() private formGroupDirective: FormGroupDirective) {
-
+  public constructor(
+    private loadingService: LoadingService,
+    @Optional() private formGroupDirective: FormGroupDirective
+  ) {
     this.loadingService.loading$.pipe(
       tap((loading) => {
         if (!this.formControl) {

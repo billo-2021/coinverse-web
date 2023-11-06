@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {GlobalRoutingComponent} from './global-routing.component';
+import { GlobalRoutingComponent } from './global-routing.component';
 
 describe('GlobalComponent', () => {
   let component: GlobalRoutingComponent;
@@ -8,7 +8,7 @@ describe('GlobalComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GlobalRoutingComponent]
+      declarations: [GlobalRoutingComponent],
     });
     fixture = TestBed.createComponent(GlobalRoutingComponent);
     component = fixture.componentInstance;

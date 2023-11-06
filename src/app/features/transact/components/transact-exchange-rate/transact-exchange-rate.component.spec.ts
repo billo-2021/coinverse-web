@@ -8,7 +8,7 @@ describe('TransactExchangeRateComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TransactExchangeRateComponent]
+      declarations: [TransactExchangeRateComponent],
     });
     fixture = TestBed.createComponent(TransactExchangeRateComponent);
     component = fixture.componentInstance;

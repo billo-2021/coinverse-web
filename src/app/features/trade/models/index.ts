@@ -1,1 +1,1 @@
-export {TradeModel} from './trade.model';
+export { TradeModel } from './trade.model';

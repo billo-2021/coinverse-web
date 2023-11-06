@@ -1,3 +1,3 @@
-import {BaseComponent} from './base/base.component';
+import { BaseComponent } from './base/base.component';
 
-export {BaseComponent};
+export { BaseComponent };

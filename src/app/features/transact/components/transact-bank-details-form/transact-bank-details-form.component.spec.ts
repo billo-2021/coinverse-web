@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {TransactBankDetailsFormComponent} from './transact-bank-details-form.component';
+import { TransactBankDetailsFormComponent } from './transact-bank-details-form.component';
 
 describe('TransactBankDetailsComponent', () => {
   let component: TransactBankDetailsFormComponent;
@@ -8,7 +8,7 @@ describe('TransactBankDetailsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TransactBankDetailsFormComponent]
+      declarations: [TransactBankDetailsFormComponent],
     });
     fixture = TestBed.createComponent(TransactBankDetailsFormComponent);
     component = fixture.componentInstance;

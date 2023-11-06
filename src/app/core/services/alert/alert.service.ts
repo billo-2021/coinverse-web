@@ -1,26 +1,27 @@
-import {Inject, Injectable} from '@angular/core';
-import {TuiAlertService, TuiNotification} from "@taiga-ui/core";
+import { Inject, Injectable } from '@angular/core';
+import { TuiAlertService, TuiNotification } from '@taiga-ui/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlertService {
-  constructor(@Inject(TuiAlertService) private readonly alerts: TuiAlertService) {
-  }
+  constructor(@Inject(TuiAlertService) private readonly alerts: TuiAlertService) {}
 
   public showErrorMessage(message: string, heading?: string): void {
-    this.alerts.open(this.getSimpleMessageTemplate(message),
-      {
+    this.alerts
+      .open(this.getSimpleMessageTemplate(message), {
         label: heading || 'Error',
-        status: TuiNotification.Error
-      }
-    ).subscribe();
+        status: TuiNotification.Error,
+      })
+      .subscribe();
   }
 
   public showMessage(message: string, heading?: string): void {
-    this.alerts.open(this.getSimpleMessageTemplate(message),
-      {label: heading || 'Message'}
-    ).subscribe();
+    this.alerts
+      .open(this.getSimpleMessageTemplate(message), {
+        label: heading || 'Message',
+      })
+      .subscribe();
   }
 
   public getSimpleMessageTemplate(message: string): string {

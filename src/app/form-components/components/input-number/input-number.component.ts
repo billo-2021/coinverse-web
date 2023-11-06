@@ -1,14 +1,14 @@
-import {Component, Input, Optional} from '@angular/core';
-import {FormGroup, FormGroupDirective} from "@angular/forms";
-import {LoadingService} from "../../../core/services/loading/loading.service";
-import {SizeType} from "../text-field/text-field.component";
+import { Component, Input, Optional } from '@angular/core';
+import { FormGroup, FormGroupDirective } from '@angular/forms';
+import { LoadingService } from '../../../core/services/loading/loading.service';
+import { SizeType } from '../text-field/text-field.component';
 
 type DecimalType = 'not-zero' | 'always' | 'never';
 
 @Component({
   selector: 'app-input-number',
   templateUrl: './input-number.component.html',
-  styleUrls: ['./input-number.component.scss']
+  styleUrls: ['./input-number.component.scss'],
 })
 export class InputNumberComponent {
   @Input() public size: SizeType = 'm';
@@ -24,9 +24,10 @@ export class InputNumberComponent {
   protected formGroup?: FormGroup;
   protected readonly loading$ = this.loadingService.loading$;
 
-  public constructor(private loadingService: LoadingService,
-                     @Optional() private formGroupDirective: FormGroupDirective) {
-  }
+  public constructor(
+    private loadingService: LoadingService,
+    @Optional() private formGroupDirective: FormGroupDirective
+  ) {}
 
   public ngOnInit(): void {
     if (!this.formGroupDirective) {

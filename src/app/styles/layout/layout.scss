@@ -49,7 +49,6 @@
   flex-wrap: wrap;
 }
 
-
 .flex-center {
   justify-content: center;
   align-items: center;
@@ -87,7 +86,6 @@ mr-auto {
   margin-top: auto;
   margin-bottom: auto;
 }
-
 
 @each $index, $value in variables.$sizes {
   .p-#{$index} {
@@ -150,7 +148,6 @@ mr-auto {
     margin-bottom: $value;
   }
 }
-
 
 .text-center {
   text-align: center;

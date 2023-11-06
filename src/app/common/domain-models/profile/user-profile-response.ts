@@ -1,5 +1,5 @@
-import {UserProfileAddressResponse} from "./user-profile-address-response";
-import {UserProfilePreferenceResponse} from "./user-profile-preference-response";
+import { UserProfileAddressResponse } from './user-profile-address-response';
+import { UserProfilePreferenceResponse } from './user-profile-preference-response';
 
 export interface UserProfileResponse {
   readonly emailAddress: string;

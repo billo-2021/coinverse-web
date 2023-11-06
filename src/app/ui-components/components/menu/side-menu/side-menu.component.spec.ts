@@ -8,7 +8,7 @@ describe('SideMenuComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SideMenuComponent]
+      declarations: [SideMenuComponent],
     });
     fixture = TestBed.createComponent(SideMenuComponent);
     component = fixture.componentInstance;

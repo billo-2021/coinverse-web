@@ -1,12 +1,11 @@
-import {Injectable} from '@angular/core';
-import {StorageKey} from "../../constants";
+import { Injectable } from '@angular/core';
+import { StorageKey } from '../../constants';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LocalStorageService {
-  public constructor() {
-  }
+  public constructor() {}
 
   public set<T>(key: StorageKey, item: T): void {
     try {

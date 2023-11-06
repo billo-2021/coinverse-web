@@ -8,7 +8,7 @@ describe('RowItemComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [RowItemComponent]
+      declarations: [RowItemComponent],
     });
     fixture = TestBed.createComponent(RowItemComponent);
     component = fixture.componentInstance;

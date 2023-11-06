@@ -1,8 +1,7 @@
-import {Component, Inject} from '@angular/core';
-import {BaseComponent} from "../../../../common/components";
-import {webRoutesConfig} from "../../../../common/config/web-routes-config";
-import {Router} from "@angular/router";
-
+import { Component, Inject } from '@angular/core';
+import { BaseComponent } from '../../../../common/components';
+import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+import { Router } from '@angular/router';
 
 type Tab = {
   text: string;
@@ -12,21 +11,21 @@ type Tab = {
 
 enum Tabs {
   CryptoCurrencies,
-  FiatCurrencies
+  FiatCurrencies,
 }
 
 @Component({
   selector: 'app-manage-currencies',
   templateUrl: './manage-currencies.component.html',
-  styleUrls: ['./manage-currencies.component.scss']
+  styleUrls: ['./manage-currencies.component.scss'],
 })
 export class ManageCurrenciesComponent extends BaseComponent {
   protected readonly manageCurrenciesUrl = webRoutesConfig.administration.manageCurrencies;
   protected readonly newCurrencyUrl = webRoutesConfig.administration.newCurrency;
   protected readonly title = 'Manage Currencies';
   protected readonly tabs: Tab[] = [
-    {text: 'Crypto', icon: 'tuiIconKey', isDisabled: false},
-    {text: 'Fiat', icon: 'tuiIconDollarSign', isDisabled: false}
+    { text: 'Crypto', icon: 'tuiIconKey', isDisabled: false },
+    { text: 'Fiat', icon: 'tuiIconDollarSign', isDisabled: false },
   ];
   protected readonly TABS = Tabs;
   protected activeTabIndex = 0;
