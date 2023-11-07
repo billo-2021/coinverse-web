@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
   Inject,
   Input,
   Output,
@@ -22,10 +23,10 @@ type StepType = {
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'stepper' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StepperComponent {
+  @HostBinding('class') classes = 'stepper';
   @Input() currentStepIndex = 0;
   @Input() steps: StepType[] = [];
 
@@ -36,7 +37,8 @@ export class StepperComponent {
   public constructor(
     @Inject(TuiBreakpointService)
     protected readonly breakpoint$: TuiBreakpointService
-  ) {}
+  ) {
+  }
 
   public onCurrentStepChanged(currentStep: number) {
     this.currentStepIndexChange.emit(currentStep);

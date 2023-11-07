@@ -5,7 +5,7 @@ type Nothing = Extract<None, null | undefined>;
 
 type Maybe<T> = T | Nothing;
 
-function of<T extends unknown>(value: T): Maybe<T> {
+function of<T>(value: T): Maybe<T> {
   return value ?? undefined;
 }
 

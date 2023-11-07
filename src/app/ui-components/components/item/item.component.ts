@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-item',
   templateUrl: './item.component.html',
   styleUrls: ['./item.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'row item' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemComponent {
-  public constructor() {}
+  @HostBinding('class') classes = 'row item';
 }

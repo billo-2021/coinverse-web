@@ -3,7 +3,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
@@ -21,7 +20,7 @@ import { ListOptionUtils } from '../../../../form-components/utils';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressDetailsFormComponent extends BaseComponent implements OnInit {
+export class AddressDetailsFormComponent extends BaseComponent {
   @Input() public form?: FormGroup;
   @Input() public saveText = '';
 
@@ -43,6 +42,4 @@ export class AddressDetailsFormComponent extends BaseComponent implements OnInit
   public onSaveClicked(): void {
     this.saveClicked.emit(this.form);
   }
-
-  ngOnInit(): void {}
 }

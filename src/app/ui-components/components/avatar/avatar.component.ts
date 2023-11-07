@@ -15,6 +15,4 @@ export class AvatarComponent {
   @Input() public rounded = true;
   @Input() public size: SizeType = 'm';
   @Input() public avatarUrl: string | null = null;
-
-  public constructor() {}
 }

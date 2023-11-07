@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, Optional, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Input,
+  OnInit,
+  Optional,
+  ViewEncapsulation
+} from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { LoadingService } from '../../../core/services/loading/loading.service';
@@ -11,7 +19,6 @@ export type SizeType = 's' | 'm' | 'l';
   styleUrls: ['./phone-number-field.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'input-text-field-wrapper' },
   providers: [
     {
       provide: TUI_VALIDATION_ERRORS,
@@ -22,7 +29,8 @@ export type SizeType = 's' | 'm' | 'l';
     },
   ],
 })
-export class PhoneNumberFieldComponent {
+export class PhoneNumberFieldComponent implements OnInit {
+  @HostBinding('class') public classes = 'input-text-field-wrapper';
   @Input() public size: SizeType = 'm';
   @Input() public name = '';
   @Input() public label = '';
@@ -38,7 +46,8 @@ export class PhoneNumberFieldComponent {
   public constructor(
     private readonly loadingService: LoadingService,
     @Optional() private readonly formGroupDirective: FormGroupDirective
-  ) {}
+  ) {
+  }
 
   public ngOnInit(): void {
     if (!this.formGroupDirective) {

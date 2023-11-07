@@ -46,15 +46,15 @@ const WALLET_LABEL: Record<number, string> = {
 })
 export class TransactFormComponent implements OnInit {
   public form: FormGroup;
-  @Input() public activeTabIndex: number = 0;
+  @Input() public activeTabIndex = 0;
   @Input() public currencyCode: string | null = null;
 
   @Output() public actionClicked = new EventEmitter<PaymentModel>();
   @Output() public activeTabIndexChange = new EventEmitter<number>();
 
   protected readonly tabs: Tab[] = [
-    { text: 'Deposit', icon: null, isDisabled: false },
-    { text: 'Withdraw', icon: null, isDisabled: false },
+    {text: 'Deposit', icon: null, isDisabled: false},
+    {text: 'Withdraw', icon: null, isDisabled: false},
   ];
 
   protected readonly action = ACTION;
@@ -95,7 +95,7 @@ export class TransactFormComponent implements OnInit {
       shareReplay(1)
     );
 
-    this.walletOptions$ = walletService.getBalances({ page: 0, size: 100 }).pipe(
+    this.walletOptions$ = walletService.getBalances({page: 0, size: 100}).pipe(
       map((response) => {
         const wallets = response.data;
         return wallets.map((wallet) => {

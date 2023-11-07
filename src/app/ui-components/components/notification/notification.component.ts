@@ -22,8 +22,6 @@ export class NotificationComponent {
 
   @Output() public closeClicked = new EventEmitter<void>();
 
-  public constructor() {}
-
   public onClose() {
     this.closeClicked.emit();
   }

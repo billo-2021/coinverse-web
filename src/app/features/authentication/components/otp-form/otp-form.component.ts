@@ -13,7 +13,7 @@ export class OtpFormComponent extends BaseComponent implements OnInit {
   @Input() public form?: FormGroup;
   @Input() public saveText = 'Submit';
   @Input() public cancelText = 'Resend OTP';
-  @Input() public otpRecipient: string = '';
+  @Input() public otpRecipient = '';
   @Input() public autoSave = false;
   @Output() public saveClicked = new EventEmitter<FormGroup>();
   @Output() public cancelClicked = new EventEmitter<void>();

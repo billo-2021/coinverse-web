@@ -6,5 +6,4 @@ import { Component } from '@angular/core';
   styleUrls: ['./col.component.scss'],
 })
 export class ColComponent {
-  public constructor() {}
 }

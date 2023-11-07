@@ -36,8 +36,6 @@ export class ButtonComponent {
 
   @Output() public click = new EventEmitter<void>();
 
-  public constructor() {}
-
   public onClick() {
     this.click.emit();
   }

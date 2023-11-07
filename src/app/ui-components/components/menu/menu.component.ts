@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   Inject,
   Input,
   OnChanges,
@@ -21,10 +22,10 @@ import { MenuService } from '../../../common/domain-services/menu/menu.service';
   styleUrls: ['./menu.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [tuiWidthCollapse],
-  host: { class: 'flex-col' },
+  animations: [tuiWidthCollapse]
 })
 export class MenuComponent implements OnChanges {
+  @HostBinding('class') classes = 'flex-col';
   @Input() public animationDuration = 250;
   @Input() public user: UserPrincipal | null = null;
 
@@ -64,7 +65,7 @@ export class MenuComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChangesTyped<MenuComponentInput>): void {
     const nextState = getUpdatedChanges(changes);
-    this._state$.next({ ...this._state$.value, ...nextState });
+    this._state$.next({...this._state$.value, ...nextState});
   }
 
   public onToggleMenu(open: boolean): void {

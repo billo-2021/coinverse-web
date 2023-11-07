@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   Input,
   OnChanges,
   OnInit,
@@ -23,7 +24,6 @@ export type SizeType = 's' | 'm' | 'l';
   styleUrls: ['./combo-box.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'combo-box' },
   providers: [
     {
       provide: TUI_VALIDATION_ERRORS,
@@ -35,6 +35,7 @@ export type SizeType = 's' | 'm' | 'l';
   ],
 })
 export class ComboBoxComponent implements OnInit, OnChanges {
+  @HostBinding('class') public classes = 'combo-box';
   @Input() size: SizeType = 'm';
   @Input() public name = '';
   @Input() public label = '';

@@ -6,7 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./container.component.scss'],
 })
 export class ContainerComponent {
-  @Input() public ngClass: string = '';
-
-  public constructor() {}
+  @Input() public ngClass = '';
 }

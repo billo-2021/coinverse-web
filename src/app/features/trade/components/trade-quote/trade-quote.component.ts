@@ -14,14 +14,15 @@ type ActionType = 'buy' | 'sell';
   styleUrls: ['./trade-quote.component.scss'],
 })
 export class TradeQuoteComponent implements OnInit {
-  @Input() public currencyPairName: string = '';
+  @Input() public currencyPairName = '';
   @Input() public action: ActionType | null = null;
   @Output() public acceptQuoteClicked = new EventEmitter<number>();
   @Output() public declineQuoteClicked = new EventEmitter<void>();
   protected exchangeRate: CurrencyExchangeRateResponse | null = null;
   protected exchangeRateData: CurrencyExchangeResponseData | null = null;
 
-  constructor(private readonly quoteService: QuoteService) {}
+  constructor(private readonly quoteService: QuoteService) {
+  }
 
   ngOnInit(): void {
     this.quoteService

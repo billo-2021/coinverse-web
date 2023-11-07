@@ -18,16 +18,14 @@ import { Tab } from '../../types';
 export class TabsComponent {
   @Input() public title: string | null = null;
   @Input() public tabs: Tab[] = [
-    { text: 'Maps', icon: 'tuiIconCreditCard', isDisabled: false },
-    { text: 'Calls', icon: 'tuiIconPhone', isDisabled: false },
-    { text: 'Settings', icon: 'tuiIconSettings', isDisabled: false },
+    {text: 'Maps', icon: 'tuiIconCreditCard', isDisabled: false},
+    {text: 'Calls', icon: 'tuiIconPhone', isDisabled: false},
+    {text: 'Settings', icon: 'tuiIconSettings', isDisabled: false},
   ];
 
   @Input() public activeItemIndex = 0;
 
   @Output() public activeItemIndexChange = new EventEmitter<number>();
-
-  public constructor() {}
 
   public onActiveItemIndexChange(activeItemIndex: number): void {
     if (activeItemIndex === this.activeItemIndex) {

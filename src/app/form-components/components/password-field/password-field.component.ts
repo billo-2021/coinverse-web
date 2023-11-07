@@ -23,7 +23,7 @@ export class PasswordFieldComponent implements OnInit {
   @Input() public size: SizeType = 'm';
   @Input() public name = '';
   @Input() public label = '';
-  @Input() public placeholder: string = '';
+  @Input() public placeholder = '';
   @Input() public isDisabled = false;
   @Input() hasClear = false;
   @Input() public autocomplete = 'current-password';
@@ -34,7 +34,8 @@ export class PasswordFieldComponent implements OnInit {
   public constructor(
     private readonly loadingService: LoadingService,
     @Optional() private readonly formGroupDirective: FormGroupDirective
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     if (!this.formGroupDirective) {

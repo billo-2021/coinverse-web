@@ -33,6 +33,4 @@ export class AddressDetailsFormComponent extends BaseComponent {
   public onSaveClicked(): void {
     this.saveClicked.emit(this.form);
   }
-
-  ngOnInit(): void {}
 }

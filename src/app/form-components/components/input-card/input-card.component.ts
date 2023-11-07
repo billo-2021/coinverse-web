@@ -1,4 +1,4 @@
-import { Component, Input, Optional } from '@angular/core';
+import { Component, Input, OnInit, Optional } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { LoadingService } from '../../../core/services/loading/loading.service';
 
@@ -9,7 +9,7 @@ export type SizeType = 's' | 'm' | 'l';
   templateUrl: './input-card.component.html',
   styleUrls: ['./input-card.component.scss'],
 })
-export class InputCardComponent {
+export class InputCardComponent implements OnInit {
   @Input() public type: 'text' | 'email' = 'text';
   @Input() public size: SizeType = 'm';
   @Input() public cardNumberName = 'cardNumber';
@@ -28,7 +28,8 @@ export class InputCardComponent {
   public constructor(
     private loadingService: LoadingService,
     @Optional() private formGroupDirective: FormGroupDirective
-  ) {}
+  ) {
+  }
 
   public ngOnInit(): void {
     if (!this.formGroupDirective) {

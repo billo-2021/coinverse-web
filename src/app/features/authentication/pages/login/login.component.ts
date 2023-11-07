@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Inject,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
 
 import { AuthenticationService } from '../../../../common/domain-services';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -12,10 +19,10 @@ import { webRoutesConfig } from '../../../../common/config/web-routes-config';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-width flex-col justify-center items-center' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
+  @HostBinding('class') public classes = 'full-width flex-col justify-center items-center';
   protected readonly loginForm: FormGroup;
   private _redirectUrl?: string;
 

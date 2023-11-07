@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CurrencyTransactionResponse } from '../../../../common/domain-models/trade/currency-transaction-response';
+import {
+  CurrencyTransactionResponse
+} from '../../../../common/domain-models/trade/currency-transaction-response';
 
 @Component({
   selector: 'app-trade-confirmation',
@@ -12,8 +14,6 @@ export class TradeConfirmationComponent {
 
   @Output() public viewTradesClicked = new EventEmitter<void>();
   @Output() public tradeAgainClicked = new EventEmitter<void>();
-
-  public constructor() {}
 
   public onViewTradesClicked(): void {
     this.viewTradesClicked.emit();

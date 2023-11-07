@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
   Input,
   Output,
   ViewEncapsulation,
@@ -16,10 +17,10 @@ import { webRoutesConfig } from '../../../../common/config/web-routes-config';
   templateUrl: './menu-header.component.html',
   styleUrls: ['./menu-header.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'header' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuHeaderComponent {
+  @HostBinding('class') classes = 'header';
   @Input() public isMobile = false;
   @Input() public user: UserPrincipal | null = null;
 
@@ -28,7 +29,8 @@ export class MenuHeaderComponent {
   public constructor(
     private readonly router: Router,
     private readonly userPrincipalService: UserPrincipalStoreService
-  ) {}
+  ) {
+  }
 
   public onMenuToggle(open: boolean): void {
     this.toggleMenuClicked.emit(open);

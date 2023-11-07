@@ -13,12 +13,10 @@ export class GetFormStepPipe implements PipeTransform {
   transform(valid: boolean, touched: boolean, title: string): FormStepType {
     const state = !touched ? 'normal' : touched && valid ? 'pass' : 'error';
 
-    let isDisabled = !valid;
-
     return {
       title,
       state,
-      isDisabled,
+      isDisabled: !valid,
     };
   }
 }

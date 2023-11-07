@@ -10,8 +10,6 @@ export class AccountVerificationStoreService {
 
   public readonly accountVerification$ = this._accountVerification.asObservable();
 
-  public constructor() {}
-
   public get accountVerification() {
     return this._accountVerification.getValue();
   }

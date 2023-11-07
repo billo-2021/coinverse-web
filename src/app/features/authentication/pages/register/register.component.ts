@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  HostBinding,
   Inject,
   ViewEncapsulation,
 } from '@angular/core';
@@ -38,10 +39,10 @@ enum FormSteps {
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-width flex-col justify-center items-center' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterComponent {
+  @HostBinding('class') public classes = 'full-width flex-col justify-center items-center';
   protected readonly personalInformationForm: FormGroup;
   protected readonly addressDetailsForm: FormGroup;
   protected readonly preferenceDetailsForm: FormGroup;

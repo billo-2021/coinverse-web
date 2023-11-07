@@ -1,4 +1,4 @@
-import { Component, Input, Optional } from '@angular/core';
+import { Component, Input, OnInit, Optional } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { LoadingService } from '../../../core/services/loading/loading.service';
 import { SizeType } from '../text-field/text-field.component';
@@ -10,7 +10,7 @@ type DecimalType = 'not-zero' | 'always' | 'never';
   templateUrl: './input-number.component.html',
   styleUrls: ['./input-number.component.scss'],
 })
-export class InputNumberComponent {
+export class InputNumberComponent implements OnInit {
   @Input() public size: SizeType = 'm';
   @Input() public name = '';
   @Input() public label = '';
@@ -27,7 +27,8 @@ export class InputNumberComponent {
   public constructor(
     private loadingService: LoadingService,
     @Optional() private formGroupDirective: FormGroupDirective
-  ) {}
+  ) {
+  }
 
   public ngOnInit(): void {
     if (!this.formGroupDirective) {

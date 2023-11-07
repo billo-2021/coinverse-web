@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input, ViewEncapsulation } from '@angular/core';
 import { TuiPoint } from '@taiga-ui/core';
 import { TUI_DEFAULT_STRINGIFY, TuiContextWithImplicit } from '@taiga-ui/cdk';
 
@@ -7,10 +7,10 @@ import { TUI_DEFAULT_STRINGIFY, TuiContextWithImplicit } from '@taiga-ui/cdk';
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-width' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LineChartComponent {
+  @HostBinding('class') classes = 'full-width';
   @Input() public data: TuiPoint[] = [
     [50, 50],
     [100, 75],
@@ -22,6 +22,6 @@ export class LineChartComponent {
   ];
 
   protected readonly stringify = TUI_DEFAULT_STRINGIFY;
-  protected readonly hintContent = ({ $implicit }: TuiContextWithImplicit<readonly TuiPoint[]>): number =>
+  protected readonly hintContent = ({$implicit}: TuiContextWithImplicit<readonly TuiPoint[]>): number =>
     $implicit[0][1];
 }

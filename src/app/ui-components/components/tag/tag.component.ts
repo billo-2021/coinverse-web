@@ -33,8 +33,6 @@ export class TagComponent {
 
   @Output() public edited = new EventEmitter<string>();
 
-  public constructor() {}
-
   public onEdited(edited: string): void {
     this.edited.emit(edited);
   }

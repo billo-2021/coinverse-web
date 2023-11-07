@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
   AccountVerificationService,
@@ -16,10 +23,10 @@ import { webRoutesConfig } from '../../../../common/config/web-routes-config';
   templateUrl: './verify-account.component.html',
   styleUrls: ['./verify-account.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'full-width flex-col justify-center items-center'},
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VerifyAccountComponent implements OnInit {
+  @HostBinding('class') classes = 'full-width flex-col justify-center items-center';
   protected readonly OTP_LENGTH = 8;
   protected readonly VERIFICATION_METHOD = 'email';
   protected otpRecipient = '';

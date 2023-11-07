@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { finalize, map, switchMap, take } from 'rxjs';
 import { AlertService, NavigationService } from '../../../../core/services';
@@ -28,10 +28,10 @@ enum Steps {
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-width flex-col justify-center items-center' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResetPasswordComponent implements OnInit {
+  @HostBinding('class') public classes = 'full-width flex-col justify-center items-center';
   protected readonly STEPS = Steps;
   protected readonly DEFAULT_STEP_STATE: StepState = {
     state: 'normal',
@@ -98,8 +98,8 @@ export class ResetPasswordComponent implements OnInit {
 
   public getSteps(): StepType[] {
     return [
-      { title: 'Set a new Password', ...this.DEFAULT_STEP_STATE },
-      { title: 'Reset password result', ...this.DEFAULT_STEP_STATE },
+      {title: 'Set a new Password', ...this.DEFAULT_STEP_STATE},
+      {title: 'Reset password result', ...this.DEFAULT_STEP_STATE},
     ];
   }
 

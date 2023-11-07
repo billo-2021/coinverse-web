@@ -11,8 +11,6 @@ export class PersonalInformationFormComponent {
   @Input() public saveText = '';
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
-  public constructor() {}
-
   public onSaveClicked(): void {
     this.saveClicked.emit(this.form);
   }

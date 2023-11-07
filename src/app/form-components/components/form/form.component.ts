@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
   Input,
   Output,
   ViewEncapsulation,
@@ -13,10 +14,10 @@ import { LoadingService } from '../../../core/services/loading/loading.service';
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'form' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormComponent {
+  @HostBinding('class') public classes = 'form';
   @Input() public isValid = false;
   @Input() public title?: string;
   @Input() public subtitle?: string;
@@ -31,7 +32,8 @@ export class FormComponent {
 
   protected loading$ = this.loadingService.loading$;
 
-  public constructor(private readonly loadingService: LoadingService) {}
+  public constructor(private readonly loadingService: LoadingService) {
+  }
 
   public onCancelClicked(): void {
     this.cancelClicked.emit();

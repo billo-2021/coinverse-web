@@ -21,8 +21,6 @@ export class ResetPasswordFormComponent {
 
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
-  public constructor() {}
-
   public onSaveClicked(): void {
     this.saveClicked.emit(this.form);
   }

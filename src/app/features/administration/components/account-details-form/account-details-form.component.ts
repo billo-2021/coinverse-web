@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ListOptionUtils } from '../../../../form-components/utils';
 
 const roles = [
-  { code: 'CS', name: 'customer' },
-  { code: 'AD', name: 'admin' },
+  {code: 'CS', name: 'customer'},
+  {code: 'AD', name: 'admin'},
 ];
 
 @Component({
@@ -12,15 +12,13 @@ const roles = [
   templateUrl: './account-details-form.component.html',
   styleUrls: ['./account-details-form.component.scss'],
 })
-export class AccountDetailsFormComponent {
+export class AccountDetailsFormComponent implements OnInit {
   @Input() public form?: FormGroup;
   @Input() public saveText = '';
 
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
   protected readonly roleOptions = roles.map(ListOptionUtils.toListOption);
-
-  public constructor() {}
 
   ngOnInit(): void {
     if (!this.roleOptions.length) {

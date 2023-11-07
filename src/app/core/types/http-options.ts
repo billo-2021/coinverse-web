@@ -9,8 +9,6 @@ class HttpOptionsBuilder {
   private headers?: HttpHeaders;
   private params?: HttpParams;
 
-  public constructor() {}
-
   public addHeaders(headers: HttpHeaders): HttpOptionsBuilder {
     this.headers = headers;
     return this;

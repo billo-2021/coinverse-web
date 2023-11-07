@@ -13,8 +13,6 @@ export class TransactConfirmationComponent {
   @Output() payAgainClicked = new EventEmitter<void>();
   @Output() viewPaymentsClicked = new EventEmitter<void>();
 
-  public constructor() {}
-
   public onViewPayments(): void {
     this.viewPaymentsClicked.emit();
   }

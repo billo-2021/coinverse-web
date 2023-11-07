@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-logo',
   templateUrl: './logo.component.html',
   styleUrls: ['./logo.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'logo-icon-container' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LogoComponent {
-  public constructor() {}
+  @HostBinding('class') classes = 'logo-icon-container';
 }

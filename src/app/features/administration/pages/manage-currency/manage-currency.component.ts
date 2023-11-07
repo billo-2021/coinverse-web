@@ -64,7 +64,7 @@ export class ManageCurrencyComponent {
     this.currencyCode$ = route.params.pipe(
       map((params) => {
         const currencyCode = params['currencyCode'] as string | null | undefined;
-        this.mode$.next(!!currencyCode ? 'edit' : 'create');
+        this.mode$.next(currencyCode ? 'edit' : 'create');
         return currencyCode || null;
       })
     );

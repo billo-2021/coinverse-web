@@ -27,12 +27,12 @@ const ACTION: Record<number, string> = {
 })
 export class TradeFormComponent {
   public form: FormGroup;
-  @Input() public activeTabIndex: number = 0;
+  @Input() public activeTabIndex = 0;
   @Output() public actionClicked = new EventEmitter<TradeModel>();
   @Output() public activeTabIndexChange = new EventEmitter<number>();
   protected readonly tabs: Tab[] = [
-    { text: 'BUY', icon: null, isDisabled: false },
-    { text: 'SELL', icon: null, isDisabled: false },
+    {text: 'BUY', icon: null, isDisabled: false},
+    {text: 'SELL', icon: null, isDisabled: false},
   ];
   protected readonly action = ACTION;
   protected readonly currencyPairOptions$: Observable<ListOption[]>;

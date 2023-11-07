@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Host,
+  HostBinding,
   Inject,
   Input,
   OnInit,
@@ -15,10 +16,10 @@ import { TuiStepperComponent } from '@taiga-ui/kit';
   templateUrl: './step.component.html',
   styleUrls: ['./step.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'step' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StepComponent implements OnInit, AfterViewInit {
+  @HostBinding('class') classes = 'step';
   @Input() public title = '';
   @Input() public state: 'error' | 'normal' | 'pass' = 'normal';
   @Input() public isDisabled = false;

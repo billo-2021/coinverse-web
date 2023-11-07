@@ -14,10 +14,6 @@ export class TransactExchangeRateComponent {
   @Output() public acceptRateClicked = new EventEmitter<void>();
   @Output() public declineRateClicked = new EventEmitter<void>();
 
-  constructor() {}
-
-  ngOnInit(): void {}
-
   public onAcceptRate(): void {
     this.acceptRateClicked.emit();
   }

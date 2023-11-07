@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PasswordResetService } from '../../../../common/domain-services';
 import { PasswordResetTokenRequest } from '../../../../common/domain-models';
@@ -26,10 +26,10 @@ enum Steps {
   templateUrl: './reset-password-request.component.html',
   styleUrls: ['./reset-password-request.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-width flex-col justify-center items-center' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResetPasswordRequestComponent {
+  @HostBinding('class') public classes = 'full-width flex-col justify-center items-center';
   protected readonly STEPS = Steps;
   protected readonly DEFAULT_STEP_STATE: StepState = {
     state: 'normal',
@@ -58,8 +58,8 @@ export class ResetPasswordRequestComponent {
 
   public getSteps(): StepType[] {
     return [
-      { title: 'Forgot password', ...this.DEFAULT_STEP_STATE },
-      { title: 'Reset validation', ...this.DEFAULT_STEP_STATE },
+      {title: 'Forgot password', ...this.DEFAULT_STEP_STATE},
+      {title: 'Reset validation', ...this.DEFAULT_STEP_STATE},
     ];
   }
 

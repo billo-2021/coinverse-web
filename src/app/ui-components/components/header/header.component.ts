@@ -10,6 +10,4 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
 export class HeaderComponent {
   @Input() title = '';
   @Input() subtitle: string | null = null;
-
-  public constructor() {}
 }

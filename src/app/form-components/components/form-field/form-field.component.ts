@@ -13,13 +13,11 @@ export class FormFieldComponent implements OnInit, AfterViewInit {
   @Input() public control: Maybe<AbstractControl>;
   @Input() public appearance: 'fill' | 'outline' = 'fill';
 
-  @ContentChild('materialFormField', { static: true })
+  @ContentChild('materialFormField', {static: true})
   public formFieldControl?: MatFormFieldControl<any>;
 
-  @ContentChild(MatFormFieldControl, { static: true })
+  @ContentChild(MatFormFieldControl, {static: true})
   public matFormField: Maybe<MatFormField>;
-
-  public constructor() {}
 
   ngOnInit(): void {
     if (Maybe.isSome(this.formFieldControl) && Maybe.isSome(this.matFormField)) {

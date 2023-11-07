@@ -7,6 +7,4 @@ import { Component, Input } from '@angular/core';
 })
 export class RowComponent {
   @Input() public ngClass: string | string[] | Set<string> | { [p: string]: any } | null | undefined;
-
-  public constructor() {}
 }

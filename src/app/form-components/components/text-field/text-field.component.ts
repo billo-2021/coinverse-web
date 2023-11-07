@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, Optional, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Input,
+  OnInit,
+  Optional,
+  ViewEncapsulation
+} from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { LoadingService } from '../../../core/services/loading/loading.service';
@@ -11,7 +19,6 @@ export type SizeType = 's' | 'm' | 'l';
   styleUrls: ['./text-field.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'input-text-field-wrapper' },
   providers: [
     {
       provide: TUI_VALIDATION_ERRORS,
@@ -22,12 +29,13 @@ export type SizeType = 's' | 'm' | 'l';
     },
   ],
 })
-export class TextFieldComponent {
+export class TextFieldComponent implements OnInit {
+  @HostBinding('class') public classes = 'input-text-field-wrapper';
   @Input() public type: 'text' | 'email' = 'text';
   @Input() public size: SizeType = 'm';
   @Input() public name = '';
   @Input() public label = '';
-  @Input() public placeholder: string = '';
+  @Input() public placeholder = '';
   @Input() public isDisabled = false;
   @Input() public hasClear = true;
   @Input() public autocomplete = 'on';
@@ -38,7 +46,8 @@ export class TextFieldComponent {
   public constructor(
     private loadingService: LoadingService,
     @Optional() private formGroupDirective: FormGroupDirective
-  ) {}
+  ) {
+  }
 
   public ngOnInit(): void {
     if (!this.formGroupDirective) {

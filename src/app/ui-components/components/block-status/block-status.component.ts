@@ -9,6 +9,4 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
 })
 export class BlockStatusComponent {
   @Input() public card = false;
-
-  public constructor() {}
 }
