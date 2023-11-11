@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { UserAccessCredentials, UserPrincipal } from '../../domain-models';
-import { BehaviorSubject, map, Observable, shareReplay, tap, zip } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { UserAccessCredentialsStoreService } from '../user-access-credentials-store/user-access-credentials-store.service';
+import {
+  UserAccessCredentialsStoreService
+} from '../user-access-credentials-store/user-access-credentials-store.service';
 import { LocalStorageService } from '../../../core/services/local-storage/local-storage.service';
 import { StorageKey } from '../../../core/constants';
 import { DateTime } from 'luxon';
@@ -19,9 +21,6 @@ const TOKEN_EXPIRY_OFFSET: TokenExpiryOffset = {
   providedIn: 'root',
 })
 export class UserPrincipalStoreService {
-  public readonly userAccessCredentials$: Observable<UserAccessCredentials | null>;
-  public readonly userLoggedIn$: Observable<boolean>;
-  public readonly userPrincipal$: Observable<UserPrincipal | null>;
   private readonly _userPrincipal: BehaviorSubject<UserPrincipal | null>;
 
   constructor(
@@ -33,7 +32,6 @@ export class UserPrincipalStoreService {
     private readonly userAccessCredentialsStoreService: UserAccessCredentialsStoreService
   ) {
     let userPrincipal = localStorageService.get<UserPrincipal>(StorageKey.USER);
-    this.userAccessCredentials$ = this.userAccessCredentialsStoreService.userCredentials$;
 
     if (userPrincipal && !userPrincipal.isVerified) {
       localStorageService.remove(StorageKey.USER);
@@ -42,17 +40,14 @@ export class UserPrincipalStoreService {
     }
 
     this._userPrincipal = new BehaviorSubject(userPrincipal);
+  }
 
-    this.userPrincipal$ = this._userPrincipal
-      .asObservable()
-      .pipe(tap((userPrincipal) => this.updateUserStorage(userPrincipal)));
+  public get userAccessCredentials$(): Observable<UserAccessCredentials | null> {
+    return this.userAccessCredentialsStoreService.userCredentials$;
+  }
 
-    this.userLoggedIn$ = zip(this.userPrincipal$, this.userAccessCredentials$).pipe(
-      map(([userPrincipal, userCredentials]) => {
-        return this.isUserCredentialsValid(userPrincipal, userCredentials);
-      }),
-      shareReplay(1)
-    );
+  public get userPrincipal$(): Observable<UserPrincipal | null> {
+    return this._userPrincipal.pipe();
   }
 
   public get userPrincipal(): UserPrincipal | null {
@@ -61,6 +56,7 @@ export class UserPrincipalStoreService {
 
   public set userPrincipal(userPrincipal: UserPrincipal | null) {
     this._userPrincipal.next(userPrincipal);
+    this.updateUserStorage(userPrincipal);
   }
 
   public get userAccessCredentials(): UserAccessCredentials | null {
@@ -83,6 +79,12 @@ export class UserPrincipalStoreService {
         (userPrincipal) =>
           !!userPrincipal && userPrincipal.roles.some((role) => role.toLowerCase().includes('admin'))
       )
+    );
+  }
+
+  public get userLoggedIn$(): Observable<boolean> {
+    return combineLatest([this.userPrincipal$, this.userAccessCredentials$]).pipe(
+      map(([userPrincipal, userCredentials]) => this.isUserCredentialsValid(userPrincipal, userCredentials))
     );
   }
 

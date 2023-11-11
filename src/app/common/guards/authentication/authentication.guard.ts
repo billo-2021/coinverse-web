@@ -10,10 +10,10 @@ export class AuthenticationGuardService {
     private readonly router: Router,
     @Inject(UserPrincipalStoreService)
     private readonly userPrincipalService: UserPrincipalStoreService
-  ) {}
+  ) {
+  }
 
   public canActivate(): boolean {
-    console.log('Is 2', this.userPrincipalService.isLoggedIn());
     return this.userPrincipalService.isLoggedIn();
   }
 }

@@ -61,8 +61,8 @@ export class LoginComponent implements OnInit {
         finalize(() => {
           this.resetForm();
         }),
-        tap(() => {
-          if (this._redirectUrl) {
+        tap((response) => {
+          if (this._redirectUrl && response.user.isVerified) {
             this.router.navigate([this._redirectUrl]).then();
             return;
           }

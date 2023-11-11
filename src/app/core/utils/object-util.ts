@@ -17,7 +17,7 @@ function map<A extends object, B extends object>(keysMap: ObjectKeysMap<A, B>, a
   }, {} as B) as B;
 }
 
-function isObject(value: unknown): value is {} {
+function isObject(value: unknown): value is object {
   return value != null || typeof value === 'object';
 }
 

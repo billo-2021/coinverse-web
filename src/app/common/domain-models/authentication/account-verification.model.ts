@@ -1,5 +1,5 @@
 export interface AccountVerification {
-  username: string;
-  emailAddress: string;
-  isVerified: boolean;
+  readonly username: string;
+  readonly emailAddress: string;
+  readonly isVerified: boolean;
 }

@@ -1,3 +1,3 @@
-import { interceptorProviders } from '../providers/interceptor-providers/interceptor-providers';
+import { interceptorProviders } from '../providers/interceptor-provider';
 
 export { interceptorProviders };

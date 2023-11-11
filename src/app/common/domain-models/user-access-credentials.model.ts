@@ -1,5 +1,5 @@
 export interface UserAccessCredentials {
-  username: string;
-  accessToken: string;
-  refreshToken: string;
+  readonly username: string;
+  readonly accessToken: string;
+  readonly refreshToken: string;
 }

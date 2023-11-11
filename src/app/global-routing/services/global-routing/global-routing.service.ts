@@ -5,7 +5,7 @@ import { AccountVerificationStoreService, UserPrincipalStoreService } from '../.
 import { NavigationService } from '../../../core/services';
 import { webRoutesConfig } from '../../../common/config/web-routes-config';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class GlobalRoutingService {
   private readonly verification$: Observable<AccountVerification>;
   private verificationRedirect$?: Subscription;
@@ -63,9 +63,7 @@ export class GlobalRoutingService {
   ): Subscription {
     return userPrincipalStore.userAccessCredentials$
       .pipe(
-        filter((userCredentials): userCredentials is UserAccessCredentials => {
-          return userCredentials !== null;
-        }),
+        filter((userCredentials): userCredentials is UserAccessCredentials => userCredentials !== null),
         switchMap((userCredentials) => {
           const accessToken = userCredentials.accessToken;
           const tokenExpiryDate = userPrincipalStore.getTokenExpiryDate(accessToken);
@@ -74,7 +72,7 @@ export class GlobalRoutingService {
         }),
         tap(() => {
           userPrincipalStore.logOut();
-          navigationService.to({ path: webRoutesConfig.authentication.login });
+          navigationService.to({path: webRoutesConfig.authentication.login}).then();
         })
       )
       .subscribe();
@@ -86,10 +84,10 @@ export class GlobalRoutingService {
   ): Subscription {
     return navigationService.navigation$
       .pipe(
-        tap(async (route) => {
+        tap((route) => {
           const accountVerification = accountVerificationStore.accountVerification;
           if (route.url.includes('verify') && (!accountVerification || accountVerification.isVerified)) {
-            await navigationService.to({ path: webRoutesConfig.root });
+            navigationService.to({path: webRoutesConfig.root}).then();
           }
         })
       )
@@ -102,15 +100,15 @@ export class GlobalRoutingService {
   ): Subscription {
     return verification$
       .pipe(
-        tap(async (userVerification) => {
+        tap((userVerification) => {
           if (!userVerification.isVerified) {
-            await navigationService.to({
+            navigationService.to({
               path: webRoutesConfig.authentication.verifyAccount,
-            });
+            }).then();
             return;
           }
 
-          await navigationService.to({ path: webRoutesConfig.dashboard.root });
+          navigationService.to({path: webRoutesConfig.dashboard.root}).then();
         })
       )
       .subscribe();

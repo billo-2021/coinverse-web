@@ -1,5 +1,6 @@
 export type MenuItem = {
-  link: string;
-  text: string;
-  icon: string;
+  readonly link: string;
+  readonly text: string;
+  readonly icon: string;
+  readonly roles: ('admin' | 'customer') []
 };

@@ -11,7 +11,7 @@ function authGuard(options: { isAuthenticated: true; redirectUrl?: string } | { 
   if (options.isAuthenticated && !isLoggedIn && options.redirectUrl) {
     router
       .navigate([webRoutesConfig.authentication.login], {
-        queryParams: { redirectUrl: options.redirectUrl },
+        queryParams: {redirectUrl: options.redirectUrl},
       })
       .then();
     return false;
@@ -21,7 +21,7 @@ function authGuard(options: { isAuthenticated: true; redirectUrl?: string } | { 
     router.navigate([webRoutesConfig.authentication.login]).then();
     return false;
   }
-
+  
   if (!options.isAuthenticated && isLoggedIn) {
     router.navigate([webRoutesConfig.dashboard.root]).then();
     return false;
@@ -31,11 +31,11 @@ function authGuard(options: { isAuthenticated: true; redirectUrl?: string } | { 
 }
 
 function isAuthenticatedGuard(redirectUrl: string) {
-  return authGuard({ isAuthenticated: true, redirectUrl: redirectUrl });
+  return authGuard({isAuthenticated: true, redirectUrl: redirectUrl});
 }
 
 function unAuthenticatedGuard() {
-  return authGuard({ isAuthenticated: false });
+  return authGuard({isAuthenticated: false});
 }
 
 export { authGuard, isAuthenticatedGuard, unAuthenticatedGuard };

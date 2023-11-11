@@ -14,22 +14,24 @@ export class GlobalRoutingComponent implements AfterViewInit {
     private router: Router,
     private readonly userPrincipalStore: UserPrincipalStoreService,
     private readonly navigationService: NavigationService
-  ) {}
+  ) {
+  }
 
   ngAfterViewInit(): void {
     const isLoggedIn = this.userPrincipalStore.isLoggedIn();
 
     if (isLoggedIn) {
-      this.navigationService.to({ path: webRoutesConfig.dashboard.root }).then();
+      this.navigationService.to({path: webRoutesConfig.dashboard.root}).then();
       return;
     }
 
     const userPrincipal = this.userPrincipalStore.userPrincipal;
+    
     if (userPrincipal && !userPrincipal.isVerified) {
-      this.navigationService.to({ path: webRoutesConfig.authentication.verifyAccount }).then();
+      this.navigationService.to({path: webRoutesConfig.authentication.verifyAccount}).then();
       return;
     }
 
-    this.navigationService.to({ path: webRoutesConfig.authentication.login }).then();
+    this.navigationService.to({path: webRoutesConfig.authentication.login}).then();
   }
 }

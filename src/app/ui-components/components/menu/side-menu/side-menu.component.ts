@@ -14,12 +14,12 @@ export class SideMenuComponent {
   private readonly _viewModel$: Observable<SideMenuViewModel>;
 
   public constructor(@Inject(MenuService) private readonly menuService: MenuService) {
-    this._viewModel$ = combineLatest([this.menuService.isMobile$, this.menuService.isSideMenuShown$]).pipe(
-      map(([isMobile, isSideMenuShown]) => {
+    this._viewModel$ = combineLatest([this.menuService.isMobile$, this.menuService.isSideMenuShown$, this.menuService.menuItems$]).pipe(
+      map(([isMobile, isSideMenuShown, menuItems]) => {
         return {
           isMobile: isMobile,
           isShown: isSideMenuShown,
-          menuItems: this.menuService.menuItems,
+          menuItems: menuItems,
         };
       })
     );

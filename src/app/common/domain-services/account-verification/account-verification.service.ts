@@ -4,8 +4,11 @@ import { Observable, tap } from 'rxjs';
 import { HttpMessageResponse } from '../../../core/types';
 import { HttpCrudService } from '../../../core/services';
 import { apiRoutesConfig } from '../../config';
-import { AccountVerificationStoreService } from '../account-verification-store/account-verification-store.service';
+import {
+  AccountVerificationStoreService
+} from '../account-verification-store/account-verification-store.service';
 import { UserPrincipalStoreService } from '../user-principal-store/user-principal-store.service';
+import { UserPermissionsService } from "../../services/user-permissions/user-permissions.service";
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +23,10 @@ export class AccountVerificationService {
     @Inject(AccountVerificationStoreService)
     private readonly accountVerificationStore: AccountVerificationStoreService,
     @Inject(UserPrincipalStoreService)
-    private readonly userPrincipalStore: UserPrincipalStoreService
-  ) {}
+    private readonly userPrincipalStore: UserPrincipalStoreService,
+    private readonly _userPermissionsService: UserPermissionsService
+  ) {
+  }
 
   public requestOtpToken(otpTokenRequest: OtpTokenRequest): Observable<HttpMessageResponse> {
     return this.httpService.create<OtpTokenRequest, HttpMessageResponse>(
@@ -38,27 +43,7 @@ export class AccountVerificationService {
       )
       .pipe(
         tap(() => {
-          const accountVerification = this.accountVerificationStore.accountVerification;
-
-          if (!accountVerification) {
-            return;
-          }
-
-          const userPrincipal = this.userPrincipalStore.userPrincipal;
-
-          if (!userPrincipal) {
-            return;
-          }
-
-          this.userPrincipalStore.userPrincipal = {
-            ...userPrincipal,
-            isVerified: true,
-          };
-
-          this.accountVerificationStore.accountVerification = {
-            ...accountVerification,
-            isVerified: true,
-          };
+          this._userPermissionsService.verifyUser(true);
         })
       );
   }
