@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Inject, ViewEncapsulation } from '@angular/core';
+import { appNameToken } from "../../../common/config";
 
 @Component({
   selector: 'app-logo',
@@ -9,4 +10,13 @@ import { ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation } fr
 })
 export class LogoComponent {
   @HostBinding('class') classes = 'logo-icon-container';
+  private readonly _appName: string;
+
+  constructor(@Inject(appNameToken) private readonly _appNameToken: string) {
+    this._appName = _appNameToken;
+  }
+
+  protected get appName(): string {
+    return this._appName;
+  }
 }

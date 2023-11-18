@@ -8,6 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { LoadingService } from '../../../core/services/loading/loading.service';
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'app-form',
@@ -30,9 +31,11 @@ export class FormComponent {
   @Output() public cancelClicked = new EventEmitter<void>();
   @Output() public saveClicked = new EventEmitter<void>();
 
-  protected loading$ = this.loadingService.loading$;
+  public constructor(private readonly _loadingService: LoadingService) {
+  }
 
-  public constructor(private readonly loadingService: LoadingService) {
+  protected get loading$(): Observable<boolean> {
+    return this._loadingService.loading$;
   }
 
   public onCancelClicked(): void {

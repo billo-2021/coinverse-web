@@ -37,7 +37,7 @@
       <app-input-number class="col-6" label="Amount" name="amount" size="l"></app-input-number>
     </div>
     <app-button
-      (click)="onAction()"
+      (clicked)="onAction()"
       [isDisabled]="!form.valid"
       [text]="action[activeTabIndex]"
       class="mt-4"

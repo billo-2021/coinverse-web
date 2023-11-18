@@ -4,64 +4,71 @@ import {
   HostBinding,
   Input,
   OnChanges,
-  OnInit,
   Optional,
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
-import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { ListOption } from '../../types';
-import { BehaviorSubject, filter, merge, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { TUI_DEFAULT_MATCHER } from '@taiga-ui/cdk';
 import { LoadingService } from '../../../core/services/loading/loading.service';
 
 export type SizeType = 's' | 'm' | 'l';
+
+const DEFAULT_HEIGHT = 44;
 
 @Component({
   selector: 'app-combo-box',
   templateUrl: './combo-box.component.html',
   styleUrls: ['./combo-box.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: TUI_VALIDATION_ERRORS,
-      useValue: {
-        required: 'This is required',
-        email: 'Email is invalid',
-      },
-    },
-  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ComboBoxComponent implements OnInit, OnChanges {
-  @HostBinding('class') public classes = 'combo-box';
+export class ComboBoxComponent implements OnChanges {
   @Input() size: SizeType = 'm';
   @Input() public name = '';
   @Input() public label = '';
   @Input() public options: ListOption[] = [];
   @Input() public isDisabled = false;
-  protected formGroup?: FormGroup;
-  protected readonly loading$ = this.loadingService.loading$;
-  private readonly search$ = new Subject<string | null>();
-  private readonly _options = new BehaviorSubject<ListOption[]>(this.options);
-  public readonly options$: Observable<readonly ListOption[] | null> = this._options.asObservable();
-  private readonly _height = new BehaviorSubject((this.options.length && this.options.length * 44) || 44);
-  public readonly height$ = this._height.asObservable();
+  private readonly _search$ = new Subject<string | null>();
+  private readonly _options$: BehaviorSubject<ListOption[]>;
+  private readonly _height$: BehaviorSubject<number>;
 
   public constructor(
-    private readonly loadingService: LoadingService,
-    @Optional() private formGroupDirective: FormGroupDirective
+    private readonly _loadingService: LoadingService,
+    @Optional() private _formGroupDirective: FormGroupDirective
   ) {
-    const a = merge(this._options, this.search$.pipe(filter((value) => value !== null)));
+    this._options$ = new BehaviorSubject<ListOption[]>(this.options);
+    this._height$ = new BehaviorSubject((this.options.length && this.options.length * DEFAULT_HEIGHT) || DEFAULT_HEIGHT)
   }
 
-  public ngOnInit(): void {
-    if (!this.formGroupDirective) {
-      return;
-    }
+  @Input()
+  public set ngClass(classNames: string) {
+    this._classes = classNames;
+  }
 
-    this.formGroup = this.formGroupDirective.form;
+  private _classes = '';
+
+  @HostBinding('class')
+  protected get classes(): string {
+    return `combo-box ${this._classes}`;
+  }
+
+  protected get formGroup(): FormGroup | null {
+    return this._formGroupDirective?.form || null;
+  }
+
+  protected get loading$(): Observable<boolean> {
+    return this._loadingService.loading$;
+  }
+
+  protected get options$(): Observable<readonly ListOption[] | null> {
+    return this._options$.asObservable();
+  }
+
+  protected get height$(): Observable<number> {
+    return this._height$.asObservable();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -69,16 +76,16 @@ export class ComboBoxComponent implements OnInit, OnChanges {
       return;
     }
 
-    this._options.next(this.options);
-    this._height.next((this.options.length && this.options.length * 44) || 44);
+    this._options$.next(this.options);
+    this._height$.next((this.options.length && this.options.length * DEFAULT_HEIGHT) || DEFAULT_HEIGHT);
   }
 
-  public onSearch(query: string | null) {
-    this.search$.next(query);
+  public onSearch(query: string | null): void {
+    this._search$.next(query);
     const filteredOptions = this.options.filter((option) => TUI_DEFAULT_MATCHER(option, query || ''));
 
-    this._options.next(filteredOptions);
-    this._height.next((filteredOptions.length && filteredOptions.length * 44) || 44);
+    this._options$.next(filteredOptions);
+    this._height$.next((filteredOptions.length && filteredOptions.length * DEFAULT_HEIGHT) || DEFAULT_HEIGHT);
   }
 
   public extractValueFromEvent(event: Event): string | null {

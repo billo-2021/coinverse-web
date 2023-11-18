@@ -3,13 +3,12 @@ import {
   Component,
   HostBinding,
   Input,
-  OnInit,
   Optional,
   ViewEncapsulation
 } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
-import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { LoadingService } from '../../../core/services/loading/loading.service';
+import { Observable } from "rxjs";
 
 export type SizeType = 's' | 'm' | 'l';
 
@@ -18,19 +17,9 @@ export type SizeType = 's' | 'm' | 'l';
   templateUrl: './phone-number-field.component.html',
   styleUrls: ['./phone-number-field.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: TUI_VALIDATION_ERRORS,
-      useValue: {
-        required: 'This is required',
-        email: 'Email is invalid',
-      },
-    },
-  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PhoneNumberFieldComponent implements OnInit {
-  @HostBinding('class') public classes = 'input-text-field-wrapper';
+export class PhoneNumberFieldComponent {
   @Input() public size: SizeType = 'm';
   @Input() public name = '';
   @Input() public label = '';
@@ -40,20 +29,29 @@ export class PhoneNumberFieldComponent implements OnInit {
   @Input() public isDisabled = false;
   @Input() public hasClear = true;
 
-  protected formGroup?: FormGroup;
-  protected readonly loading$ = this.loadingService.loading$;
-
   public constructor(
-    private readonly loadingService: LoadingService,
-    @Optional() private readonly formGroupDirective: FormGroupDirective
+    private readonly _loadingService: LoadingService,
+    @Optional() private readonly _formGroupDirective: FormGroupDirective
   ) {
   }
 
-  public ngOnInit(): void {
-    if (!this.formGroupDirective) {
-      return;
-    }
+  @Input()
+  public set ngClass(classNames: string) {
+    this._classes = classNames;
+  }
 
-    this.formGroup = this.formGroupDirective.form;
+  private _classes = '';
+
+  @HostBinding('class')
+  protected get classes(): string {
+    return `input-text-field-wrapper ${this._classes}`;
+  }
+
+  protected get formGroup(): FormGroup | null {
+    return this._formGroupDirective?.form || null;
+  }
+
+  protected get loading$(): Observable<boolean> {
+    return this._loadingService.loading$;
   }
 }

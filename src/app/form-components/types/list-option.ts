@@ -1,6 +1,6 @@
 type ListOptionType = {
-  code: string;
-  name: string;
+  readonly code: string;
+  readonly name: string;
 };
 
 class ListOption {
@@ -9,7 +9,8 @@ class ListOption {
     public readonly name: string,
     public readonly value: unknown,
     public readonly avatar: string | null = null
-  ) {}
+  ) {
+  }
 
   public toString(): string {
     return `${this.code} ${this.name}`;

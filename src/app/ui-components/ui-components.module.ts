@@ -1,9 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import {
   TuiButtonModule,
@@ -112,10 +108,6 @@ import { BlockStatusComponent } from './components/block-status/block-status.com
   ],
   imports: [
     CommonModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatCardModule,
-    MatIconModule,
     RouterModule,
     TuiSvgModule,
     TuiIslandModule,
@@ -188,4 +180,5 @@ import { BlockStatusComponent } from './components/block-status/block-status.com
     BlockStatusComponent,
   ],
 })
-export class UiComponentsModule {}
+export class UiComponentsModule {
+}

@@ -2,40 +2,40 @@
   <app-card [subtitle]="subtitle" [title]="title">
     <table *ngIf="userAccountEvents$ | async as userAccountEvents" [columns]="columns" class="table" tuiTable>
       <thead>
-        <tr tuiThGroup>
-          <ng-container *ngFor="let column of columns">
-            <th *tuiHead="column" [sorter]="null" tuiTh>
-              <ng-container *ngIf="column !== 'actions'">{{ keys[column] }}</ng-container>
-            </th>
-          </ng-container>
-        </tr>
+      <tr tuiThGroup>
+        <ng-container *ngFor="let column of columns">
+          <th *tuiHead="column" [sorter]="null" tuiTh>
+            <ng-container *ngIf="column !== 'actions'">{{ keys[column] }}</ng-container>
+          </th>
+        </ng-container>
+      </tr>
       </thead>
       <tbody [data]="userAccountEvents" class="tbody" tuiTbody>
-        <tr *ngFor="let userAccountEvent of userAccountEvents" tuiTr>
-          <td *tuiCell="'device'" [class.match]="isMatch(userAccountEvent.deviceDetails)" tuiTd>
-            {{ userAccountEvent.deviceDetails }}
-          </td>
-          <td *tuiCell="'ipAddress'" [class.match]="isMatch(userAccountEvent.ipAddress)" tuiTd>
-            {{ userAccountEvent.ipAddress }}
-          </td>
-          <td *tuiCell="'type'" [class.match]="isMatch(userAccountEvent.event.type)" tuiTd>
-            <app-tag [autoColor]="true" [value]="userAccountEvent.event.type"> </app-tag>
-          </td>
-          <td *tuiCell="'description'" [class.match]="isMatch(userAccountEvent.event.description)" tuiTd>
-            {{ userAccountEvent.event.description }}
-          </td>
-          <td *tuiCell="'date'" [class.match]="isMatch(userAccountEvent.createdAt)" tuiTd>
-            {{ userAccountEvent.createdAt | date: 'dd/MM/yy HH:mm' }}
-          </td>
-          <td *tuiCell="'actions'" tuiTd>
-            <app-button
-              (click)="onReportActivity()"
-              appearance="secondary-destructive"
-              size="xs"
-              text="Report"
-            ></app-button>
-          </td>
-        </tr>
+      <tr *ngFor="let userAccountEvent of userAccountEvents" tuiTr>
+        <td *tuiCell="'device'" [class.match]="isMatch(userAccountEvent.deviceDetails)" tuiTd>
+          {{ userAccountEvent.deviceDetails }}
+        </td>
+        <td *tuiCell="'ipAddress'" [class.match]="isMatch(userAccountEvent.ipAddress)" tuiTd>
+          {{ userAccountEvent.ipAddress }}
+        </td>
+        <td *tuiCell="'type'" [class.match]="isMatch(userAccountEvent.event.type)" tuiTd>
+          <app-tag [autoColor]="true" [value]="userAccountEvent.event.type"></app-tag>
+        </td>
+        <td *tuiCell="'description'" [class.match]="isMatch(userAccountEvent.event.description)" tuiTd>
+          {{ userAccountEvent.event.description }}
+        </td>
+        <td *tuiCell="'date'" [class.match]="isMatch(userAccountEvent.createdAt)" tuiTd>
+          {{ userAccountEvent.createdAt | date: 'dd/MM/yy HH:mm' }}
+        </td>
+        <td *tuiCell="'actions'" tuiTd>
+          <app-button
+            (clicked)="onReportActivity()"
+            appearance="secondary-destructive"
+            size="xs"
+            text="Report"
+          ></app-button>
+        </td>
+      </tr>
       </tbody>
       <ng-container *ngTemplateOutlet="tableFoot"></ng-container>
     </table>
@@ -44,18 +44,18 @@
 
 <ng-template #tableFoot>
   <tfoot class="tfoot">
-    <tr class="tr">
-      <td [colSpan]="columns.length" class="td">
-        <ng-container *ngIf="pagination$ | async as pagination">
-          <tui-table-pagination
-            (paginationChange)="onPagination($event)"
-            [page]="pagination.page"
-            [size]="pagination.size"
-            [total]="(total$ | async) || 0"
-            class="tui_space-top-2"
-          ></tui-table-pagination>
-        </ng-container>
-      </td>
-    </tr>
+  <tr class="tr">
+    <td [colSpan]="columns.length" class="td">
+      <ng-container *ngIf="pagination$ | async as pagination">
+        <tui-table-pagination
+          (paginationChange)="onPagination($event)"
+          [page]="pagination.page"
+          [size]="pagination.size"
+          [total]="(total$ | async) || 0"
+          class="tui_space-top-2"
+        ></tui-table-pagination>
+      </ng-container>
+    </td>
+  </tr>
   </tfoot>
 </ng-template>

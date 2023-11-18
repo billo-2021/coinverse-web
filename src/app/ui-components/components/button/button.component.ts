@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation
+} from '@angular/core';
 
 export type AppearanceType =
   | 'primary'
@@ -15,12 +22,14 @@ export type SizeType = 'xs' | 's' | 'm' | 'l' | 'xl';
 
 export type ButtonType = 'button' | 'submit' | 'reset';
 
-type ShapeType = 'square' | 'rounded' | null;
+export type ShapeType = 'square' | 'rounded' | null;
 
 @Component({
   selector: 'app-button',
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
   @Input() public type: ButtonType = 'button';
@@ -34,9 +43,9 @@ export class ButtonComponent {
   @Input() public isLoading = false;
   @Input() public shape: ShapeType = null;
 
-  @Output() public click = new EventEmitter<void>();
+  @Output() public clicked = new EventEmitter<void>();
 
   public onClick() {
-    this.click.emit();
+    this.clicked.emit();
   }
 }

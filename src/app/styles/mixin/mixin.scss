@@ -37,10 +37,6 @@
 @mixin create-col-classes($modifier, $grid-cols, $break-point) {
   $min-or-max: 'min';
 
-  //@if ($modifier == '-lg') {
-  //  $min-or-max: 'max'
-  //}
-
   @if ($modifier == '') {
     @include create-col-class($modifier, $grid-cols);
   } @else {

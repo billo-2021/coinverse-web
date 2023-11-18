@@ -1,6 +1,7 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import { Component, Input, Optional } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { LoadingService } from '../../../core/services/loading/loading.service';
+import { Observable } from "rxjs";
 
 export type SizeType = 's' | 'm' | 'l';
 
@@ -9,7 +10,7 @@ export type SizeType = 's' | 'm' | 'l';
   templateUrl: './input-card.component.html',
   styleUrls: ['./input-card.component.scss'],
 })
-export class InputCardComponent implements OnInit {
+export class InputCardComponent {
   @Input() public type: 'text' | 'email' = 'text';
   @Input() public size: SizeType = 'm';
   @Input() public cardNumberName = 'cardNumber';
@@ -22,20 +23,17 @@ export class InputCardComponent implements OnInit {
   @Input() public hasClear = true;
   @Input() public autocompleteEnabled = true;
 
-  protected formGroup?: FormGroup;
-  protected readonly loading$ = this.loadingService.loading$;
-
   public constructor(
-    private loadingService: LoadingService,
-    @Optional() private formGroupDirective: FormGroupDirective
+    private readonly _loadingService: LoadingService,
+    @Optional() private readonly _formGroupDirective: FormGroupDirective
   ) {
   }
 
-  public ngOnInit(): void {
-    if (!this.formGroupDirective) {
-      return;
-    }
+  protected get formGroup(): FormGroup | null {
+    return this._formGroupDirective?.form || null;
+  }
 
-    this.formGroup = this.formGroupDirective.form;
+  protected get loading$(): Observable<boolean> {
+    return this._loadingService.loading$;
   }
 }

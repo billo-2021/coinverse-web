@@ -13,9 +13,9 @@ import { TuiBreakpointService } from '@taiga-ui/core';
 import { TuiStepperComponent } from '@taiga-ui/kit';
 
 type StepType = {
-  title: string;
-  state: 'error' | 'normal' | 'pass';
-  isDisabled: boolean;
+  readonly title: string;
+  readonly state: 'error' | 'normal' | 'pass';
+  readonly isDisabled: boolean;
 };
 
 @Component({

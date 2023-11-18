@@ -1,8 +1,4 @@
 <div *ngIf="user" class="app-bar-wrapper color gray p-2 flex-row items-center text-center">
-  <!--  <button (click)="onMenuToggle(true)" (tuiActiveZoneChange)="onMenuToggle($event)" *ngIf="isMobile"-->
-  <!--          [icon]="'tuiIconMenuLarge'"-->
-  <!--          appearance="icon" class="white ml-6" size="m" title="Menu" tuiIconButton>-->
-  <!--  </button>-->
   <tui-marker-icon
     (click)="onMenuToggle(true)"
     *ngIf="isMobile"
@@ -14,7 +10,7 @@
   <app-text *ngIf="isMobile">Coinverse</app-text>
   <div class="ml-auto flex-row items-center text-center">
     <app-button
-      (click)="onSignOut()"
+      (clicked)="onSignOut()"
       appearance="primary"
       class="mr-5"
       icon="tuiIconLogOut"

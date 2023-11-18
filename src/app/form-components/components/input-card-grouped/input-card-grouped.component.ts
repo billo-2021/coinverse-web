@@ -1,37 +1,24 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import { Component, Input, Optional } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { LoadingService } from '../../../core/services/loading/loading.service';
-import { of, tap } from 'rxjs';
-import { TUI_INPUT_CARD_GROUPED_TEXTS } from '@taiga-ui/addon-commerce';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-input-card-grouped',
   templateUrl: './input-card-grouped.component.html',
-  styleUrls: ['./input-card-grouped.component.scss'],
-  providers: [
-    {
-      provide: TUI_INPUT_CARD_GROUPED_TEXTS,
-      useValue: of({
-        cardNumberText: 'Number',
-        expiryText: 'mm/yy',
-        cvcText: 'Code',
-      }),
-    },
-  ],
+  styleUrls: ['./input-card-grouped.component.scss']
 })
-export class InputCardGroupedComponent implements OnInit {
+export class InputCardGroupedComponent {
   @Input() public name = '';
   @Input() public label = '';
   @Input() public isDisabled = false;
 
-  protected formGroup?: FormGroup;
-  protected formControl?: FormControl;
-
   public constructor(
-    private loadingService: LoadingService,
-    @Optional() private formGroupDirective: FormGroupDirective
+    private readonly _loadingService: LoadingService,
+    @Optional() private readonly _formGroupDirective: FormGroupDirective
   ) {
-    this.loadingService.loading$.pipe(
+
+    this.loading$.pipe(
       tap((loading) => {
         if (!this.formControl) {
           return;
@@ -43,16 +30,18 @@ export class InputCardGroupedComponent implements OnInit {
         }
 
         this.formControl.enable();
-      })
-    );
+      }));
   }
 
-  public ngOnInit(): void {
-    if (!this.formGroupDirective) {
-      return;
-    }
+  protected get formGroup(): FormGroup | null {
+    return this._formGroupDirective?.form || null;
+  }
 
-    this.formGroup = this.formGroupDirective.form;
-    this.formControl = this.formGroup?.controls[this.name] as FormControl;
+  protected get formControl(): FormControl | null {
+    return this.formGroup?.controls[this.name] as FormControl || null;
+  }
+
+  protected get loading$(): Observable<boolean> {
+    return this._loadingService.loading$;
   }
 }

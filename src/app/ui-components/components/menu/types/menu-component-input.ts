@@ -1,7 +1,7 @@
 import { UserPrincipal } from '../../../../common/domain-models';
 
 export type MenuComponentInput = {
-  isMenuShown: boolean;
-  animationDuration: number;
-  user: UserPrincipal | null;
+  readonly isMenuShown: boolean;
+  readonly animationDuration: number;
+  readonly user: UserPrincipal | null;
 };

@@ -2,12 +2,7 @@
 @use '../variables/variables' as variables;
 
 .page {
-  // min-height: 100vh;
   padding: 16px;
-  //display: flex;
-  //flex-direction: column;
-  //align-items: center;
-  //justify-content: center;
 }
 
 .full-width {
@@ -16,7 +11,6 @@
 
 .container {
   max-width: variables.$card_width_md * 1px;
-  // margin: 0 auto;
 
   &-fluid {
     margin: 0;

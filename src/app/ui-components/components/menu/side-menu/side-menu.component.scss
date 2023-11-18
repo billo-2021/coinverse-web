@@ -4,7 +4,6 @@
   height: 100px;
   @include mixins.shadow(6);
   border-bottom: 1px solid var(--tui-base-02);
-  // background: var(--tui-primary);
 }
 
 .link {
@@ -46,10 +45,6 @@
   text-align: center;
   height: 3.4rem;
 }
-
-//.t-icon {
-//  color: var(--tui-primary);
-//}
 
 .active {
   color: var(--tui-primary) !important;

@@ -32,7 +32,6 @@ import {
 import { UiComponentsModule } from '../ui-components/ui-components.module';
 import { NgOtpInputModule } from 'ng-otp-input';
 import { TextFieldComponent } from './components/text-field/text-field.component';
-import { FormFieldComponent } from './components/form-field/form-field.component';
 import { FormComponent } from './components/form/form.component';
 import { PasswordFieldComponent } from './components/password-field/password-field.component';
 import { PhoneNumberFieldComponent } from './components/phone-number-field/phone-number-field.component';
@@ -48,7 +47,6 @@ import { InputCardGroupedComponent } from './components/input-card-grouped/input
 
 @NgModule({
   declarations: [
-    FormFieldComponent,
     TextFieldComponent,
     FormComponent,
     PasswordFieldComponent,
@@ -94,7 +92,6 @@ import { InputCardGroupedComponent } from './components/input-card-grouped/input
   ],
   exports: [
     ReactiveFormsModule,
-    FormFieldComponent,
     FormComponent,
     TextFieldComponent,
     PasswordFieldComponent,
@@ -108,4 +105,5 @@ import { InputCardGroupedComponent } from './components/input-card-grouped/input
     InputCardComponent,
   ],
 })
-export class FormComponentsModule {}
+export class FormComponentsModule {
+}

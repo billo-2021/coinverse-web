@@ -8,5 +8,5 @@ import { ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation } fr
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemComponent {
-  @HostBinding('class') classes = 'row item';
+  @HostBinding('class') classes = 'row item full-width';
 }
