@@ -44,7 +44,7 @@ enum TransactSteps {
   styleUrls: ['./transact.component.scss'],
 })
 export class TransactComponent extends BaseComponent {
-  protected readonly manageTransactionsUrl = webRoutesConfig.transact.manageTransactions;
+  protected readonly manageTransactionsUrl = webRoutesConfig.manageTransactions;
   protected readonly title = 'Transact';
   protected readonly subtitle = 'Deposit or withdraw here.';
 
@@ -169,6 +169,6 @@ export class TransactComponent extends BaseComponent {
   }
 
   public async onViewTransactions(): Promise<void> {
-    await this.router.navigate([webRoutesConfig.transact.manageTransactions]);
+    await this.router.navigate([webRoutesConfig.manageTransactions]);
   }
 }

@@ -20,8 +20,8 @@ enum Tabs {
   styleUrls: ['./manage-currencies.component.scss'],
 })
 export class ManageCurrenciesComponent extends BaseComponent {
-  protected readonly manageCurrenciesUrl = webRoutesConfig.administration.manageCurrencies;
-  protected readonly newCurrencyUrl = webRoutesConfig.administration.newCurrency;
+  protected readonly manageCurrenciesUrl = webRoutesConfig.manageCurrencies;
+  protected readonly newCurrencyUrl = webRoutesConfig.newCurrency;
   protected readonly title = 'Manage Currencies';
   protected readonly tabs: Tab[] = [
     { text: 'Crypto', icon: 'tuiIconKey', isDisabled: false },

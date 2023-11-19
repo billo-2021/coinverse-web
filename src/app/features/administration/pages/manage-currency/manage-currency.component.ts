@@ -34,7 +34,7 @@ const SAVE_TEXT: Record<Mode, string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageCurrencyComponent {
-  public manageCurrenciesUrl = webRoutesConfig.administration.manageCurrencies;
+  public manageCurrenciesUrl = webRoutesConfig.manageCurrencies;
   public readonly title = TITLE;
   public readonly subtitle = SUBTITLE;
   public readonly saveText = SAVE_TEXT;

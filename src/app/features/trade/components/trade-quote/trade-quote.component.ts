@@ -21,8 +21,7 @@ export class TradeQuoteComponent implements OnInit {
   protected exchangeRate: CurrencyExchangeRateResponse | null = null;
   protected exchangeRateData: CurrencyExchangeResponseData | null = null;
 
-  constructor(private readonly quoteService: QuoteService) {
-  }
+  constructor(private readonly quoteService: QuoteService) {}
 
   ngOnInit(): void {
     this.quoteService

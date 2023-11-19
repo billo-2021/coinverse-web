@@ -39,7 +39,7 @@ const KEYS: Record<Key, string> = {
   styleUrls: ['./manage-transactions.component.scss'],
 })
 export class ManageTransactionsComponent extends BaseComponent {
-  protected readonly transactUrl = webRoutesConfig.transact.root;
+  protected readonly transactUrl = webRoutesConfig.transact;
   protected readonly title = 'Transaction History';
 
   protected readonly subtitle = 'Your transaction history.';

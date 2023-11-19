@@ -7,10 +7,9 @@ import { TUI_DEFAULT_STRINGIFY, TuiContextWithImplicit } from '@taiga-ui/cdk';
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineChartComponent {
-  @HostBinding('class') classes = 'full-width';
   @Input() public data: TuiPoint[] = [
     [50, 50],
     [100, 75],
@@ -20,8 +19,20 @@ export class LineChartComponent {
     [300, 190],
     [350, 90],
   ];
-
   protected readonly stringify = TUI_DEFAULT_STRINGIFY;
-  protected readonly hintContent = ({$implicit}: TuiContextWithImplicit<readonly TuiPoint[]>): number =>
+
+  @Input()
+  public set classNames(value: string) {
+    this._classes = value;
+  }
+
+  private _classes = '';
+
+  @HostBinding('class')
+  protected get classes(): string {
+    return `full-width ${this._classes}`;
+  }
+
+  protected readonly hintContent = ({ $implicit }: TuiContextWithImplicit<readonly TuiPoint[]>): number =>
     $implicit[0][1];
 }

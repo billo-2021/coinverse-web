@@ -15,8 +15,8 @@ import {
 import { apiRoutesConfig } from '../../config';
 import { loginDtoToLoginResponse } from '../../mappers';
 import { userDtoToUserResponse } from '../../mappers/authentication/authentication.mapper';
-import { UserPrincipalStoreService } from '../user-principal-store/user-principal-store.service';
-import { AccountVerificationStoreService } from '../account-verification-store/account-verification-store.service';
+import { UserPrincipalStoreService } from '../../services/user-principal-store/user-principal-store.service';
+import { AccountVerificationStoreService } from '../../services/account-verification-store/account-verification-store.service';
 
 @Injectable({
   providedIn: 'root',

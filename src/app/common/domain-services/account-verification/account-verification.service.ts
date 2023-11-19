@@ -4,11 +4,9 @@ import { Observable, tap } from 'rxjs';
 import { HttpMessageResponse } from '../../../core/types';
 import { HttpCrudService } from '../../../core/services';
 import { apiRoutesConfig } from '../../config';
-import {
-  AccountVerificationStoreService
-} from '../account-verification-store/account-verification-store.service';
-import { UserPrincipalStoreService } from '../user-principal-store/user-principal-store.service';
-import { UserPermissionsService } from "../../services/user-permissions/user-permissions.service";
+import { AccountVerificationStoreService } from '../../services/account-verification-store/account-verification-store.service';
+import { UserPrincipalStoreService } from '../../services/user-principal-store/user-principal-store.service';
+import { UserPermissionsService } from '../../services/user-permissions/user-permissions.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,8 +23,7 @@ export class AccountVerificationService {
     @Inject(UserPrincipalStoreService)
     private readonly userPrincipalStore: UserPrincipalStoreService,
     private readonly _userPermissionsService: UserPermissionsService
-  ) {
-  }
+  ) {}
 
   public requestOtpToken(otpTokenRequest: OtpTokenRequest): Observable<HttpMessageResponse> {
     return this.httpService.create<OtpTokenRequest, HttpMessageResponse>(

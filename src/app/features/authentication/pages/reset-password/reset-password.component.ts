@@ -5,7 +5,6 @@ import { AlertService, NavigationService } from '../../../../core/services';
 import { PasswordResetService } from '../../../../common/domain-services';
 import { PasswordTokenUserResponse, ResetPasswordRequest } from '../../../../common/domain-models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
 
 type StateType = 'error' | 'normal' | 'pass';
 
@@ -28,7 +27,7 @@ enum Steps {
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordComponent implements OnInit {
   @HostBinding('class') public classes = 'full-width flex-col justify-center items-center';
@@ -89,17 +88,15 @@ export class ResetPasswordComponent implements OnInit {
           this.passwordTokenUser = response;
         },
         error: async () => {
-          await this.navigationService.to({
-            path: webRoutesConfig.authentication.login,
-          });
+          await this.navigationService.to('login');
         },
       });
   }
 
   public getSteps(): StepType[] {
     return [
-      {title: 'Set a new Password', ...this.DEFAULT_STEP_STATE},
-      {title: 'Reset password result', ...this.DEFAULT_STEP_STATE},
+      { title: 'Set a new Password', ...this.DEFAULT_STEP_STATE },
+      { title: 'Reset password result', ...this.DEFAULT_STEP_STATE },
     ];
   }
 

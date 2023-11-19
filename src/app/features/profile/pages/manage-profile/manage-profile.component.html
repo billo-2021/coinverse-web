@@ -6,17 +6,17 @@
         [text]="userProfileResponse.firstName + ' ' + userProfileResponse.lastName"
         size="m"
       ></app-avatar>
-      <app-col class="ml-6">
+      <div class="ml-6">
         <app-text>{{ userProfileResponse.firstName + ' ' }}{{ userProfileResponse.lastName }}</app-text>
         <app-text>{{ userProfileResponse.emailAddress }}</app-text>
-      </app-col>
+      </div>
     </div>
   </div>
   <app-tabs [(activeItemIndex)]="activeTabIndex" [tabs]="tabs"></app-tabs>
   <div class="flex-row">
     <div *ngIf="activeTabIndex === TABS.Profile" class="mt-12 flex-col col-lg-6 col-md-6 col-sm-12">
-      <app-profile-form (saveClicked)="onSaveClicked()"> </app-profile-form>
-      <!--      <app-button appearance="outline" class="mt-6" text="Delete my Account"></app-button>-->
+      <app-profile-form (saveClicked)="onSaveClicked()"></app-profile-form>
+      <app-button appearance="outline" class="mt-6" text="Delete my Account"></app-button>
     </div>
 
     <app-address-details-form

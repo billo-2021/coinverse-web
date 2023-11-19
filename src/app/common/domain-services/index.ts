@@ -1,10 +1,10 @@
 import { AuthenticationService } from './authentication/authentication.service';
 
-import { UserAccessCredentialsStoreService } from './user-access-credentials-store/user-access-credentials-store.service';
-import { UserPrincipalStoreService } from './user-principal-store/user-principal-store.service';
+import { UserAccessCredentialsStoreService } from '../services/user-access-credentials-store/user-access-credentials-store.service';
+import { UserPrincipalStoreService } from '../services/user-principal-store/user-principal-store.service';
 
 import { AccountVerificationService } from './account-verification/account-verification.service';
-import { AccountVerificationStoreService } from './account-verification-store/account-verification-store.service';
+import { AccountVerificationStoreService } from '../services/account-verification-store/account-verification-store.service';
 
 import { PasswordResetService } from './password-reset/password-reset.service';
 

@@ -4,7 +4,7 @@ import {
   HostBinding,
   OnInit,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
@@ -23,7 +23,7 @@ import { webRoutesConfig } from '../../../../common/config/web-routes-config';
   templateUrl: './verify-account.component.html',
   styleUrls: ['./verify-account.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerifyAccountComponent implements OnInit {
   @HostBinding('class') classes = 'full-width flex-col justify-center items-center';
@@ -43,8 +43,7 @@ export class VerifyAccountComponent implements OnInit {
     private readonly accountVerificationService: AccountVerificationService,
     private readonly accountVerificationStore: AccountVerificationStoreService,
     private readonly alertService: AlertService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     const accountVerification = this.accountVerificationStore.accountVerification;

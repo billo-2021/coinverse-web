@@ -4,11 +4,11 @@ import {
   HostBinding,
   Input,
   Optional,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { LoadingService } from '../../../core/services/loading/loading.service';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 
 export type SizeType = 's' | 'm' | 'l';
 
@@ -17,7 +17,7 @@ export type SizeType = 's' | 'm' | 'l';
   templateUrl: './text-field.component.html',
   styleUrls: ['./text-field.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextFieldComponent {
   @Input() public type: 'text' | 'email' = 'text';
@@ -32,12 +32,11 @@ export class TextFieldComponent {
   public constructor(
     private readonly _loadingService: LoadingService,
     @Optional() private readonly _formGroupDirective: FormGroupDirective
-  ) {
-  }
+  ) {}
 
   @Input()
-  public set ngClass(classNames: string) {
-    this._classes = classNames;
+  public set classNames(value: string) {
+    this._classes = value;
   }
 
   private _classes = '';

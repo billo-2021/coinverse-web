@@ -5,17 +5,27 @@ import { ChangeDetectionStrategy, Component, HostBinding, Input, ViewEncapsulati
   templateUrl: './ring-chart.component.html',
   styleUrls: ['./ring-chart.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RingChartComponent {
-  @HostBinding('class') classes = 'full-width';
   @Input() public value: number[] = [];
   @Input() public labels: string[] = [];
   @Input() public extraLabels: string[] = [];
   @Input() public total = 0;
 
   protected activeItemIndex = NaN;
-  protected readonly NaN = NaN;
+
+  @Input()
+  public set classNames(value: string) {
+    this._classes = value;
+  }
+
+  private _classes = '';
+
+  @HostBinding('class')
+  protected get classes(): string {
+    return `full-width ${this._classes}`;
+  }
 
   public getColor(index: number): string {
     return `var(--tui-chart-${index})`;

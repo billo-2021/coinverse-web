@@ -1,4 +1,4 @@
-<app-item *ngIf="formGroup" [formGroup]="formGroup" class="otp-wrapper mb-10">
+<div *ngIf="formGroup" [formGroup]="formGroup" class="item otp-wrapper mb-10">
   <app-label [text]="label"></app-label>
 
   <ng-otp-input
@@ -12,4 +12,4 @@
     [formCtrl]="formControl"
   >
   </ng-otp-input>
-</app-item>
+</div>

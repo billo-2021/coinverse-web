@@ -1,7 +1,7 @@
 import { Component, Input, Optional } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { LoadingService } from '../../../core/services/loading/loading.service';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 
 export type SizeType = 'm' | 'l';
 
@@ -19,8 +19,7 @@ export class CheckBoxComponent {
   public constructor(
     private readonly _loadingService: LoadingService,
     @Optional() private _formGroupDirective: FormGroupDirective
-  ) {
-  }
+  ) {}
 
   protected get loading$(): Observable<boolean> {
     return this._loadingService.loading$;

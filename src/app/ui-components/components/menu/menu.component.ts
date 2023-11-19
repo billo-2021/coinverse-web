@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
-  Inject,
   Input,
   OnChanges,
   ViewEncapsulation,
@@ -14,7 +13,9 @@ import { UserPrincipal } from '../../../common/domain-models';
 import { MenuComponentInput } from './types';
 import { MenuViewModel } from './menu.view-model';
 import { getUpdatedChanges, SimpleChangesTyped } from '../../../common/utils';
-import { MenuService } from '../../../common/domain-services/menu/menu.service';
+import { MenuService } from '../../../common/services/menu/menu.service';
+
+const DEFAULT_ANIMATION_DURATION = 250;
 
 @Component({
   selector: 'app-menu',
@@ -22,11 +23,10 @@ import { MenuService } from '../../../common/domain-services/menu/menu.service';
   styleUrls: ['./menu.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [tuiWidthCollapse]
+  animations: [tuiWidthCollapse],
 })
 export class MenuComponent implements OnChanges {
-  @HostBinding('class') classes = 'flex-col';
-  @Input() public animationDuration = 250;
+  @Input() public animationDuration = DEFAULT_ANIMATION_DURATION;
   @Input() public user: UserPrincipal | null = null;
 
   private readonly _state$ = new BehaviorSubject<MenuComponentInput>({
@@ -35,16 +35,28 @@ export class MenuComponent implements OnChanges {
     user: this.user,
   });
 
-  private readonly _viewModel$: Observable<MenuViewModel>;
-
   public constructor(
-    private readonly navigationService: NavigationService,
-    @Inject(MenuService) private readonly menuService: MenuService
-  ) {
-    this._viewModel$ = combineLatest([
-      this.menuService.isMobile$,
-      this.menuService.isMenuShown$,
-      this.menuService.isSideMenuShown$,
+    private readonly _navigationService: NavigationService,
+    private readonly _menuService: MenuService
+  ) {}
+
+  @Input()
+  public set classNames(value: string) {
+    this._classes = value;
+  }
+
+  private _classes = '';
+
+  @HostBinding('class')
+  protected get classes(): string {
+    return `flex-col ${this._classes}`;
+  }
+
+  protected get viewModel$(): Observable<MenuViewModel> {
+    return combineLatest([
+      this._menuService.isMobile$,
+      this._menuService.isMenuShown$,
+      this._menuService.isSideMenuShown$,
       this._state$,
     ]).pipe(
       map(([isMobile, isMenuShown, isSideMenuShown, state]) => {
@@ -59,21 +71,17 @@ export class MenuComponent implements OnChanges {
     );
   }
 
-  protected get viewModel$() {
-    return this._viewModel$;
-  }
-
   public ngOnChanges(changes: SimpleChangesTyped<MenuComponentInput>): void {
     const nextState = getUpdatedChanges(changes);
-    this._state$.next({...this._state$.value, ...nextState});
+    this._state$.next({ ...this._state$.value, ...nextState });
   }
 
   public onToggleMenu(open: boolean): void {
-    this.menuService.setIsSideMenuShown(open);
+    this._menuService.setIsSideMenuShown(open);
   }
 
   public onClickOutside(open: boolean): void {
-    if (this.menuService.isSideMenuShown) {
+    if (this._menuService.isSideMenuShown) {
       this.onToggleMenu(open);
     }
   }

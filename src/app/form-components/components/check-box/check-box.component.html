@@ -1,4 +1,4 @@
-<app-item *ngIf="formGroup" [formGroup]="formGroup" class="mt-6">
+<div *ngIf="formGroup" [formGroup]="formGroup" class="item">
   <tui-checkbox-labeled
     [disabled]="isDisabled || (loading$ | async) || false"
     [formControlName]="name"
@@ -6,4 +6,4 @@
   >
     {{ label }}
   </tui-checkbox-labeled>
-</app-item>
+</div>

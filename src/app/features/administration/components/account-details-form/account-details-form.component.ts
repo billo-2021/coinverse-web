@@ -3,8 +3,8 @@ import { FormGroup } from '@angular/forms';
 import { ListOptionUtils } from '../../../../form-components/utils';
 
 const roles = [
-  {code: 'CS', name: 'customer'},
-  {code: 'AD', name: 'admin'},
+  { code: 'CS', name: 'customer' },
+  { code: 'AD', name: 'admin' },
 ];
 
 @Component({

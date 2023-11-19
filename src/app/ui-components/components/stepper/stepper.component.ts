@@ -11,22 +11,16 @@ import {
 } from '@angular/core';
 import { TuiBreakpointService } from '@taiga-ui/core';
 import { TuiStepperComponent } from '@taiga-ui/kit';
-
-type StepType = {
-  readonly title: string;
-  readonly state: 'error' | 'normal' | 'pass';
-  readonly isDisabled: boolean;
-};
+import { StepType } from './stepper.type';
 
 @Component({
   selector: 'app-stepper',
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepperComponent {
-  @HostBinding('class') classes = 'stepper';
   @Input() currentStepIndex = 0;
   @Input() steps: StepType[] = [];
 
@@ -37,7 +31,18 @@ export class StepperComponent {
   public constructor(
     @Inject(TuiBreakpointService)
     protected readonly breakpoint$: TuiBreakpointService
-  ) {
+  ) {}
+
+  @Input()
+  public set classNames(value: string) {
+    this._classes = value;
+  }
+
+  private _classes = '';
+
+  @HostBinding('class')
+  protected get classes(): string {
+    return `stepper ${this._classes}`;
   }
 
   public onCurrentStepChanged(currentStep: number) {

@@ -9,27 +9,36 @@ import {
 } from '@angular/core';
 import { UserPrincipal } from '../../../../common/domain-models';
 import { UserPrincipalStoreService } from '../../../../common/domain-services';
-import { Router } from '@angular/router';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+import { NavigationService } from '../../../../core/services';
 
 @Component({
   selector: 'app-menu-header',
   templateUrl: './menu-header.component.html',
   styleUrls: ['./menu-header.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuHeaderComponent {
-  @HostBinding('class') classes = 'header';
   @Input() public isMobile = false;
   @Input() public user: UserPrincipal | null = null;
 
   @Output() public toggleMenuClicked = new EventEmitter<boolean>();
 
   public constructor(
-    private readonly router: Router,
-    private readonly userPrincipalService: UserPrincipalStoreService
-  ) {
+    private readonly _navigationService: NavigationService,
+    private readonly _userPrincipalService: UserPrincipalStoreService
+  ) {}
+
+  @Input()
+  public set classNames(value: string) {
+    this._classes = value;
+  }
+
+  private _classes = '';
+
+  @HostBinding('class')
+  protected get classes(): string {
+    return `header ${this._classes}`;
   }
 
   public onMenuToggle(open: boolean): void {
@@ -37,11 +46,11 @@ export class MenuHeaderComponent {
   }
 
   public async onSignOut(): Promise<boolean> {
-    this.userPrincipalService.logOut();
-    return this.router.navigate(['/']);
+    this._userPrincipalService.logOut();
+    return this._navigationService.to('root');
   }
 
   public async onGotoProfile(): Promise<boolean> {
-    return this.router.navigate([webRoutesConfig.profile.root]);
+    return this._navigationService.to('profile');
   }
 }

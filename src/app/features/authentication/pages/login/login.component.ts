@@ -1,73 +1,47 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  Inject,
-  OnInit,
-  ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation } from '@angular/core';
 
 import { AuthenticationService } from '../../../../common/domain-services';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginRequest } from '../../../../common/domain-models';
-import { filter, finalize, tap } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+import { finalize } from 'rxjs';
+import { AlertService } from '../../../../core/services';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   @HostBinding('class') public classes = 'full-width flex-col justify-center items-center';
   protected readonly loginForm: FormGroup;
-  private _redirectUrl?: string;
 
   public constructor(
-    @Inject(ActivatedRoute) private readonly _route: ActivatedRoute,
-    @Inject(FormBuilder) private readonly formBuilder: FormBuilder,
-    @Inject(Router) private readonly router: Router,
-    @Inject(AuthenticationService)
-    private readonly authenticationService: AuthenticationService
+    private readonly _formBuilder: FormBuilder,
+    private readonly _authenticationService: AuthenticationService,
+    private readonly _alertService: AlertService
   ) {
-    this.loginForm = formBuilder.group({
+    this.loginForm = _formBuilder.group({
       username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
-  }
-
-  public ngOnInit(): void {
-    this._route.queryParams
-      .pipe(
-        filter((params) => params['redirectUrl']),
-        tap((params) => (this._redirectUrl = params['redirectUrl']))
-      )
-      .subscribe();
   }
 
   public onLogin(): void {
     const loginFormValue: unknown | LoginRequest = this.loginForm.value;
 
     if (!this.isLoginRequest(loginFormValue)) {
+      this._alertService.showErrorMessage('Invalid login credentials provided');
+      this.resetForm();
       return;
     }
 
-    this.authenticationService
+    this._authenticationService
       .login(loginFormValue)
       .pipe(
         finalize(() => {
           this.resetForm();
-        }),
-        tap((response) => {
-          if (this._redirectUrl && response.user.isVerified) {
-            this.router.navigate([this._redirectUrl]).then();
-            return;
-          }
-
-          this.router.navigate([webRoutesConfig.root]).then();
         })
       )
       .subscribe();

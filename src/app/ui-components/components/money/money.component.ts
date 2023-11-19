@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-
-type Decimal = 'always' | 'never' | 'not-zero';
-type MoneySign = 'always' | 'force-negative' | 'force-positive' | 'negative-only' | 'never';
+import { Decimal, MoneySign } from './money.type';
 
 @Component({
   selector: 'app-money',

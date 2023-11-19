@@ -42,7 +42,8 @@ export class OtpInputComponent {
         }
 
         this.formControl.enable();
-      }));
+      })
+    );
   }
 
   protected get formGroup(): FormGroup | null {
@@ -50,7 +51,7 @@ export class OtpInputComponent {
   }
 
   protected get formControl(): FormControl | null {
-    return this.formGroup?.controls[this.name] as FormControl || null;
+    return (this.formGroup?.controls[this.name] as FormControl) || null;
   }
 
   protected get loading$(): Observable<boolean> {

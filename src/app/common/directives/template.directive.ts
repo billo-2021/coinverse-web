@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, Self, TemplateRef } from "@angular/core";
+import { ChangeDetectorRef, Directive, Self, TemplateRef } from '@angular/core';
 
 @Directive({
   selector: 'ng-template[polymorphic]',
@@ -10,14 +10,10 @@ export class PolymorphicTemplate<C = any> {
 
   constructor(
     @Self() public readonly template: TemplateRef<C>,
-    private readonly _changeDetectorRef: ChangeDetectorRef,
-  ) {
-  }
+    private readonly _changeDetectorRef: ChangeDetectorRef
+  ) {}
 
-  static ngTemplateContextGuard<T>(
-    _dir: PolymorphicTemplate<T>,
-    _ctx: any
-  ): _ctx is T extends '' ? any : T {
+  static ngTemplateContextGuard<T>(_dir: PolymorphicTemplate<T>, _ctx: any): _ctx is T extends '' ? any : T {
     return true;
   }
 

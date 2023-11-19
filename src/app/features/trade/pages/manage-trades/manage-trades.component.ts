@@ -40,7 +40,7 @@ const KEYS: Record<Key, string> = {
   styleUrls: ['./manage-trades.component.scss'],
 })
 export class ManageTradesComponent extends BaseComponent {
-  protected readonly tradeUrl = webRoutesConfig.trade.root;
+  protected readonly tradeUrl = webRoutesConfig.trade;
 
   protected readonly title = 'Trade History';
 

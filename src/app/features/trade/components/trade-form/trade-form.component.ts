@@ -31,8 +31,8 @@ export class TradeFormComponent {
   @Output() public actionClicked = new EventEmitter<TradeModel>();
   @Output() public activeTabIndexChange = new EventEmitter<number>();
   protected readonly tabs: Tab[] = [
-    {text: 'BUY', icon: null, isDisabled: false},
-    {text: 'SELL', icon: null, isDisabled: false},
+    { text: 'BUY', icon: null, isDisabled: false },
+    { text: 'SELL', icon: null, isDisabled: false },
   ];
   protected readonly action = ACTION;
   protected readonly currencyPairOptions$: Observable<ListOption[]>;

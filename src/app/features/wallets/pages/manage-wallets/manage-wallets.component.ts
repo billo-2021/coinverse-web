@@ -30,7 +30,7 @@ const KEYS: Record<Key, string> = {
   styleUrls: ['./manage-wallets.component.scss'],
 })
 export class ManageWalletsComponent extends BaseComponent {
-  protected readonly transactUrl = webRoutesConfig.transact.root;
+  protected readonly transactUrl = webRoutesConfig.transact;
   protected readonly title = 'Wallets';
 
   protected readonly subtitle = 'Your latest wallet balances.';

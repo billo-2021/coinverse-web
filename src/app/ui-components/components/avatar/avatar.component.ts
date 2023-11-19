@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-
-export type SizeType = 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl';
+import { SizeType } from './avatar.type';
 
 @Component({
   selector: 'app-avatar',

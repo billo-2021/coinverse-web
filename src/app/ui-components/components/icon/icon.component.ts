@@ -5,9 +5,20 @@ import { ChangeDetectionStrategy, Component, HostBinding, Input, ViewEncapsulati
   templateUrl: './icon.component.html',
   styleUrls: ['./icon.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent {
-  @HostBinding('class') classes = 'icon-wrapper';
   @Input() public src = '';
+
+  @Input()
+  public set classNames(value: string) {
+    this._classes = value;
+  }
+
+  private _classes = '';
+
+  @HostBinding('class')
+  protected get classes(): string {
+    return `icon-wrapper ${this._classes}`;
+  }
 }

@@ -2,7 +2,7 @@ import { Component, Input, Optional } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { LoadingService } from '../../../core/services/loading/loading.service';
 import { SizeType } from '../text-field/text-field.component';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 
 type DecimalType = 'not-zero' | 'always' | 'never';
 
@@ -25,8 +25,7 @@ export class InputNumberComponent {
   public constructor(
     private readonly _loadingService: LoadingService,
     @Optional() private readonly _formGroupDirective: FormGroupDirective
-  ) {
-  }
+  ) {}
 
   protected get formGroup(): FormGroup | null {
     return this._formGroupDirective?.form || null;

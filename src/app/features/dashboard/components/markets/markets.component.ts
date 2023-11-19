@@ -47,7 +47,7 @@ type CryptoCurrencyModel = CryptoCurrencyResponse & {
   styleUrls: ['./markets.component.scss'],
 })
 export class MarketsComponent extends BaseComponent {
-  protected readonly transactUrl = webRoutesConfig.transact.root;
+  protected readonly transactUrl = webRoutesConfig.transact;
   protected readonly title = 'Markets';
   protected readonly subtitle = 'Latest market prices.';
 
@@ -97,7 +97,7 @@ export class MarketsComponent extends BaseComponent {
   }
 
   public async onBuy(currencyCode: string): Promise<void> {
-    const url = webRoutesConfig.trade.root;
+    const url = webRoutesConfig.trade;
     await this.router.navigate([url], {
       queryParams: {
         action: 'BUY',
@@ -107,7 +107,7 @@ export class MarketsComponent extends BaseComponent {
   }
 
   public async onSell(currencyCode: string): Promise<void> {
-    const url = webRoutesConfig.trade.root;
+    const url = webRoutesConfig.trade;
     await this.router.navigate([url], {
       queryParams: {
         action: 'SELL',

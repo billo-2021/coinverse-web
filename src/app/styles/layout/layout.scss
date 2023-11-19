@@ -21,9 +21,18 @@
 .row {
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: wrap;
   row-gap: 1rem;
+}
+
+.item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  row-gap: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .flex {
@@ -51,7 +60,7 @@
 
 .col {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
 
   @each $modifier, $break-point in variables.$map_grid_props {

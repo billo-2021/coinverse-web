@@ -23,7 +23,7 @@ const DEFAULT_HEIGHT = 44;
   templateUrl: './combo-box.component.html',
   styleUrls: ['./combo-box.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboBoxComponent implements OnChanges {
   @Input() size: SizeType = 'm';
@@ -40,12 +40,14 @@ export class ComboBoxComponent implements OnChanges {
     @Optional() private _formGroupDirective: FormGroupDirective
   ) {
     this._options$ = new BehaviorSubject<ListOption[]>(this.options);
-    this._height$ = new BehaviorSubject((this.options.length && this.options.length * DEFAULT_HEIGHT) || DEFAULT_HEIGHT)
+    this._height$ = new BehaviorSubject(
+      (this.options.length && this.options.length * DEFAULT_HEIGHT) || DEFAULT_HEIGHT
+    );
   }
 
   @Input()
-  public set ngClass(classNames: string) {
-    this._classes = classNames;
+  public set classNames(value: string) {
+    this._classes = value;
   }
 
   private _classes = '';

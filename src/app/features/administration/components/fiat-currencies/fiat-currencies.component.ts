@@ -36,7 +36,7 @@ const KEYS: Record<Key, string> = {
   styleUrls: ['./fiat-currencies.component.scss'],
 })
 export class FiatCurrenciesComponent extends BaseComponent {
-  protected readonly manageCurrenciesUrl = webRoutesConfig.administration.manageCurrencies;
+  protected readonly manageCurrenciesUrl = webRoutesConfig.manageCurrencies;
   protected readonly columns: Key[] = ['code', 'name', 'symbol'];
   protected readonly keys = KEYS;
   protected search = '';

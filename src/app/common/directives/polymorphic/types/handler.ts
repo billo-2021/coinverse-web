@@ -1,3 +1,3 @@
-import { PolymorphicPrimitive } from "./primitive";
+import { PolymorphicPrimitive } from './primitive';
 
-export type PolymorphicHandler<C> = (context: C) => PolymorphicPrimitive
+export type PolymorphicHandler<C> = (context: C) => PolymorphicPrimitive;

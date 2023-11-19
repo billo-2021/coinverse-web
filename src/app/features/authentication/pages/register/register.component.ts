@@ -39,7 +39,7 @@ enum FormSteps {
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent {
   @HostBinding('class') public classes = 'full-width flex-col justify-center items-center';

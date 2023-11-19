@@ -1,4 +1,4 @@
-<app-item *ngIf="formGroup" [formGroup]="formGroup" class="mb-6">
+<div *ngIf="formGroup" [formGroup]="formGroup" class="item">
   <tui-input-phone
     [countryCode]="countryCode"
     [formControlName]="name"
@@ -14,5 +14,5 @@
       tuiTextfield
     />
   </tui-input-phone>
-  <tui-error [error]="[] | tuiFieldError | async" [formControlName]="name"> </tui-error>
-</app-item>
+  <tui-error [error]="[] | tuiFieldError | async" [formControlName]="name"></tui-error>
+</div>

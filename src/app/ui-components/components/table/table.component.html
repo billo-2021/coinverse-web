@@ -6,40 +6,40 @@
 <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">
   <table *ngIf="data$ | async as data" [columns]="columns" class="table" tuiTable>
     <thead>
-    <tr tuiThGroup>
-      <th tuiTh>Name</th>
-      <th tuiTh>Price</th>
-      <th tuiTh>24hr %</th>
-      <th tuiTh>Circulating Supply</th>
-    </tr>
+      <tr tuiThGroup>
+        <th tuiTh>Name</th>
+        <th tuiTh>Price</th>
+        <th tuiTh>24hr %</th>
+        <th tuiTh>Circulating Supply</th>
+      </tr>
     </thead>
     <tbody [data]="data" tuiTbody>
-    <tr *ngFor="let item of data" tuiTr>
-      <td *tuiCell="'name'" [class.match]="isMatch(item.name)" tuiTd>
-        {{ item.name }}
-      </td>
-      <td *tuiCell="'price'" [class.match]="isMatch(item.price)" tuiTd>
-        {{ item.price }}
-      </td>
-      <td *tuiCell="'change'" [class.match]="isMatch(item.change)" tuiTd>
-        {{ item.change }}
-      </td>
-      <td *tuiCell="'circulatingSupply'" [class.match]="isMatch(item.change)" tuiTd>
-        {{ item.circulatingSupply }}
-      </td>
-    </tr>
+      <tr *ngFor="let item of data" tuiTr>
+        <td *tuiCell="'name'" [class.match]="isMatch(item.name)" tuiTd>
+          {{ item.name }}
+        </td>
+        <td *tuiCell="'price'" [class.match]="isMatch(item.price)" tuiTd>
+          {{ item.price }}
+        </td>
+        <td *tuiCell="'change'" [class.match]="isMatch(item.change)" tuiTd>
+          {{ item.change }}
+        </td>
+        <td *tuiCell="'circulatingSupply'" [class.match]="isMatch(item.change)" tuiTd>
+          {{ item.circulatingSupply }}
+        </td>
+      </tr>
     </tbody>
     <tfoot>
-    <tr>
-      <td [colSpan]="columns.length">
-        <tui-table-pagination
-          (pageChange)="onPage($event)"
-          (sizeChange)="onSize($event)"
-          [total]="(total$ | async) || 0"
-          class="tui_space-top-2"
-        ></tui-table-pagination>
-      </td>
-    </tr>
+      <tr>
+        <td [colSpan]="columns.length">
+          <tui-table-pagination
+            (pageChange)="onPage($event)"
+            (sizeChange)="onSize($event)"
+            [total]="(total$ | async) || 0"
+            class="tui_space-top-2"
+          ></tui-table-pagination>
+        </td>
+      </tr>
     </tfoot>
   </table>
 </tui-loader>

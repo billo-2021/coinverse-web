@@ -51,8 +51,8 @@ const KEYS: Record<Key, string> = {
   styleUrls: ['./manage-users.component.scss'],
 })
 export class ManageUsersComponent extends BaseComponent {
-  protected readonly manageUsersUrl = webRoutesConfig.administration.manageUsers;
-  protected readonly newUserUrl = webRoutesConfig.administration.newUser;
+  protected readonly manageUsersUrl = webRoutesConfig.manageUsers;
+  protected readonly newUserUrl = webRoutesConfig.newUser;
 
   protected readonly title = 'Manage Users';
 

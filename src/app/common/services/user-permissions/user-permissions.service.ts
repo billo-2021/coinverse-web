@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { AccountVerificationStoreService, UserPrincipalStoreService } from '../../domain-services';
 import { combineLatest, map, Observable } from 'rxjs';
-import { UserPrincipal } from "../../domain-models";
-import { MenuItem, UserPermissions } from "../../types";
-import { menuItemsToken } from "../../config";
-import { userRoles } from "../../constants";
+import { UserPrincipal } from '../../domain-models';
+import { MenuItem, UserPermissions } from '../../types';
+import { menuItemsToken } from '../../config';
+import { userRoles } from '../../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -16,18 +16,24 @@ export class UserPermissionsService {
     @Inject(AccountVerificationStoreService)
     private readonly _accountVerificationStore: AccountVerificationStoreService,
     @Inject(menuItemsToken) private readonly _menuItems: MenuItem[]
-  ) {
-  }
+  ) {}
 
   public get permissions$(): Observable<UserPermissions> {
-    return combineLatest([this.userLoggedIn$, this.userPrincipal$, this.isAdmin$, this.isMenuShown$, this.menuItems$])
-      .pipe(map(([userLoggedIn, userPrincipal, isAdmin, isMenuShown, menuItems]) => ({
+    return combineLatest([
+      this.userLoggedIn$,
+      this.userPrincipal$,
+      this.isAdmin$,
+      this.isMenuShown$,
+      this.menuItems$,
+    ]).pipe(
+      map(([userLoggedIn, userPrincipal, isAdmin, isMenuShown, menuItems]) => ({
         userLoggedIn,
         userPrincipal,
         isAdmin,
         isMenuShown,
-        menuItems
-      })));
+        menuItems,
+      }))
+    );
   }
 
   public get userLoggedIn$(): Observable<boolean> {
@@ -57,8 +63,7 @@ export class UserPermissionsService {
   }
 
   public get menuItems$(): Observable<MenuItem[]> {
-    return this.isAdmin$.pipe(
-      map((isAdmin) => this.getMenuItems(isAdmin ? 'admin' : 'customer')));
+    return this.isAdmin$.pipe(map((isAdmin) => this.getMenuItems(isAdmin ? 'admin' : 'customer')));
   }
 
   public get menuItems(): MenuItem[] {
@@ -90,6 +95,8 @@ export class UserPermissionsService {
   }
 
   private getMenuItems(userRole: 'admin' | 'customer'): MenuItem[] {
-    return this._menuItems.filter((menuItem) => menuItem.roles.some(menuItemRole => menuItemRole === userRoles[`${userRole}`].name));
+    return this._menuItems.filter((menuItem) =>
+      menuItem.roles.some((menuItemRole) => menuItemRole === userRoles[`${userRole}`].name)
+    );
   }
 }

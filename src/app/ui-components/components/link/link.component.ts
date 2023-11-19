@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./link.component.scss'],
 })
 export class LinkComponent {
-  @Input() to: string | undefined;
-  @Input() text: string | undefined;
-  @Input() isDisabled = false;
+  @Input() public to: string | undefined;
+  @Input() public text: string | undefined;
+  @Input() public isDisabled = false;
 }

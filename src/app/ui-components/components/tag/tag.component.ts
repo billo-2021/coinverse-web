@@ -6,10 +6,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-
-type LeftContentType = '' | 'Error icon';
-type SizeType = 's' | 'm' | 'l';
-type StatusType = 'default' | 'primary' | 'custom' | 'success' | 'error' | 'warning';
+import { LeftContentType, SizeType, StatusType } from './tag.type';
 
 @Component({
   selector: 'app-tag',

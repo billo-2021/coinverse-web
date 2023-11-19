@@ -1,8 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { UserPrincipalStoreService } from '../../../common/domain-services';
+import { UserPrincipalStoreService } from '../../../common/services';
 import { NavigationService } from '../../../core/services';
-import { webRoutesConfig } from '../../../common/config/web-routes-config';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-global-routing',
@@ -11,27 +9,25 @@ import { Router } from '@angular/router';
 })
 export class GlobalRoutingComponent implements AfterViewInit {
   public constructor(
-    private router: Router,
-    private readonly userPrincipalStore: UserPrincipalStoreService,
-    private readonly navigationService: NavigationService
-  ) {
-  }
+    private readonly _userPrincipalStore: UserPrincipalStoreService,
+    private readonly _navigationService: NavigationService
+  ) {}
 
   ngAfterViewInit(): void {
-    const isLoggedIn = this.userPrincipalStore.isLoggedIn();
+    const isLoggedIn = this._userPrincipalStore.isLoggedIn();
 
     if (isLoggedIn) {
-      this.navigationService.to({path: webRoutesConfig.dashboard.root}).then();
+      this._navigationService.to('dashboard').then();
       return;
     }
 
-    const userPrincipal = this.userPrincipalStore.userPrincipal;
-    
+    const userPrincipal = this._userPrincipalStore.userPrincipal;
+
     if (userPrincipal && !userPrincipal.isVerified) {
-      this.navigationService.to({path: webRoutesConfig.authentication.verifyAccount}).then();
+      this._navigationService.to('verifyAccount').then();
       return;
     }
 
-    this.navigationService.to({path: webRoutesConfig.authentication.login}).then();
+    this._navigationService.to('login').then();
   }
 }

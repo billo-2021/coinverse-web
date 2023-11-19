@@ -105,5 +105,4 @@ import { InputCardGroupedComponent } from './components/input-card-grouped/input
     InputCardComponent,
   ],
 })
-export class FormComponentsModule {
-}
+export class FormComponentsModule {}

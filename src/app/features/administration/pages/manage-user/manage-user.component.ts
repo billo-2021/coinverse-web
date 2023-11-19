@@ -181,7 +181,7 @@ export class ManageUserComponent {
       .pipe(
         tap((response) => {
           this.alertService.showMessage(response.message);
-          this.router.navigate([webRoutesConfig.administration.manageUsers]);
+          this.router.navigate([webRoutesConfig.manageUsers]).then();
         }),
         finalize(() => this.resetForms())
       )

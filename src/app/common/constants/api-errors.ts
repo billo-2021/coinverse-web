@@ -15,7 +15,7 @@ export const apiErrorCodes = {
   ACCOUNT_CREDENTIALS_EXPIRED: 13,
   RESOURCE_ACCESS_NOT_ALLOWED: 14,
   ACCOUNT_NOT_FOUND: 15,
-  USER_WITH_EMAIL_ALREADY_EXISTS: 20
+  USER_WITH_EMAIL_ALREADY_EXISTS: 20,
 } as const;
 export const apiErrorMessages = {
   0: 'Something went wrong',
@@ -34,5 +34,5 @@ export const apiErrorMessages = {
   13: 'User account credentials expired',
   14: 'You are not allowed to access this resource',
   15: 'User account not found',
-  20: 'User with email already exists'
+  20: 'User with email already exists',
 } as const;

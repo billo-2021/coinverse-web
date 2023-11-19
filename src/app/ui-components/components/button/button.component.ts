@@ -4,25 +4,9 @@ import {
   EventEmitter,
   Input,
   Output,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-
-export type AppearanceType =
-  | 'primary'
-  | 'secondary'
-  | 'secondary-destructive'
-  | 'accent'
-  | 'flat'
-  | 'outline'
-  | 'icon'
-  | 'whiteblock'
-  | 'whiteblock-active';
-
-export type SizeType = 'xs' | 's' | 'm' | 'l' | 'xl';
-
-export type ButtonType = 'button' | 'submit' | 'reset';
-
-export type ShapeType = 'square' | 'rounded' | null;
+import { AppearanceType, ButtonType, ShapeType, SizeType } from './button.type';
 
 @Component({
   selector: 'app-button',

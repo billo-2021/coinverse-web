@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject, ViewEncapsulation } from '@angular/core';
 import { combineLatest, map, Observable } from 'rxjs';
 import { SideMenuViewModel } from './side-menu.view-model';
-import { MenuService } from '../../../../common/domain-services/menu/menu.service';
+import { MenuService } from '../../../../common/services';
+import { appNameToken } from '../../../../common/config';
 
 @Component({
   selector: 'app-side-menu',
@@ -11,10 +12,17 @@ import { MenuService } from '../../../../common/domain-services/menu/menu.servic
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SideMenuComponent {
-  private readonly _viewModel$: Observable<SideMenuViewModel>;
+  public constructor(
+    @Inject(MenuService) private readonly _menuService: MenuService,
+    @Inject(appNameToken) private readonly _appNameToken: string
+  ) {}
 
-  public constructor(@Inject(MenuService) private readonly menuService: MenuService) {
-    this._viewModel$ = combineLatest([this.menuService.isMobile$, this.menuService.isSideMenuShown$, this.menuService.menuItems$]).pipe(
+  public get viewModel$(): Observable<SideMenuViewModel> {
+    return combineLatest([
+      this._menuService.isMobile$,
+      this._menuService.isSideMenuShown$,
+      this._menuService.menuItems$,
+    ]).pipe(
       map(([isMobile, isSideMenuShown, menuItems]) => {
         return {
           isMobile: isMobile,
@@ -25,7 +33,7 @@ export class SideMenuComponent {
     );
   }
 
-  public get viewModel$() {
-    return this._viewModel$;
+  protected get appName(): string {
+    return this._appNameToken;
   }
 }

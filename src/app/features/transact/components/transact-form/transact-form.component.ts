@@ -53,8 +53,8 @@ export class TransactFormComponent implements OnInit {
   @Output() public activeTabIndexChange = new EventEmitter<number>();
 
   protected readonly tabs: Tab[] = [
-    {text: 'Deposit', icon: null, isDisabled: false},
-    {text: 'Withdraw', icon: null, isDisabled: false},
+    { text: 'Deposit', icon: null, isDisabled: false },
+    { text: 'Withdraw', icon: null, isDisabled: false },
   ];
 
   protected readonly action = ACTION;
@@ -95,7 +95,7 @@ export class TransactFormComponent implements OnInit {
       shareReplay(1)
     );
 
-    this.walletOptions$ = walletService.getBalances({page: 0, size: 100}).pipe(
+    this.walletOptions$ = walletService.getBalances({ page: 0, size: 100 }).pipe(
       map((response) => {
         const wallets = response.data;
         return wallets.map((wallet) => {

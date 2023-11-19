@@ -1,4 +1,4 @@
-<div *ngIf="formGroup" [formGroup]="formGroup" class="flex-col mb-4">
+<div *ngIf="formGroup" [formGroup]="formGroup" class="item">
   <tui-input-number
     [decimal]="decimal"
     [formControlName]="name"
@@ -9,5 +9,5 @@
   >
     {{ label }}
   </tui-input-number>
-  <tui-error [error]="[] | tuiFieldError | async" [formControlName]="name"> </tui-error>
+  <tui-error [error]="[] | tuiFieldError | async" [formControlName]="name"></tui-error>
 </div>

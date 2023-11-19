@@ -1,4 +1,4 @@
-<app-item *ngIf="formGroup" [formGroup]="formGroup" class="mb-4">
+<div *ngIf="formGroup" [formGroup]="formGroup" class="item">
   <tui-input [formControlName]="name" [tuiTextfieldCleaner]="hasClear" [tuiTextfieldSize]="size">
     {{ label }}
     <input
@@ -9,5 +9,5 @@
       tuiTextfield
     />
   </tui-input>
-  <tui-error [error]="[] | tuiFieldError | async" [formControlName]="name"> </tui-error>
-</app-item>
+  <tui-error [error]="[] | tuiFieldError | async" [formControlName]="name"></tui-error>
+</div>

@@ -15,8 +15,7 @@ export class ResetPasswordRequestResultComponent {
 
   protected readonly loading$ = this.loadingService.loading$;
 
-  public constructor(private readonly loadingService: LoadingService) {
-  }
+  public constructor(private readonly loadingService: LoadingService) {}
 
   public onResend(): void {
     this.resendClicked.emit();

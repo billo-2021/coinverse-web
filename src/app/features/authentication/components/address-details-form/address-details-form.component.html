@@ -22,8 +22,9 @@
   >
   </app-text-field>
   <app-combo-box [options]="(countryOptions$ | async) ?? []" label="Country" name="country"></app-combo-box>
-  <app-text-field label="Province" name="province" placeholder="i.e. Western Cape"> </app-text-field>
-  <app-text-field label="City" name="city" placeholder="i.e. Cape Town"> </app-text-field>
+  <app-text-field label="Province" name="province" placeholder="i.e. Western Cape"></app-text-field>
+  <app-text-field label="City" name="city" placeholder="i.e. Cape Town"></app-text-field>
   <app-text-field autocomplete="postal-code" label="Postal Code" name="postalCode" placeholder="i.e. 1632">
   </app-text-field>
+  <ng-content></ng-content>
 </app-form>

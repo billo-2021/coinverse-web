@@ -6,7 +6,7 @@ import { Observable, tap } from 'rxjs';
 @Component({
   selector: 'app-input-card-grouped',
   templateUrl: './input-card-grouped.component.html',
-  styleUrls: ['./input-card-grouped.component.scss']
+  styleUrls: ['./input-card-grouped.component.scss'],
 })
 export class InputCardGroupedComponent {
   @Input() public name = '';
@@ -17,7 +17,6 @@ export class InputCardGroupedComponent {
     private readonly _loadingService: LoadingService,
     @Optional() private readonly _formGroupDirective: FormGroupDirective
   ) {
-
     this.loading$.pipe(
       tap((loading) => {
         if (!this.formControl) {
@@ -30,7 +29,8 @@ export class InputCardGroupedComponent {
         }
 
         this.formControl.enable();
-      }));
+      })
+    );
   }
 
   protected get formGroup(): FormGroup | null {
@@ -38,7 +38,7 @@ export class InputCardGroupedComponent {
   }
 
   protected get formControl(): FormControl | null {
-    return this.formGroup?.controls[this.name] as FormControl || null;
+    return (this.formGroup?.controls[this.name] as FormControl) || null;
   }
 
   protected get loading$(): Observable<boolean> {

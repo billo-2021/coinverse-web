@@ -5,7 +5,6 @@ import { StorageKey } from '../../constants';
   providedIn: 'root',
 })
 export class LocalStorageService {
-
   public set<T>(key: StorageKey, item: T): void {
     try {
       localStorage.setItem(key, JSON.stringify(item));

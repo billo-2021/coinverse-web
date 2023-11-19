@@ -26,7 +26,7 @@ enum Steps {
   templateUrl: './reset-password-request.component.html',
   styleUrls: ['./reset-password-request.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordRequestComponent {
   @HostBinding('class') public classes = 'full-width flex-col justify-center items-center';
@@ -58,8 +58,8 @@ export class ResetPasswordRequestComponent {
 
   public getSteps(): StepType[] {
     return [
-      {title: 'Forgot password', ...this.DEFAULT_STEP_STATE},
-      {title: 'Reset validation', ...this.DEFAULT_STEP_STATE},
+      { title: 'Forgot password', ...this.DEFAULT_STEP_STATE },
+      { title: 'Reset validation', ...this.DEFAULT_STEP_STATE },
     ];
   }
 

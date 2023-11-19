@@ -39,7 +39,7 @@ const KEYS: Record<Key, string> = {
 })
 export class CryptoCurrenciesComponent extends BaseComponent {
   @Output() public editCurrencyClicked = new EventEmitter<string>();
-  protected readonly manageCurrenciesUrl = webRoutesConfig.administration.manageCurrencies;
+  protected readonly manageCurrenciesUrl = webRoutesConfig.manageCurrencies;
   protected readonly columns: Key[] = ['code', 'name', 'symbol', 'circulatingSupply', 'actions'];
   protected readonly keys = KEYS;
   protected search = '';

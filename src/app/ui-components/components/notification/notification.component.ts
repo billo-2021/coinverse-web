@@ -6,8 +6,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-
-type StatusType = 'info' | 'error' | 'warning' | 'success';
+import { StatusType } from './notification.type';
 
 @Component({
   selector: 'app-notification',

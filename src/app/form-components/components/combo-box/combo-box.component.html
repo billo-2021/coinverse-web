@@ -1,4 +1,4 @@
-<app-item *ngIf="formGroup" [formGroup]="formGroup" class="mb-6">
+<div *ngIf="formGroup" [formGroup]="formGroup" class="item">
   <tui-combo-box
     (searchChange)="onSearch($event)"
     *tuiLet="options$ | async as filteredOptions"
@@ -34,15 +34,15 @@
       </cdk-virtual-scroll-viewport>
     </ng-container>
   </tui-combo-box>
-</app-item>
+</div>
 
 <ng-template #content let-item>
-  <app-row class="mt-2 items-center text-center">
+  <div class="row mt-2 items-center text-center">
     <app-col>
       <tui-avatar [autoColor]="true" [text]="item.code" size="xs"></tui-avatar>
     </app-col>
     <app-col class="ml-4">
       <span>{{ item.name }}</span>
     </app-col>
-  </app-row>
+  </div>
 </ng-template>

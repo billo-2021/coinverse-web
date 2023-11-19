@@ -1,4 +1,4 @@
-import { apiErrorMessages } from "../../constants";
+import { apiErrorMessages } from '../../constants';
 
 export interface ApiErrorDto {
   readonly timeStamp: string;

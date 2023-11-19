@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, Optional, ViewEncapsulation } from '@angular/core';
-import { FormGroup, FormGroupDirective } from "@angular/forms";
+import { FormGroup, FormGroupDirective } from '@angular/forms';
 
 @Component({
   selector: 'app-label',
@@ -12,8 +12,7 @@ export class LabelComponent {
   @Input() public labelFor = '';
   @Input() public text = '';
 
-  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {
-  }
+  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
 
   protected get formGroup(): FormGroup | null {
     return this._formGroupDirective?.form || null;

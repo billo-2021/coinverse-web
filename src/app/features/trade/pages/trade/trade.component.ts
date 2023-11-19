@@ -50,7 +50,7 @@ export class TradeComponent extends BaseComponent {
     { path: 'buy', mode: 'buy' },
     { path: 'sell', mode: 'sell' },
   ];
-  protected readonly manageTradesUrl = webRoutesConfig.trade.manageTrades;
+  protected readonly manageTradesUrl = webRoutesConfig.trade;
 
   protected readonly MAX_NUMBER_OF_STEPS = 3;
   protected readonly TRADE_STEPS = TradeSteps;
@@ -167,6 +167,6 @@ export class TradeComponent extends BaseComponent {
   }
 
   public async onTradeHistory(): Promise<void> {
-    await this.router.navigate([webRoutesConfig.trade.manageTrades]);
+    await this.router.navigate([webRoutesConfig.manageTrades]);
   }
 }
