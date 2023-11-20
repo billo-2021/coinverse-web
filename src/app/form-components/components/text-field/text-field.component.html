@@ -6,8 +6,7 @@
       [disabled]="isDisabled || (loading$ | async) || false"
       [placeholder]="placeholder"
       [type]="type"
-      tuiTextfield
-    />
+      tuiTextfield />
   </tui-input>
   <tui-error [error]="[] | tuiFieldError | async" [formControlName]="name"></tui-error>
 </div>

@@ -32,8 +32,7 @@
               <app-money
                 [currency]="wallet.currency.symbol"
                 [precision]="6"
-                [value]="wallet.balance"
-              ></app-money>
+                [value]="wallet.balance"></app-money>
               <!--            {{ wallet.balance + ' '}} {{wallet.currency.symbol}}-->
             </td>
             <td *tuiCell="'actions'" tuiTd>
@@ -42,15 +41,13 @@
                   (clicked)="onDeposit(wallet.currency.code)"
                   appearance="primary"
                   size="s"
-                  text="Deposit"
-                ></app-button>
+                  text="Deposit"></app-button>
                 <app-button
                   (clicked)="onWithdraw(wallet.currency.code)"
                   appearance="accent"
                   class="ml-4"
                   size="s"
-                  text="Withdraw"
-                ></app-button>
+                  text="Withdraw"></app-button>
               </div>
             </td>
           </tr>
@@ -71,8 +68,7 @@
             [page]="pagination.page"
             [size]="pagination.size"
             [total]="(total$ | async) || 0"
-            class="tui_space-top-2"
-          ></tui-table-pagination>
+            class="tui_space-top-2"></tui-table-pagination>
         </ng-container>
       </td>
     </tr>

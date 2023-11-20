@@ -6,8 +6,7 @@
           *ngIf="cryptoCurrencies$ | async as cryptoCurrencies"
           [columns]="columns"
           class="table"
-          tuiTable
-        >
+          tuiTable>
           <thead class="thead">
             <tr class="tr" tuiThGroup>
               <ng-container *ngFor="let column of columns">
@@ -25,14 +24,11 @@
               <td
                 *tuiCell="'currencyPairName'"
                 [class.match]="isMatch(cryptoCurrency.currencyPairName)"
-                tuiTd
-              >
+                tuiTd>
                 {{ cryptoCurrency.currencyPairName }}
               </td>
               <td *tuiCell="'price'" [class.match]="isMatch(cryptoCurrency.price)" tuiTd>
-                <div class="flex-row justify-end">
-                  {{ cryptoCurrency.price }}
-                </div>
+                <div class="flex-row justify-end">{{ cryptoCurrency.price }}</div>
               </td>
               <td *tuiCell="'change'" [class.match]="isMatch(cryptoCurrency.price)" tuiTd>
                 <div class="flex-row justify-end">0</div>
@@ -40,23 +36,23 @@
               <td
                 *tuiCell="'circulatingSupply'"
                 [class.match]="isMatch(cryptoCurrency.circulatingSupply)"
-                tuiTd
-              >
+                tuiTd>
                 <div class="flex-row justify-end">
-                  {{ cryptoCurrency.circulatingSupply + ' ' }}
-                  {{ cryptoCurrency.code }}
+                  {{ cryptoCurrency.circulatingSupply + ' ' }} {{ cryptoCurrency.code }}
                 </div>
               </td>
               <td *tuiCell="'actions'">
                 <div class="flex-row justify-end">
-                  <app-button (clicked)="onBuy(cryptoCurrency.code)" size="s" text="BUY"></app-button>
+                  <app-button
+                    (clicked)="onBuy(cryptoCurrency.code)"
+                    size="s"
+                    text="BUY"></app-button>
                   <app-button
                     (clicked)="onSell(cryptoCurrency.code)"
                     appearance="accent"
                     class="ml-4"
                     size="s"
-                    text="SELL"
-                  ></app-button>
+                    text="SELL"></app-button>
                 </div>
               </td>
             </tr>
@@ -76,8 +72,7 @@
             [page]="pagination.page"
             [size]="pagination.size"
             [total]="(total$ | async) || 0"
-            class="tui_space-top-2"
-          ></tui-table-pagination>
+            class="tui_space-top-2"></tui-table-pagination>
         </td>
       </tr>
     </tfoot>

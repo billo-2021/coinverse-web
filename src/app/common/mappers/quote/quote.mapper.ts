@@ -10,7 +10,10 @@ import { ObjectUtils } from '../../../core/utils';
 type CurrencyExchangeRateKeys = 'currencyPairName' | 'currencyPairType';
 
 type CurrencyExchangeRateDtoType = Pick<CurrencyExchangeRateDto, CurrencyExchangeRateKeys>;
-type CurrencyExchangeRateResponseType = Pick<CurrencyExchangeRateResponse, CurrencyExchangeRateKeys>;
+type CurrencyExchangeRateResponseType = Pick<
+  CurrencyExchangeRateResponse,
+  CurrencyExchangeRateKeys
+>;
 
 function currencyExchangeRateDtoToCurrencyExchangeRateResponse(
   currencyExchangeRateDto: CurrencyExchangeRateDto

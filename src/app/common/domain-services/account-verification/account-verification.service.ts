@@ -32,7 +32,9 @@ export class AccountVerificationService {
     );
   }
 
-  public verifyAccount(verifyAccountRequest: VerifyAccountRequest): Observable<HttpMessageResponse> {
+  public verifyAccount(
+    verifyAccountRequest: VerifyAccountRequest
+  ): Observable<HttpMessageResponse> {
     return this.httpService
       .create<VerifyAccountRequest, HttpMessageResponse>(
         this.getFullPath(this.VERIFY_ACCOUNT_PATH),

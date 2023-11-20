@@ -1,6 +1,10 @@
 <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">
   <app-card [subtitle]="subtitle" [title]="title">
-    <table *ngIf="userAccountEvents$ | async as userAccountEvents" [columns]="columns" class="table" tuiTable>
+    <table
+      *ngIf="userAccountEvents$ | async as userAccountEvents"
+      [columns]="columns"
+      class="table"
+      tuiTable>
       <thead>
         <tr tuiThGroup>
           <ng-container *ngFor="let column of columns">
@@ -21,7 +25,10 @@
           <td *tuiCell="'type'" [class.match]="isMatch(userAccountEvent.event.type)" tuiTd>
             <app-tag [autoColor]="true" [value]="userAccountEvent.event.type"></app-tag>
           </td>
-          <td *tuiCell="'description'" [class.match]="isMatch(userAccountEvent.event.description)" tuiTd>
+          <td
+            *tuiCell="'description'"
+            [class.match]="isMatch(userAccountEvent.event.description)"
+            tuiTd>
             {{ userAccountEvent.event.description }}
           </td>
           <td *tuiCell="'date'" [class.match]="isMatch(userAccountEvent.createdAt)" tuiTd>
@@ -32,8 +39,7 @@
               (clicked)="onReportActivity()"
               appearance="secondary-destructive"
               size="xs"
-              text="Report"
-            ></app-button>
+              text="Report"></app-button>
           </td>
         </tr>
       </tbody>
@@ -52,8 +58,7 @@
             [page]="pagination.page"
             [size]="pagination.size"
             [total]="(total$ | async) || 0"
-            class="tui_space-top-2"
-          ></tui-table-pagination>
+            class="tui_space-top-2"></tui-table-pagination>
         </ng-container>
       </td>
     </tr>

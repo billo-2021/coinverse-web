@@ -1,7 +1,11 @@
 <div class="flex-col">
   <div class="mt-6 col-sm-12 col-md-10 col-lg-10">
     <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">
-      <table *ngIf="cryptoCurrencies$ | async as cryptoCurrencies" [columns]="columns" class="table" tuiTable>
+      <table
+        *ngIf="cryptoCurrencies$ | async as cryptoCurrencies"
+        [columns]="columns"
+        class="table"
+        tuiTable>
         <thead>
           <tr tuiThGroup>
             <ng-container *ngFor="let column of columns">
@@ -26,8 +30,7 @@
               *tuiCell="'circulatingSupply'"
               [class.match]="isMatch(cryptoCurrency.circulatingSupply)"
               class="td"
-              tuiTd
-            >
+              tuiTd>
               {{ cryptoCurrency.circulatingSupply }}
             </td>
             <td *tuiCell="'actions'" tuiTd>
@@ -37,8 +40,7 @@
                   appearance="flat"
                   icon="tuiIconEdit2"
                   size="xs"
-                  title="Edit"
-                ></app-button>
+                  title="Edit"></app-button>
               </div>
             </td>
           </tr>
@@ -59,8 +61,7 @@
             [page]="pagination.page"
             [size]="pagination.size"
             [total]="(total$ | async) || 0"
-            class="tui_space-top-2"
-          ></tui-table-pagination>
+            class="tui_space-top-2"></tui-table-pagination>
         </ng-container>
       </td>
     </tr>

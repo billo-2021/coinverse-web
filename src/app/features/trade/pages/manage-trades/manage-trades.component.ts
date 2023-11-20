@@ -22,7 +22,14 @@ interface Pagination {
   size: number;
 }
 
-type Key = 'id' | 'amount' | 'sourceWallet' | 'destinationWallet' | 'action' | 'status' | 'createdAt';
+type Key =
+  | 'id'
+  | 'amount'
+  | 'sourceWallet'
+  | 'destinationWallet'
+  | 'action'
+  | 'status'
+  | 'createdAt';
 
 const KEYS: Record<Key, string> = {
   id: 'id',

@@ -7,45 +7,38 @@
         appearance="primary"
         icon="tuiIconShuffle"
         size="s"
-        text="Transaction History"
-      ></app-button>
+        text="Transaction History"></app-button>
     </div>
   </div>
   <div class="flex-col">
     <app-card
       *ngIf="currentStepIndex !== TRANSACT_STEPS.TRANSACT_CONFIRMATION"
-      class="col-sm-12 col-md-6 col-lg-6"
-    >
+      class="col-sm-12 col-md-6 col-lg-6">
       <div class="mt-6">
         <app-stepper
           (currentStepIndexChange)="onStepChanged($event)"
           [currentStepIndex]="currentStepIndex"
-          [steps]="transactSteps"
-        >
+          [steps]="transactSteps">
         </app-stepper>
       </div>
       <app-transact-form
         (actionClicked)="onRequestTransaction($event)"
         *ngIf="currentStepIndex === TRANSACT_STEPS.TRANSACT_REQUEST"
         [(activeTabIndex)]="activeTabIndex"
-        [currencyCode]="currencyCode"
-      >
+        [currencyCode]="currencyCode">
       </app-transact-form>
       <app-transact-bank-details-form
         (saveClicked)="onSaveBankingDetails()"
-        *ngIf="currentStepIndex === TRANSACT_STEPS.BANK_DETAILS"
-      >
+        *ngIf="currentStepIndex === TRANSACT_STEPS.BANK_DETAILS">
       </app-transact-bank-details-form>
     </app-card>
     <app-card
       *ngIf="currentStepIndex === TRANSACT_STEPS.TRANSACT_CONFIRMATION"
-      class="col-sm-12 col-md-6 col-lg-6"
-    >
+      class="col-sm-12 col-md-6 col-lg-6">
       <app-transact-confirmation
         (payAgainClicked)="onPayAgain()"
         (viewPaymentsClicked)="onViewPayments()"
-        [paymentResponse]="paymentResponse"
-      ></app-transact-confirmation>
+        [paymentResponse]="paymentResponse"></app-transact-confirmation>
     </app-card>
   </div>
 </div>

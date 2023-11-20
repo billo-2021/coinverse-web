@@ -79,15 +79,21 @@ export class ComboBoxComponent implements OnChanges {
     }
 
     this._options$.next(this.options);
-    this._height$.next((this.options.length && this.options.length * DEFAULT_HEIGHT) || DEFAULT_HEIGHT);
+    this._height$.next(
+      (this.options.length && this.options.length * DEFAULT_HEIGHT) || DEFAULT_HEIGHT
+    );
   }
 
   public onSearch(query: string | null): void {
     this._search$.next(query);
-    const filteredOptions = this.options.filter((option) => TUI_DEFAULT_MATCHER(option, query || ''));
+    const filteredOptions = this.options.filter((option) =>
+      TUI_DEFAULT_MATCHER(option, query || '')
+    );
 
     this._options$.next(filteredOptions);
-    this._height$.next((filteredOptions.length && filteredOptions.length * DEFAULT_HEIGHT) || DEFAULT_HEIGHT);
+    this._height$.next(
+      (filteredOptions.length && filteredOptions.length * DEFAULT_HEIGHT) || DEFAULT_HEIGHT
+    );
   }
 
   public extractValueFromEvent(event: Event): string | null {

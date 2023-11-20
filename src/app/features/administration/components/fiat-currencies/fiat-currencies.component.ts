@@ -47,7 +47,9 @@ export class FiatCurrenciesComponent extends BaseComponent {
   });
 
   protected readonly request$ = combineLatest([this.pagination$]).pipe(
-    switchMap((query) => this.lookupService.getCurrenciesByType('fiat', ...query).pipe(startWith(null))),
+    switchMap((query) =>
+      this.lookupService.getCurrenciesByType('fiat', ...query).pipe(startWith(null))
+    ),
     shareReplay(1)
   );
 

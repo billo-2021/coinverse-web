@@ -13,8 +13,7 @@
       <app-money
         [currency]="paymentResponse.currency"
         [precision]="6"
-        [value]="paymentResponse.amount"
-      ></app-money>
+        [value]="paymentResponse.amount"></app-money>
     </p>
   </div>
   <div class="flex-row justify-space-between">
@@ -36,8 +35,7 @@
       (clicked)="onViewPayments()"
       appearance="accent"
       class="grow"
-      text="View Payments"
-    ></app-button>
+      text="View Payments"></app-button>
     <app-button (clicked)="onPayAgain()" class="grow ml-4" text="Pay Again"></app-button>
   </div>
 </div>

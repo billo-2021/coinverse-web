@@ -24,9 +24,9 @@ export class TransactService {
   constructor(@Inject(HttpCrudService) private httpService: HttpCrudService) {}
 
   public getTransactions(pageRequest: PageRequest): Observable<PageResponse<PaymentResponse>> {
-    const url = `${this.getFullPath(this.TRANSACTIONS_PATH)}?pageNumber=${pageRequest.page}&pageSize=${
-      pageRequest.size
-    }`;
+    const url = `${this.getFullPath(this.TRANSACTIONS_PATH)}?pageNumber=${
+      pageRequest.page
+    }&pageSize=${pageRequest.size}`;
     return this.httpService.find<PageResponse<PaymentDto>>(url);
   }
 

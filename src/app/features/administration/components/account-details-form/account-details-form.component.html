@@ -5,17 +5,16 @@
   [isValid]="form.valid"
   [saveText]="saveText"
   subtitle="Add new user here."
-  title="Add user"
->
+  title="Add user">
   <app-text-field
     autocomplete="username"
     label="Username"
     name="username"
     placeholder="john@gmail.com"
-    type="email"
-  >
+    type="email">
   </app-text-field>
 
   <app-combo-box [options]="roleOptions" label="Role" name="role"></app-combo-box>
-  <app-password-field autocomplete="new-password" label="Password" name="password"> </app-password-field>
+  <app-password-field autocomplete="new-password" label="Password" name="password">
+  </app-password-field>
 </app-form>

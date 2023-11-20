@@ -6,6 +6,8 @@ const httpHeadersConfig = {
 } as const;
 
 const apiBaseUrlToken = new InjectionToken<string>('apiBaseUrl');
-const httpHeadersConfigToken = new InjectionToken<Record<string, string | number>>('httpHeadersConfig');
+const httpHeadersConfigToken = new InjectionToken<Record<string, string | number>>(
+  'httpHeadersConfig'
+);
 
 export { httpHeadersConfig, apiBaseUrlToken, httpHeadersConfigToken };

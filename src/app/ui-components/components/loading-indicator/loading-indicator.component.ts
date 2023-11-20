@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Input,
+  ViewEncapsulation,
+} from '@angular/core';
 
 @Component({
   selector: 'app-loading-indicator',

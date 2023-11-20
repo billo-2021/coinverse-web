@@ -103,7 +103,10 @@ export class ManageCurrencyComponent {
       code: [cryptoCurrencyResponse.code, [Validators.required]],
       name: [cryptoCurrencyResponse.name, [Validators.required]],
       symbol: [cryptoCurrencyResponse.symbol, [Validators.required]],
-      circulatingSupply: [cryptoCurrencyResponse.circulatingSupply, [Validators.required, Validators.min(1)]],
+      circulatingSupply: [
+        cryptoCurrencyResponse.circulatingSupply,
+        [Validators.required, Validators.min(1)],
+      ],
     });
   }
 

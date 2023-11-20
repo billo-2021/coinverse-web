@@ -4,4 +4,11 @@ import { QueryParams } from './query-params.type';
 import { WebRoutesConfigType } from './web-routes-config.type';
 import { NavigationParam } from './navigation-param.type';
 
-export { ObjectKeysMap, KeysMap, HttpMessageResponse, QueryParams, WebRoutesConfigType, NavigationParam };
+export {
+  ObjectKeysMap,
+  KeysMap,
+  HttpMessageResponse,
+  QueryParams,
+  WebRoutesConfigType,
+  NavigationParam,
+};

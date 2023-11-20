@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, filter, Observable, Subscription, switchMap, tap, timer } from 'rxjs';
 import { AccountVerification, UserAccessCredentials } from '../../../common/domain-models';
-import { AccountVerificationStoreService, UserPrincipalStoreService } from '../../../common/services';
+import {
+  AccountVerificationStoreService,
+  UserPrincipalStoreService,
+} from '../../../common/services';
 import { NavigationService } from '../../../core/services';
 import { RedirectService } from '../../../core/services/redirect/redirect.service';
 
@@ -24,7 +27,8 @@ export class GlobalRoutingService {
   private get _verification$(): Observable<AccountVerification> {
     return this._accountVerificationStore.accountVerification$.pipe(
       filter(
-        (accountVerification): accountVerification is AccountVerification => accountVerification !== null
+        (accountVerification): accountVerification is AccountVerification =>
+          accountVerification !== null
       )
     );
   }
@@ -34,7 +38,10 @@ export class GlobalRoutingService {
   }
 
   public start(): void {
-    this._verificationRedirect$ = this.getVerificationRedirect(this._verification$, this._navigationService);
+    this._verificationRedirect$ = this.getVerificationRedirect(
+      this._verification$,
+      this._navigationService
+    );
     this._missingVerificationParamsRedirect$ = this.getMissingParamsRedirect(
       this._navigationService,
       this._accountVerificationStore
@@ -68,7 +75,9 @@ export class GlobalRoutingService {
   ): Subscription {
     return userPrincipalStore.userAccessCredentials$
       .pipe(
-        filter((userCredentials): userCredentials is UserAccessCredentials => userCredentials !== null),
+        filter(
+          (userCredentials): userCredentials is UserAccessCredentials => userCredentials !== null
+        ),
         switchMap((userCredentials) => {
           const accessToken = userCredentials.accessToken;
           const tokenExpiryDate = userPrincipalStore.getTokenExpiryDate(accessToken);
@@ -91,7 +100,10 @@ export class GlobalRoutingService {
       .pipe(
         tap((route) => {
           const accountVerification = accountVerificationStore.accountVerification;
-          if (route.url.includes('verify') && (!accountVerification || accountVerification.isVerified)) {
+          if (
+            route.url.includes('verify') &&
+            (!accountVerification || accountVerification.isVerified)
+          ) {
             navigationService.to('root').then();
           }
         })

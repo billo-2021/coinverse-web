@@ -13,7 +13,10 @@ export class PolymorphicTemplate<C = any> {
     private readonly _changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  static ngTemplateContextGuard<T>(_dir: PolymorphicTemplate<T>, _ctx: any): _ctx is T extends '' ? any : T {
+  static ngTemplateContextGuard<T>(
+    _dir: PolymorphicTemplate<T>,
+    _ctx: any
+  ): _ctx is T extends '' ? any : T {
     return true;
   }
 

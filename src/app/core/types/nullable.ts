@@ -40,7 +40,10 @@ function andThen<T>(fn: (value: NonNullable<T>) => void, nullable: Nullable<T>):
   fn(nullable as NonNullable<T>);
 }
 
-function getWhenValueTypeIs<T>(nullable: Nullable<unknown>, valueTypeIs: ValueTypeIs<T>): Nullable<T> {
+function getWhenValueTypeIs<T>(
+  nullable: Nullable<unknown>,
+  valueTypeIs: ValueTypeIs<T>
+): Nullable<T> {
   if (isNone(nullable) || !valueTypeIs(nullable)) {
     return nothing;
   }

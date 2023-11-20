@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, Optional, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Optional,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 
 @Component({

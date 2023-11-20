@@ -2,6 +2,10 @@
   <form [formGroup]="form" class="flex-col mt-10">
     <app-text-field label="Name" name="name" placeholder="i.e. John Done"></app-text-field>
     <app-input-card></app-input-card>
-    <app-button (clicked)="onSave()" [isDisabled]="!form.valid" [text]="saveText" class="mt-6"></app-button>
+    <app-button
+      (clicked)="onSave()"
+      [isDisabled]="!form.valid"
+      [text]="saveText"
+      class="mt-6"></app-button>
   </form>
 </div>

@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, HostBinding, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { finalize, map, switchMap, take } from 'rxjs';
 import { AlertService, NavigationService } from '../../../../core/services';
@@ -78,7 +84,9 @@ export class ResetPasswordComponent implements OnInit {
 
           return passwordToken;
         }),
-        switchMap((passwordToken) => this.passwordResetService.requestPasswordTokenUser(passwordToken)),
+        switchMap((passwordToken) =>
+          this.passwordResetService.requestPasswordTokenUser(passwordToken)
+        ),
         finalize(() => {
           this.isLoading = false;
         })

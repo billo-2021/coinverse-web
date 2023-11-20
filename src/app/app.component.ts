@@ -1,11 +1,10 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { appTitleToken } from './common/config';
-import { MenuService } from './common/services/menu/menu.service';
+import { MenuService, UserPermissionsService } from './common/services';
 import { AppViewModel } from './app.view-model';
 import { GlobalRoutingService } from './global-routing/services/global-routing/global-routing.service';
 import { BaseComponent } from './common/components';
-import { UserPermissionsService } from './common/services/user-permissions/user-permissions.service';
 
 @Component({
   selector: 'app-root',

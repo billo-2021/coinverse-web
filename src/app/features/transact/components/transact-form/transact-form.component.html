@@ -2,19 +2,16 @@
   <app-tabs
     (activeItemIndexChange)="onActiveTabIndexChange($event)"
     [activeItemIndex]="activeTabIndex"
-    [tabs]="tabs"
-  ></app-tabs>
+    [tabs]="tabs"></app-tabs>
   <form [formGroup]="form" class="flex-col mt-10">
     <app-combo-box
       [options]="(paymentMethodOptions$ | async) ?? []"
       label="Payment Method"
-      name="paymentMethod"
-    ></app-combo-box>
+      name="paymentMethod"></app-combo-box>
     <app-combo-box
       [label]="walletLabel[activeTabIndex]"
       [options]="(walletOptions$ | async) ?? []"
-      name="wallet"
-    ></app-combo-box>
+      name="wallet"></app-combo-box>
     <div *ngIf="selectedWallet$ | async as selectedWallet" class="flex-col justify-end border mb-6">
       <div class="flex-row justify-space-between items-center p-4">
         <p class="col-8 row-item-title">Available Balance</p>
@@ -22,8 +19,7 @@
           <app-money
             [currency]="selectedWallet.currency.symbol"
             [precision]="6"
-            [value]="selectedWallet.balance"
-          ></app-money>
+            [value]="selectedWallet.balance"></app-money>
         </p>
       </div>
     </div>
@@ -32,15 +28,13 @@
         [options]="(currencyOptions$ | async) ?? []"
         class="col-4"
         label="Currency"
-        name="amountCurrency"
-      ></app-combo-box>
+        name="amountCurrency"></app-combo-box>
       <app-input-number class="col-6" label="Amount" name="amount" size="l"></app-input-number>
     </div>
     <app-button
       (clicked)="onAction()"
       [isDisabled]="!form.valid"
       [text]="action[activeTabIndex]"
-      class="mt-4"
-    ></app-button>
+      class="mt-4"></app-button>
   </form>
 </div>

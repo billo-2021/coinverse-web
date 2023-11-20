@@ -5,7 +5,10 @@ import { LookupService } from '../../../../common/domain-services/lookup/lookup.
 import { ListOptionUtils } from '../../../../form-components/utils';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProfileService } from '../../../../common/domain-services';
-import { UserProfilePreferenceUpdate, UserProfileResponse } from '../../../../common/domain-models/profile';
+import {
+  UserProfilePreferenceUpdate,
+  UserProfileResponse,
+} from '../../../../common/domain-models/profile';
 import { CurrencyResponse } from '../../../../common/domain-models';
 import { AlertService } from '../../../../core/services';
 

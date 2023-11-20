@@ -36,7 +36,11 @@ import { FormComponent } from './components/form/form.component';
 import { PasswordFieldComponent } from './components/password-field/password-field.component';
 import { PhoneNumberFieldComponent } from './components/phone-number-field/phone-number-field.component';
 import { ComboBoxComponent } from './components/combo-box/combo-box.component';
-import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import {
+  CdkFixedSizeVirtualScroll,
+  CdkVirtualForOf,
+  CdkVirtualScrollViewport,
+} from '@angular/cdk/scrolling';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { CheckBoxComponent } from './components/check-box/check-box.component';
 import { LabelComponent } from './components/label/label.component';

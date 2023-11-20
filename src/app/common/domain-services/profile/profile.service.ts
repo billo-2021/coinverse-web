@@ -35,10 +35,15 @@ export class ProfileService {
     );
   }
 
-  public updateAddress(userProfileAddressUpdate: UserProfileAddressUpdate): Observable<UserProfileResponse> {
+  public updateAddress(
+    userProfileAddressUpdate: UserProfileAddressUpdate
+  ): Observable<UserProfileResponse> {
     const url = this.getFullPath(apiRoutesConfig.profile.address);
 
-    return this.httpService.patch<UserProfileAddressUpdate, UserProfileDto>(url, userProfileAddressUpdate);
+    return this.httpService.patch<UserProfileAddressUpdate, UserProfileDto>(
+      url,
+      userProfileAddressUpdate
+    );
   }
 
   public updatePersonalInformation(

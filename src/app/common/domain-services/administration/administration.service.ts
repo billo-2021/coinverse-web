@@ -34,14 +34,19 @@ export class AdministrationService {
   ): Observable<CryptoCurrencyResponse> {
     const url = this.getFullPath(apiRoutesConfig.administration.cryptoCurrencies);
 
-    return this.httpService.create<CryptoCurrencyRequest, CryptoCurrencyDto>(url, cryptoCurrencyRequest);
+    return this.httpService.create<CryptoCurrencyRequest, CryptoCurrencyDto>(
+      url,
+      cryptoCurrencyRequest
+    );
   }
 
   public updateCryptoCurrency(
     currencyCode: string,
     cryptoCurrencyUpdateRequest: CryptoCurrencyUpdateRequest
   ): Observable<CryptoCurrencyResponse> {
-    const url = `${this.getFullPath(apiRoutesConfig.administration.cryptoCurrencies)}/${currencyCode}`;
+    const url = `${this.getFullPath(
+      apiRoutesConfig.administration.cryptoCurrencies
+    )}/${currencyCode}`;
     return this.httpService.patch<CryptoCurrencyUpdateRequest, CryptoCurrencyDto>(
       url,
       cryptoCurrencyUpdateRequest

@@ -20,12 +20,17 @@ export class TradeService {
 
   constructor(@Inject(HttpCrudService) private httpService: HttpCrudService) {}
 
-  public getTrades(pageRequest: PageRequest): Observable<PageResponse<CurrencyTransactionResponse>> {
+  public getTrades(
+    pageRequest: PageRequest
+  ): Observable<PageResponse<CurrencyTransactionResponse>> {
     const url = `${this.BASE_PATH}?pageNumber=${pageRequest.page}&pageSize=${pageRequest.size}`;
     return this.httpService.find<PageResponse<CurrencyTransactionDto>>(url);
   }
 
   public requestTrade(tradeRequest: TradeRequest): Observable<CurrencyTransactionResponse> {
-    return this.httpService.create<TradeRequest, CurrencyTransactionDto>(this.BASE_PATH, tradeRequest);
+    return this.httpService.create<TradeRequest, CurrencyTransactionDto>(
+      this.BASE_PATH,
+      tradeRequest
+    );
   }
 }

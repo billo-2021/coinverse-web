@@ -5,7 +5,11 @@ import { TransactComponent } from './pages/transact/transact.component';
 import { pagesConfig } from './config';
 
 const routes: Routes = [
-  { path: pagesConfig.transact.path, component: TransactComponent, title: pagesConfig.transact.title },
+  {
+    path: pagesConfig.transact.path,
+    component: TransactComponent,
+    title: pagesConfig.transact.title,
+  },
   {
     path: pagesConfig.manageTransactions.path,
     component: ManageTransactionsComponent,

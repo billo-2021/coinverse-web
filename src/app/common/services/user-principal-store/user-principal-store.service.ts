@@ -67,7 +67,8 @@ export class UserPrincipalStoreService {
 
   public get isAdmin(): boolean {
     return (
-      !!this.userPrincipal && this.userPrincipal.roles.some((role) => role.toLowerCase().includes('admin'))
+      !!this.userPrincipal &&
+      this.userPrincipal.roles.some((role) => role.toLowerCase().includes('admin'))
     );
   }
 
@@ -75,14 +76,17 @@ export class UserPrincipalStoreService {
     return this.userPrincipal$.pipe(
       map(
         (userPrincipal) =>
-          !!userPrincipal && userPrincipal.roles.some((role) => role.toLowerCase().includes('admin'))
+          !!userPrincipal &&
+          userPrincipal.roles.some((role) => role.toLowerCase().includes('admin'))
       )
     );
   }
 
   public get userLoggedIn$(): Observable<boolean> {
     return combineLatest([this.userPrincipal$, this.userAccessCredentials$]).pipe(
-      map(([userPrincipal, userCredentials]) => this.isUserCredentialsValid(userPrincipal, userCredentials))
+      map(([userPrincipal, userCredentials]) =>
+        this.isUserCredentialsValid(userPrincipal, userCredentials)
+      )
     );
   }
 

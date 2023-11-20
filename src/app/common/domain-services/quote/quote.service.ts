@@ -14,7 +14,9 @@ export class QuoteService {
 
   constructor(@Inject(HttpCrudService) private httpService: HttpCrudService) {}
 
-  public getCurrencyExchangeRateByCurrencyPairName(name: string): Observable<CurrencyExchangeRateResponse> {
+  public getCurrencyExchangeRateByCurrencyPairName(
+    name: string
+  ): Observable<CurrencyExchangeRateResponse> {
     const url = `${this.getFullPath(this.CURRENCY_PAIRS_PATH)}?name=${name}`;
     return this.httpService
       .find<CurrencyExchangeRateDto>(url)

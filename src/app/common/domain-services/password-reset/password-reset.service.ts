@@ -42,7 +42,9 @@ export class PasswordResetService {
       .pipe(map(passwordTokenUserDtoToPasswordTokenUserResponse));
   }
 
-  public resetPassword(resetPasswordRequest: ResetPasswordRequest): Observable<HttpMessageResponse> {
+  public resetPassword(
+    resetPasswordRequest: ResetPasswordRequest
+  ): Observable<HttpMessageResponse> {
     return this.httpService.patch<ResetPasswordRequest, HttpMessageResponse>(
       this.getFullPath(this.RESET_PASSWORD_PATH),
       resetPasswordRequest

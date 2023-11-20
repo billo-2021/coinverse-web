@@ -5,30 +5,29 @@
     [formControlName]="name"
     [tuiTextfieldSize]="size"
     [valueContent]="content"
-    class="combo-box-content"
-  >
+    class="combo-box-content">
     {{ label }}
     <input
       (input)="onSearch(extractValueFromEvent($event))"
       [disabled]="isDisabled || (loading$ | async) || false"
       class="search-input"
       placeholder="Type something"
-      tuiTextfield
-    />
+      tuiTextfield />
 
     <ng-container *tuiDataList>
       <cdk-virtual-scroll-viewport
         (scrolledIndexChange)="list.handleFocusLossIfNecessary()"
         [itemSize]="44"
         [style.height.px]="(height$ | async) || 44"
-        tuiScrollable
-      >
+        tuiScrollable>
         <tui-data-list #list>
-          <button *cdkVirtualFor="let filteredOption of filteredOptions" [value]="filteredOption" tuiOption>
+          <button
+            *cdkVirtualFor="let filteredOption of filteredOptions"
+            [value]="filteredOption"
+            tuiOption>
             <ng-container
               [ngTemplateOutletContext]="{ $implicit: filteredOption }"
-              [ngTemplateOutlet]="content"
-            ></ng-container>
+              [ngTemplateOutlet]="content"></ng-container>
           </button>
         </tui-data-list>
       </cdk-virtual-scroll-viewport>

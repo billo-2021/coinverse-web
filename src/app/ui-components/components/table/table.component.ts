@@ -96,7 +96,9 @@ export class TableComponent {
 
   public onEnabled(enabled: readonly string[]): void {
     this.enabled = enabled;
-    this.columns = this.initial.filter((column) => enabled.includes(column)).map((column) => KEYS[column]);
+    this.columns = this.initial
+      .filter((column) => enabled.includes(column))
+      .map((column) => KEYS[column]);
   }
 
   private getData(

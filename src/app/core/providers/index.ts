@@ -3,7 +3,12 @@ import { JWT_OPTIONS } from '@auth0/angular-jwt';
 import { TUI_SANITIZER } from '@taiga-ui/core';
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
 import { apiBaseUrlToken, coreServiceConfig, httpHeadersConfigToken } from '../config';
-import { appNameToken, appTitleToken, commonServiceConfig, menuItemsToken } from '../../common/config';
+import {
+  appNameToken,
+  appTitleToken,
+  commonServiceConfig,
+  menuItemsToken,
+} from '../../common/config';
 import { INTERCEPTOR_PROVIDERS } from './interceptor.provider';
 import { FORM_PROVIDERS } from './form.provider';
 

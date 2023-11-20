@@ -16,7 +16,10 @@ import { LookupService } from '../../../../common/domain-services/lookup/lookup.
 import { AlertService } from '../../../../core/services';
 import { ProfileService } from '../../../../common/domain-services';
 import { CountryResponse } from '../../../../common/domain-models';
-import { UserProfileAddressUpdate, UserProfileResponse } from '../../../../common/domain-models/profile';
+import {
+  UserProfileAddressUpdate,
+  UserProfileResponse,
+} from '../../../../common/domain-models/profile';
 
 @Component({
   selector: 'app-address-details-form',

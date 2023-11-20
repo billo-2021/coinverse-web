@@ -23,7 +23,13 @@ import { ResetPasswordFormComponent } from './components/reset-password-form/res
 import { ResetPasswordResultComponent } from './components/reset-password-result/reset-password-result.component';
 
 @NgModule({
-  imports: [NgCommon, CommonModule, FormComponentsModule, AuthenticationRoutingModule, UiComponentsModule],
+  imports: [
+    NgCommon,
+    CommonModule,
+    FormComponentsModule,
+    AuthenticationRoutingModule,
+    UiComponentsModule,
+  ],
   declarations: [
     LoginComponent,
     RegisterComponent,

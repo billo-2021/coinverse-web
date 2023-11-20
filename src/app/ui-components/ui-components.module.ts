@@ -51,7 +51,12 @@ import { MenuComponent } from './components/menu/menu.component';
 import { MenuHeaderComponent } from './components/menu/menu-header/menu-header.component';
 import { SideMenuComponent } from './components/menu/side-menu/side-menu.component';
 import { MenuFooterComponent } from './components/menu/menu-footer/menu-footer.component';
-import { TuiActiveZoneModule, TuiAutoFocusModule, TuiHoveredModule, TuiLetModule } from '@taiga-ui/cdk';
+import {
+  TuiActiveZoneModule,
+  TuiAutoFocusModule,
+  TuiHoveredModule,
+  TuiLetModule,
+} from '@taiga-ui/cdk';
 import { MoneyComponent } from './components/money/money.component';
 import { LineChartComponent } from './components/line-chart/line-chart.component';
 import { RingChartComponent } from './components/ring-chart/ring-chart.component';

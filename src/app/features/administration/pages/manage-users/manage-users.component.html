@@ -8,8 +8,7 @@
         icon="tuiIconUserPlus"
         shape="rounded"
         size="s"
-        text="New user"
-      ></app-button>
+        text="New user"></app-button>
     </div>
   </div>
   <div class="mt-6 col-sm-12 col-md-11 col-lg-11">
@@ -26,7 +25,11 @@
         </thead>
         <tbody [data]="users" class="tbody" tuiTbody>
           <tr *ngFor="let user of users" class="tr" tuiTr>
-            <td *tuiCell="'emailAddress'" [class.match]="isMatch(user.emailAddress)" class="td" tuiTd>
+            <td
+              *tuiCell="'emailAddress'"
+              [class.match]="isMatch(user.emailAddress)"
+              class="td"
+              tuiTd>
               {{ user.emailAddress }}
             </td>
             <td *tuiCell="'firstName'" [class.match]="isMatch(user.firstName)" class="td" tuiTd>
@@ -35,7 +38,11 @@
             <td *tuiCell="'lastName'" [class.match]="isMatch(user.lastName)" class="td" tuiTd>
               {{ user.lastName }}
             </td>
-            <td *tuiCell="'username'" [class.match]="isMatch(user.account.username)" class="td" tuiTd>
+            <td
+              *tuiCell="'username'"
+              [class.match]="isMatch(user.account.username)"
+              class="td"
+              tuiTd>
               {{ user.account.username }}
             </td>
             <td *tuiCell="'roles'" [class.match]="isMatch(user.account.roles)" class="td" tuiTd>
@@ -44,7 +51,11 @@
             <td *tuiCell="'status'" [class.match]="isMatch(user.account.status)" class="td" tuiTd>
               <app-tag [autoColor]="true" [value]="user.account.status"></app-tag>
             </td>
-            <td *tuiCell="'createdAt'" [class.match]="isMatch(user.account.createdAt)" class="td" tuiTd>
+            <td
+              *tuiCell="'createdAt'"
+              [class.match]="isMatch(user.account.createdAt)"
+              class="td"
+              tuiTd>
               {{ user.account.createdAt | date }}
             </td>
             <td *tuiCell="'actions'" tuiTd>
@@ -57,15 +68,13 @@
                   *ngIf="!user.account.isEnabled"
                   appearance="flat"
                   icon="tuiIconUnlock"
-                  size="xs"
-                ></app-button>
+                  size="xs"></app-button>
                 <app-button
                   (clicked)="onDisableAccount(user.account.username)"
                   *ngIf="user.account.isEnabled"
                   appearance="flat"
                   icon="tuiIconLock"
-                  size="xs"
-                ></app-button>
+                  size="xs"></app-button>
               </div>
             </td>
           </tr>
@@ -86,8 +95,7 @@
             [page]="pagination.page"
             [size]="pagination.size"
             [total]="(total$ | async) || 0"
-            class="tui_space-top-2"
-          ></tui-table-pagination>
+            class="tui_space-top-2"></tui-table-pagination>
         </ng-container>
       </td>
     </tr>

@@ -5,19 +5,25 @@
   [isValid]="form.valid"
   [saveText]="saveText"
   subtitle="Please fill in your personal details."
-  title="Personal Details"
->
-  <app-text-field autocomplete="given-name" label="First Name" name="firstName" placeholder="i.e. John">
+  title="Personal Details">
+  <app-text-field
+    autocomplete="given-name"
+    label="First Name"
+    name="firstName"
+    placeholder="i.e. John">
   </app-text-field>
-  <app-text-field autocomplete="family-name" label="Last Name" name="lastName" placeholder="i.e. Doe">
+  <app-text-field
+    autocomplete="family-name"
+    label="Last Name"
+    name="lastName"
+    placeholder="i.e. Doe">
   </app-text-field>
   <app-text-field
     autocomplete="email"
     label="Email Address"
     name="emailAddress"
     placeholder="john@gmail.com"
-    type="email"
-  >
+    type="email">
   </app-text-field>
 
   <app-phone-number-field label="Phone Number" name="phoneNumber" placeholder="i.e. 0733001026">

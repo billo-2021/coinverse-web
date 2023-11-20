@@ -20,7 +20,11 @@ const routes: Routes = [
     component: ManageCurrenciesComponent,
     title: pagesConfig.currencies.title,
   },
-  { path: pagesConfig.currency.path, component: ManageCurrencyComponent, title: pagesConfig.currency.title },
+  {
+    path: pagesConfig.currency.path,
+    component: ManageCurrencyComponent,
+    title: pagesConfig.currency.title,
+  },
   {
     path: pagesConfig.currencyDetails.path,
     component: ManageCurrencyComponent,

@@ -58,7 +58,10 @@ export class UserPermissionsService {
 
   public get isMenuShown$(): Observable<boolean> {
     return combineLatest([this.userLoggedIn$, this.userPrincipal$]).pipe(
-      map(([userLoggedIn, userPrincipal]) => userLoggedIn && !!userPrincipal && userPrincipal.isVerified)
+      map(
+        ([userLoggedIn, userPrincipal]) =>
+          userLoggedIn && !!userPrincipal && userPrincipal.isVerified
+      )
     );
   }
 

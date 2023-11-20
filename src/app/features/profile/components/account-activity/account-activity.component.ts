@@ -51,15 +51,18 @@ export class AccountActivityComponent extends BaseComponent {
   });
 
   protected readonly request$ = combineLatest([this.pagination$]).pipe(
-    switchMap((query) => this.userAccountService.getUserAccountEvents(...query).pipe(startWith(null))),
+    switchMap((query) =>
+      this.userAccountService.getUserAccountEvents(...query).pipe(startWith(null))
+    ),
     shareReplay(1)
   );
 
-  protected readonly userAccountEvents$: Observable<readonly UserAccountEventResponse[]> = this.request$.pipe(
-    filter(tuiIsPresent),
-    map((userAccountEventPage) => userAccountEventPage.data),
-    startWith([])
-  );
+  protected readonly userAccountEvents$: Observable<readonly UserAccountEventResponse[]> =
+    this.request$.pipe(
+      filter(tuiIsPresent),
+      map((userAccountEventPage) => userAccountEventPage.data),
+      startWith([])
+    );
 
   protected total$: Observable<number> = this.request$.pipe(
     filter(tuiIsPresent),

@@ -9,7 +9,11 @@ import { webRoutesConfig } from '../../../common/config/web-routes-config';
   providedIn: 'root',
 })
 export class RedirectService {
-  private readonly _redirectUrl$: Observable<{ url: string; urlAfterRedirects: string; params: Params }>;
+  private readonly _redirectUrl$: Observable<{
+    url: string;
+    urlAfterRedirects: string;
+    params: Params;
+  }>;
 
   public constructor(
     private readonly _router: Router,
@@ -19,13 +23,13 @@ export class RedirectService {
       filter((navigation) => navigation.url !== navigation.urlAfterRedirects),
       tap((navigation) => {
         console.log('Navigation service Params', this.route);
-        const redirectRoute = (Object.keys(webRoutesConfig) as Array<keyof typeof webRoutesConfig>).find(
-          (webRoute) => webRoutesConfig[webRoute] === navigation.url
-        );
+        const redirectRoute = (
+          Object.keys(webRoutesConfig) as Array<keyof typeof webRoutesConfig>
+        ).find((webRoute) => webRoutesConfig[webRoute] === navigation.url);
 
-        const currentRoute = (Object.keys(webRoutesConfig) as Array<keyof typeof webRoutesConfig>).find(
-          (webRoute) => webRoutesConfig[webRoute] === navigation.urlAfterRedirects
-        );
+        const currentRoute = (
+          Object.keys(webRoutesConfig) as Array<keyof typeof webRoutesConfig>
+        ).find((webRoute) => webRoutesConfig[webRoute] === navigation.urlAfterRedirects);
 
         if (typeof redirectRoute === 'undefined' || currentRoute !== 'login') {
           return;

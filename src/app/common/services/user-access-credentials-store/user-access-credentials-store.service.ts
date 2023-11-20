@@ -15,7 +15,9 @@ export class UserAccessCredentialsStoreService {
     @Inject(LocalStorageService)
     private readonly localStorageService: LocalStorageService
   ) {
-    const userCredentials = localStorageService.get<UserAccessCredentials>(StorageKey.USER_CREDENTIALS);
+    const userCredentials = localStorageService.get<UserAccessCredentials>(
+      StorageKey.USER_CREDENTIALS
+    );
 
     this._userCredentials = new BehaviorSubject(userCredentials);
     this.userCredentials$ = this._userCredentials

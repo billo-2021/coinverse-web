@@ -2,28 +2,24 @@
   <app-tabs
     (activeItemIndexChange)="onActiveTabIndexChange($event)"
     [activeItemIndex]="activeTabIndex"
-    [tabs]="tabs"
-  ></app-tabs>
+    [tabs]="tabs"></app-tabs>
   <form [formGroup]="form" class="flex-col mt-10">
     <app-combo-box
       [options]="(currencyPairOptions$ | async) ?? []"
       label="Currency Pair"
-      name="currencyPair"
-    ></app-combo-box>
+      name="currencyPair"></app-combo-box>
     <div class="flex-row justify-space-between">
       <app-combo-box
         [options]="(filteredCurrencyOptions$ | async) ?? []"
         class="col-6"
         label="Currency"
-        name="amountCurrency"
-      ></app-combo-box>
+        name="amountCurrency"></app-combo-box>
       <app-input-number class="col-4" label="Amount" name="amount" size="l"></app-input-number>
     </div>
     <app-button
       (clicked)="onAction()"
       [isDisabled]="!form.valid"
       [text]="action[activeTabIndex]"
-      class="mt-4"
-    ></app-button>
+      class="mt-4"></app-button>
   </form>
 </div>

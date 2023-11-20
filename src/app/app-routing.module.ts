@@ -9,7 +9,9 @@ const routes: Routes = [
   {
     path: webRoutesConfig.authentication,
     loadChildren: () =>
-      import('./features/authentication/authentication.module').then((module) => module.AuthenticationModule),
+      import('./features/authentication/authentication.module').then(
+        (module) => module.AuthenticationModule
+      ),
     canActivate: [unAuthenticatedGuard],
     runGuardsAndResolvers: 'always',
   },
@@ -22,32 +24,38 @@ const routes: Routes = [
   },
   {
     path: webRoutesConfig.wallets,
-    loadChildren: () => import('./features/wallets/wallets.module').then((module) => module.WalletsModule),
+    loadChildren: () =>
+      import('./features/wallets/wallets.module').then((module) => module.WalletsModule),
     canActivate: [() => isAuthenticatedGuard(webRoutesConfig.wallets)],
     runGuardsAndResolvers: 'always',
   },
   {
     path: webRoutesConfig.transact,
-    loadChildren: () => import('./features/transact/transact.module').then((module) => module.TransactModule),
+    loadChildren: () =>
+      import('./features/transact/transact.module').then((module) => module.TransactModule),
     canActivate: [() => isAuthenticatedGuard(webRoutesConfig.transact)],
     runGuardsAndResolvers: 'always',
   },
   {
     path: webRoutesConfig.trade,
-    loadChildren: () => import('./features/trade/trade.module').then((module) => module.TradeModule),
+    loadChildren: () =>
+      import('./features/trade/trade.module').then((module) => module.TradeModule),
     canActivate: [() => isAuthenticatedGuard(webRoutesConfig.trade)],
     runGuardsAndResolvers: 'always',
   },
   {
     path: webRoutesConfig.profile,
-    loadChildren: () => import('./features/profile/profile.module').then((module) => module.ProfileModule),
+    loadChildren: () =>
+      import('./features/profile/profile.module').then((module) => module.ProfileModule),
     canMatch: [() => isAuthenticatedGuard(webRoutesConfig.profile)],
     runGuardsAndResolvers: 'always',
   },
   {
     path: webRoutesConfig.administration,
     loadChildren: () =>
-      import('./features/administration/administration.module').then((module) => module.AdministrationModule),
+      import('./features/administration/administration.module').then(
+        (module) => module.AdministrationModule
+      ),
     canActivate: [() => isAuthenticatedGuard(webRoutesConfig.administration), adminRoleGuard],
     runGuardsAndResolvers: 'always',
   },

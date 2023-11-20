@@ -2,14 +2,12 @@
   <div *tuiSidebar="viewModel.isMobile && viewModel.isShown; direction: 'left'">
     <ng-container
       [ngTemplateOutletContext]="{ $implicit: viewModel.menuItems }"
-      [ngTemplateOutlet]="menuContent"
-    ></ng-container>
+      [ngTemplateOutlet]="menuContent"></ng-container>
   </div>
   <ng-container *ngIf="!viewModel.isMobile">
     <ng-container
       [ngTemplateOutletContext]="{ $implicit: viewModel.menuItems }"
-      [ngTemplateOutlet]="menuContent"
-    ></ng-container>
+      [ngTemplateOutlet]="menuContent"></ng-container>
   </ng-container>
 </div>
 

@@ -11,7 +11,11 @@ const MAX_HISTORY_ITEMS = 12;
   providedIn: 'root',
 })
 export class NavigationService {
-  private readonly _navigation$: Observable<{ url: string; urlAfterRedirects: string; params: Params }>;
+  private readonly _navigation$: Observable<{
+    url: string;
+    urlAfterRedirects: string;
+    params: Params;
+  }>;
 
   public constructor(
     private readonly _router: Router,
@@ -64,7 +68,9 @@ export class NavigationService {
     return this._navigation$;
   }
 
-  private _history$: BehaviorSubject<NavigationParam[]> = new BehaviorSubject<NavigationParam[]>([]);
+  private _history$: BehaviorSubject<NavigationParam[]> = new BehaviorSubject<NavigationParam[]>(
+    []
+  );
 
   public get history$(): Observable<NavigationParam[]> {
     return this._history$.asObservable();
@@ -95,7 +101,10 @@ export class NavigationService {
       const url = webRoutesConfig[route];
       const commands: string[] = routePath ? [url, routePath] : [url];
 
-      const navigate = await this._router.navigate(commands, queryParams && { queryParams: queryParams });
+      const navigate = await this._router.navigate(
+        commands,
+        queryParams && { queryParams: queryParams }
+      );
       if (navigate) {
         this.updateNavigation(param);
       }

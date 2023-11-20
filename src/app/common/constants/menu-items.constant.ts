@@ -8,14 +8,24 @@ const menuItems: MenuItem[] = [
     icon: 'tuiIconPieChart',
     roles: ['admin', 'customer'],
   },
-  { text: 'Wallets', link: webRoutesConfig.wallets, icon: 'tuiIconBriefcase', roles: ['admin', 'customer'] },
+  {
+    text: 'Wallets',
+    link: webRoutesConfig.wallets,
+    icon: 'tuiIconBriefcase',
+    roles: ['admin', 'customer'],
+  },
   {
     text: 'Transact',
     link: webRoutesConfig.transact,
     icon: 'tuiIconCreditCard',
     roles: ['admin', 'customer'],
   },
-  { text: 'Trade', link: webRoutesConfig.trade, icon: 'tuiIconShuffle', roles: ['admin', 'customer'] },
+  {
+    text: 'Trade',
+    link: webRoutesConfig.trade,
+    icon: 'tuiIconShuffle',
+    roles: ['admin', 'customer'],
+  },
   {
     text: 'Currencies',
     link: webRoutesConfig.manageCurrencies,

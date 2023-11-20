@@ -159,10 +159,20 @@ export class RegisterComponent {
     this.onRegister();
   }
 
-  public getFormStep(title: string, form: FormGroup, formStep: FormSteps, previousForm: FormGroup): FormStep {
+  public getFormStep(
+    title: string,
+    form: FormGroup,
+    formStep: FormSteps,
+    previousForm: FormGroup
+  ): FormStep {
     return {
       title,
-      state: !form.touched && formStep >= this.currentStepIndex ? 'normal' : form.valid ? 'pass' : 'error',
+      state:
+        !form.touched && formStep >= this.currentStepIndex
+          ? 'normal'
+          : form.valid
+            ? 'pass'
+            : 'error',
       isDisabled: !previousForm.valid || formStep >= this.currentStepIndex,
     };
   }

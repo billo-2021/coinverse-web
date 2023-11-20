@@ -109,6 +109,8 @@ function isComponent<C>(content: PolymorphicContent<C>): content is PolymorphicC
   return content instanceof PolymorphicComponent;
 }
 
-function isTemplate<C>(content: PolymorphicContent<C>): content is PolymorphicTemplate<C> | TemplateRef<C> {
+function isTemplate<C>(
+  content: PolymorphicContent<C>
+): content is PolymorphicTemplate<C> | TemplateRef<C> {
   return isDirective(content) || content instanceof TemplateRef;
 }

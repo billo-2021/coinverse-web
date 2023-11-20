@@ -1,6 +1,14 @@
 import { Component, Inject } from '@angular/core';
 import { webRoutesConfig } from '../../../../common/config/web-routes-config';
-import { BehaviorSubject, combineLatest, filter, map, Observable, startWith, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  filter,
+  map,
+  Observable,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { Router } from '@angular/router';
 import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
 import { BaseComponent } from '../../../../common/components';

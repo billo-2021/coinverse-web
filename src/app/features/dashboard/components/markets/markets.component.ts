@@ -150,7 +150,9 @@ export class MarketsComponent extends BaseComponent {
     );
   }
 
-  public getCurrencyExchangeRate(currency: CryptoCurrencyResponse): Observable<CurrencyExchangeResponseData> {
+  public getCurrencyExchangeRate(
+    currency: CryptoCurrencyResponse
+  ): Observable<CurrencyExchangeResponseData> {
     const currencyPairName = this.getCurrencyPairName(currency.code);
     return this.quoteService
       .getCurrencyExchangeRateByCurrencyPairName(currencyPairName)

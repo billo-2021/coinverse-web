@@ -13,22 +13,17 @@
       <app-money
         [currency]="tradeResponse.currency"
         [precision]="6"
-        [value]="tradeResponse.amount"
-      ></app-money>
+        [value]="tradeResponse.amount"></app-money>
     </p>
   </div>
 
   <div class="flex-row justify-space-between items-center p-4">
     <p class="col-8 row-item-title">Source Wallet Currency</p>
-    <p class="col-3 ml-4 row-item-description">
-      {{ tradeResponse.sourceWallet.currency.code }}
-    </p>
+    <p class="col-3 ml-4 row-item-description">{{ tradeResponse.sourceWallet.currency.code }}</p>
   </div>
   <div class="flex-row justify-space-between items-center p-4">
     <p class="col-8 row-item-title">Source Wallet</p>
-    <p class="col-3 ml-4 row-item-description">
-      {{ tradeResponse.sourceWallet.address }}
-    </p>
+    <p class="col-3 ml-4 row-item-description">{{ tradeResponse.sourceWallet.address }}</p>
   </div>
   <div class="flex-row justify-space-between items-center p-4">
     <p class="col-8 row-item-title">Destination Wallet Currency</p>
@@ -38,9 +33,7 @@
   </div>
   <div class="flex-row justify-space-between items-center p-4">
     <p class="col-8 row-item-title">Destination Wallet</p>
-    <p class="col-3 ml-4 row-item-description">
-      {{ tradeResponse.destinationWallet.address }}
-    </p>
+    <p class="col-3 ml-4 row-item-description">{{ tradeResponse.destinationWallet.address }}</p>
   </div>
   <div class="flex-row justify-space-between items-center p-4">
     <p class="col-8 row-item-title">Action</p>
@@ -61,8 +54,7 @@
       (clicked)="onViewTradesClicked()"
       appearance="accent"
       class="grow"
-      text="View Trades"
-    ></app-button>
+      text="View Trades"></app-button>
     <app-button (clicked)="onTradeClicked()" class="grow ml-4" text="Trade Again"></app-button>
   </div>
 </div>

@@ -11,9 +11,11 @@
       *ngFor="let label of labels; let index = index"
       [color]="getColor(index)"
       [isActive]="isItemActive(index)"
-      [text]="label"
-    >
-      <app-money [currency]="extraLabels[index]" [singleColor]="true" [value]="value[index]"></app-money>
+      [text]="label">
+      <app-money
+        [currency]="extraLabels[index]"
+        [singleColor]="true"
+        [value]="value[index]"></app-money>
     </app-chart-legend-item>
   </div>
 </div>
