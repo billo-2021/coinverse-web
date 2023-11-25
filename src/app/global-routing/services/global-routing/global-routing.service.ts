@@ -86,25 +86,4 @@ export class GlobalRoutingService extends Observable<void> {
       )
     );
   }
-
-  private getUserPrincipalRedirect(
-    userPrincipalService: UserPrincipalStoreService,
-    userPermissionService: UserPermissionsService
-  ) {
-    return userPrincipalService
-      .pipe(
-        tap((userPrincipal) => {
-          const accountVerification = this._accountVerificationStore$.getValue();
-
-          if (!userPrincipal || accountVerification) {
-            return;
-          }
-
-          if (!userPrincipal.isVerified) {
-            userPermissionService.verifyUser(false);
-          }
-        })
-      )
-      .subscribe();
-  }
 }
