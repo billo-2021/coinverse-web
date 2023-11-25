@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 
 import { HttpCrudService } from '../../../core/services';
@@ -15,8 +15,7 @@ import {
 import { apiRoutesConfig } from '../../config';
 import { loginDtoToLoginResponse } from '../../mappers';
 import { userDtoToUserResponse } from '../../mappers/authentication/authentication.mapper';
-import { UserPrincipalStoreService } from '../../services/user-principal-store/user-principal-store.service';
-import { AccountVerificationStoreService } from '../../services/account-verification-store/account-verification-store.service';
+import { AccountVerificationStoreService, UserPrincipalStoreService } from '../../services';
 
 @Injectable({
   providedIn: 'root',
@@ -27,15 +26,13 @@ export class AuthenticationService {
   public readonly REGISTER_PATH = apiRoutesConfig.authentication.register;
 
   constructor(
-    @Inject(HttpCrudService) private readonly httpService: HttpCrudService,
-    @Inject(UserPrincipalStoreService)
-    private readonly userPrincipalStore: UserPrincipalStoreService,
-    @Inject(AccountVerificationStoreService)
-    private readonly accountVerificationStore: AccountVerificationStoreService
+    private readonly _httpService: HttpCrudService,
+    private readonly _userPrincipalStore: UserPrincipalStoreService,
+    private readonly _accountVerificationStore: AccountVerificationStoreService
   ) {}
 
   public register(registerRequest: RegisterRequest): Observable<UserResponse> {
-    return this.httpService
+    return this._httpService
       .create<RegisterRequest, UserDto>(this.getFullPath(this.REGISTER_PATH), registerRequest)
       .pipe(
         map(userDtoToUserResponse),
@@ -46,7 +43,7 @@ export class AuthenticationService {
   }
 
   public login(loginRequest: LoginRequest): Observable<LoginResponse> {
-    return this.httpService
+    return this._httpService
       .create<LoginRequest, LoginDto>(this.getFullPath(this.LOGIN_PATH), loginRequest)
       .pipe(
         map(loginDtoToLoginResponse),
@@ -67,14 +64,14 @@ export class AuthenticationService {
       ...user,
     };
 
-    const userCredentials: UserAccessCredentials = {
+    const accessCredentials: UserAccessCredentials = {
       username: user.username,
       accessToken: userLogin.accessToken,
       refreshToken: userLogin.refreshToken,
     };
 
-    this.userPrincipalStore.userPrincipal = userPrincipal;
-    this.userPrincipalStore.userCredentials = userCredentials;
+    this._userPrincipalStore.next(userPrincipal);
+    this._userPrincipalStore.accessCredentials = accessCredentials;
     this.addAccountVerification(user);
   }
 
@@ -85,10 +82,10 @@ export class AuthenticationService {
       return;
     }
 
-    this.accountVerificationStore.accountVerification = {
+    this._accountVerificationStore.next({
       username: user.username,
       emailAddress: user.emailAddress,
       isVerified,
-    };
+    });
   }
 }

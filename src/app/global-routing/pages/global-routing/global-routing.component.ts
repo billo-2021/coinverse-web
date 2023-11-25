@@ -1,11 +1,13 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { UserPrincipalStoreService } from '../../../common/services';
 import { NavigationService } from '../../../core/services';
+import { DestroyService } from '../../../core/services/destroy/destroy.service';
 
 @Component({
   selector: 'app-global-routing',
   templateUrl: './global-routing.component.html',
   styleUrls: ['./global-routing.component.scss'],
+  providers: [DestroyService],
 })
 export class GlobalRoutingComponent implements AfterViewInit {
   public constructor(
@@ -18,13 +20,6 @@ export class GlobalRoutingComponent implements AfterViewInit {
 
     if (isLoggedIn) {
       this._navigationService.to('dashboard').then();
-      return;
-    }
-
-    const userPrincipal = this._userPrincipalStore.userPrincipal;
-
-    if (userPrincipal && !userPrincipal.isVerified) {
-      this._navigationService.to('verifyAccount').then();
       return;
     }
 

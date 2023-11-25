@@ -1,4 +1,4 @@
-import { Provider } from '@angular/core';
+import { ErrorHandler, Provider } from '@angular/core';
 import { JWT_OPTIONS } from '@auth0/angular-jwt';
 import { TUI_SANITIZER } from '@taiga-ui/core';
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
@@ -11,6 +11,7 @@ import {
 } from '../../common/config';
 import { INTERCEPTOR_PROVIDERS } from './interceptor.provider';
 import { FORM_PROVIDERS } from './form.provider';
+import { GlobalErrorHandlerService } from '../services/global-error-handler/global-error-handler.service';
 
 export const PROVIDERS: Provider[] = [
   ...INTERCEPTOR_PROVIDERS,
@@ -18,6 +19,7 @@ export const PROVIDERS: Provider[] = [
   { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
   { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
   { provide: apiBaseUrlToken, useValue: coreServiceConfig.apiUrl },
+  { provide: ErrorHandler, useClass: GlobalErrorHandlerService },
   {
     provide: httpHeadersConfigToken,
     useValue: coreServiceConfig.httpHeadersConfig,

@@ -7,15 +7,15 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { AlertService, NavigationService } from '../../services';
+import { NavigationService } from '../../services';
 import { apiErrorCodes, apiErrorMessages } from '../../../common/constants';
 import { isApiErrorDto } from '../../../common/validators';
 import { UserPermissionsService } from '../../../common/services';
+import { ApiError } from '../../models';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
   constructor(
-    private readonly _alertService: AlertService,
     private readonly _navigationService: NavigationService,
     private readonly _userPermissionsService: UserPermissionsService
   ) {}
@@ -24,11 +24,16 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (!isApiErrorDto(error.error)) {
-          console.error('Api Error', error);
           const errorMessage = apiErrorMessages[apiErrorCodes.SOMETHING_WENT_WRONG];
 
-          this._alertService.showErrorMessage(errorMessage);
-          return throwError(() => new Error(errorMessage));
+          return throwError(
+            () =>
+              new ApiError(
+                errorMessage,
+                apiErrorCodes.SOMETHING_WENT_WRONG,
+                new Date().toISOString()
+              )
+          );
         }
 
         const apiError = error.error;
@@ -38,9 +43,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           this._navigationService.to('verifyAccount').then();
         }
 
-        this._alertService.showErrorMessage(error.error.message);
-
-        return throwError(error.error);
+        return throwError(() => new ApiError(apiError.message, apiError.code, apiError.timeStamp));
       })
     );
   }

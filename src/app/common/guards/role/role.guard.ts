@@ -4,9 +4,9 @@ import { NavigationService } from '../../../core/services';
 
 function roleGuard(role: string) {
   const navigationService = inject(NavigationService);
-  const userPrincipalService = inject(UserPrincipalStoreService);
-  const isLoggedIn = userPrincipalService.isLoggedIn();
-  const user = userPrincipalService.userPrincipal;
+  const userPrincipalStore$ = inject(UserPrincipalStoreService);
+  const isLoggedIn = userPrincipalStore$.isLoggedIn();
+  const user = userPrincipalStore$.getValue();
   const userHasRole =
     user && user.roles.some((userRole) => userRole.toLowerCase().includes(role.toLowerCase()));
 

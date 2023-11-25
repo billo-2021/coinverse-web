@@ -1,31 +1,85 @@
-import { Injectable } from '@angular/core';
-import { combineLatest, filter, Observable, Subscription, switchMap, tap, timer } from 'rxjs';
+import { Injectable, Self } from '@angular/core';
+import { combineLatest, filter, map, merge, Observable, switchMap, tap, timer } from 'rxjs';
 import { AccountVerification, UserAccessCredentials } from '../../../common/domain-models';
 import {
   AccountVerificationStoreService,
+  UserPermissionsService,
   UserPrincipalStoreService,
 } from '../../../common/services';
 import { NavigationService } from '../../../core/services';
 import { RedirectService } from '../../../core/services/redirect/redirect.service';
+import { NavigationParam } from '../../../core/types';
+import { DestroyService } from '../../../core/services/destroy/destroy.service';
 
 @Injectable({ providedIn: 'root' })
-export class GlobalRoutingService {
-  private _verificationRedirect$ = new Subscription();
-  private _missingVerificationParamsRedirect$ = new Subscription();
-  private _loginRedirect$ = new Subscription();
-  private _autoLogout$ = new Subscription();
-  private _navigation$ = new Subscription();
-  private _redirectUrl$ = new Subscription();
+export class GlobalRoutingService extends Observable<void> {
+  private readonly _stream = merge(
+    this._navigationService.pipe(),
+    this._redirectService.pipe(),
+    this.missingVerification$.pipe(tap(() => this._navigationService.to('verifyAccount').then())),
+    this.verification$.pipe(tap(() => this._navigationService.to('root').then())),
+    this.login$.pipe(tap(() => this._redirectService.redirect('dashboard'))),
+    this.autoLogoutTimer$.pipe(
+      tap(() => {
+        this._userPrincipalStore$.logOut();
+        this._navigationService.to('login').then();
+      })
+    )
+  ).pipe(switchMap(() => new Observable<void>((observer) => observer.next())));
 
   constructor(
-    private readonly _userPrincipalStore: UserPrincipalStoreService,
-    private readonly _accountVerificationStore: AccountVerificationStoreService,
+    private readonly _userPrincipalStore$: UserPrincipalStoreService,
+    private readonly _accountVerificationStore$: AccountVerificationStoreService,
     private readonly _navigationService: NavigationService,
-    private readonly _redirectService: RedirectService
-  ) {}
+    private readonly _redirectService: RedirectService,
+    private readonly _userPermissions$: UserPermissionsService,
+    @Self() private readonly _destroy$: DestroyService
+  ) {
+    super((subscriber) => this._stream.subscribe(subscriber));
+  }
+
+  public get missingVerification$() {
+    return this._verification$.pipe(
+      filter((userVerification) => !userVerification.isVerified),
+      map((userVerification) => userVerification.isVerified)
+    );
+  }
+
+  public get verification$() {
+    return this._verification$.pipe(filter((userVerification) => userVerification.isVerified));
+  }
+
+  public get login$(): Observable<NavigationParam[]> {
+    return combineLatest([this._isLoggedIn$, this._navigationService.history$]).pipe(
+      filter(
+        ([isLoggedIn, history]) =>
+          isLoggedIn && history.length > 0 && history[history.length - 1] === 'login'
+      ),
+      map(({ 1: history }) => history)
+    );
+  }
+
+  public get autoLogoutTimer$(): Observable<0> {
+    return this._userPrincipalStore$.accessCredentials$.pipe(
+      filter(
+        (userCredentials): userCredentials is UserAccessCredentials => userCredentials !== null
+      ),
+      switchMap((userCredentials) => {
+        const accessToken = userCredentials.accessToken;
+        const tokenExpiryDate = this._userPrincipalStore$.getTokenExpiryDate(accessToken);
+        return timer(tokenExpiryDate);
+      })
+    );
+  }
+
+  private get _isLoggedIn$(): Observable<true> {
+    return this._userPrincipalStore$.userLoggedIn$.pipe(
+      filter((userLoggedIn): userLoggedIn is true => userLoggedIn)
+    );
+  }
 
   private get _verification$(): Observable<AccountVerification> {
-    return this._accountVerificationStore.accountVerification$.pipe(
+    return this._accountVerificationStore$.pipe(
       filter(
         (accountVerification): accountVerification is AccountVerification =>
           accountVerification !== null
@@ -33,97 +87,22 @@ export class GlobalRoutingService {
     );
   }
 
-  private get _isLoggedIn$(): Observable<boolean> {
-    return this._userPrincipalStore.userLoggedIn$.pipe(filter((userLogged) => userLogged));
-  }
-
-  public start(): void {
-    this._verificationRedirect$ = this.getVerificationRedirect(
-      this._verification$,
-      this._navigationService
-    );
-    this._missingVerificationParamsRedirect$ = this.getMissingParamsRedirect(
-      this._navigationService,
-      this._accountVerificationStore
-    );
-    this._loginRedirect$ = combineLatest([this._isLoggedIn$, this._navigationService.history$])
+  private getUserPrincipalRedirect(
+    userPrincipalService: UserPrincipalStoreService,
+    userPermissionService: UserPermissionsService
+  ) {
+    return userPrincipalService
       .pipe(
-        filter(
-          ([isLoggedIn, history]) =>
-            isLoggedIn && history.length > 0 && history[history.length - 1] === 'login'
-        )
-      )
-      .subscribe(() => {
-        this._redirectService.redirect('dashboard');
-      });
+        tap((userPrincipal) => {
+          const accountVerification = this._accountVerificationStore$.getValue();
 
-    this._autoLogout$ = this.getAutoLogout(this._userPrincipalStore, this._navigationService);
-    this._navigation$ = this._navigationService.navigation$.subscribe();
-    this._redirectUrl$ = this._redirectService.redirectUrl$.subscribe();
-  }
-
-  public stop(): void {
-    this._verificationRedirect$.unsubscribe();
-    this._missingVerificationParamsRedirect$.unsubscribe();
-    this._loginRedirect$.unsubscribe();
-    this._redirectUrl$.unsubscribe();
-  }
-
-  private getAutoLogout(
-    userPrincipalStore: UserPrincipalStoreService,
-    navigationService: NavigationService
-  ): Subscription {
-    return userPrincipalStore.userAccessCredentials$
-      .pipe(
-        filter(
-          (userCredentials): userCredentials is UserAccessCredentials => userCredentials !== null
-        ),
-        switchMap((userCredentials) => {
-          const accessToken = userCredentials.accessToken;
-          const tokenExpiryDate = userPrincipalStore.getTokenExpiryDate(accessToken);
-
-          return timer(tokenExpiryDate);
-        }),
-        tap(() => {
-          userPrincipalStore.logOut();
-          navigationService.to('login').then();
-        })
-      )
-      .subscribe();
-  }
-
-  private getMissingParamsRedirect(
-    navigationService: NavigationService,
-    accountVerificationStore: AccountVerificationStoreService
-  ): Subscription {
-    return navigationService.navigation$
-      .pipe(
-        tap((route) => {
-          const accountVerification = accountVerificationStore.accountVerification;
-          if (
-            route.url.includes('verify') &&
-            (!accountVerification || accountVerification.isVerified)
-          ) {
-            navigationService.to('root').then();
-          }
-        })
-      )
-      .subscribe();
-  }
-
-  private getVerificationRedirect(
-    verification$: Observable<AccountVerification>,
-    navigationService: NavigationService
-  ): Subscription {
-    return verification$
-      .pipe(
-        tap((userVerification) => {
-          if (!userVerification.isVerified) {
-            navigationService.to('verifyAccount').then();
+          if (!userPrincipal || accountVerification) {
             return;
           }
 
-          navigationService.to('root').then();
+          if (!userPrincipal.isVerified) {
+            userPermissionService.verifyUser(false);
+          }
         })
       )
       .subscribe();

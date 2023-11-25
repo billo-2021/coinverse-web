@@ -1,1 +1,1 @@
-export * from './api-error';
+export * from '../../core/models/api-error';

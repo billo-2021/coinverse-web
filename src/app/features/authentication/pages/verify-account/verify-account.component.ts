@@ -12,11 +12,9 @@ import {
   AccountVerificationStoreService,
 } from '../../../../common/domain-services';
 import { OtpTokenRequest, VerifyAccountRequest } from '../../../../common/domain-models';
-import { AlertService } from '../../../../core/services';
+import { AlertService, NavigationService } from '../../../../core/services';
 import { finalize } from 'rxjs';
 import { OtpFormComponent } from '../../components/otp-form/otp-form.component';
-import { Router } from '@angular/router';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
 
 @Component({
   selector: 'app-verify-account',
@@ -31,24 +29,25 @@ export class VerifyAccountComponent implements OnInit {
   protected readonly VERIFICATION_METHOD = 'email';
   protected otpRecipient = '';
 
-  protected otpForm = this.formBuilder.group({
+  protected otpForm = this._formBuilder.group({
     otp: ['', [Validators.required, Validators.minLength(this.OTP_LENGTH)]],
   });
 
   @ViewChild('otpFormRef') private otpFormRef?: OtpFormComponent;
 
   public constructor(
-    private readonly formBuilder: FormBuilder,
-    private readonly router: Router,
-    private readonly accountVerificationService: AccountVerificationService,
-    private readonly accountVerificationStore: AccountVerificationStoreService,
-    private readonly alertService: AlertService
+    private readonly _formBuilder: FormBuilder,
+    private readonly _navigationService: NavigationService,
+    private readonly _accountVerificationService: AccountVerificationService,
+    private readonly _accountVerificationStore$: AccountVerificationStoreService,
+    private readonly _alertService: AlertService
   ) {}
 
   ngOnInit(): void {
-    const accountVerification = this.accountVerificationStore.accountVerification;
+    const accountVerification = this._accountVerificationStore$.getValue();
 
     if (!accountVerification) {
+      this._navigationService.to('root').then();
       return;
     }
 
@@ -67,12 +66,11 @@ export class VerifyAccountComponent implements OnInit {
       token: otp,
     };
 
-    this.accountVerificationService
+    this._accountVerificationService
       .verifyAccount(verifyAccountRequest)
       .pipe(finalize(() => this.resetOtpForm()))
       .subscribe(async (response) => {
-        this.alertService.showMessage(response.message);
-        await this.router.navigate([webRoutesConfig.root]);
+        this._alertService.showMessage(response.message);
       });
   }
 
@@ -82,7 +80,7 @@ export class VerifyAccountComponent implements OnInit {
       messagingChannel: this.VERIFICATION_METHOD,
     };
 
-    this.accountVerificationService
+    this._accountVerificationService
       .requestOtpToken(otpTokenRequest)
       .pipe(
         finalize(() => {
@@ -90,7 +88,7 @@ export class VerifyAccountComponent implements OnInit {
         })
       )
       .subscribe((response) => {
-        this.alertService.showMessage(response.message);
+        this._alertService.showMessage(response.message);
       });
   }
 

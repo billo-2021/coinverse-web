@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { MenuItem } from '../../types';
-import { BehaviorSubject, filter, map, Observable, startWith, tap } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, shareReplay, startWith, tap } from 'rxjs';
 import { TuiBreakpointService } from '@taiga-ui/core';
 import { ModeType } from '../../../ui-components/components/menu/types';
 import { menuItemsToken } from '../../config';
@@ -10,25 +10,23 @@ import { UserPermissionsService } from '../user-permissions/user-permissions.ser
   providedIn: 'root',
 })
 export class MenuService {
+  public readonly isMobile$: Observable<boolean>;
   private readonly _isSideMenuShown = new BehaviorSubject(false);
   private readonly _isSideMenuShown$ = this._isSideMenuShown.asObservable();
   private readonly _isMenuShown = new BehaviorSubject(false);
   private readonly _isMenuShown$ = this._isMenuShown.asObservable();
 
   constructor(
-    @Inject(TuiBreakpointService)
-    private readonly tuiBreakpoint: TuiBreakpointService,
+    private readonly _tuiBreakpointService: TuiBreakpointService,
     @Inject(menuItemsToken) private readonly _menuItems: MenuItem[],
-    @Inject(UserPermissionsService)
     private readonly _userPermissionsService: UserPermissionsService
-  ) {}
-
-  public get isMobile$(): Observable<boolean> {
-    return this.tuiBreakpoint.pipe(
+  ) {
+    this.isMobile$ = this._tuiBreakpointService.pipe(
       startWith('mobile'),
       filter((mode): mode is ModeType => mode !== null),
       map((mode) => mode === 'mobile'),
-      tap((isMobile) => isMobile && this.setIsSideMenuShown(false))
+      tap((isMobile) => isMobile && this.setIsSideMenuShown(false)),
+      shareReplay(1)
     );
   }
 

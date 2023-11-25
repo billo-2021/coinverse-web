@@ -1,43 +1,49 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, Observable, tap } from 'rxjs';
+import { Injectable, Self } from '@angular/core';
+import { BehaviorSubject, filter, Observable, takeUntil, tap } from 'rxjs';
 import { NavigationService } from '../navigation/navigation.service';
 import { Params, Router } from '@angular/router';
 import { NavigationParam, WebRoutesConfigType } from '../../types';
 import { webRoutesConfig } from '../../../common/config/web-routes-config';
+import { DestroyService } from '../destroy/destroy.service';
+
+type RedirectServiceKey = {
+  url: string;
+  urlAfterRedirects: string;
+  params: Params;
+};
 
 @Injectable({
   providedIn: 'root',
 })
-export class RedirectService {
-  private readonly _redirectUrl$: Observable<{
-    url: string;
-    urlAfterRedirects: string;
-    params: Params;
-  }>;
-
+export class RedirectService extends Observable<RedirectServiceKey> {
   public constructor(
     private readonly _router: Router,
-    private readonly _navigationService: NavigationService
+    private readonly _navigationService: NavigationService,
+    @Self() private readonly _destroy$: DestroyService
   ) {
-    this._redirectUrl$ = this._navigationService.navigation$.pipe(
-      filter((navigation) => navigation.url !== navigation.urlAfterRedirects),
-      tap((navigation) => {
-        console.log('Navigation service Params', this.route);
-        const redirectRoute = (
-          Object.keys(webRoutesConfig) as Array<keyof typeof webRoutesConfig>
-        ).find((webRoute) => webRoutesConfig[webRoute] === navigation.url);
+    super((subscriber) => {
+      this._navigationService
+        .pipe(
+          filter((navigation) => navigation.url !== navigation.urlAfterRedirects),
+          tap((navigation) => {
+            const redirectRoute = (
+              Object.keys(webRoutesConfig) as Array<keyof typeof webRoutesConfig>
+            ).find((webRoute) => webRoutesConfig[webRoute] === navigation.url);
 
-        const currentRoute = (
-          Object.keys(webRoutesConfig) as Array<keyof typeof webRoutesConfig>
-        ).find((webRoute) => webRoutesConfig[webRoute] === navigation.urlAfterRedirects);
+            const currentRoute = (
+              Object.keys(webRoutesConfig) as Array<keyof typeof webRoutesConfig>
+            ).find((webRoute) => webRoutesConfig[webRoute] === navigation.urlAfterRedirects);
 
-        if (typeof redirectRoute === 'undefined' || currentRoute !== 'login') {
-          return;
-        }
+            if (typeof redirectRoute === 'undefined' || currentRoute !== 'login') {
+              return;
+            }
 
-        this._route.next(redirectRoute);
-      })
-    );
+            this._route.next(redirectRoute);
+          }),
+          takeUntil(this._destroy$)
+        )
+        .subscribe(subscriber);
+    });
   }
 
   private _route = new BehaviorSubject<WebRoutesConfigType | null>(null);
@@ -48,10 +54,6 @@ export class RedirectService {
 
   public set route(routeConfig: WebRoutesConfigType) {
     this._route.next(routeConfig);
-  }
-
-  public get redirectUrl$(): Observable<Params> {
-    return this._redirectUrl$;
   }
 
   public redirect(fallbackParam: NavigationParam): void {

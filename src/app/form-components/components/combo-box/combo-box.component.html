@@ -37,11 +37,11 @@
 
 <ng-template #content let-item>
   <div class="row mt-2 items-center text-center">
-    <app-col>
+    <div>
       <tui-avatar [autoColor]="true" [text]="item.code" size="xs"></tui-avatar>
-    </app-col>
-    <app-col class="ml-4">
+    </div>
+    <div class="ml-4">
       <span>{{ item.name }}</span>
-    </app-col>
+    </div>
   </div>
 </ng-template>

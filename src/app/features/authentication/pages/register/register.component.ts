@@ -4,6 +4,7 @@ import {
   Component,
   HostBinding,
   Inject,
+  OnInit,
   ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -41,7 +42,7 @@ enum FormSteps {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   @HostBinding('class') public classes = 'full-width flex-col justify-center items-center';
   protected readonly personalInformationForm: FormGroup;
   protected readonly addressDetailsForm: FormGroup;
@@ -228,6 +229,10 @@ export class RegisterComponent {
       city: addressDetailsFormValue.city,
       postalCode: addressDetailsFormValue.postalCode,
     };
+  }
+
+  ngOnInit(): void {
+    throw new Error('Something went wrong');
   }
 
   private resetForms(): void {

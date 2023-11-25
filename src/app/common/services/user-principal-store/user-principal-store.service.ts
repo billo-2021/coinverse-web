@@ -1,11 +1,21 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, Self } from '@angular/core';
 import { UserAccessCredentials, UserPrincipal } from '../../domain-models';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  Observable,
+  shareReplay,
+  skip,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { UserAccessCredentialsStoreService } from '../user-access-credentials-store/user-access-credentials-store.service';
 import { LocalStorageService } from '../../../core/services/local-storage/local-storage.service';
 import { StorageKey } from '../../../core/constants';
 import { DateTime } from 'luxon';
+import { DestroyService } from '../../../core/services/destroy/destroy.service';
 
 type TokenExpiryOffset = {
   seconds: number;
@@ -18,100 +28,89 @@ const TOKEN_EXPIRY_OFFSET: TokenExpiryOffset = {
 @Injectable({
   providedIn: 'root',
 })
-export class UserPrincipalStoreService {
-  private readonly _userPrincipal: BehaviorSubject<UserPrincipal | null>;
+export class UserPrincipalStoreService extends BehaviorSubject<UserPrincipal | null> {
+  public readonly userLoggedIn$: Observable<boolean>;
+  public readonly isAdmin$: Observable<boolean>;
+  public readonly accessCredentials$: Observable<UserAccessCredentials | null>;
 
   constructor(
-    @Inject(LocalStorageService)
-    private readonly localStorageService: LocalStorageService,
-    @Inject(JwtHelperService)
-    private readonly jwtHelperService: JwtHelperService,
-    @Inject(UserAccessCredentialsStoreService)
-    private readonly userAccessCredentialsStoreService: UserAccessCredentialsStoreService
+    private readonly _localStorageService: LocalStorageService,
+    private readonly _jwtHelperService: JwtHelperService,
+    private readonly _userAccessCredentialsStore$: UserAccessCredentialsStoreService,
+    @Self() private readonly _destroy$: DestroyService
   ) {
-    let userPrincipal = localStorageService.get<UserPrincipal>(StorageKey.USER);
+    super(_localStorageService.get<UserPrincipal>(StorageKey.USER));
+    this.pipe(
+      skip(1),
+      tap((userPrincipal) => this.updateStorage(userPrincipal)),
+      takeUntil(this._destroy$)
+    ).subscribe();
 
-    if (userPrincipal && !userPrincipal.isVerified) {
-      localStorageService.remove(StorageKey.USER);
-      userPrincipal = null;
-      userAccessCredentialsStoreService.userCredentials = null;
+    this.accessCredentials$ = this._userAccessCredentialsStore$.pipe(shareReplay(1));
+
+    const userPrincipal = this.getValue();
+    const userAccessCredentials = this.accessCredentials;
+
+    if ((userPrincipal && !userPrincipal.isVerified) || (userPrincipal && !userAccessCredentials)) {
+      this.next(null);
+      this.accessCredentials = null;
     }
 
-    this._userPrincipal = new BehaviorSubject(userPrincipal);
-  }
-
-  public get userAccessCredentials$(): Observable<UserAccessCredentials | null> {
-    return this.userAccessCredentialsStoreService.userCredentials$;
-  }
-
-  public get userPrincipal$(): Observable<UserPrincipal | null> {
-    return this._userPrincipal.pipe();
-  }
-
-  public get userPrincipal(): UserPrincipal | null {
-    return this._userPrincipal.getValue();
-  }
-
-  public set userPrincipal(userPrincipal: UserPrincipal | null) {
-    this._userPrincipal.next(userPrincipal);
-    this.updateUserStorage(userPrincipal);
-  }
-
-  public get userAccessCredentials(): UserAccessCredentials | null {
-    return this.userAccessCredentialsStoreService.userCredentials;
-  }
-
-  public set userCredentials(userCredentials: UserAccessCredentials | null) {
-    this.userAccessCredentialsStoreService.userCredentials = userCredentials;
-  }
-
-  public get isAdmin(): boolean {
-    return (
-      !!this.userPrincipal &&
-      this.userPrincipal.roles.some((role) => role.toLowerCase().includes('admin'))
+    this.userLoggedIn$ = combineLatest([this.pipe(), this.accessCredentials$]).pipe(
+      map(([userPrincipal, userCredentials]) =>
+        this.isUserAccessCredentialsValid(userPrincipal, userCredentials)
+      ),
+      shareReplay(1)
     );
-  }
 
-  public get isAdmin$(): Observable<boolean> {
-    return this.userPrincipal$.pipe(
+    this.isAdmin$ = this.pipe(
       map(
         (userPrincipal) =>
           !!userPrincipal &&
           userPrincipal.roles.some((role) => role.toLowerCase().includes('admin'))
-      )
+      ),
+      shareReplay(1)
     );
   }
 
-  public get userLoggedIn$(): Observable<boolean> {
-    return combineLatest([this.userPrincipal$, this.userAccessCredentials$]).pipe(
-      map(([userPrincipal, userCredentials]) =>
-        this.isUserCredentialsValid(userPrincipal, userCredentials)
-      )
+  public get accessCredentials(): UserAccessCredentials | null {
+    return this._userAccessCredentialsStore$.getValue();
+  }
+
+  public set accessCredentials(accessCredentials: UserAccessCredentials | null) {
+    this._userAccessCredentialsStore$.next(accessCredentials);
+  }
+
+  public get isAdmin(): boolean {
+    const userPrincipal = this.getValue();
+
+    return (
+      !!userPrincipal && userPrincipal.roles.some((role) => role.toLowerCase().includes('admin'))
     );
   }
 
-  public updateUserStorage(userPrincipal: UserPrincipal | null): void {
+  public updateStorage(userPrincipal: UserPrincipal | null): void {
     if (userPrincipal == null) {
-      this.localStorageService.remove(StorageKey.USER);
+      this._localStorageService.remove(StorageKey.USER);
       return;
     }
 
-    this.localStorageService.set(StorageKey.USER, userPrincipal);
+    this._localStorageService.set(StorageKey.USER, userPrincipal);
   }
 
   public isLoggedIn(): boolean {
-    return this.isUserCredentialsValid(this.userPrincipal, this.userAccessCredentials);
+    return this.isUserAccessCredentialsValid(this.getValue(), this.accessCredentials);
   }
 
   public logOut(): void {
-    this.userPrincipal = null;
-    this.userAccessCredentialsStoreService.userCredentials = null;
+    this.next(null);
+    this.accessCredentials = null;
   }
 
   public setLoggedInUser(loggedInUser: (UserPrincipal & UserAccessCredentials) | null) {
     if (loggedInUser === null) {
-      this.userPrincipal = null;
-      this.userCredentials = null;
+      this.next(null);
+      this.accessCredentials = null;
       return;
     }
 
@@ -131,13 +130,13 @@ export class UserPrincipalStoreService {
       refreshToken: loggedInUser.refreshToken,
     };
 
-    this.userPrincipal = userPrincipal;
-    this.userCredentials = userCredentials;
+    this.next(userPrincipal);
+    this.accessCredentials = userCredentials;
   }
 
   public getLoggedInUser(): (UserPrincipal & UserAccessCredentials) | null {
-    const userPrincipal = this.userPrincipal;
-    const userCredentials = this.userCredentials;
+    const userPrincipal = this.getValue();
+    const userCredentials = this.accessCredentials;
 
     if (userPrincipal == null || userCredentials == null) {
       return null;
@@ -150,12 +149,12 @@ export class UserPrincipalStoreService {
   }
 
   public getTokenExpiryDate(token: string): Date {
-    const tokenExpiryDate = this.jwtHelperService.getTokenExpirationDate(token) || new Date();
+    const tokenExpiryDate = this._jwtHelperService.getTokenExpirationDate(token) || new Date();
 
     return DateTime.fromJSDate(tokenExpiryDate).minus(TOKEN_EXPIRY_OFFSET).toJSDate();
   }
 
-  private isUserCredentialsValid(
+  private isUserAccessCredentialsValid(
     userPrincipal: UserPrincipal | null,
     userCredentials: UserAccessCredentials | null
   ): boolean {
@@ -167,14 +166,10 @@ export class UserPrincipalStoreService {
 
     const isTokenExpired = this.isTokenExpired(accessToken);
 
-    if (isTokenExpired) {
-      this.logOut();
-    }
-
     return !isTokenExpired;
   }
 
   private isTokenExpired(token: string): boolean {
-    return this.jwtHelperService.isTokenExpired(token, TOKEN_EXPIRY_OFFSET.seconds);
+    return this._jwtHelperService.isTokenExpired(token, TOKEN_EXPIRY_OFFSET.seconds);
   }
 }

@@ -1,79 +1,68 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Self } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Event, NavigationEnd, Params, Router } from '@angular/router';
-import { BehaviorSubject, filter, map, Observable, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, shareReplay, takeUntil, tap } from 'rxjs';
 import { NavigationParam } from '../../types';
 import { webRoutesConfig } from '../../../common/config/web-routes-config';
+import { DestroyService } from '../destroy/destroy.service';
+
+type NavigationServiceKey = {
+  url: string;
+  urlAfterRedirects: string;
+  params: Params;
+};
 
 const MAX_HISTORY_ITEMS = 12;
 
 @Injectable({
   providedIn: 'root',
 })
-export class NavigationService {
-  private readonly _navigation$: Observable<{
-    url: string;
-    urlAfterRedirects: string;
-    params: Params;
-  }>;
+export class NavigationService extends Observable<NavigationServiceKey> {
+  public readonly history$: Observable<NavigationParam[]>;
+  private _history$ = new BehaviorSubject<NavigationParam[]>([]);
 
   public constructor(
     private readonly _router: Router,
     private readonly _activatedRoute: ActivatedRoute,
-    private readonly _location: Location
+    private readonly _location: Location,
+    @Self() private readonly _destroy$: DestroyService
   ) {
-    this._navigation$ = this._router.events.pipe(
-      filter((e: Event): e is NavigationEnd => e instanceof NavigationEnd && !!e.url),
-      map((e) => ({ url: e.url, urlAfterRedirects: e.urlAfterRedirects })),
-      map((event) => {
-        return {
-          url: event.url,
-          urlAfterRedirects: event.urlAfterRedirects,
-          params: this._activatedRoute.snapshot.params,
-        };
-      }),
-      tap((navigation) => {
-        const route = (Object.keys(webRoutesConfig) as Array<keyof typeof webRoutesConfig>).find(
-          (webRoute) => webRoutesConfig[webRoute] === navigation.url.substring(1)
-        );
+    super((subscriber) => {
+      this._routerEvents$()
+        .pipe(
+          tap((navigation) => {
+            const route = (
+              Object.keys(webRoutesConfig) as Array<keyof typeof webRoutesConfig>
+            ).find((webRoute) => webRoutesConfig[webRoute] === navigation.url.substring(1));
 
-        if (typeof route === 'undefined') {
-          return;
-        }
+            if (typeof route === 'undefined') {
+              return;
+            }
 
-        const currentHistory = this.history;
+            const currentHistory = this.history;
 
-        if (!currentHistory.length) {
-          this.updateNavigation(route);
-          return;
-        }
+            if (!currentHistory.length) {
+              this.updateNavigation(route);
+              return;
+            }
 
-        const lastHistoryItem = currentHistory[currentHistory.length - 1];
+            const lastHistoryItem = currentHistory[currentHistory.length - 1];
 
-        if (typeof lastHistoryItem === 'string' && lastHistoryItem === route) {
-          return;
-        }
+            if (typeof lastHistoryItem === 'string' && lastHistoryItem === route) {
+              return;
+            }
 
-        if (typeof lastHistoryItem !== 'string' && lastHistoryItem.route === route) {
-          return;
-        }
+            if (typeof lastHistoryItem !== 'string' && lastHistoryItem.route === route) {
+              return;
+            }
 
-        this.updateNavigation(route);
-      }),
-      shareReplay(1)
-    );
-  }
-
-  public get navigation$(): Observable<{ url: string; urlAfterRedirects: string; params: Params }> {
-    return this._navigation$;
-  }
-
-  private _history$: BehaviorSubject<NavigationParam[]> = new BehaviorSubject<NavigationParam[]>(
-    []
-  );
-
-  public get history$(): Observable<NavigationParam[]> {
-    return this._history$.asObservable();
+            this.updateNavigation(route);
+          }),
+          takeUntil(this._destroy$)
+        )
+        .subscribe(subscriber);
+    });
+    this.history$ = this._history$.asObservable();
   }
 
   public get history(): NavigationParam[] {
@@ -124,6 +113,21 @@ export class NavigationService {
     if (historyUpdate.length > 0) {
       this._location.back();
     }
+  }
+
+  private _routerEvents$() {
+    return this._router.events.pipe(
+      filter((e: Event): e is NavigationEnd => e instanceof NavigationEnd && !!e.url),
+      map((e) => ({ url: e.url, urlAfterRedirects: e.urlAfterRedirects })),
+      map((event) => {
+        return {
+          url: event.url,
+          urlAfterRedirects: event.urlAfterRedirects,
+          params: this._activatedRoute.snapshot.params,
+        };
+      }),
+      shareReplay(1)
+    );
   }
 
   private updateNavigation(param: NavigationParam): void {
