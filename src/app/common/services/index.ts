@@ -4,10 +4,19 @@ import { AccountVerificationStoreService } from './account-verification-store/ac
 import { UserAccessCredentialsStoreService } from './user-access-credentials-store/user-access-credentials-store.service';
 import { UserPrincipalStoreService } from './user-principal-store/user-principal-store.service';
 
+import { PersonalInformationFormService } from './personal-information-form/personal-information-form.service';
+import { AddressFormService } from './address-form/address-form.service';
+import { PreferenceFormService } from './preference-form/preference-form.service';
+import { AccountFormService } from './account-form/account-form.service';
+
 export {
   MenuService,
   UserPermissionsService,
   AccountVerificationStoreService,
   UserAccessCredentialsStoreService,
   UserPrincipalStoreService,
+  PersonalInformationFormService,
+  AddressFormService,
+  PreferenceFormService,
+  AccountFormService,
 };

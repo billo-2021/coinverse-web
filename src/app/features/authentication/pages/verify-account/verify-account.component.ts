@@ -14,10 +14,11 @@ import { OtpForm } from '../../models';
 import {
   AccountVerificationService,
   AccountVerificationStoreService,
-} from '../../../../common/domain-services';
-import { OtpTokenRequest, VerifyAccountRequest } from '../../../../common/domain-models';
+  OtpTokenRequest,
+  VerifyAccountRequest,
+} from '../../../../common';
 import { AlertService, NavigationService } from '../../../../core/services';
-import { finalize, Subject, throwError } from 'rxjs';
+import { finalize, Subject } from 'rxjs';
 import { OtpFormComponent } from '../../components/otp-form/otp-form.component';
 import { verificationMethodToken } from '../../../../core/config';
 import { OtpFormService } from '../../services';
@@ -98,7 +99,7 @@ export class VerifyAccountComponent implements OnInit, AfterViewInit {
             this.formError$.next(error.message);
             return;
           }
-          return throwError(error);
+          throw error;
         },
       });
   }

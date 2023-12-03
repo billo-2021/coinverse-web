@@ -8,16 +8,16 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-
-import { AuthenticationService } from '../../../../common/domain-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { LoginRequest } from '../../../../common/domain-models';
-import { finalize, Subject, throwError, timer } from 'rxjs';
-import { AlertService } from '../../../../core/services';
-import { LoginForm } from '../../models';
+import { finalize, Subject, timer } from 'rxjs';
+
+import { ApiError } from '../../../../core/models';
+import { AuthenticationService, LoginRequest } from '../../../../common';
 import { TextFieldComponent } from '../../../../form-components/components/text-field/text-field.component';
 import { PasswordFieldComponent } from '../../../../form-components/components/password-field/password-field.component';
-import { ApiError } from '../../../../core/models';
+
+import { AlertService } from '../../../../core/services';
+import { LoginForm } from '../../models';
 import { LoginFormService } from '../../services';
 
 @Component({
@@ -77,7 +77,8 @@ export class LoginComponent implements AfterViewInit {
             this.formError$.next(error.message);
             return;
           }
-          return throwError(error);
+
+          throw error;
         },
       });
   }

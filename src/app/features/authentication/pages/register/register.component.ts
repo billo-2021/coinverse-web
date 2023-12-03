@@ -5,26 +5,24 @@ import {
   Self,
   ViewEncapsulation,
 } from '@angular/core';
-import { AuthenticationService } from '../../../../common/domain-services';
-import { finalize, Subject, throwError } from 'rxjs';
+import { finalize, Subject } from 'rxjs';
+
+import { ApiError, AppError } from '../../../../core/models';
+import { DestroyService } from '../../../../core/services/destroy/destroy.service';
 import {
+  AccountFormService,
+  AddressFormService,
+  AuthenticationService,
+  FormSteps,
+  messages,
+  PersonalInformationFormService,
+  PreferenceFormService,
   RegisterAccountRequest,
   RegisterAddressRequest,
   RegisterPreferenceRequest,
   RegisterRequest,
-} from '../../../../common/domain-models';
-
-import { ApiError, AppError } from '../../../../core/models';
-import { messages } from '../../../../common/constants';
-import { DestroyService } from '../../../../core/services/destroy/destroy.service';
-import {
-  FormSteps,
   UserFormBaseDirective,
-} from '../../../../common/directives/user-form-base/user-form-base.directive';
-import { PersonalInformationFormService } from '../../../../common/services/personal-information-form/personal-information-form.service';
-import { AddressFormService } from '../../../../common/services/address-form/address-form.service';
-import { PreferenceFormService } from '../../../../common/services/preference-form/preference-form.service';
-import { AccountFormService } from '../../../../common/services/account-form/account-form.service';
+} from '../../../../common';
 
 @Component({
   selector: 'app-register',
@@ -93,7 +91,8 @@ export class RegisterComponent extends UserFormBaseDirective {
             this.formError$.next(error.message);
             return;
           }
-          return throwError(error);
+
+          throw error;
         },
       });
   }
