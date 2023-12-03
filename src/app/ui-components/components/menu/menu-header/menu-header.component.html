@@ -2,15 +2,15 @@
   <tui-marker-icon
     (click)="onMenuToggle(true)"
     *ngIf="isMobile"
-    [src]="'tuiIconMenuLarge'"
+    [src]="'tuiIconMenu'"
     class="mx-5"
     mode="primary"
-    size="s"></tui-marker-icon>
-  <app-text *ngIf="isMobile">Coinverse</app-text>
+    size="xs"></tui-marker-icon>
+  <p *ngIf="isMobile" class="tui-text_body-s">Coinverse</p>
   <div class="ml-auto flex-row items-center text-center">
     <app-button
       (clicked)="onSignOut()"
-      appearance="primary"
+      appearance="outline"
       class="mr-5"
       icon="tuiIconLogOut"
       size="s"
@@ -30,8 +30,8 @@
 <ng-template #tooltip>
   <ng-container *ngIf="user">
     <div class="flex-col">
-      <app-text class="ml-5">{{ user.firstName + ' ' }}{{ user.lastName }}</app-text>
-      <app-text class="ml-5">{{ user.username }}</app-text>
+      <p class="tui-text_body-s ml-5">{{ user.firstName + ' ' }}{{ user.lastName }}</p>
+      <p class="tui-text_body-s ml-5">{{ user.username }}</p>
     </div>
   </ng-container>
 </ng-template>

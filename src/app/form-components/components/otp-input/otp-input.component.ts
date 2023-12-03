@@ -8,8 +8,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { NgOtpInputComponent } from 'ng-otp-input';
-import { LoadingService } from '../../../core/services/loading/loading.service';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-otp-input',
@@ -21,29 +20,17 @@ import { Observable, tap } from 'rxjs';
 export class OtpInputComponent {
   @Input() public name = '';
   @Input() public label = '';
-  @Input() public isDisabled = false;
   @Input() public length = 8;
   @Input() public allowNumbersOnly = true;
   @ViewChild('ngOtpInput') ngOtpInputRef?: NgOtpInputComponent;
 
-  public constructor(
-    private readonly _loadingService: LoadingService,
-    @Optional() private readonly _formGroupDirective: FormGroupDirective
-  ) {
-    this.loading$.pipe(
-      tap((loading) => {
-        if (!this.formControl) {
-          return;
-        }
+  private _disabled = new BehaviorSubject<boolean>(false);
 
-        if (loading) {
-          this.formControl.disable();
-          return;
-        }
+  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
 
-        this.formControl.enable();
-      })
-    );
+  @Input()
+  public set isDisabled(value: boolean) {
+    this._disabled.next(value);
   }
 
   protected get formGroup(): FormGroup | null {
@@ -54,10 +41,6 @@ export class OtpInputComponent {
     return (this.formGroup?.controls[this.name] as FormControl) || null;
   }
 
-  protected get loading$(): Observable<boolean> {
-    return this._loadingService.loading$;
-  }
-
   public setValue(value: string): void {
     if (!this.ngOtpInputRef) {
       return;
@@ -65,6 +48,15 @@ export class OtpInputComponent {
 
     this.ngOtpInputRef.setValue(value);
     const elementId = this.ngOtpInputRef.getBoxId(0);
+    this.ngOtpInputRef.focusTo(elementId);
+  }
+
+  public focusInput(index: number): void {
+    if (!this.ngOtpInputRef || index < 0 || index >= this.length) {
+      return;
+    }
+
+    const elementId = this.ngOtpInputRef.getBoxId(index);
     this.ngOtpInputRef.focusTo(elementId);
   }
 }

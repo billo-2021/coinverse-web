@@ -1,8 +1,13 @@
-import { Component, Input, Optional } from '@angular/core';
-import { FormGroup, FormGroupDirective } from '@angular/forms';
-import { LoadingService } from '../../../core/services/loading/loading.service';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Optional,
+  ViewEncapsulation,
+} from '@angular/core';
+import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { SizeType } from '../text-field/text-field.component';
-import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 type DecimalType = 'not-zero' | 'always' | 'never';
 
@@ -10,28 +15,33 @@ type DecimalType = 'not-zero' | 'always' | 'never';
   selector: 'app-input-number',
   templateUrl: './input-number.component.html',
   styleUrls: ['./input-number.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputNumberComponent {
   @Input() public size: SizeType = 'm';
   @Input() public name = '';
   @Input() public label = '';
-  @Input() public isDisabled = false;
   @Input() public hasClear = true;
   @Input() public autocomplete = 'on';
   @Input() public prefix = '';
   @Input() public precision = 2;
   @Input() public decimal: DecimalType = 'not-zero';
 
-  public constructor(
-    private readonly _loadingService: LoadingService,
-    @Optional() private readonly _formGroupDirective: FormGroupDirective
-  ) {}
+  private _disabled = new BehaviorSubject<boolean>(false);
 
-  protected get formGroup(): FormGroup | null {
+  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
+
+  @Input()
+  public set isDisabled(value: boolean) {
+    this._disabled.next(value);
+  }
+
+  protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
     return this._formGroupDirective?.form || null;
   }
 
-  protected get loading$(): Observable<boolean> {
-    return this._loadingService.loading$;
+  protected get formControl(): AbstractControl<unknown> | null {
+    return this.formGroup?.controls[this.name] || null;
   }
 }

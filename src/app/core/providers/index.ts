@@ -12,10 +12,12 @@ import {
 import { INTERCEPTOR_PROVIDERS } from './interceptor.provider';
 import { FORM_PROVIDERS } from './form.provider';
 import { GlobalErrorHandlerService } from '../services/global-error-handler/global-error-handler.service';
+import { AUTHENTICATION_PROVIDERS } from './authentication.provider';
 
 export const PROVIDERS: Provider[] = [
   ...INTERCEPTOR_PROVIDERS,
   ...FORM_PROVIDERS,
+  ...AUTHENTICATION_PROVIDERS,
   { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
   { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
   { provide: apiBaseUrlToken, useValue: coreServiceConfig.apiUrl },

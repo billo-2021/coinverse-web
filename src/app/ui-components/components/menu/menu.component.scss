@@ -1,10 +1,10 @@
 .side-menu {
   height: 100%;
   width: 12rem;
-  background: var(--tui-base-01);
+  //background: var(--tui-base-02);
   position: fixed;
   top: 0;
-  border-right: 1px solid var(--tui-base-03);
+  border-right: 1px solid var(--tui-base-02);
   z-index: 100;
 }
 
@@ -12,4 +12,11 @@
 .menu-header {
   transition-timing-function: ease-in;
   transition: width 500ms;
+}
+
+.menu-header {
+  background: var(--tui-base-02);
+  z-index: 100;
+  top: 0;
+  position: sticky;
 }

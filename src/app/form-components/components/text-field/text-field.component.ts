@@ -4,11 +4,13 @@ import {
   HostBinding,
   Input,
   Optional,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormGroup, FormGroupDirective } from '@angular/forms';
+import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { LoadingService } from '../../../core/services/loading/loading.service';
-import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { TuiInputComponent } from '@taiga-ui/kit';
 
 export type SizeType = 's' | 'm' | 'l';
 
@@ -25,14 +27,21 @@ export class TextFieldComponent {
   @Input() public name = '';
   @Input() public label = '';
   @Input() public placeholder = '';
-  @Input() public isDisabled = false;
   @Input() public hasClear = true;
   @Input() public autocomplete = 'on';
+
+  private _disabled = new BehaviorSubject<boolean>(false);
+  @ViewChild(TuiInputComponent) private _inputRef?: TuiInputComponent;
 
   public constructor(
     private readonly _loadingService: LoadingService,
     @Optional() private readonly _formGroupDirective: FormGroupDirective
   ) {}
+
+  @Input()
+  public set isDisabled(value: boolean) {
+    this._disabled.next(value);
+  }
 
   @Input()
   public set classNames(value: string) {
@@ -50,7 +59,11 @@ export class TextFieldComponent {
     return this._formGroupDirective?.form || null;
   }
 
-  protected get loading$(): Observable<boolean> {
-    return this._loadingService.loading$;
+  protected get formControl(): FormControl | null {
+    return (this.formGroup?.controls[this.name] as FormControl) || null;
+  }
+
+  public focusInput(preventScroll: boolean) {
+    this._inputRef?.nativeFocusableElement?.focus({ preventScroll: preventScroll });
   }
 }

@@ -81,6 +81,10 @@ export class UserPermissionsService extends Observable<UserPermissions> {
     const accountVerification = this.accountVerification;
     const userPrincipal = this.userPrincipal;
 
+    if (accountVerification !== null) {
+      this._accountVerificationStore$.next({ ...accountVerification, isVerified: isVerified });
+    }
+
     if (!userPrincipal) {
       return;
     }
@@ -90,13 +94,13 @@ export class UserPermissionsService extends Observable<UserPermissions> {
       isVerified: isVerified,
     });
 
-    this._accountVerificationStore$.next({
-      ...(accountVerification || {
+    if (accountVerification == null) {
+      this._accountVerificationStore$.next({
         username: userPrincipal.username,
         emailAddress: userPrincipal.emailAddress,
-      }),
-      isVerified: isVerified,
-    });
+        isVerified: isVerified,
+      });
+    }
   }
 
   private getMenuItems(userRole: 'admin' | 'customer'): MenuItem[] {

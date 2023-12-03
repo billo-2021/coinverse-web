@@ -8,7 +8,8 @@
 
 .link {
   padding: 1rem;
-  background: var(--tui-base-02);
+  border-bottom: solid 1px var(--tui-base-01);
+  //background: var(--tui-base-02);
 }
 
 .side-menu-content {
@@ -22,12 +23,13 @@
 
 .menu-toggle {
   height: 3.4rem;
-  background: var(--tui-base-02);
+  border-right: solid 1px var(--tui-primary);
+  background: var(--tui-primary);
 }
 
 .side-menu-header {
   height: 3.4rem;
-  background: var(--tui-base-02);
+  background: var(--tui-primary);
 }
 
 .side-menu-over {
@@ -44,6 +46,11 @@
   align-items: center;
   text-align: center;
   height: 3.4rem;
+  color: var(--tui-base-01);
+}
+
+.icon {
+  color: var(--tui-base-01);
 }
 
 .active {

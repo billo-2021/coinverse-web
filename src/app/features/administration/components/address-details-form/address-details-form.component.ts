@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { map, Observable } from 'rxjs';
-import { ListOption } from '../../../../form-components/types';
+import { Option } from '../../../../form-components/types';
 import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
-import { ListOptionUtils } from '../../../../form-components/utils';
 import { BaseComponent } from '../../../../common/components';
+import { CountryResponse } from '../../../../common/domain-models';
 
 @Component({
   selector: 'app-address-details-form',
@@ -18,15 +18,20 @@ export class AddressDetailsFormComponent extends BaseComponent {
   @Output() public formChange = new EventEmitter<FormGroup>();
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
-  protected countryOptions$: Observable<ListOption[]>;
+  protected countryOptions$: Observable<Option<CountryResponse>[]>;
 
   public constructor(private readonly lookupService: LookupService) {
     super();
 
     this.countryOptions$ = this.lookupService.getAllCountries().pipe(
-      map((res) => {
-        return res.map(ListOptionUtils.toListOption);
-      })
+      map((countryResponse) =>
+        countryResponse.map((country) => ({
+          code: country.code,
+          name: country.name,
+          value: country,
+          avatar: country.code,
+        }))
+      )
     );
   }
 

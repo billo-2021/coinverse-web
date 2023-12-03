@@ -1,7 +1,12 @@
-import { Component, Input, Optional } from '@angular/core';
-import { FormGroup, FormGroupDirective } from '@angular/forms';
-import { LoadingService } from '../../../core/services/loading/loading.service';
-import { Observable } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Optional,
+  ViewEncapsulation,
+} from '@angular/core';
+import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 export type SizeType = 's' | 'm' | 'l';
 
@@ -9,6 +14,8 @@ export type SizeType = 's' | 'm' | 'l';
   selector: 'app-input-card',
   templateUrl: './input-card.component.html',
   styleUrls: ['./input-card.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputCardComponent {
   @Input() public type: 'text' | 'email' = 'text';
@@ -19,20 +26,27 @@ export class InputCardComponent {
   @Input() public cardNumberLabel = 'Card Number';
   @Input() public expireLabel = 'Expiry Date';
   @Input() public cvcLabel = 'Security Code';
-  @Input() public isDisabled = false;
   @Input() public hasClear = true;
   @Input() public autocompleteEnabled = true;
 
-  public constructor(
-    private readonly _loadingService: LoadingService,
-    @Optional() private readonly _formGroupDirective: FormGroupDirective
-  ) {}
+  private _disabled = new BehaviorSubject<boolean>(false);
 
-  protected get formGroup(): FormGroup | null {
+  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
+
+  @Input()
+  public set isDisabled(value: boolean) {
+    this._disabled.next(value);
+  }
+
+  protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
     return this._formGroupDirective?.form || null;
   }
 
-  protected get loading$(): Observable<boolean> {
-    return this._loadingService.loading$;
+  protected get formControl(): AbstractControl<unknown>[] | null {
+    return [
+      this.formGroup?.controls[this.cardNumberName] || null,
+      this.formGroup?.controls[this.expireName] || null,
+      this.formGroup?.controls[this.cvcName] || null,
+    ].filter((value) => !!value);
   }
 }

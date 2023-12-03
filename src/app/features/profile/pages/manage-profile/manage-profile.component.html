@@ -8,10 +8,10 @@
         [text]="userProfileResponse.firstName + ' ' + userProfileResponse.lastName"
         size="m"></app-avatar>
       <div class="ml-6">
-        <app-text
-          >{{ userProfileResponse.firstName + ' ' }}{{ userProfileResponse.lastName }}</app-text
-        >
-        <app-text>{{ userProfileResponse.emailAddress }}</app-text>
+        <p class="tui-text_body-s">
+          {{ userProfileResponse.firstName + ' ' }}{{ userProfileResponse.lastName }}
+        </p>
+        <p class="tui-text_body-s">{{ userProfileResponse.emailAddress }}</p>
       </div>
     </div>
   </div>

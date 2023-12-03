@@ -6,9 +6,8 @@ import {
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormGroup, FormGroupDirective } from '@angular/forms';
-import { LoadingService } from '../../../core/services/loading/loading.service';
-import { Observable } from 'rxjs';
+import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 export type SizeType = 's' | 'm' | 'l';
 
@@ -26,13 +25,16 @@ export class PhoneNumberFieldComponent {
   @Input() public placeholder = '';
   @Input() public countryCode = '+27';
   @Input() public phoneMaskAfterCountryCode = '(###) ###-##-##';
-  @Input() public isDisabled = false;
   @Input() public hasClear = true;
 
-  public constructor(
-    private readonly _loadingService: LoadingService,
-    @Optional() private readonly _formGroupDirective: FormGroupDirective
-  ) {}
+  private _disabled = new BehaviorSubject<boolean>(false);
+
+  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
+
+  @Input()
+  public set isDisabled(value: boolean) {
+    this._disabled.next(value);
+  }
 
   @Input()
   public set classNames(value: string) {
@@ -46,11 +48,11 @@ export class PhoneNumberFieldComponent {
     return `input-text-field-wrapper ${this._classes}`;
   }
 
-  protected get formGroup(): FormGroup | null {
+  protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
     return this._formGroupDirective?.form || null;
   }
 
-  protected get loading$(): Observable<boolean> {
-    return this._loadingService.loading$;
+  protected get formControl(): AbstractControl<unknown> | null {
+    return this.formGroup?.controls[this.name] || null;
   }
 }

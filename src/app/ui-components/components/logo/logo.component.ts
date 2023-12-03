@@ -27,7 +27,7 @@ export class LogoComponent {
 
   @HostBinding('class')
   protected get classes(): string {
-    return `logo-icon-container ${this._classes}`;
+    return `block col-12 p-8 m-auto ${this._classes}`;
   }
 
   protected get appName(): string {

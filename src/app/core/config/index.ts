@@ -1,4 +1,17 @@
 import { apiBaseUrlToken, httpHeadersConfigToken } from './api-request.config';
 import { coreServiceConfig } from './service.config';
 
-export { apiBaseUrlToken, coreServiceConfig, httpHeadersConfigToken };
+import {
+  messagingChannelToken,
+  otpLengthToken,
+  verificationMethodToken,
+} from './authentication.config';
+
+export {
+  apiBaseUrlToken,
+  coreServiceConfig,
+  httpHeadersConfigToken,
+  otpLengthToken,
+  verificationMethodToken,
+  messagingChannelToken,
+};

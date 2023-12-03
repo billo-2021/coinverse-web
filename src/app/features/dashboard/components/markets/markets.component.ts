@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, HostBinding, Inject } from '@angular/core';
 import { webRoutesConfig } from '../../../../common/config/web-routes-config';
 import {
   BehaviorSubject,
@@ -20,7 +20,7 @@ import { CryptoCurrencyResponse } from '../../../../common/domain-models';
 import { CurrencyExchangeResponseData } from '../../../../common/domain-models/quote';
 import { LoadingService } from '../../../../core/services/loading/loading.service';
 
-type Key = 'name' | 'currencyPairName' | 'price' | 'change' | 'circulatingSupply' | 'actions';
+type Key = 'name' | 'askRate' | 'bidRate' | 'change' | 'circulatingSupply' | 'actions';
 
 interface Pagination {
   page: number;
@@ -29,16 +29,16 @@ interface Pagination {
 
 const KEYS: Record<Key, string> = {
   name: 'Name',
-  currencyPairName: 'Pair',
-  price: 'Price $',
+  askRate: 'Sell $',
+  bidRate: 'Buy $',
   change: '24hr %',
   circulatingSupply: 'Circulating Supply',
-  actions: 'Actions',
+  actions: '',
 };
 
 type CryptoCurrencyModel = CryptoCurrencyResponse & {
-  currencyPairName: string;
-  price: number;
+  askRate: number;
+  bidRate: number;
 };
 
 @Component({
@@ -50,33 +50,29 @@ export class MarketsComponent extends BaseComponent {
   protected readonly transactUrl = webRoutesConfig.transact;
   protected readonly title = 'Markets';
   protected readonly subtitle = 'Latest market prices.';
-
   protected search = '';
   protected readonly columns: Key[] = [
     'name',
-    'currencyPairName',
-    'price',
+    'askRate',
+    'bidRate',
     'change',
     'circulatingSupply',
     'actions',
   ];
   protected readonly keys = KEYS;
-
   protected total$: Observable<number>;
   protected readonly pagination$ = new BehaviorSubject({ page: 0, size: 5 });
-
   protected request$ = combineLatest([this.pagination$]).pipe(
     switchMap((query) => this.lookupService.getCryptoCurrencies(...query).pipe(startWith(null))),
     shareReplay(1)
   );
-
   protected cryptoCurrencies$ = this.request$.pipe(
     filter(tuiIsPresent),
     switchMap((currencyPage) => this.getCryptoCurrencyModels(currencyPage.data)),
     startWith([])
   );
-
   protected loading$ = this.loadingService.loading$;
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(
     @Inject(Router) private readonly router: Router,
@@ -141,8 +137,8 @@ export class MarketsComponent extends BaseComponent {
               name: currency.name,
               symbol: currency.symbol,
               circulatingSupply: currency.circulatingSupply,
-              currencyPairName: this.getCurrencyPairName(currency.code),
-              price: exchangeRate.askRate,
+              askRate: exchangeRate.askRate,
+              bidRate: exchangeRate.bidRate,
             };
           })
         );

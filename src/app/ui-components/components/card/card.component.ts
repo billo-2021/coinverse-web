@@ -14,7 +14,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {
-  public class: string | null = null;
   @Input() title?: string;
   @Input() subtitle?: string;
 
@@ -27,6 +26,6 @@ export class CardComponent {
 
   @HostBinding('class')
   protected get classes(): string {
-    return `block ${this._classes}`;
+    return `block full-width ${this._classes}`;
   }
 }

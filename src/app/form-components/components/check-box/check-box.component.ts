@@ -1,7 +1,12 @@
-import { Component, Input, Optional } from '@angular/core';
-import { FormGroup, FormGroupDirective } from '@angular/forms';
-import { LoadingService } from '../../../core/services/loading/loading.service';
-import { Observable } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Optional,
+  ViewEncapsulation,
+} from '@angular/core';
+import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 export type SizeType = 'm' | 'l';
 
@@ -9,23 +14,28 @@ export type SizeType = 'm' | 'l';
   selector: 'app-check-box',
   templateUrl: './check-box.component.html',
   styleUrls: ['./check-box.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckBoxComponent {
   @Input() size: SizeType = 'm';
   @Input() public name = '';
   @Input() public label = '';
-  @Input() public isDisabled = false;
 
-  public constructor(
-    private readonly _loadingService: LoadingService,
-    @Optional() private _formGroupDirective: FormGroupDirective
-  ) {}
+  private _disabled = new BehaviorSubject<boolean>(false);
 
-  protected get loading$(): Observable<boolean> {
-    return this._loadingService.loading$;
+  public constructor(@Optional() private _formGroupDirective: FormGroupDirective) {}
+
+  @Input()
+  public set isDisabled(value: boolean) {
+    this._disabled.next(value);
   }
 
-  protected get formGroup(): FormGroup | null {
+  protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
     return this._formGroupDirective?.form || null;
+  }
+
+  protected get formControl(): AbstractControl<unknown> | null {
+    return this.formGroup?.controls[this.name] || null;
   }
 }

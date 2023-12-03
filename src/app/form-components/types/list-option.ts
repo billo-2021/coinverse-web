@@ -3,11 +3,11 @@ type ListOptionType = {
   readonly name: string;
 };
 
-class ListOption {
+class ListOption<T> {
   constructor(
     public readonly code: string,
     public readonly name: string,
-    public readonly value: unknown,
+    public readonly value: T,
     public readonly avatar: string | null = null
   ) {}
 

@@ -3,13 +3,13 @@
     (searchChange)="onSearch($event)"
     *tuiLet="options$ | async as filteredOptions"
     [formControlName]="name"
+    [stringify]="toString"
     [tuiTextfieldSize]="size"
     [valueContent]="content"
     class="combo-box-content">
     {{ label }}
     <input
       (input)="onSearch(extractValueFromEvent($event))"
-      [disabled]="isDisabled || (loading$ | async) || false"
       class="search-input"
       placeholder="Type something"
       tuiTextfield />

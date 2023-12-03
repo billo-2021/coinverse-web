@@ -11,13 +11,13 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
 import { filter, map, Observable, shareReplay, tap } from 'rxjs';
-import { ListOption } from '../../../../form-components/types';
-import { ListOptionUtils } from '../../../../form-components/utils';
+import { ListOption, Option } from '../../../../form-components/types';
+import { OptionUtils } from '../../../../form-components/utils';
 import { WalletService } from '../../../../common/domain-services';
 import { WalletResponse } from '../../../../common/domain-models/wallet';
 import { tuiIsPresent } from '@taiga-ui/cdk';
 import { PaymentModel } from '../../models';
-import { CurrencyResponse } from '../../../../common/domain-models';
+import { CurrencyResponse, PaymentMethodResponse } from '../../../../common/domain-models';
 
 type ActionType = 'deposit' | 'withdraw';
 
@@ -59,9 +59,9 @@ export class TransactFormComponent implements OnInit {
 
   protected readonly action = ACTION;
   protected readonly walletLabel = WALLET_LABEL;
-  protected readonly paymentMethodOptions$: Observable<ListOption[]>;
-  protected readonly currencyOptions$: Observable<ListOption[]>;
-  protected readonly walletOptions$: Observable<ListOption[]>;
+  protected readonly paymentMethodOptions$: Observable<Option<PaymentMethodResponse>[]>;
+  protected readonly currencyOptions$: Observable<Option<CurrencyResponse>[]>;
+  protected readonly walletOptions$: Observable<Option<WalletResponse>[]>;
   protected selectedWallet$: Observable<WalletResponse> | null = null;
 
   public constructor(
@@ -72,23 +72,23 @@ export class TransactFormComponent implements OnInit {
     this.form = this.getTransactForm(formBuilder);
 
     this.paymentMethodOptions$ = lookupService.getAllPaymentMethods().pipe(
-      map((response) => {
-        return response.map((paymentMethod) => {
-          return ListOptionUtils.toListOption({
-            code: paymentMethod.code,
-            name: paymentMethod.name,
-            value: paymentMethod,
-            avatar: paymentMethod.id,
-          });
-        });
-      }),
+      map((response) =>
+        OptionUtils.toOptions(response, { code: 'code', name: 'name', avatar: 'code' })
+      ),
       tap((paymentMethods) => {
         this.form?.controls['paymentMethod']?.setValue(paymentMethods[0]);
       })
     );
 
     this.currencyOptions$ = lookupService.getAllCurrenciesByType('fiat').pipe(
-      map((currencyResponse) => currencyResponse.map(ListOptionUtils.toListOption)),
+      map((currencyResponse) => {
+        return currencyResponse.map((currencyResponse) => ({
+          code: currencyResponse.code,
+          name: currencyResponse.name,
+          avatar: currencyResponse.code,
+          value: currencyResponse,
+        }));
+      }),
       tap((currencyOptions) => {
         this.form.controls['amountCurrency']?.setValue(currencyOptions[0]);
       }),
@@ -99,12 +99,12 @@ export class TransactFormComponent implements OnInit {
       map((response) => {
         const wallets = response.data;
         return wallets.map((wallet) => {
-          return ListOptionUtils.toListOption({
+          return {
             code: wallet.currency.code,
             name: wallet.currency.name + ' Wallet',
             avatar: wallet.currency.code,
             value: wallet,
-          });
+          };
         });
       })
     );
@@ -116,7 +116,7 @@ export class TransactFormComponent implements OnInit {
 
   public onAction(): void {
     const paymentMethod = this.form.controls['paymentMethod'].value.code as string;
-    const walletOption = this.form.controls['wallet'].value.value as ListOption;
+    const walletOption = this.form.controls['wallet'].value.value as ListOption<WalletResponse>;
     const wallet = walletOption.value as WalletResponse;
     const walletCurrency = wallet.currency;
     const amountCurrency = this.form.controls['amountCurrency'].value.value as CurrencyResponse;
@@ -147,8 +147,7 @@ export class TransactFormComponent implements OnInit {
           }
 
           const foundWalletOption = walletOptions.find((option) => {
-            const listOption = option.value as ListOption;
-            const wallet = listOption.value as WalletResponse;
+            const wallet = option.value as WalletResponse;
 
             return wallet.currency.code.toLowerCase() === currencyCode.toLowerCase();
           });
@@ -165,8 +164,7 @@ export class TransactFormComponent implements OnInit {
     this.selectedWallet$ = this.form.controls['wallet'].valueChanges.pipe(
       filter((option) => tuiIsPresent(option)),
       map((option) => {
-        const optionValue = option.value as ListOption;
-        return optionValue.value as WalletResponse;
+        return option.value as WalletResponse;
       })
     );
   }

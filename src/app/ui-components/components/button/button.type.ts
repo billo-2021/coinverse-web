@@ -5,6 +5,7 @@ type AppearanceType =
   | 'accent'
   | 'flat'
   | 'outline'
+  | 'mono'
   | 'icon'
   | 'whiteblock'
   | 'whiteblock-active';

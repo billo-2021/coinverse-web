@@ -1,36 +1,33 @@
-import { Component, Input, Optional } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Optional,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { LoadingService } from '../../../core/services/loading/loading.service';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { DestroyService } from '../../../core/services/destroy/destroy.service';
 
 @Component({
   selector: 'app-input-card-grouped',
   templateUrl: './input-card-grouped.component.html',
   styleUrls: ['./input-card-grouped.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DestroyService],
 })
 export class InputCardGroupedComponent {
   @Input() public name = '';
   @Input() public label = '';
-  @Input() public isDisabled = false;
 
-  public constructor(
-    private readonly _loadingService: LoadingService,
-    @Optional() private readonly _formGroupDirective: FormGroupDirective
-  ) {
-    this.loading$.pipe(
-      tap((loading) => {
-        if (!this.formControl) {
-          return;
-        }
+  private _disabled = new BehaviorSubject<boolean>(false);
 
-        if (loading) {
-          this.formControl.disable();
-          return;
-        }
+  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
 
-        this.formControl.enable();
-      })
-    );
+  @Input()
+  public set isDisabled(value: boolean) {
+    this._disabled.next(value);
   }
 
   protected get formGroup(): FormGroup | null {
@@ -39,9 +36,5 @@ export class InputCardGroupedComponent {
 
   protected get formControl(): FormControl | null {
     return (this.formGroup?.controls[this.name] as FormControl) || null;
-  }
-
-  protected get loading$(): Observable<boolean> {
-    return this._loadingService.loading$;
   }
 }

@@ -1,21 +1,22 @@
 .app-bar-wrapper {
   height: 3.4rem;
-  border: solid var(--tui-base-01);
+  //border: solid var(--tui-base-01);
   font-weight: bold;
   color: var(--tui-text-01);
   font: var(--tui-font-text-m);
 }
 
 .app-bar-wrapper .custom {
-  background: var(--tui-base-05);
+  background: var(--tui-clear);
 }
 
-.custom .t-text {
-  --tui-text-01: var(--tui-base-01);
-}
+//.custom .t-text {
+//  --tui-text-01: var(--tui-base-01);
+//}
 
 .gray {
-  background: var(--tui-base-02);
+  border-bottom: solid 1px var(--tui-base-03);
+  //background: var(--tui-base-02);
 }
 
 .user-avatar {
@@ -23,5 +24,5 @@
 }
 
 .user-avatar:hover {
-  outline: 2px solid var(--tui-base-06);
+  outline: 1px solid var(--tui-base-04);
 }

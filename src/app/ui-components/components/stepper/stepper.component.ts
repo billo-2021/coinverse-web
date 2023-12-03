@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { TuiBreakpointService } from '@taiga-ui/core';
 import { TuiStepperComponent } from '@taiga-ui/kit';
-import { StepType } from './stepper.type';
+import { StepOptions } from './stepper.types';
 
 @Component({
   selector: 'app-stepper',
@@ -22,7 +22,8 @@ import { StepType } from './stepper.type';
 })
 export class StepperComponent {
   @Input() currentStepIndex = 0;
-  @Input() steps: StepType[] = [];
+  @Input() steps: string[] = [];
+  @Input() stepsOptions: StepOptions[] = [];
 
   @Output() currentStepIndexChange = new EventEmitter<number>();
 
@@ -30,7 +31,7 @@ export class StepperComponent {
 
   public constructor(
     @Inject(TuiBreakpointService)
-    protected readonly breakpoint$: TuiBreakpointService
+    protected readonly _breakpoint$: TuiBreakpointService
   ) {}
 
   @Input()
@@ -42,7 +43,11 @@ export class StepperComponent {
 
   @HostBinding('class')
   protected get classes(): string {
-    return `stepper ${this._classes}`;
+    return `block stepper ${this._classes}`;
+  }
+
+  protected get breakpoint$() {
+    return this._breakpoint$;
   }
 
   public onCurrentStepChanged(currentStep: number) {

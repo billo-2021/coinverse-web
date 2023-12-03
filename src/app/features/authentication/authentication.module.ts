@@ -8,10 +8,6 @@ import { UiComponentsModule } from '../../ui-components/ui-components.module';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
-import { PersonalInformationFormComponent } from './components/personal-information-form/personal-information-form.component';
-import { AddressDetailsFormComponent } from './components/address-details-form/address-details-form.component';
-import { PreferenceDetailsFormComponent } from './components/preference-details-form/preference-details-form.component';
-import { AccountDetailsFormComponent } from './components/account-details-form/account-details-form.component';
 import { GetFormStepPipe } from './pipes/get-form-step/get-form-step.pipe';
 import { VerifyAccountComponent } from './pages/verify-account/verify-account.component';
 import { OtpFormComponent } from './components/otp-form/otp-form.component';
@@ -33,10 +29,6 @@ import { ResetPasswordResultComponent } from './components/reset-password-result
   declarations: [
     LoginComponent,
     RegisterComponent,
-    PersonalInformationFormComponent,
-    AddressDetailsFormComponent,
-    PreferenceDetailsFormComponent,
-    AccountDetailsFormComponent,
     GetFormStepPipe,
     VerifyAccountComponent,
     OtpFormComponent,
@@ -47,12 +39,6 @@ import { ResetPasswordResultComponent } from './components/reset-password-result
     ResetPasswordFormComponent,
     ResetPasswordResultComponent,
   ],
-  exports: [
-    LoginComponent,
-    RegisterComponent,
-    VerifyAccountComponent,
-    AddressDetailsFormComponent,
-    PreferenceDetailsFormComponent,
-  ],
+  exports: [LoginComponent, RegisterComponent, VerifyAccountComponent],
 })
 export class AuthenticationModule {}

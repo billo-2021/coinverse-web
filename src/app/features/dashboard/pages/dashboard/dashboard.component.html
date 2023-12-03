@@ -1,21 +1,19 @@
-<div class="flex-col">
-  <div class="flex-row justify-center">
-    <div class="col-sm-12 col-md-7 col-lg-6">
-      <app-card subtitle="Balance in ZAR" title="Estimated Balance">
-        <app-ring-chart
-          [extraLabels]="(currencyCodes$ | async) ?? []"
-          [labels]="(labels$ | async) ?? []"
-          [total]="(total$ | async) ?? 0"
-          [value]="(values$ | async) ?? []"></app-ring-chart>
-      </app-card>
-    </div>
-    <div class="ml-5 grow">
-      <app-card subtitle="Your balance history" title="Balance History">
-        <app-line-chart></app-line-chart>
-      </app-card>
-    </div>
-  </div>
-  <div class="col-sm-12 col-md-12 col-lg-12 mt-4">
-    <app-markets></app-markets>
-  </div>
+<div class="row">
+  <app-card
+    class="col-sm-12 col-md-12 col-lg-5 mr-6"
+    subtitle="Balance in ZAR"
+    title="Estimated Balance">
+    <app-ring-chart
+      [extraLabels]="(currencyCodes$ | async) ?? []"
+      [labels]="(labels$ | async) ?? []"
+      [total]="(total$ | async) ?? 0"
+      [value]="(values$ | async) ?? []"></app-ring-chart>
+  </app-card>
+  <app-card
+    class="col-sm-12 col-md-12 col-lg-5 mr-6 max-w-3xl"
+    subtitle="Your balance history"
+    title="Balance History">
+    <app-line-chart></app-line-chart>
+  </app-card>
 </div>
+<app-markets class="mt-10"></app-markets>

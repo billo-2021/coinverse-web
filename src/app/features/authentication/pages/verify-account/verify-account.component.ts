@@ -1,20 +1,29 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   HostBinding,
+  Inject,
   OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { OtpForm } from '../../models';
+
 import {
   AccountVerificationService,
   AccountVerificationStoreService,
 } from '../../../../common/domain-services';
 import { OtpTokenRequest, VerifyAccountRequest } from '../../../../common/domain-models';
 import { AlertService, NavigationService } from '../../../../core/services';
-import { finalize } from 'rxjs';
+import { finalize, Subject, throwError } from 'rxjs';
 import { OtpFormComponent } from '../../components/otp-form/otp-form.component';
+import { verificationMethodToken } from '../../../../core/config';
+import { OtpFormService } from '../../services';
+import { FormGroup } from '@angular/forms';
+import { ApiError } from '../../../../core/models';
+import { MessagingChannel } from '../../../../core/types';
 
 @Component({
   selector: 'app-verify-account',
@@ -23,25 +32,26 @@ import { OtpFormComponent } from '../../components/otp-form/otp-form.component';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VerifyAccountComponent implements OnInit {
-  @HostBinding('class') classes = 'full-width flex-col justify-center items-center';
-  protected readonly OTP_LENGTH = 8;
-  protected readonly VERIFICATION_METHOD = 'email';
+export class VerifyAccountComponent implements OnInit, AfterViewInit {
   protected otpRecipient = '';
-
-  protected otpForm = this._formBuilder.group({
-    otp: ['', [Validators.required, Validators.minLength(this.OTP_LENGTH)]],
-  });
-
+  protected readonly otpForm: FormGroup<OtpForm>;
+  protected readonly formError$ = new Subject<string>();
+  protected readonly verificationMethod: MessagingChannel;
+  @HostBinding('class') private _classes = 'block col-12 col-md-10 m-auto';
   @ViewChild('otpFormRef') private otpFormRef?: OtpFormComponent;
 
   public constructor(
-    private readonly _formBuilder: FormBuilder,
+    private readonly _changeDetectorRef: ChangeDetectorRef,
+    @Inject(verificationMethodToken) private readonly _verificationMethodToken: MessagingChannel,
+    private readonly _otpForm$: OtpFormService,
     private readonly _navigationService: NavigationService,
     private readonly _accountVerificationService: AccountVerificationService,
     private readonly _accountVerificationStore$: AccountVerificationStoreService,
     private readonly _alertService: AlertService
-  ) {}
+  ) {
+    this.otpForm = _otpForm$.value;
+    this.verificationMethod = _verificationMethodToken;
+  }
 
   ngOnInit(): void {
     const accountVerification = this._accountVerificationStore$.getValue();
@@ -51,10 +61,20 @@ export class VerifyAccountComponent implements OnInit {
       return;
     }
 
-    this.otpRecipient = accountVerification.emailAddress;
+    this.otpRecipient = accountVerification.username;
+  }
+
+  ngAfterViewInit(): void {
+    if (!this.otpFormRef) {
+      return;
+    }
+
+    this.otpFormRef.focusInput(0);
+    this._changeDetectorRef.detectChanges();
   }
 
   public onSubmitOtp(): void {
+    this.formError$.next('');
     const otp = this.otpForm.value.otp;
 
     if (!otp) {
@@ -69,22 +89,33 @@ export class VerifyAccountComponent implements OnInit {
     this._accountVerificationService
       .verifyAccount(verifyAccountRequest)
       .pipe(finalize(() => this.resetOtpForm()))
-      .subscribe(async (response) => {
-        this._alertService.showMessage(response.message);
+      .subscribe({
+        next: (response) => {
+          this._alertService.showMessage(response.message);
+        },
+        error: (error) => {
+          if (error instanceof ApiError) {
+            this.formError$.next(error.message);
+            return;
+          }
+          return throwError(error);
+        },
       });
   }
 
   public onResendOtp(): void {
+    this.formError$.next('');
+
     const otpTokenRequest: OtpTokenRequest = {
       username: this.otpRecipient,
-      messagingChannel: this.VERIFICATION_METHOD,
+      messagingChannel: this.verificationMethod,
     };
 
     this._accountVerificationService
       .requestOtpToken(otpTokenRequest)
       .pipe(
         finalize(() => {
-          this.otpForm.reset();
+          this.resetOtpForm();
         })
       )
       .subscribe((response) => {
@@ -93,11 +124,11 @@ export class VerifyAccountComponent implements OnInit {
   }
 
   public resetOtpForm(): void {
+    this.otpForm.reset();
+
     if (!this.otpFormRef) {
       return;
     }
-
-    this.otpForm.reset();
     this.otpFormRef.setValue('');
   }
 }

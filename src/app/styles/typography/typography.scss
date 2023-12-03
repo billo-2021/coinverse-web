@@ -1,0 +1,20 @@
+@use 'typography-variables' as typography-variables;
+@use 'sass:map';
+
+@each $key, $value in typography-variables.$font-sizes {
+  .#{key} {
+    font-size: $value;
+    line-height: map.get(typography-variables.$font-line-heights, $key);
+  }
+}
+
+@each $key, $value in typography-variables.$font-weights {
+  .#{key} {
+    font-weight: $value
+  }
+}
+
+.text {
+  font-size: map.get(typography-variables.$font-sizes, 'text-sm');;
+  line-height: map.get(typography-variables.$font-line-heights, 'text-sm');
+}

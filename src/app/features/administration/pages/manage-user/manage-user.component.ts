@@ -12,17 +12,6 @@ import { AlertService } from '../../../../core/services';
 import { Router } from '@angular/router';
 import { webRoutesConfig } from '../../../../common/config/web-routes-config';
 
-type FormStateType = 'error' | 'normal' | 'pass';
-
-type FormState = {
-  state: FormStateType;
-  isDisabled: boolean;
-};
-
-type FormStep = {
-  title: string;
-} & FormState;
-
 enum FormSteps {
   PERSONAL_INFORMATION,
   ADDRESS_DETAILS,
@@ -45,7 +34,7 @@ export class ManageUserComponent {
   protected readonly MAX_NUMBER_OF_STEPS = 4;
   protected readonly FORM_STEPS = FormSteps;
   protected currentStepIndex = 0;
-  protected formSteps: FormStep[];
+  protected formSteps = ['Personal Information', 'Address', 'Preference', 'Account'];
 
   public constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
@@ -58,8 +47,6 @@ export class ManageUserComponent {
     this.addressDetailsForm = this.getAddressForm(formBuilder);
     this.preferenceDetailsForm = this.getPreferenceForm(formBuilder);
     this.accountDetailsForm = this.getAccountForm(formBuilder);
-
-    this.formSteps = this.getFormSteps();
   }
 
   public getPersonalInformationForm(formBuilder: FormBuilder): FormGroup {
@@ -68,45 +55,6 @@ export class ManageUserComponent {
       lastName: ['', [Validators.required]],
       emailAddress: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [Validators.required]],
-    });
-  }
-
-  public getFormSteps(): FormStep[] {
-    return [
-      this.getFormStep(
-        'Personal Information',
-        this.personalInformationForm,
-        FormSteps.PERSONAL_INFORMATION,
-        this.personalInformationForm
-      ),
-      this.getFormStep(
-        'Address',
-        this.addressDetailsForm,
-        FormSteps.ADDRESS_DETAILS,
-        this.personalInformationForm
-      ),
-      this.getFormStep(
-        'Preference',
-        this.preferenceDetailsForm,
-        FormSteps.PREFERENCE_DETAILS,
-        this.addressDetailsForm
-      ),
-      this.getFormStep(
-        'Account',
-        this.accountDetailsForm,
-        FormSteps.ACCOUNT_DETAILS,
-        this.preferenceDetailsForm
-      ),
-    ];
-  }
-
-  public updateFormSteps(): void {
-    const updatedFormSteps = this.getFormSteps();
-
-    this.formSteps.forEach((step, index) => {
-      const updatedStep = updatedFormSteps[index];
-      step.state = updatedStep.state;
-      step.isDisabled = updatedStep.isDisabled;
     });
   }
 
@@ -148,29 +96,10 @@ export class ManageUserComponent {
 
     if (nextStepIndex < this.MAX_NUMBER_OF_STEPS) {
       this.currentStepIndex = nextStepIndex;
-      this.updateFormSteps();
       return;
     }
 
     this.onAddUser();
-  }
-
-  public getFormStep(
-    title: string,
-    form: FormGroup,
-    formStep: FormSteps,
-    previousForm: FormGroup
-  ): FormStep {
-    return {
-      title,
-      state:
-        !form.touched && formStep >= this.currentStepIndex
-          ? 'normal'
-          : form.valid
-            ? 'pass'
-            : 'error',
-      isDisabled: !previousForm.valid || formStep >= this.currentStepIndex,
-    };
   }
 
   public onAddUser(): void {

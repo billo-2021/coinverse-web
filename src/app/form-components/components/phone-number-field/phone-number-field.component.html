@@ -6,11 +6,7 @@
     [tuiTextfieldCleaner]="hasClear"
     [tuiTextfieldSize]="size">
     {{ label }}
-    <input
-      [disabled]="isDisabled || (loading$ | async) || false"
-      [placeholder]="placeholder"
-      autocomplete="tel"
-      tuiTextfield />
+    <input [placeholder]="placeholder" autocomplete="tel" tuiTextfield />
   </tui-input-phone>
   <tui-error [error]="[] | tuiFieldError | async" [formControlName]="name"></tui-error>
 </div>

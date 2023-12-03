@@ -1,0 +1,22 @@
+<app-form
+  (saveClicked)="onSaveClicked()"
+  [formGroup]="form"
+  [isValid]="form.valid"
+  [saveText]="saveText"
+  class="max-w-md m-auto"
+  subtitle="It's free to sign up and only takes a minute."
+  title="Create new Account">
+  <app-text-field
+    autocomplete="username"
+    label="Username"
+    name="username"
+    placeholder="john@gmail.com"
+    type="email">
+  </app-text-field>
+
+  <app-password-field
+    autocomplete="new-password"
+    label="Password"
+    name="password"></app-password-field>
+  <ng-content></ng-content>
+</app-form>

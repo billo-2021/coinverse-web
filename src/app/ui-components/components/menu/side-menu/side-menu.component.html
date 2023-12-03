@@ -13,7 +13,8 @@
 
 <ng-template #menuContent let-data>
   <div class="side-menu-header flex-row items-center">
-    <app-text class="ml-9 logo">{{ appName }}</app-text>
+    <tui-svg [src]="'tuiIconApertureLarge'" class="icon ml-9 mr-4"></tui-svg>
+    <p class="tui-text_body-s logo">{{ appName }}</p>
   </div>
   <ul class="side-menu-content col-12">
     <li *ngFor="let menuItem of data" class="link">

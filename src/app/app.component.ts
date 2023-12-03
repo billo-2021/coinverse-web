@@ -7,7 +7,7 @@ import { GlobalRoutingService } from './global-routing/services/global-routing/g
 import { LoggingService } from './core/services/logging/logging.service';
 import { AlertService } from './core/services';
 import { DestroyService } from './core/services/destroy/destroy.service';
-import { ApiError } from './core/models';
+import { isKnownErrorLog } from './common/utils';
 
 @Component({
   selector: 'app-root',
@@ -40,12 +40,14 @@ export class AppComponent {
       .pipe(
         throttleTime(2000),
         tap((log) => {
-          if (log.type === 'error' && log.options instanceof ApiError) {
+          if (isKnownErrorLog(log)) {
             this._alertService.showErrorMessage(log.message);
             return;
           }
 
-          this._alertService.showMessage(log.message);
+          if (log.type === 'info') {
+            this._alertService.showMessage(log.message);
+          }
         }),
         takeUntil(this._destroy$)
       )

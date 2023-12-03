@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
-import { ListOption } from '../../../../form-components/types';
+import { Option } from '../../../../form-components/types';
 import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
-import { ListOptionUtils } from '../../../../form-components/utils';
 import { AbstractControl, FormGroup } from '@angular/forms';
+import { CurrencyResponse } from '../../../../common/domain-models';
 
 @Component({
   selector: 'app-preference-details-form',
@@ -16,11 +16,18 @@ export class PreferenceDetailsFormComponent {
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
   protected readonly FormGroup = FormGroup;
-  protected readonly currencyOptions$: Observable<ListOption[]>;
+  protected readonly currencyOptions$: Observable<Option<CurrencyResponse>[]>;
 
   public constructor(private readonly lookupService: LookupService) {
     this.currencyOptions$ = lookupService.getAllCurrencies().pipe(
-      map((currencyResponse) => currencyResponse.map(ListOptionUtils.toListOption)),
+      map((currencyResponse) =>
+        currencyResponse.map((currency) => ({
+          code: currency.code,
+          name: currency.name,
+          avatar: currency.code,
+          value: currency,
+        }))
+      ),
       tap((currencyOptions) => {
         this.form?.controls['currency'].setValue(currencyOptions[0]);
       })

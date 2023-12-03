@@ -36,15 +36,15 @@
               <!--            {{ wallet.balance + ' '}} {{wallet.currency.symbol}}-->
             </td>
             <td *tuiCell="'actions'" tuiTd>
-              <div class="flex-row">
+              <div class="flex-row justify-end">
                 <app-button
                   (clicked)="onDeposit(wallet.currency.code)"
-                  appearance="primary"
+                  appearance="outline"
                   size="s"
                   text="Deposit"></app-button>
                 <app-button
                   (clicked)="onWithdraw(wallet.currency.code)"
-                  appearance="accent"
+                  appearance="outline"
                   class="ml-4"
                   size="s"
                   text="Withdraw"></app-button>

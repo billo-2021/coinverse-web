@@ -11,13 +11,16 @@ $sizes: (
   '9': 1.25rem,
   '10': 1.5rem,
   '11': 1.75rem,
-  '12': 2rem /* 32 px */,
+  '12': 2rem,
 );
 
 $break_point_default: 0;
 $break_point_sm: 320;
 $break_point_md: 768;
-$break_point_lg: 769;
+$break_point_lg: 1024;
+$break_point_xl: 1200;
+$break_point_2xl: 1700;
+$break_point_3xl: 1701;
 $grid_cols: 12;
 
 $card_width_xs: 350;
@@ -30,10 +33,7 @@ $map_grid_props: (
   '-sm': $break_point_sm,
   '-md': $break_point_md,
   '-lg': $break_point_lg,
-);
-
-$font-weights: (
-  'regular': 300,
-  'medium': 400,
-  'bold': 500,
+  '-xl': $break_point_xl,
+  '-2xl': $break_point_2xl,
+  '-3xl': $break_point_3xl
 );

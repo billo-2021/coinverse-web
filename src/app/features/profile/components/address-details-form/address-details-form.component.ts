@@ -9,9 +9,8 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { combineLatest, map, Observable, shareReplay, tap } from 'rxjs';
-import { ListOption } from '../../../../form-components/types';
+import { ListOption, Option } from '../../../../form-components/types';
 import { BaseComponent } from '../../../../common/components';
-import { ListOptionUtils } from '../../../../form-components/utils';
 import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
 import { AlertService } from '../../../../core/services';
 import { ProfileService } from '../../../../common/domain-services';
@@ -33,7 +32,7 @@ export class AddressDetailsFormComponent extends BaseComponent {
   @Input() public saveText = 'Save Changes';
   @Output() public saveClicked = new EventEmitter<void>();
 
-  protected countryOptions$: Observable<ListOption[]>;
+  protected countryOptions$: Observable<Option<CountryResponse>[]>;
   protected readonly userProfileResponse$: Observable<UserProfileResponse>;
 
   public constructor(
@@ -46,8 +45,13 @@ export class AddressDetailsFormComponent extends BaseComponent {
     this.form = this.getAddressDetailsForm(formBuilder);
 
     this.countryOptions$ = this.lookupService.getAllCountries().pipe(
-      map((res) => {
-        return res.map(ListOptionUtils.toListOption);
+      map((countryResponse) => {
+        return countryResponse.map((country) => ({
+          code: country.code,
+          name: country.name,
+          avatar: country.code,
+          value: country,
+        }));
       }),
       shareReplay(1)
     );
@@ -83,14 +87,12 @@ export class AddressDetailsFormComponent extends BaseComponent {
 
   public onSaveChanges(): void {
     const addressFormValue = this.form.value;
-
-    const countryOption = this.form.controls['country'].value as ListOption;
-    const country = countryOption.value as CountryResponse;
+    const countryOption = this.form.controls['country'].value as ListOption<CountryResponse>;
 
     const addressUpdateRequest: UserProfileAddressUpdate = {
       addressLine: addressFormValue.addressLine,
       street: addressFormValue.street,
-      countryCode: country.code,
+      countryCode: countryOption.value.code,
       province: addressFormValue.province,
       city: addressFormValue.city,
       postalCode: addressFormValue.postalCode,

@@ -2,6 +2,7 @@ import { ErrorHandler, Injectable } from '@angular/core';
 import { LoggingService } from '../logging/logging.service';
 import { apiErrorCodes, apiErrorMessages } from '../../../common/constants';
 import { ApiError } from '../../models';
+import { isKnownError } from '../../../common/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
       console.warn('Caught by error handler ', error);
     }
 
-    if (error instanceof Error) {
+    if (isKnownError(error)) {
       this._log$.next({ type: 'error', message: error.message, options: error });
       return;
     }

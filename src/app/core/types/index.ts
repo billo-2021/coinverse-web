@@ -5,6 +5,7 @@ import { WebRoutesConfigType } from './web-routes-config.type';
 import { NavigationParam } from './navigation-param.type';
 
 import { Log } from './log.type';
+import { MessagingChannel } from './messaging-channel.type';
 
 export {
   ObjectKeysMap,
@@ -14,4 +15,5 @@ export {
   WebRoutesConfigType,
   NavigationParam,
   Log,
+  MessagingChannel,
 };

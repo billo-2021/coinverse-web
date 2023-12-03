@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import {
   TuiButtonModule,
+  TuiExpandModule,
   TuiGroupModule,
   TuiHintModule,
   TuiHostedDropdownModule,
@@ -37,7 +38,6 @@ import { TuiBlockStatusModule } from '@taiga-ui/layout';
 
 import { ButtonComponent } from './components/button/button.component';
 import { ContainerComponent } from './components/container/container.component';
-import { TextComponent } from './components/text/text.component';
 import { HeaderComponent } from './components/header/header.component';
 import { CardComponent } from './components/card/card.component';
 import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
@@ -69,12 +69,12 @@ import { AvatarComponent } from './components/avatar/avatar.component';
 import { TagComponent } from './components/tag/tag.component';
 import { GroupComponent } from './components/group/group.component';
 import { BlockStatusComponent } from './components/block-status/block-status.component';
+import { ExpandComponent } from './components/expand/expand.component';
 
 @NgModule({
   declarations: [
     ButtonComponent,
     ContainerComponent,
-    TextComponent,
     HeaderComponent,
     CardComponent,
     LoadingIndicatorComponent,
@@ -98,6 +98,7 @@ import { BlockStatusComponent } from './components/block-status/block-status.com
     TagComponent,
     GroupComponent,
     BlockStatusComponent,
+    ExpandComponent,
   ],
   imports: [
     CommonModule,
@@ -139,11 +140,11 @@ import { BlockStatusComponent } from './components/block-status/block-status.com
     TuiTagModule,
     TuiGroupModule,
     TuiBlockStatusModule,
+    TuiExpandModule,
   ],
   exports: [
     ButtonComponent,
     ContainerComponent,
-    TextComponent,
     CardComponent,
     HeaderComponent,
     LogoComponent,
@@ -166,6 +167,7 @@ import { BlockStatusComponent } from './components/block-status/block-status.com
     TagComponent,
     GroupComponent,
     BlockStatusComponent,
+    ExpandComponent,
   ],
 })
 export class UiComponentsModule {}

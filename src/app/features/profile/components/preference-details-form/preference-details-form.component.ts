@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { combineLatest, map, Observable, shareReplay, tap } from 'rxjs';
-import { ListOption } from '../../../../form-components/types';
+import { Option } from '../../../../form-components/types';
 import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
-import { ListOptionUtils } from '../../../../form-components/utils';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProfileService } from '../../../../common/domain-services';
 import {
@@ -23,7 +22,7 @@ export class PreferenceDetailsFormComponent {
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
   protected readonly FormGroup = FormGroup;
-  protected readonly currencyOptions$: Observable<ListOption[]>;
+  protected readonly currencyOptions$: Observable<Option<CurrencyResponse>[]>;
   protected readonly userProfileResponse$: Observable<UserProfileResponse>;
 
   public constructor(
@@ -33,7 +32,14 @@ export class PreferenceDetailsFormComponent {
     private readonly lookupService: LookupService
   ) {
     this.currencyOptions$ = lookupService.getAllCurrencies().pipe(
-      map((currencyResponse) => currencyResponse.map(ListOptionUtils.toListOption)),
+      map((currencyResponse) =>
+        currencyResponse.map((currency) => ({
+          code: currency.code,
+          name: currency.name,
+          avatar: currency.code,
+          value: currency,
+        }))
+      ),
       shareReplay(1)
     );
 
@@ -79,8 +85,8 @@ export class PreferenceDetailsFormComponent {
   }
 
   public onSaveChanges(): void {
-    const currencyOption = this.form.controls['currency'].value as ListOption;
-    const currency = currencyOption.value as CurrencyResponse;
+    const currencyOption = this.form.controls['currency'].value as Option<CurrencyResponse>;
+    const currency = currencyOption.value;
 
     const notificationMethodsValue = this.form.controls['notificationMethods'].value;
 

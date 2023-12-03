@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ListOptionUtils } from '../../../../form-components/utils';
 
 const roles = [
   { code: 'CS', name: 'customer' },
@@ -18,7 +17,12 @@ export class AccountDetailsFormComponent implements OnInit {
 
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
-  protected readonly roleOptions = roles.map(ListOptionUtils.toListOption);
+  protected readonly roleOptions = roles.map((role) => ({
+    code: role.code,
+    name: role.name,
+    avatar: role.code,
+    value: role,
+  }));
 
   ngOnInit(): void {
     if (!this.roleOptions.length) {

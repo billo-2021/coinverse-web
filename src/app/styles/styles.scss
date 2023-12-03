@@ -6,10 +6,6 @@
 @import './typography/typography';
 @import './layout/layout';
 
-body {
-  font-size: 13px;
-}
-
 .bg-primary {
   background-color: palette.$primary-color;
 }
@@ -18,10 +14,6 @@ body {
   color: palette.$primary-color;
 }
 
-a {
-  text-decoration: none;
-  color: palette.$primary-color;
-}
 
 ul,
 li {
@@ -31,3 +23,4 @@ li {
 div {
   word-wrap: break-word;
 }
+

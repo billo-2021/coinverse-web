@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, HostBinding, Inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { WalletResponse } from '../../../../common/domain-models/wallet';
 import { Router } from '@angular/router';
@@ -16,6 +16,7 @@ export class DashboardComponent {
   protected values$: Observable<number[]>;
   protected currencyCodes$: Observable<string[]>;
   protected total$: Observable<number>;
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(
     @Inject(Router) private readonly router: Router,

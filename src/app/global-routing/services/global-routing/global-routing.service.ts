@@ -38,14 +38,14 @@ export class GlobalRoutingService extends Observable<void> {
     super((subscriber) => this._stream.subscribe(subscriber));
   }
 
-  public get missingVerification$() {
+  public get missingVerification$(): Observable<boolean> {
     return this._verification$.pipe(
       filter((userVerification) => !userVerification.isVerified),
       map((userVerification) => userVerification.isVerified)
     );
   }
 
-  public get verification$() {
+  public get verification$(): Observable<AccountVerification> {
     return this._verification$.pipe(filter((userVerification) => userVerification.isVerified));
   }
 

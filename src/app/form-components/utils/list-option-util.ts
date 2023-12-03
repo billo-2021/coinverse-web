@@ -1,6 +1,6 @@
 import { ListOption, ListOptionType } from '../types';
 
-function toListOption<T extends ListOptionType>(data: T): ListOption {
+function toListOption<T extends ListOptionType>(data: T): ListOption<T> {
   return new ListOption(data.code, data.name, data);
 }
 

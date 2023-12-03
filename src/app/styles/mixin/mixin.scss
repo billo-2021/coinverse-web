@@ -47,48 +47,97 @@
 }
 
 @mixin add-table-styles {
-  .table {
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  th,
-  td {
-    padding: 1rem;
-  }
-
   td,
   th {
     white-space: nowrap;
     border-color: transparent;
-    border-right-color: var(--tui-base-04);
-
-    &:last-child {
-      border-right-color: transparent;
-    }
+    //border-right-color: var(--tui-base-04);
+    //
+    //&:last-child {
+    //  border-right-color: transparent;
+    //}
   }
 
-  tbody {
-    border-color: transparent;
-  }
-
-  tr:nth-child(even) td {
-    background: var(--tui-base-02);
-  }
-
-  .filters {
-    display: flex;
-  }
-
-  .input {
-    flex: 1;
-  }
-
-  //.columns {
-  //  width: 10.625rem;
+  //tbody {
+  //  border-color: transparent;
   //}
 
-  .match {
-    background: var(--tui-selection);
+  tr td:first-child {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
   }
+
+  tr td:last-child {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+
+
+  .alive:before {
+    background: var(--tui-success-fill);
+  }
+
+  .table {
+    width: 100%;
+    margin-top: 1rem;
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+  }
+
+  th,
+  td {
+    padding: 0 0.75rem;
+    height: var(--tui-height-m);
+    //border-bottom-color: var(--tui-base-04);
+  }
+
+  tr td {
+    border-top: solid 1px var(--tui-base-03);
+    border-bottom: solid 1px var(--tui-base-03);
+  }
+
+  tr td:first-child {
+    border-left: solid 1px var(--tui-base-03);
+  }
+
+  tr td:last-child {
+    border-right: solid 1px var(--tui-base-03);
+  }
+
+  tr th {
+    border-bottom: solid 1px var(--tui-base-03);
+  }
+
+
+  //
+  //td,
+  //th {
+  //  white-space: nowrap;
+  //  border-color: transparent;
+  //  border-right-color: var(--tui-base-04);
+  //
+  //  &:last-child {
+  //    border-right-color: transparent;
+  //  }
+  //}
+  //
+  //tbody {
+  //  border-color: transparent;
+  //}
+  //
+  //tr:nth-child(even) td {
+  //  background: var(--tui-base-02);
+  //}
+  //
+  //.filters {
+  //  display: flex;
+  //}
+  //
+  //.input {
+  //  flex: 1;
+  //}
+  //
+  //.match {
+  //  background: var(--tui-selection);
+  //}
 }

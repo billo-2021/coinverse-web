@@ -1,12 +1,44 @@
 import { NgModule } from '@angular/core';
 import { CommonModule as ngCommonModule } from '@angular/common';
-import { PolymorphicOutletDirective } from './directives/polymorphic/outlet.directive';
-import { PolymorphicTemplate } from './directives/template.directive';
+
+import { UiComponentsModule } from '../ui-components/ui-components.module';
+import { FormComponentsModule } from '../form-components/form-components.module';
+
+import {
+  PolymorphicOutletDirective,
+  PolymorphicTemplate,
+  UserFormBaseDirective,
+} from './directives';
+import {
+  AccountFormComponent,
+  AddressFormComponent,
+  PersonalInformationFormComponent,
+  PreferenceFormComponent,
+} from './components';
+import { MaskEmailPipe } from './pipes';
 
 @NgModule({
-  declarations: [PolymorphicOutletDirective, PolymorphicTemplate],
-  imports: [ngCommonModule],
+  declarations: [
+    PolymorphicOutletDirective,
+    PolymorphicTemplate,
+    UserFormBaseDirective,
+    PersonalInformationFormComponent,
+    AddressFormComponent,
+    PreferenceFormComponent,
+    AccountFormComponent,
+    MaskEmailPipe,
+  ],
+  imports: [ngCommonModule, UiComponentsModule, FormComponentsModule],
   providers: [],
-  exports: [PolymorphicOutletDirective, PolymorphicTemplate],
+  exports: [
+    PolymorphicOutletDirective,
+    PolymorphicTemplate,
+    UserFormBaseDirective,
+    PersonalInformationFormComponent,
+    AddressFormComponent,
+    PreferenceFormComponent,
+    AccountFormComponent,
+    MaskEmailPipe,
+  ],
 })
 export class CommonModule {}

@@ -1,0 +1,21 @@
+<app-form
+  (saveClicked)="onSaveClicked()"
+  [formGroup]="form"
+  [isValid]="form.valid"
+  [saveText]="saveText"
+  class="max-w-md m-auto"
+  subtitle="Please fill in your preferences."
+  title="Preferences">
+  <app-combo-box
+    [options]="(currencyOptions$ | async) ?? []"
+    label="Currency"
+    name="currency"></app-combo-box>
+  <app-label
+    [formGroup]="notificationMethodsFormGroup"
+    labelFor="notificationMethods"
+    text="Notification Methods">
+    <app-check-box label="Sms" name="sms"></app-check-box>
+    <app-check-box label="Email" name="email"></app-check-box>
+  </app-label>
+  <ng-content></ng-content>
+</app-form>

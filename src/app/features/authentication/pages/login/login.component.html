@@ -1,25 +1,39 @@
-<div class="col-sm-12 col-md-6 col-lg-4">
-  <app-form
-    (saveClicked)="onLogin()"
-    [formGroup]="loginForm"
-    [isValid]="loginForm.valid"
-    saveText="Sign in"
-    subtitle="Please sign in to continue."
-    title="Welcome back!">
-    <app-text-field label="Username" name="username" placeholder="john@gmail.com" type="email">
-    </app-text-field>
-    <app-password-field label="Password" name="password"></app-password-field>
-    <div class="item">
-      <app-link text="Forgot password?" to="../reset-password"></app-link>
-    </div>
-  </app-form>
+<app-expand [isExpanded]="!loginForm.valid">
+  <app-notification *ngIf="formError$ | async as formError" status="error">
+    <p class="tui-text_body-s">{{ formError }}</p>
+  </app-notification>
+</app-expand>
 
-  <app-card class="full-width mt-6">
-    <div class="full-width flex-center text-center">
-      <app-text>
-        New here?
-        <app-link text="Create an account." to="../register"></app-link>
-      </app-text>
-    </div>
-  </app-card>
-</div>
+<app-form
+  (keydown.enter)="loginForm.valid && onLogin()"
+  (saveClicked)="onLogin()"
+  [formGroup]="loginForm"
+  [isValid]="loginForm.valid"
+  class="max-w-md m-auto"
+  saveText="Sign in"
+  subtitle="Please sign in to continue."
+  title="Welcome back!">
+  <app-text-field
+    (keydown.enter)="password.focusInput(false)"
+    label="Username"
+    name="username"
+    placeholder="john@gmail.com"
+    type="email">
+  </app-text-field>
+  <app-password-field
+    #password
+    (keydown.enter)="!loginForm.disabled && loginForm.valid && onLogin()"
+    label="Password"
+    name="password"></app-password-field>
+  <div class="item flex-row justify-space-between">
+    <app-check-box class="mr-2" label="Remember me" name="rememberMe"></app-check-box>
+    <app-link text="Forgot password?" to="../reset-password"></app-link>
+  </div>
+</app-form>
+
+<app-card class="max-w-md m-auto mt-6">
+  <p class="tui-text_body-s text-center">
+    New here?
+    <app-link text="Create an account." to="../register"></app-link>
+  </p>
+</app-card>

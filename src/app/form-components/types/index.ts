@@ -1,3 +1,5 @@
 import { ListOption, ListOptionType } from './list-option';
 
-export { ListOptionType, ListOption };
+import { Option } from './option.type';
+
+export { ListOptionType, ListOption, Option };

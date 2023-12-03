@@ -1,29 +1,53 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { BaseComponent } from '../../../../common/components';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+  Output,
+  Self,
+  SkipSelf,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { OtpInputComponent } from '../../../../form-components/components/otp-input/otp-input.component';
-import { debounce, filter, interval, tap } from 'rxjs';
+import { debounce, filter, interval, takeUntil, tap } from 'rxjs';
+import { otpLengthToken } from '../../../../core/config';
+import { OtpForm } from '../../models';
+import { OtpFormService } from '../../services';
+import { DestroyService } from '../../../../core/services/destroy/destroy.service';
+import { MessagingChannel } from '../../../../core/types';
 
 @Component({
   selector: 'app-otp-form',
   templateUrl: './otp-form.component.html',
   styleUrls: ['./otp-form.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DestroyService],
 })
-export class OtpFormComponent extends BaseComponent implements OnInit {
-  @Input() public form?: FormGroup;
+export class OtpFormComponent implements OnInit {
   @Input() public saveText = 'Submit';
   @Input() public cancelText = 'Resend OTP';
   @Input() public otpRecipient = '';
   @Input() public autoSave = false;
-  @Output() public saveClicked = new EventEmitter<FormGroup>();
-  @Output() public cancelClicked = new EventEmitter<void>();
-  protected readonly OTP_LENGTH = 8;
-  @Input() public otpLength = this.OTP_LENGTH;
+  @Input() public verificationMethod: MessagingChannel = 'email';
 
+  @Output() public saveClicked = new EventEmitter<FormGroup<OtpForm>>();
+  @Output() public cancelClicked = new EventEmitter<void>();
+  @Input() public otpLength: number;
+  protected readonly form: FormGroup<OtpForm>;
   @ViewChild('otpInput') private otpInputRef?: OtpInputComponent;
 
-  public constructor() {
-    super();
+  public constructor(
+    @Inject(otpLengthToken) private readonly _otpLengthToken: number,
+    @SkipSelf() private readonly _otpForm$: OtpFormService,
+    @Self() private readonly _destroy$: DestroyService
+  ) {
+    this.otpLength = _otpLengthToken;
+    this.form = _otpForm$.value;
   }
 
   public ngOnInit(): void {
@@ -35,7 +59,8 @@ export class OtpFormComponent extends BaseComponent implements OnInit {
       .pipe(
         debounce(() => interval(250)),
         filter((status) => status === 'VALID'),
-        tap(() => this.onSaveClicked())
+        tap(() => this.onSaveClicked()),
+        takeUntil(this._destroy$)
       )
       .subscribe();
   }
@@ -54,5 +79,42 @@ export class OtpFormComponent extends BaseComponent implements OnInit {
     }
 
     this.otpInputRef.setValue(value);
+  }
+
+  public focusInput(index: number): void {
+    if (!this.otpInputRef) {
+      return;
+    }
+
+    this.otpInputRef.focusInput(index);
+  }
+
+  private getMaskedOtpRecipient(): string {
+    if (this.verificationMethod === 'email') {
+      const [username, domain] = this.otpRecipient.split('@');
+
+      const maskedUsername = this.maskFromStart(username, '.', 3);
+      const maskedDomain = this.maskFromEnd(domain, '.', 3);
+
+      return `${maskedUsername}@${maskedDomain}`;
+    }
+
+    const startPart = this.otpRecipient.substring(0, 3);
+    const endPart = this.otpRecipient.substring(3);
+    return `${startPart} ${this.maskFromStart(endPart, '.', endPart.length - 3)}`;
+  }
+
+  private maskFromStart(input: string, inputMask: string, count: number): string {
+    return input
+      .split('')
+      .map((char, index) => (index < count ? inputMask : char))
+      .join('');
+  }
+
+  private maskFromEnd(input: string, inputMask: string, count: number): string {
+    return input
+      .split('')
+      .map((char, index) => (index >= input.length - count ? inputMask : char))
+      .join('');
   }
 }

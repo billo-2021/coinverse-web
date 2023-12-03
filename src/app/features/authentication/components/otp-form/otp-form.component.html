@@ -1,13 +1,17 @@
 <app-form
   (cancelClicked)="onCancelClicked()"
   (saveClicked)="onSaveClicked()"
-  *ngIf="form"
   [cancelText]="cancelText"
   [formGroup]="form"
   [isCancelShown]="true"
   [isValid]="form.valid"
   [saveText]="saveText"
-  [subtitle]="'An Otp has been sent to: ' + otpRecipient"
-  title="OTP">
-  <app-otp-input #otpInput label="Please enter OTP" name="otp"></app-otp-input>
+  [subtitle]="'A verification code has been sent to your ' + verificationMethod + ' ' + (otpRecipient | maskEmail)"
+  class="max-w-md m-auto"
+  title="Verification Code">
+  <app-otp-input
+    #otpInput
+    [label]="'Please enter ' + otpLength + ' digits code'"
+    [length]="otpLength"
+    name="otp"></app-otp-input>
 </app-form>

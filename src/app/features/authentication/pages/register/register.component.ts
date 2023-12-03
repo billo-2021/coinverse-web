@@ -1,15 +1,12 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   HostBinding,
-  Inject,
-  OnInit,
+  Self,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../../../common/domain-services';
-import { finalize } from 'rxjs';
+import { finalize, Subject, throwError } from 'rxjs';
 import {
   RegisterAccountRequest,
   RegisterAddressRequest,
@@ -17,23 +14,17 @@ import {
   RegisterRequest,
 } from '../../../../common/domain-models';
 
-type FormStateType = 'error' | 'normal' | 'pass';
-
-type FormState = {
-  state: FormStateType;
-  isDisabled: boolean;
-};
-
-type FormStep = {
-  title: string;
-} & FormState;
-
-enum FormSteps {
-  PERSONAL_INFORMATION,
-  ADDRESS_DETAILS,
-  PREFERENCE_DETAILS,
-  ACCOUNT_DETAILS,
-}
+import { ApiError, AppError } from '../../../../core/models';
+import { messages } from '../../../../common/constants';
+import { DestroyService } from '../../../../core/services/destroy/destroy.service';
+import {
+  FormSteps,
+  UserFormBaseDirective,
+} from '../../../../common/directives/user-form-base/user-form-base.directive';
+import { PersonalInformationFormService } from '../../../../common/services/personal-information-form/personal-information-form.service';
+import { AddressFormService } from '../../../../common/services/address-form/address-form.service';
+import { PreferenceFormService } from '../../../../common/services/preference-form/preference-form.service';
+import { AccountFormService } from '../../../../common/services/account-form/account-form.service';
 
 @Component({
   selector: 'app-register',
@@ -41,206 +32,113 @@ enum FormSteps {
   styleUrls: ['./register.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    PersonalInformationFormService,
+    AddressFormService,
+    PreferenceFormService,
+    AccountFormService,
+    DestroyService,
+  ],
 })
-export class RegisterComponent implements OnInit {
-  @HostBinding('class') public classes = 'full-width flex-col justify-center items-center';
-  protected readonly personalInformationForm: FormGroup;
-  protected readonly addressDetailsForm: FormGroup;
-  protected readonly preferenceDetailsForm: FormGroup;
-  protected readonly accountDetailsForm: FormGroup;
-  protected readonly MAX_NUMBER_OF_STEPS = 4;
-  protected readonly FORM_STEPS = FormSteps;
-  protected currentStepIndex = 0;
-  protected formSteps: FormStep[];
+export class RegisterComponent extends UserFormBaseDirective {
+  protected readonly formError$ = new Subject<string>();
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    @Inject(ChangeDetectorRef)
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    @Inject(FormBuilder) private readonly formBuilder: FormBuilder,
-    @Inject(AuthenticationService)
-    private readonly authenticationService: AuthenticationService
+    @Self() _personalInformationForm$: PersonalInformationFormService,
+    @Self() _addressForm$: AddressFormService,
+    @Self() _preferenceForm$: PreferenceFormService,
+    @Self() _accountForm$: AccountFormService,
+    private readonly _authenticationService: AuthenticationService,
+    @Self() _destroy$: DestroyService
   ) {
-    this.personalInformationForm = this.getPersonalInformationForm(formBuilder);
-    this.addressDetailsForm = this.getAddressForm(formBuilder);
-    this.preferenceDetailsForm = this.getPreferenceForm(formBuilder);
-    this.accountDetailsForm = this.getAccountForm(formBuilder);
-
-    this.formSteps = this.getFormSteps();
-  }
-
-  public getPersonalInformationForm(formBuilder: FormBuilder): FormGroup {
-    return formBuilder.group({
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      emailAddress: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required]],
-    });
-  }
-
-  public getFormSteps(): FormStep[] {
-    return [
-      this.getFormStep(
-        'Personal Information',
-        this.personalInformationForm,
-        FormSteps.PERSONAL_INFORMATION,
-        this.personalInformationForm
-      ),
-      this.getFormStep(
-        'Address',
-        this.addressDetailsForm,
-        FormSteps.ADDRESS_DETAILS,
-        this.personalInformationForm
-      ),
-      this.getFormStep(
-        'Preference',
-        this.preferenceDetailsForm,
-        FormSteps.PREFERENCE_DETAILS,
-        this.addressDetailsForm
-      ),
-      this.getFormStep(
-        'Account',
-        this.accountDetailsForm,
-        FormSteps.ACCOUNT_DETAILS,
-        this.preferenceDetailsForm
-      ),
-    ];
-  }
-
-  public updateFormSteps(): void {
-    const updatedFormSteps = this.getFormSteps();
-
-    this.formSteps.forEach((step, index) => {
-      const updatedStep = updatedFormSteps[index];
-      step.state = updatedStep.state;
-      step.isDisabled = updatedStep.isDisabled;
-    });
-  }
-
-  public getAddressForm(formBuilder: FormBuilder): FormGroup {
-    return formBuilder.group({
-      addressLine: ['', [Validators.required]],
-      street: ['', [Validators.required]],
-      country: [null, [Validators.required]],
-      province: ['', [Validators.required]],
-      city: ['', [Validators.required]],
-      postalCode: ['', [Validators.required]],
-    });
-  }
-
-  public getPreferenceForm(formBuilder: FormBuilder): FormGroup {
-    return formBuilder.group({
-      currency: [null, [Validators.required]],
-      notificationMethods: formBuilder.group({
-        sms: [false],
-        email: [true],
-      }),
-    });
-  }
-
-  public getAccountForm(formBuilder: FormBuilder): FormGroup {
-    return formBuilder.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required]],
-    });
+    super(_personalInformationForm$, _addressForm$, _preferenceForm$, _accountForm$, _destroy$);
   }
 
   public onStepChanged(nextStepIndex: number) {
     if (nextStepIndex === FormSteps.ACCOUNT_DETAILS) {
-      const emailAddress = this.personalInformationForm.controls['emailAddress'].value;
-
-      this.accountDetailsForm.controls['username'].setValue(emailAddress);
+      const emailAddress = this.personalInformationForm.controls.emailAddress.value;
+      this.accountForm.controls.username.setValue(emailAddress);
     }
 
     if (nextStepIndex < this.MAX_NUMBER_OF_STEPS) {
       this.currentStepIndex = nextStepIndex;
-      this.updateFormSteps();
+      this.currentStepIndex = nextStepIndex;
       return;
     }
 
     this.onRegister();
   }
 
-  public getFormStep(
-    title: string,
-    form: FormGroup,
-    formStep: FormSteps,
-    previousForm: FormGroup
-  ): FormStep {
-    return {
-      title,
-      state:
-        !form.touched && formStep >= this.currentStepIndex
-          ? 'normal'
-          : form.valid
-            ? 'pass'
-            : 'error',
-      isDisabled: !previousForm.valid || formStep >= this.currentStepIndex,
-    };
-  }
-
   public onRegister(): void {
-    const personalInformationFormValue = this.personalInformationForm.value;
+    this.formError$.next('');
+    const personalInformationFormValue = this.personalInformationForm.getRawValue();
 
     const registerRequest: RegisterRequest = {
       firstName: personalInformationFormValue.firstName,
       lastName: personalInformationFormValue.lastName,
       emailAddress: personalInformationFormValue.emailAddress.trim().toLowerCase(),
       phoneNumber: personalInformationFormValue.phoneNumber,
-      address: this.getRegisterAddressRequest(),
-      preference: this.getRegisterPreferenceRequest(),
-      account: this.getRegisterAccountRequest(),
+      address: this.getAddressRequest(),
+      preference: this.getPreferenceRequest(),
+      account: this.getAccountRequest(),
     };
 
-    this.authenticationService
+    this._authenticationService
       .register(registerRequest)
       .pipe(finalize(() => this.resetForms()))
-      .subscribe();
+      .subscribe({
+        error: (error) => {
+          if (error instanceof ApiError) {
+            this.formError$.next(error.message);
+            return;
+          }
+          return throwError(error);
+        },
+      });
   }
 
-  public getRegisterAccountRequest(): RegisterAccountRequest {
-    const accountDetailsFormValue = this.accountDetailsForm.value;
+  public getAccountRequest(): RegisterAccountRequest {
+    const accountFormValue = this.accountForm.getRawValue();
+
     return {
-      username: accountDetailsFormValue.username.trim().toLowerCase(),
-      password: accountDetailsFormValue.password,
+      username: accountFormValue.username.trim().toLowerCase(),
+      password: accountFormValue.password,
     };
   }
 
-  public getRegisterPreferenceRequest(): RegisterPreferenceRequest {
-    const preferenceDetailsValue = this.preferenceDetailsForm.value;
-    const notificationMethodsValue = preferenceDetailsValue.notificationMethods;
+  public getPreferenceRequest(): RegisterPreferenceRequest {
+    const preferenceFormValue = this.preferenceForm.getRawValue();
+    const rawNotificationMethods = preferenceFormValue.notificationMethods;
 
-    const notificationMethods = [notificationMethodsValue.email, notificationMethodsValue.sms]
-      .filter((item) => !!item)
+    if (!preferenceFormValue.currency) {
+      throw new AppError(messages.invalidRegistrationDetails);
+    }
+
+    const notificationMethods = [rawNotificationMethods.email, rawNotificationMethods.sms]
+      .filter((item) => item)
       .map((item, index) => (index === 0 ? 'email' : 'sms'));
 
     return {
-      currencyCode: preferenceDetailsValue.currency.value.code,
+      currencyCode: preferenceFormValue.currency.value.code,
       notificationMethods,
     };
   }
 
-  public getRegisterAddressRequest(): RegisterAddressRequest {
-    const addressDetailsFormValue = this.addressDetailsForm.value;
+  public getAddressRequest(): RegisterAddressRequest {
+    const addressFormValue = this.addressForm.getRawValue();
+
+    if (!addressFormValue.country) {
+      throw new AppError(messages.invalidRegistrationDetails);
+    }
+
     return {
-      addressLine: addressDetailsFormValue.addressLine,
-      street: addressDetailsFormValue.street,
-      countryCode: addressDetailsFormValue.country.value.code,
-      province: addressDetailsFormValue.province,
-      city: addressDetailsFormValue.city,
-      postalCode: addressDetailsFormValue.postalCode,
+      addressLine: addressFormValue.addressLine,
+      street: addressFormValue.street,
+      countryCode: addressFormValue.country.value.code,
+      province: addressFormValue.province,
+      city: addressFormValue.city,
+      postalCode: addressFormValue.postalCode,
     };
-  }
-
-  ngOnInit(): void {
-    throw new Error('Something went wrong');
-  }
-
-  private resetForms(): void {
-    this.personalInformationForm.controls['emailAddress'].setValue('');
-    this.personalInformationForm.markAsUntouched();
-    this.accountDetailsForm.controls['username'].setValue('');
-    this.accountDetailsForm.controls['password'].setValue('');
-    this.accountDetailsForm.markAsUntouched();
-    this.currentStepIndex = FormSteps.PERSONAL_INFORMATION;
   }
 }

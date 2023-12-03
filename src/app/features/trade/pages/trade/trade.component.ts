@@ -16,22 +16,6 @@ type Link = {
   mode: Mode;
 };
 
-const MODES: Record<Mode, number> = {
-  buy: 0,
-  sell: 1,
-};
-
-type FormStateType = 'error' | 'normal' | 'pass';
-
-type FormState = {
-  state: FormStateType;
-  isDisabled: boolean;
-};
-
-type FormStep = {
-  title: string;
-} & FormState;
-
 enum TradeSteps {
   TRADE_REQUEST,
   TRADE_QUOTE,
@@ -55,7 +39,7 @@ export class TradeComponent extends BaseComponent {
   protected readonly MAX_NUMBER_OF_STEPS = 3;
   protected readonly TRADE_STEPS = TradeSteps;
   protected currentStepIndex = 0;
-  protected formSteps: FormStep[];
+  protected formSteps = ['Trade Request', 'Quote', 'Confirmation'];
 
   protected activeTabIndex = 0;
   protected readonly mode$ = new BehaviorSubject<Mode>('buy');
@@ -92,27 +76,6 @@ export class TradeComponent extends BaseComponent {
 
       this.currencyPairName = currencyPairName;
     });
-
-    // this.router.events
-    //   .pipe(
-    //     filter((event) => event instanceof NavigationEnd),
-    //     tap(() => {
-    //       const link = this.links.find((link) => {
-    //         return this.router.url.includes(link.path);
-    //       });
-    //
-    //       if (!link) {
-    //         return;
-    //       }
-    //
-    //       this.mode$.next(link.mode);
-    //     }), takeUntil(this.destroyed$)).subscribe();
-
-    this.formSteps = [
-      { title: 'Trade Request', state: 'normal', isDisabled: true },
-      { title: 'Quote', state: 'normal', isDisabled: true },
-      { title: 'Confirmation', state: 'normal', isDisabled: true },
-    ];
   }
 
   public onStepChanged(nextStepIndex: number) {
@@ -120,14 +83,6 @@ export class TradeComponent extends BaseComponent {
       this.currentStepIndex = nextStepIndex;
       return;
     }
-  }
-
-  public getFormStep(title: string, tradeStep: TradeSteps): FormStep {
-    return {
-      title,
-      state: tradeStep <= this.currentStepIndex ? 'normal' : 'pass',
-      isDisabled: tradeStep >= this.currentStepIndex,
-    };
   }
 
   public onRequestTrade(trade: TradeModel): void {

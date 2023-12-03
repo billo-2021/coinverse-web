@@ -8,11 +8,10 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormGroup, FormGroupDirective } from '@angular/forms';
-import { ListOption } from '../../types';
+import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
+import { Option } from '../../types';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { TUI_DEFAULT_MATCHER } from '@taiga-ui/cdk';
-import { LoadingService } from '../../../core/services/loading/loading.service';
 
 export type SizeType = 's' | 'm' | 'l';
 
@@ -25,24 +24,27 @@ const DEFAULT_HEIGHT = 44;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ComboBoxComponent implements OnChanges {
+export class ComboBoxComponent<T = unknown> implements OnChanges {
   @Input() size: SizeType = 'm';
   @Input() public name = '';
   @Input() public label = '';
-  @Input() public options: ListOption[] = [];
-  @Input() public isDisabled = false;
+  @Input() public options: Option<T>[] = [];
   private readonly _search$ = new Subject<string | null>();
-  private readonly _options$: BehaviorSubject<ListOption[]>;
+  private readonly _options$: BehaviorSubject<Option<T>[]>;
   private readonly _height$: BehaviorSubject<number>;
 
-  public constructor(
-    private readonly _loadingService: LoadingService,
-    @Optional() private _formGroupDirective: FormGroupDirective
-  ) {
-    this._options$ = new BehaviorSubject<ListOption[]>(this.options);
+  private _disabled = new BehaviorSubject<boolean>(false);
+
+  public constructor(@Optional() private _formGroupDirective: FormGroupDirective) {
+    this._options$ = new BehaviorSubject<Option<T>[]>(this.options);
     this._height$ = new BehaviorSubject(
       (this.options.length && this.options.length * DEFAULT_HEIGHT) || DEFAULT_HEIGHT
     );
+  }
+
+  @Input()
+  public set isDisabled(value: boolean) {
+    this._disabled.next(value);
   }
 
   @Input()
@@ -57,15 +59,15 @@ export class ComboBoxComponent implements OnChanges {
     return `combo-box ${this._classes}`;
   }
 
-  protected get formGroup(): FormGroup | null {
+  protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
     return this._formGroupDirective?.form || null;
   }
 
-  protected get loading$(): Observable<boolean> {
-    return this._loadingService.loading$;
+  protected get formControl(): AbstractControl<unknown> | null {
+    return this.formGroup?.controls[this.name] || null;
   }
 
-  protected get options$(): Observable<readonly ListOption[] | null> {
+  protected get options$(): Observable<readonly Option<T>[] | null> {
     return this._options$.asObservable();
   }
 
@@ -87,7 +89,7 @@ export class ComboBoxComponent implements OnChanges {
   public onSearch(query: string | null): void {
     this._search$.next(query);
     const filteredOptions = this.options.filter((option) =>
-      TUI_DEFAULT_MATCHER(option, query || '')
+      TUI_DEFAULT_MATCHER(option, query || '', this.toString)
     );
 
     this._options$.next(filteredOptions);
@@ -98,5 +100,9 @@ export class ComboBoxComponent implements OnChanges {
 
   public extractValueFromEvent(event: Event): string | null {
     return (event.target as HTMLInputElement)?.value;
+  }
+
+  protected toString(option: Option<T>): string {
+    return `${option.code} ${option.name}`;
   }
 }

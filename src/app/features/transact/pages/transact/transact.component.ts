@@ -11,27 +11,6 @@ import { webRoutesConfig } from '../../../../common/config/web-routes-config';
 
 type Mode = 'deposit' | 'withdraw';
 
-type Link = {
-  path: string;
-  mode: Mode;
-};
-
-const MODES: Record<Mode, string> = {
-  deposit: '/deposit',
-  withdraw: '/withdraw',
-};
-
-type StepStateType = 'error' | 'normal' | 'pass';
-
-type StepState = {
-  state: StepStateType;
-  isDisabled: boolean;
-};
-
-type Step = {
-  title: string;
-} & StepState;
-
 enum TransactSteps {
   TRANSACT_REQUEST,
   BANK_DETAILS,
@@ -51,7 +30,7 @@ export class TransactComponent extends BaseComponent {
   protected readonly MAX_NUMBER_OF_STEPS = 3;
   protected readonly TRANSACT_STEPS = TransactSteps;
   protected currentStepIndex = 0;
-  protected transactSteps: Step[];
+  protected readonly transactSteps = ['Transact Request', 'Bank Details'];
 
   protected activeTabIndex = 0;
   protected readonly mode$ = new BehaviorSubject<Mode>('deposit');
@@ -89,11 +68,6 @@ export class TransactComponent extends BaseComponent {
 
       this.currencyCode = currencyCode;
     });
-
-    this.transactSteps = [
-      { title: 'Transact Request', state: 'normal', isDisabled: true },
-      { title: 'Bank Details', state: 'normal', isDisabled: true },
-    ];
   }
 
   public onStepChanged(nextStepIndex: number) {
@@ -101,14 +75,6 @@ export class TransactComponent extends BaseComponent {
       this.currentStepIndex = nextStepIndex;
       return;
     }
-  }
-
-  public getFormStep(title: string, transactStep: TransactSteps): Step {
-    return {
-      title,
-      state: transactStep <= this.currentStepIndex ? 'normal' : 'pass',
-      isDisabled: transactStep >= this.currentStepIndex,
-    };
   }
 
   public onRequestTransaction(paymentModel: PaymentModel): void {

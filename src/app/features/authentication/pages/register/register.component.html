@@ -1,42 +1,41 @@
-<div class="col-sm-12 col-md-5 col-lg-5">
-  <app-stepper
-    (currentStepIndexChange)="onStepChanged($event)"
-    [currentStepIndex]="currentStepIndex"
-    [steps]="formSteps">
-    <app-personal-information-form
-      (saveClicked)="onStepChanged(FORM_STEPS.ADDRESS_DETAILS)"
-      *ngIf="currentStepIndex === FORM_STEPS.PERSONAL_INFORMATION"
-      [form]="personalInformationForm"
-      class="cont"
-      saveText="Next">
-    </app-personal-information-form>
-    <app-address-details-form
-      (saveClicked)="onStepChanged(FORM_STEPS.PREFERENCE_DETAILS)"
-      *ngIf="currentStepIndex === FORM_STEPS.ADDRESS_DETAILS"
-      [form]="addressDetailsForm"
-      saveText="Next">
-    </app-address-details-form>
+<app-stepper
+  (currentStepIndexChange)="onStepChanged($event)"
+  [currentStepIndex]="currentStepIndex"
+  [stepsOptions]="(formStepOptions$ | async) || []"
+  [steps]="formSteps"
+  class="max-w-xl m-auto">
+  <app-expand
+    [isExpanded]="!personalInformationForm.valid || !addressForm.valid || !preferenceForm.valid || !accountForm.valid">
+    <app-notification *ngIf="formError$ | async as formError" status="error">
+      <p class="tui-text_body-s">{{ formError }}</p>
+    </app-notification>
+  </app-expand>
+  <app-personal-information-form
+    (saveClicked)="onStepChanged(FORM_STEPS.ADDRESS_DETAILS)"
+    *ngIf="currentStepIndex === FORM_STEPS.PERSONAL_INFORMATION"
+    saveText="Next">
+  </app-personal-information-form>
+  <app-address-form
+    (saveClicked)="onStepChanged(FORM_STEPS.PREFERENCE_DETAILS)"
+    *ngIf="currentStepIndex === FORM_STEPS.ADDRESS_DETAILS"
+    saveText="Next">
+  </app-address-form>
 
-    <app-preference-details-form
-      (saveClicked)="onStepChanged(FORM_STEPS.ACCOUNT_DETAILS)"
-      *ngIf="currentStepIndex === FORM_STEPS.PREFERENCE_DETAILS"
-      [form]="preferenceDetailsForm"
-      saveText="Next">
-    </app-preference-details-form>
+  <app-preference-form
+    (saveClicked)="onStepChanged(FORM_STEPS.ACCOUNT_DETAILS)"
+    *ngIf="currentStepIndex === FORM_STEPS.PREFERENCE_DETAILS"
+    saveText="Next">
+  </app-preference-form>
 
-    <app-account-details-form
-      (saveClicked)="onStepChanged(MAX_NUMBER_OF_STEPS)"
-      *ngIf="currentStepIndex === FORM_STEPS.ACCOUNT_DETAILS"
-      [form]="accountDetailsForm"
-      saveText="Sign up">
-    </app-account-details-form>
-  </app-stepper>
-  <app-card class="full-width mt-6">
-    <div class="full-width flex-center text-center">
-      <app-text>
-        Already have an account?
-        <app-link text="Login." to="../login"></app-link>
-      </app-text>
-    </div>
-  </app-card>
-</div>
+  <app-account-form
+    (saveClicked)="onStepChanged(MAX_NUMBER_OF_STEPS)"
+    *ngIf="currentStepIndex === FORM_STEPS.ACCOUNT_DETAILS"
+    saveText="Sign up">
+  </app-account-form>
+</app-stepper>
+<app-card class="max-w-md m-auto mt-6">
+  <p class="tui-text_body-s text-center">
+    Already have an account?
+    <app-link text="Login." to="../login"></app-link>
+  </p>
+</app-card>

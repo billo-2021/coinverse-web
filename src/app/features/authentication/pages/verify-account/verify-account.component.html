@@ -1,11 +1,13 @@
-<div class="col-sm-12 col-md-6 col-lg-4">
-  <app-otp-form
-    #otpFormRef
-    (cancelClicked)="onResendOtp()"
-    (saveClicked)="onSubmitOtp()"
-    [autoSave]="true"
-    [form]="otpForm"
-    [otpLength]="OTP_LENGTH"
-    [otpRecipient]="otpRecipient">
-  </app-otp-form>
-</div>
+<app-expand [isExpanded]="!otpForm.valid">
+  <app-notification *ngIf="formError$ | async as formError" status="error">
+    <p class="tui-text_body-s">{{ formError }}</p>
+  </app-notification>
+</app-expand>
+
+<app-otp-form
+  #otpFormRef
+  (cancelClicked)="onResendOtp()"
+  (saveClicked)="onSubmitOtp()"
+  [autoSave]="true"
+  [otpRecipient]="otpRecipient">
+</app-otp-form>

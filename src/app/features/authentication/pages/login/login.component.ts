@@ -1,10 +1,24 @@
-import { ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostBinding,
+  Self,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import { AuthenticationService } from '../../../../common/domain-services';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoginRequest } from '../../../../common/domain-models';
-import { finalize } from 'rxjs';
+import { finalize, Subject, throwError, timer } from 'rxjs';
 import { AlertService } from '../../../../core/services';
+import { LoginForm } from '../../models';
+import { TextFieldComponent } from '../../../../form-components/components/text-field/text-field.component';
+import { PasswordFieldComponent } from '../../../../form-components/components/password-field/password-field.component';
+import { ApiError } from '../../../../core/models';
+import { LoginFormService } from '../../services';
 
 @Component({
   selector: 'app-login',
@@ -12,54 +26,63 @@ import { AlertService } from '../../../../core/services';
   styleUrls: ['./login.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LoginFormService],
 })
-export class LoginComponent {
-  @HostBinding('class') public classes = 'full-width flex-col justify-center items-center';
-  protected readonly loginForm: FormGroup;
+export class LoginComponent implements AfterViewInit {
+  protected readonly loginForm: FormGroup<LoginForm>;
+  protected readonly formError$ = new Subject<string>();
+  @HostBinding('class') private _classes = 'block col-12 col-md-10 m-auto';
+  @ViewChild(TextFieldComponent) private _usernameRef?: TextFieldComponent;
+  @ViewChild(PasswordFieldComponent) private _passwordRef?: PasswordFieldComponent;
 
   public constructor(
     private readonly _formBuilder: FormBuilder,
+    @Self() private readonly _loginForm: LoginFormService,
+    private readonly _changeDetectorRef: ChangeDetectorRef,
     private readonly _authenticationService: AuthenticationService,
     private readonly _alertService: AlertService
   ) {
-    this.loginForm = _formBuilder.group({
-      username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-    });
+    this.loginForm = _loginForm.value;
+  }
+
+  public ngAfterViewInit() {
+    this._usernameRef?.focusInput(false);
+    this._changeDetectorRef.detectChanges();
   }
 
   public onLogin(): void {
-    const loginFormValue: unknown | LoginRequest = this.loginForm.value;
+    this.formError$.next('');
+    const loginFormValue = this.loginForm.getRawValue();
 
-    if (!this.isLoginRequest(loginFormValue)) {
-      this._alertService.showErrorMessage('Invalid login credentials provided');
-      this.resetForm();
-      return;
-    }
+    const loginRequest: LoginRequest = {
+      username: loginFormValue.username,
+      password: loginFormValue.password,
+    };
 
     this._authenticationService
-      .login(loginFormValue)
+      .login(loginRequest)
       .pipe(
         finalize(() => {
           this.resetForm();
+
+          timer(0).subscribe(() => {
+            this._passwordRef?.focusInput(false);
+            this._changeDetectorRef.detectChanges();
+          });
         })
       )
-      .subscribe();
-  }
-
-  private isLoginRequest(value: unknown): value is LoginRequest {
-    return (
-      value != null &&
-      typeof value === 'object' &&
-      'username' in value &&
-      typeof value.username === 'string' &&
-      'password' in value &&
-      typeof value.password === 'string'
-    );
+      .subscribe({
+        error: (error) => {
+          if (error instanceof ApiError) {
+            this.formError$.next(error.message);
+            return;
+          }
+          return throwError(error);
+        },
+      });
   }
 
   private resetForm(): void {
-    this.loginForm.controls['password'].setValue('');
-    this.loginForm.markAsUntouched();
+    this.loginForm.controls.password.reset();
   }
 }
