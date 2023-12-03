@@ -88,33 +88,4 @@ export class OtpFormComponent implements OnInit {
 
     this.otpInputRef.focusInput(index);
   }
-
-  private getMaskedOtpRecipient(): string {
-    if (this.verificationMethod === 'email') {
-      const [username, domain] = this.otpRecipient.split('@');
-
-      const maskedUsername = this.maskFromStart(username, '.', 3);
-      const maskedDomain = this.maskFromEnd(domain, '.', 3);
-
-      return `${maskedUsername}@${maskedDomain}`;
-    }
-
-    const startPart = this.otpRecipient.substring(0, 3);
-    const endPart = this.otpRecipient.substring(3);
-    return `${startPart} ${this.maskFromStart(endPart, '.', endPart.length - 3)}`;
-  }
-
-  private maskFromStart(input: string, inputMask: string, count: number): string {
-    return input
-      .split('')
-      .map((char, index) => (index < count ? inputMask : char))
-      .join('');
-  }
-
-  private maskFromEnd(input: string, inputMask: string, count: number): string {
-    return input
-      .split('')
-      .map((char, index) => (index >= input.length - count ? inputMask : char))
-      .join('');
-  }
 }
