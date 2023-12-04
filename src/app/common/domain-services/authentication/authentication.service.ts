@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 
-import { HttpCrudService } from '../../../core/services';
+import { HttpCrudService } from '../../../core';
+
+import { apiRoutesConfig } from '../../config';
+import { loginDtoToLoginResponse, userDtoToUserResponse } from '../../mappers';
+import { AccountVerificationStoreService, UserPrincipalStoreService } from '../../services';
+import { UserAccessCredentials, UserDto, UserPrincipal, UserResponse } from '../../domain-models';
+
 import {
   LoginDto,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
-  UserAccessCredentials,
-  UserDto,
-  UserPrincipal,
-  UserResponse,
-} from '../../domain-models';
-import { apiRoutesConfig } from '../../config';
-import { loginDtoToLoginResponse } from '../../mappers';
-import { userDtoToUserResponse } from '../../mappers/authentication/authentication.mapper';
-import { AccountVerificationStoreService, UserPrincipalStoreService } from '../../services';
+} from '../../domain-models/authentication';
 
 @Injectable({
   providedIn: 'root',

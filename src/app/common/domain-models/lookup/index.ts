@@ -8,7 +8,7 @@ import { CryptoCurrencyDto } from './crypto-currency-dto';
 import { CryptoCurrencyResponse } from './crypto-currency-response';
 
 import { CurrencyPairDto } from './currency-pair-dto';
-import { CurrencyPairResponse } from '../quote/currency-pair-response';
+import { CurrencyPairResponse } from './currency-pair-response';
 
 import { PaymentMethodDto } from './payment-method-dto';
 import { PaymentMethodResponse } from './payment-method-response';

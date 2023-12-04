@@ -1,10 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
-import { AccountVerificationStoreService, UserPrincipalStoreService } from '../../domain-services';
 import { combineLatest, map, Observable, shareReplay } from 'rxjs';
-import { AccountVerification, UserPrincipal } from '../../domain-models';
+
 import { MenuItem, UserPermissions } from '../../types';
 import { menuItemsToken } from '../../config';
 import { userRoles } from '../../constants';
+import { UserPrincipal } from '../../domain-models';
+import { AccountVerification } from '../../domain-models/authentication';
+import { UserPrincipalStoreService } from '../user-principal-store/user-principal-store.service';
+import { AccountVerificationStoreService } from '../account-verification-store/account-verification-store.service';
 
 @Injectable({
   providedIn: 'root',

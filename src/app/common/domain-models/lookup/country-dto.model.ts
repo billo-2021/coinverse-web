@@ -1,5 +1,4 @@
-import { KeysMap } from '../../../core/types';
-import { ObjectUtils } from '../../../core/utils';
+import { KeysMap, ObjectUtils } from '../../../core';
 
 interface CountryDto {
   id: number;

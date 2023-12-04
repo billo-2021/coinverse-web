@@ -1,5 +1,5 @@
-import { Component, HostBinding, Inject } from '@angular/core';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+import { Component, HostBinding } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   BehaviorSubject,
   combineLatest,
@@ -11,14 +11,14 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { Router } from '@angular/router';
+
 import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
-import { BaseComponent } from '../../../../common/components';
-import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
-import { QuoteService } from '../../../../common/domain-services';
-import { CryptoCurrencyResponse } from '../../../../common/domain-models';
+
+import { LoadingService } from '../../../../core';
+import { BaseComponent, LookupService, QuoteService, webRoutesConfig } from '../../../../common';
+
+import { CryptoCurrencyResponse } from '../../../../common/domain-models/lookup';
 import { CurrencyExchangeResponseData } from '../../../../common/domain-models/quote';
-import { LoadingService } from '../../../../core/services/loading/loading.service';
 
 type Key = 'name' | 'askRate' | 'bidRate' | 'change' | 'circulatingSupply' | 'actions';
 
@@ -63,7 +63,7 @@ export class MarketsComponent extends BaseComponent {
   protected total$: Observable<number>;
   protected readonly pagination$ = new BehaviorSubject({ page: 0, size: 5 });
   protected request$ = combineLatest([this.pagination$]).pipe(
-    switchMap((query) => this.lookupService.getCryptoCurrencies(...query).pipe(startWith(null))),
+    switchMap((query) => this._lookupService.getCryptoCurrencies(...query).pipe(startWith(null))),
     shareReplay(1)
   );
   protected cryptoCurrencies$ = this.request$.pipe(
@@ -71,14 +71,14 @@ export class MarketsComponent extends BaseComponent {
     switchMap((currencyPage) => this.getCryptoCurrencyModels(currencyPage.data)),
     startWith([])
   );
-  protected loading$ = this.loadingService.loading$;
+  protected loading$ = this._loadingService.loading$;
   @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    @Inject(Router) private readonly router: Router,
-    private readonly loadingService: LoadingService,
-    @Inject(LookupService) private lookupService: LookupService,
-    private readonly quoteService: QuoteService
+    private readonly _router: Router,
+    private readonly _loadingService: LoadingService,
+    private readonly _lookupService: LookupService,
+    private readonly _quoteService: QuoteService
   ) {
     super();
     this.total$ = this.request$.pipe(
@@ -89,12 +89,12 @@ export class MarketsComponent extends BaseComponent {
   }
 
   public async onWithdraw(): Promise<void> {
-    await this.router.navigate([this.transactUrl]);
+    await this._router.navigate([this.transactUrl]);
   }
 
   public async onBuy(currencyCode: string): Promise<void> {
     const url = webRoutesConfig.trade;
-    await this.router.navigate([url], {
+    await this._router.navigate([url], {
       queryParams: {
         action: 'BUY',
         currencyPairName: this.getCurrencyPairName(currencyCode),
@@ -104,7 +104,7 @@ export class MarketsComponent extends BaseComponent {
 
   public async onSell(currencyCode: string): Promise<void> {
     const url = webRoutesConfig.trade;
-    await this.router.navigate([url], {
+    await this._router.navigate([url], {
       queryParams: {
         action: 'SELL',
         currencyPairName: this.getCurrencyPairName(currencyCode),
@@ -113,7 +113,7 @@ export class MarketsComponent extends BaseComponent {
   }
 
   public async onDeposit(): Promise<void> {
-    await this.router.navigate([this.transactUrl]);
+    await this._router.navigate([this.transactUrl]);
   }
 
   public isMatch(value: unknown): boolean {
@@ -150,7 +150,7 @@ export class MarketsComponent extends BaseComponent {
     currency: CryptoCurrencyResponse
   ): Observable<CurrencyExchangeResponseData> {
     const currencyPairName = this.getCurrencyPairName(currency.code);
-    return this.quoteService
+    return this._quoteService
       .getCurrencyExchangeRateByCurrencyPairName(currencyPairName)
       .pipe(map((currencyExchangeRates) => currencyExchangeRates.data[0]));
   }

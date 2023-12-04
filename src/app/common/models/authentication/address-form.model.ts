@@ -1,6 +1,7 @@
 import { FormControl } from '@angular/forms';
+
+import { CountryResponse } from '../../domain-models/lookup';
 import { ListOption } from '../../../form-components/types';
-import { CountryResponse } from '../../domain-models';
 
 export interface AddressForm {
   addressLine: FormControl<string>;

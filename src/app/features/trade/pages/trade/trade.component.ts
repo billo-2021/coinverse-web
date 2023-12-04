@@ -1,13 +1,12 @@
-import { Component, Inject } from '@angular/core';
-import { BehaviorSubject, tap } from 'rxjs';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BaseComponent } from '../../../../common/components';
 import { FormBuilder } from '@angular/forms';
+import { BehaviorSubject, tap } from 'rxjs';
+
+import { BaseComponent, TradeService, webRoutesConfig } from '../../../../common';
+import { CurrencyTransactionResponse, TradeRequest } from '../../../../common/domain-models/trade';
+
 import { TradeModel } from '../../models';
-import { TradeService } from '../../../../common/domain-services';
-import { TradeRequest } from '../../../../common/domain-models/trade/trade-request';
-import { CurrencyTransactionResponse } from '../../../../common/domain-models/trade/currency-transaction-response';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
 
 type Mode = 'buy' | 'sell';
 
@@ -53,13 +52,13 @@ export class TradeComponent extends BaseComponent {
   protected tradeResponse: CurrencyTransactionResponse | null = null;
 
   public constructor(
-    @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
-    @Inject(Router) private readonly router: Router,
-    @Inject(FormBuilder) private readonly formBuilder: FormBuilder,
-    @Inject(TradeService) private readonly tradeService: TradeService
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _formBuilder: FormBuilder,
+    private readonly _tradeService: TradeService
   ) {
     super();
-    this.route.queryParams.subscribe((params) => {
+    this._route.queryParams.subscribe((params) => {
       const action = params['action'] as string | undefined;
 
       if (!action) {
@@ -98,7 +97,7 @@ export class TradeComponent extends BaseComponent {
       quoteId,
     };
 
-    this.tradeService
+    this._tradeService
       .requestTrade(tradeRequest)
       .pipe(
         tap((response) => {
@@ -114,7 +113,7 @@ export class TradeComponent extends BaseComponent {
   }
 
   public async onViewTradesClicked(): Promise<void> {
-    await this.router.navigate([this.manageTradesUrl]);
+    await this._router.navigate([this.manageTradesUrl]);
   }
 
   public onTradeAgainClicked(): void {
@@ -122,6 +121,6 @@ export class TradeComponent extends BaseComponent {
   }
 
   public async onTradeHistory(): Promise<void> {
-    await this.router.navigate([webRoutesConfig.manageTrades]);
+    await this._router.navigate([webRoutesConfig.manageTrades]);
   }
 }

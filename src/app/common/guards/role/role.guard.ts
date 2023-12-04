@@ -1,6 +1,6 @@
-import { UserPrincipalStoreService } from '../../services';
 import { inject } from '@angular/core';
-import { NavigationService } from '../../../core/services';
+
+import { NavigationService, UserPrincipalStoreService } from '../../services';
 
 function roleGuard(role: string) {
   const navigationService = inject(NavigationService);

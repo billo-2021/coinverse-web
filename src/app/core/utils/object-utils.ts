@@ -27,4 +27,4 @@ const ObjectUtils = {
   isObject,
 };
 
-export { ObjectUtils, ObjectKeysMap, KeysMap };
+export { ObjectUtils };

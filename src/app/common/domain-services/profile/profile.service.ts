@@ -1,6 +1,9 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { HttpCrudService } from '../../../core';
+
 import { apiRoutesConfig } from '../../config';
-import { HttpCrudService } from '../../../core/services';
 import {
   UserProfileAddressUpdate,
   UserProfileDto,
@@ -8,7 +11,6 @@ import {
   UserProfilePreferenceUpdate,
   UserProfileResponse,
 } from '../../domain-models/profile';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -16,12 +18,12 @@ import { Observable } from 'rxjs';
 export class ProfileService {
   public readonly BASE_PATH = apiRoutesConfig.profile.root;
 
-  constructor(@Inject(HttpCrudService) private httpService: HttpCrudService) {}
+  constructor(private readonly _httpService: HttpCrudService) {}
 
   public getProfile(): Observable<UserProfileResponse> {
     const url = this.BASE_PATH;
 
-    return this.httpService.find<UserProfileDto>(url);
+    return this._httpService.find<UserProfileDto>(url);
   }
 
   public updatePreferenceDetails(
@@ -29,7 +31,7 @@ export class ProfileService {
   ): Observable<UserProfileResponse> {
     const url = this.getFullPath(apiRoutesConfig.profile.preference);
 
-    return this.httpService.patch<UserProfilePreferenceUpdate, UserProfileResponse>(
+    return this._httpService.patch<UserProfilePreferenceUpdate, UserProfileResponse>(
       url,
       userProfilePreferenceUpdate
     );
@@ -40,7 +42,7 @@ export class ProfileService {
   ): Observable<UserProfileResponse> {
     const url = this.getFullPath(apiRoutesConfig.profile.address);
 
-    return this.httpService.patch<UserProfileAddressUpdate, UserProfileDto>(
+    return this._httpService.patch<UserProfileAddressUpdate, UserProfileDto>(
       url,
       userProfileAddressUpdate
     );
@@ -51,7 +53,7 @@ export class ProfileService {
   ): Observable<UserProfileResponse> {
     const url = this.getFullPath(apiRoutesConfig.profile.personalInformation);
 
-    return this.httpService.patch<UserProfilePersonalInformationUpdate, UserProfileDto>(
+    return this._httpService.patch<UserProfilePersonalInformationUpdate, UserProfileDto>(
       url,
       userProfilePersonalInformationUpdate
     );

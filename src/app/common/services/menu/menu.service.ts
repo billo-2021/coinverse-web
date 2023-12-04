@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
-import { MenuItem } from '../../types';
 import { BehaviorSubject, filter, map, Observable, shareReplay, startWith, tap } from 'rxjs';
 import { TuiBreakpointService } from '@taiga-ui/core';
+
 import { ModeType } from '../../../ui-components/components/menu/types';
+import { MenuItem } from '../../types';
 import { menuItemsToken } from '../../config';
 import { UserPermissionsService } from '../user-permissions/user-permissions.service';
 

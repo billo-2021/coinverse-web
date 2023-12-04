@@ -2,9 +2,11 @@ import { Injectable, Self } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Event, NavigationEnd, Params, Router } from '@angular/router';
 import { BehaviorSubject, filter, map, Observable, shareReplay, takeUntil, tap } from 'rxjs';
+
+import { DestroyService } from '../../../core';
+
+import { webRoutesConfig } from '../../config';
 import { NavigationParam } from '../../types';
-import { webRoutesConfig } from '../../../common/config/web-routes-config';
-import { DestroyService } from '../destroy/destroy.service';
 
 type NavigationServiceKey = {
   url: string;

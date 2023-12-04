@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   BehaviorSubject,
   combineLatest,
@@ -10,12 +10,12 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { Router } from '@angular/router';
+
 import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
-import { BaseComponent } from '../../../../common/components';
-import { CurrencyTransactionResponse } from '../../../../common/domain-models/trade/currency-transaction-response';
-import { TradeService } from '../../../../common/domain-services';
-import { LoadingService } from '../../../../core/services/loading/loading.service';
+
+import { LoadingService } from '../../../../core';
+import { BaseComponent, TradeService, webRoutesConfig } from '../../../../common';
+import { CurrencyTransactionResponse } from '../../../../common/domain-models/trade';
 
 interface Pagination {
   page: number;
@@ -70,7 +70,7 @@ export class ManageTradesComponent extends BaseComponent {
   });
 
   protected readonly request$ = combineLatest([this.pagination$]).pipe(
-    switchMap((query) => this.tradeService.getTrades(...query).pipe(startWith(null))),
+    switchMap((query) => this._tradeService.getTrades(...query).pipe(startWith(null))),
     shareReplay(1)
   );
 
@@ -86,18 +86,18 @@ export class ManageTradesComponent extends BaseComponent {
     startWith(1)
   );
 
-  protected loading$ = this.loadingService.loading$;
+  protected loading$ = this._loadingService.loading$;
 
   public constructor(
-    @Inject(Router) private readonly router: Router,
-    private readonly loadingService: LoadingService,
-    @Inject(TradeService) private readonly tradeService: TradeService
+    private readonly _router: Router,
+    private readonly _loadingService: LoadingService,
+    private readonly _tradeService: TradeService
   ) {
     super();
   }
 
   public async onTrade(): Promise<void> {
-    await this.router.navigate([this.tradeUrl]);
+    await this._router.navigate([this.tradeUrl]);
   }
 
   public isMatch(value: unknown): boolean {

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PreferenceForm } from '../../models';
 import { BehaviorSubject } from 'rxjs';
 import { ListOption } from '../../../form-components/types';
-import { CurrencyResponse } from '../../domain-models';
+import { CurrencyResponse } from '../../domain-models/lookup';
 
 @Injectable({
   providedIn: 'root',

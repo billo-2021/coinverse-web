@@ -12,13 +12,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { OtpInputComponent } from '../../../../form-components/components/otp-input/otp-input.component';
 import { debounce, filter, interval, takeUntil, tap } from 'rxjs';
-import { otpLengthToken } from '../../../../core/config';
+
+import { DestroyService, MessagingChannel, otpLengthToken } from '../../../../core';
+import { OtpInputComponent } from '../../../../form-components/components/otp-input/otp-input.component';
+
 import { OtpForm } from '../../models';
 import { OtpFormService } from '../../services';
-import { DestroyService } from '../../../../core/services/destroy/destroy.service';
-import { MessagingChannel } from '../../../../core/types';
 
 @Component({
   selector: 'app-otp-form',

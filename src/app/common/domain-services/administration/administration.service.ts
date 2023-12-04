@@ -1,7 +1,10 @@
-import { Inject, Injectable } from '@angular/core';
-import { HttpCrudService } from '../../../core/services';
-import { apiRoutesConfig } from '../../config';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { HttpCrudService, HttpMessageResponse, PageRequest, PageResponse } from '../../../core';
+
+import { apiRoutesConfig } from '../../config';
+import { CryptoCurrencyDto, CryptoCurrencyResponse } from '../../domain-models/lookup';
 import {
   CryptoCurrencyRequest,
   CryptoCurrencyUpdateRequest,
@@ -9,14 +12,6 @@ import {
   UserRequest,
   UserResponse,
 } from '../../domain-models/administration';
-import { CryptoCurrencyDto, CryptoCurrencyResponse } from '../../domain-models';
-import { PageResponse } from '../../../core/types/crud';
-import { HttpMessageResponse } from '../../../core/types';
-
-interface PageRequest {
-  page: number;
-  size: number;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -27,14 +22,14 @@ export class AdministrationService {
   public readonly ENABLE_ACCOUNT_PATH = apiRoutesConfig.administration.users.enableAccount;
   public readonly DISABLE_ACCOUNT_PATH = apiRoutesConfig.administration.users.disableAccount;
 
-  constructor(@Inject(HttpCrudService) private httpService: HttpCrudService) {}
+  constructor(private _httpService: HttpCrudService) {}
 
   public addNewCryptoCurrency(
     cryptoCurrencyRequest: CryptoCurrencyRequest
   ): Observable<CryptoCurrencyResponse> {
     const url = this.getFullPath(apiRoutesConfig.administration.cryptoCurrencies);
 
-    return this.httpService.create<CryptoCurrencyRequest, CryptoCurrencyDto>(
+    return this._httpService.create<CryptoCurrencyRequest, CryptoCurrencyDto>(
       url,
       cryptoCurrencyRequest
     );
@@ -47,7 +42,7 @@ export class AdministrationService {
     const url = `${this.getFullPath(
       apiRoutesConfig.administration.cryptoCurrencies
     )}/${currencyCode}`;
-    return this.httpService.patch<CryptoCurrencyUpdateRequest, CryptoCurrencyDto>(
+    return this._httpService.patch<CryptoCurrencyUpdateRequest, CryptoCurrencyDto>(
       url,
       cryptoCurrencyUpdateRequest
     );
@@ -58,25 +53,25 @@ export class AdministrationService {
       pageRequest.size
     }`;
 
-    return this.httpService.find<PageResponse<UserDto>>(url);
+    return this._httpService.find<PageResponse<UserDto>>(url);
   }
 
   public addUser(userRequest: UserRequest): Observable<HttpMessageResponse> {
     const url = this.getFullPath(this.USERS_PATH);
 
-    return this.httpService.create<UserRequest, HttpMessageResponse>(url, userRequest);
+    return this._httpService.create<UserRequest, HttpMessageResponse>(url, userRequest);
   }
 
   public disableAccount(username: string): Observable<HttpMessageResponse> {
     const url = `${this.getFullPath(this.USERS_PATH)}/${username}${this.DISABLE_ACCOUNT_PATH}`;
 
-    return this.httpService.patch<string, HttpMessageResponse>(url);
+    return this._httpService.patch<string, HttpMessageResponse>(url);
   }
 
   public enableAccount(username: string): Observable<HttpMessageResponse> {
     const url = `${this.getFullPath(this.USERS_PATH)}/${username}${this.ENABLE_ACCOUNT_PATH}`;
 
-    return this.httpService.patch<string, HttpMessageResponse>(url);
+    return this._httpService.patch<string, HttpMessageResponse>(url);
   }
 
   private getFullPath(path: string): string {

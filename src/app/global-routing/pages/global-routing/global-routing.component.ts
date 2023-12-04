@@ -1,7 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { UserPrincipalStoreService } from '../../../common/services';
-import { NavigationService } from '../../../core/services';
-import { DestroyService } from '../../../core/services/destroy/destroy.service';
+
+import { DestroyService } from '../../../core';
+import { NavigationService, UserPrincipalStoreService } from '../../../common';
 
 @Component({
   selector: 'app-global-routing',

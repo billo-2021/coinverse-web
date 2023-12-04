@@ -1,4 +1,4 @@
-import { WebRoutesConfigType } from '../../core/types';
+import { WebRoutesConfigType } from './web-routes-config.type';
 
 export type AuthGuardOptions =
   | {

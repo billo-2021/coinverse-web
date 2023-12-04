@@ -1,1 +1,6 @@
-export { loginDtoToLoginResponse } from './authentication.mapper';
+export {
+  loginDtoToLoginResponse,
+  userDtoToUserResponse,
+  passResetTokenDtoToPasswordResetTokenResponse,
+  passwordTokenUserDtoToPasswordTokenUserResponse,
+} from './authentication.mapper';

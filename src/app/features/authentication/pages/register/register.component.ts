@@ -7,8 +7,7 @@ import {
 } from '@angular/core';
 import { finalize, Subject } from 'rxjs';
 
-import { ApiError, AppError } from '../../../../core/models';
-import { DestroyService } from '../../../../core/services/destroy/destroy.service';
+import { ApiError, AppError, DestroyService } from '../../../../core';
 import {
   AccountFormService,
   AddressFormService,
@@ -17,12 +16,15 @@ import {
   messages,
   PersonalInformationFormService,
   PreferenceFormService,
+  UserFormBaseDirective,
+} from '../../../../common';
+
+import {
   RegisterAccountRequest,
   RegisterAddressRequest,
   RegisterPreferenceRequest,
   RegisterRequest,
-  UserFormBaseDirective,
-} from '../../../../common';
+} from '../../../../common/domain-models/authentication';
 
 @Component({
   selector: 'app-register',
@@ -60,7 +62,6 @@ export class RegisterComponent extends UserFormBaseDirective {
     }
 
     if (nextStepIndex < this.MAX_NUMBER_OF_STEPS) {
-      this.currentStepIndex = nextStepIndex;
       this.currentStepIndex = nextStepIndex;
       return;
     }

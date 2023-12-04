@@ -9,22 +9,31 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { OtpForm } from '../../models';
+
+import { FormGroup } from '@angular/forms';
+import { finalize, Subject } from 'rxjs';
+
+import {
+  AlertService,
+  ApiError,
+  MessagingChannel,
+  verificationMethodToken,
+} from '../../../../core';
 
 import {
   AccountVerificationService,
   AccountVerificationStoreService,
+  NavigationService,
+} from '../../../../common';
+
+import {
   OtpTokenRequest,
   VerifyAccountRequest,
-} from '../../../../common';
-import { AlertService, NavigationService } from '../../../../core/services';
-import { finalize, Subject } from 'rxjs';
-import { OtpFormComponent } from '../../components/otp-form/otp-form.component';
-import { verificationMethodToken } from '../../../../core/config';
+} from '../../../../common/domain-models/authentication';
+
+import { OtpForm } from '../../models';
 import { OtpFormService } from '../../services';
-import { FormGroup } from '@angular/forms';
-import { ApiError } from '../../../../core/models';
-import { MessagingChannel } from '../../../../core/types';
+import { OtpFormComponent } from '../../components/otp-form/otp-form.component';
 
 @Component({
   selector: 'app-verify-account',

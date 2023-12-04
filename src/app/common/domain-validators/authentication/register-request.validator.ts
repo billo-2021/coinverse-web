@@ -1,4 +1,4 @@
-import { RegisterRequest } from '../../domain-models';
+import { RegisterRequest } from '../../domain-models/authentication';
 import { isRegisterAddressRequest } from './register-address-request.validator';
 import { isRegisterPreferenceRequest } from './register-preference-request.validator';
 import { isRegisterAccountRequest } from './register-account-request.validator';

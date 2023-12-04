@@ -1,5 +1,5 @@
-import { PageResponse } from '../types/crud';
-import { ObjectUtils } from './object-util';
+import { PageResponse } from '../types';
+import { ObjectUtils } from './object-utils';
 
 function isPageResponse<T>(value: PageResponse<unknown>): value is PageResponse<T> {
   return (

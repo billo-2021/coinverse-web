@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   BehaviorSubject,
   combineLatest,
@@ -10,12 +10,12 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { Router } from '@angular/router';
+
 import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
-import { BaseComponent } from '../../../../common/components';
-import { PaymentResponse } from '../../../../common/domain-models/transact/payment-response';
-import { TransactService } from '../../../../common/domain-services';
-import { LoadingService } from '../../../../core/services/loading/loading.service';
+
+import { LoadingService } from '../../../../core';
+import { BaseComponent, TransactService, webRoutesConfig } from '../../../../common';
+import { PaymentResponse } from '../../../../common/domain-models/transact';
 
 interface Pagination {
   page: number;
@@ -52,7 +52,7 @@ export class ManageTransactionsComponent extends BaseComponent {
     size: 5,
   });
   protected readonly request$ = combineLatest([this.pagination$]).pipe(
-    switchMap((query) => this.transactService.getTransactions(...query).pipe(startWith(null))),
+    switchMap((query) => this._transactService.getTransactions(...query).pipe(startWith(null))),
     shareReplay(1)
   );
 
@@ -68,22 +68,22 @@ export class ManageTransactionsComponent extends BaseComponent {
     startWith(1)
   );
 
-  protected readonly loading$ = this.loadingService.loading$;
+  protected readonly loading$ = this._loadingService.loading$;
 
   public constructor(
-    @Inject(Router) private readonly router: Router,
-    @Inject(LoadingService) private readonly loadingService: LoadingService,
-    @Inject(TransactService) private readonly transactService: TransactService
+    private readonly _router: Router,
+    private readonly _loadingService: LoadingService,
+    private readonly _transactService: TransactService
   ) {
     super();
   }
 
   public async onWithdraw(): Promise<void> {
-    await this.router.navigate([this.transactUrl]);
+    await this._router.navigate([this.transactUrl]);
   }
 
   public async onDeposit(): Promise<void> {
-    await this.router.navigate([this.transactUrl]);
+    await this._router.navigate([this.transactUrl]);
   }
 
   public isMatch(value: unknown): boolean {

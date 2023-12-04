@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AddressForm } from '../../models';
 import { BehaviorSubject } from 'rxjs';
+
+import { AddressForm } from '../../models';
 import { ListOption } from '../../../form-components/types';
-import { CountryResponse } from '../../domain-models';
+import { CountryResponse } from '../../domain-models/lookup';
 
 @Injectable({
   providedIn: 'root',

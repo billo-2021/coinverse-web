@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AccountVerification } from '../../domain-models';
 import { BehaviorSubject } from 'rxjs';
+
+import { AccountVerification } from '../../domain-models/authentication';
 
 @Injectable({
   providedIn: 'root',

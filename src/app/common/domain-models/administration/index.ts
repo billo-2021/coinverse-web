@@ -7,8 +7,6 @@ import { UserAddressDto } from './user-address-dto';
 import { UserAddressResponse } from './user-address-response';
 import { UserAccountDto } from './user-account-dto';
 import { UserAccountResponse } from './user-account-response';
-import { CountryDto } from './country-dto';
-import { CountryResponse } from './country-response';
 
 import { UserAccountRequest } from './user-account-request';
 import { UserPreferenceRequest } from './user-preference-request';
@@ -24,8 +22,6 @@ export {
   UserAddressResponse,
   UserAccountDto,
   UserAccountResponse,
-  CountryDto,
-  CountryResponse,
   UserAccountRequest,
   UserPreferenceRequest,
   UserAddressRequest,

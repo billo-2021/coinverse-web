@@ -1,15 +1,13 @@
+import { ObjectKeysMap, ObjectUtils } from '../../../core';
+
 import {
   CountryDto,
   CountryResponse,
   CryptoCurrencyDto,
   CryptoCurrencyResponse,
   CurrencyDto,
-  CurrencyPairDto,
   CurrencyResponse,
-} from '../../domain-models';
-import { ObjectKeysMap } from '../../../core/types';
-import { ObjectUtils } from '../../../core/utils';
-import { CurrencyPairResponse } from '../../domain-models/lookup/currency-pair-response';
+} from '../../domain-models/lookup';
 
 type CurrencyKeys = 'id' | 'type' | 'code' | 'name' | 'symbol';
 
@@ -29,10 +27,6 @@ const currencyKeysMap: ObjectKeysMap<CurrencyDtoType, CurrencyResponseType> = {
   name: 'name',
   symbol: 'symbol',
 };
-
-type CurrencyPairKeys = 'id' | 'type' | 'name';
-type CurrencyPairDtoType = Pick<CurrencyPairDto, CurrencyPairKeys>;
-type CurrencyPairResponseType = Pick<CurrencyPairResponse, CurrencyPairKeys>;
 
 function countryDtoToCountryResponse(countryDto: CountryDto): CountryResponse {
   return ObjectUtils.map(countryKeysMap, countryDto);
@@ -69,21 +63,6 @@ function cryptoCurrencyDtoToCryptoCurrencyResponse(
 
   return ObjectUtils.map(cryptoCurrencyKeysMap, cryptoCurrencyDto);
 }
-
-// function mapCurrencyPairDtoToCurrencyPairResponse(currencyPairDto: CurrencyPairDto): CurrencyPairResponse {
-//   const baseCurrencyDto = currencyPairDto.baseCurrency;
-//   const quoteCurrencyDto = currencyPairDto.quoteCurrency;
-//
-//   const currencyPairKeysMap: ObjectKeysMap<CurrencyPairDtoType, CurrencyPairResponseType> = {
-//     type: 'type',
-//     name: 'name'
-//   };
-//
-//   return {
-//     baseCurrency: ObjectUtils.map(currencyKeysMap, baseCurrencyDto),
-//     q
-//   }
-// }
 
 export {
   countryDtoToCountryResponse,

@@ -1,5 +1,8 @@
-import { Inject, Injectable } from '@angular/core';
-import { HttpCrudService } from '../../../core/services';
+import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+
+import { HttpCrudService, PageRequest, PageResponse } from '../../../core';
+
 import { apiRoutesConfig } from '../../config';
 import {
   CountryDto,
@@ -8,23 +11,17 @@ import {
   CryptoCurrencyResponse,
   CurrencyDto,
   CurrencyPairDto,
+  CurrencyPairResponse,
   CurrencyResponse,
   PaymentMethodDto,
   PaymentMethodResponse,
-} from '../../domain-models';
-import { map, Observable } from 'rxjs';
+} from '../../domain-models/lookup';
+
 import {
   countryDtoToCountryResponse,
   cryptoCurrencyDtoToCryptoCurrencyResponse,
   currencyDtoToCurrencyResponse,
 } from '../../mappers/lookup';
-import { PageResponse } from '../../../core/types/crud';
-import { CurrencyPairResponse } from '../../domain-models/lookup/currency-pair-response';
-
-interface PageRequest {
-  page: number;
-  size: number;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -42,16 +39,16 @@ export class LookupService {
   public readonly ALL_PAYMENT_METHODS_PATH = apiRoutesConfig.lookup.allPaymentMethods;
   public readonly PAYMENT_METHODS_PATH = apiRoutesConfig.lookup.paymentMethods;
 
-  constructor(@Inject(HttpCrudService) private httpService: HttpCrudService) {}
+  constructor(private readonly _httpService: HttpCrudService) {}
 
   public getAllCountries(): Observable<CountryResponse[]> {
-    return this.httpService
+    return this._httpService
       .find<CountryDto[]>(this.getFullPath(this.ALL_COUNTRIES_PATH))
       .pipe(map((response) => response.map(countryDtoToCountryResponse)));
   }
 
   public getCountries(): Observable<PageResponse<CountryResponse>> {
-    return this.httpService
+    return this._httpService
       .find<PageResponse<CountryDto>>(this.getFullPath(this.COUNTRIES_PATH))
       .pipe(
         map((response) => ({
@@ -63,13 +60,13 @@ export class LookupService {
   }
 
   public getAllCurrencies(): Observable<CurrencyResponse[]> {
-    return this.httpService
+    return this._httpService
       .find<CurrencyDto[]>(this.getFullPath(this.ALL_CURRENCIES_PATH))
       .pipe(map((response) => response.map(currencyDtoToCurrencyResponse)));
   }
 
   public getCurrencies(): Observable<PageResponse<CurrencyResponse>> {
-    return this.httpService
+    return this._httpService
       .find<PageResponse<CurrencyDto>>(this.getFullPath(this.CURRENCIES_PATH))
       .pipe(
         map((response) => ({
@@ -83,7 +80,7 @@ export class LookupService {
   public getAllCurrenciesByType(type: string): Observable<CurrencyResponse[]> {
     const url = `${this.getFullPath(this.ALL_CURRENCIES_PATH)}?type=${type}`;
 
-    return this.httpService.find<CurrencyDto[]>(url);
+    return this._httpService.find<CurrencyDto[]>(url);
   }
 
   public getCurrenciesByType(
@@ -94,13 +91,13 @@ export class LookupService {
       pageRequest.page
     }&pageSize=${pageRequest.size}`;
 
-    return this.httpService.find<PageResponse<CurrencyDto>>(url);
+    return this._httpService.find<PageResponse<CurrencyDto>>(url);
   }
 
   public getAllCryptoCurrencies(): Observable<CryptoCurrencyResponse[]> {
     const url = this.getFullPath(this.ALL_CRYPTO_CURRENCIES_PATH);
 
-    return this.httpService
+    return this._httpService
       .find<CryptoCurrencyDto[]>(url)
       .pipe(map((response) => response.map(cryptoCurrencyDtoToCryptoCurrencyResponse)));
   }
@@ -112,7 +109,7 @@ export class LookupService {
       pageRequest.page
     }&pageSize=${pageRequest.size}`;
 
-    return this.httpService.find<PageResponse<CryptoCurrencyDto>>(url).pipe(
+    return this._httpService.find<PageResponse<CryptoCurrencyDto>>(url).pipe(
       map((response) => {
         return {
           count: response.count,
@@ -126,12 +123,12 @@ export class LookupService {
   public getCryptoCurrencyByCurrencyCode(currencyCode: string): Observable<CryptoCurrencyResponse> {
     const url = `${this.getFullPath(this.CRYPTO_CURRENCIES_PATH)}/${currencyCode}`;
 
-    return this.httpService.find<CryptoCurrencyDto>(url);
+    return this._httpService.find<CryptoCurrencyDto>(url);
   }
 
   public getAllCurrencyPairs(): Observable<CurrencyPairResponse[]> {
     const url = `${this.getFullPath(this.ALL_CURRENCY_PAIRS_PATH)}`;
-    return this.httpService.find<CurrencyPairDto[]>(url);
+    return this._httpService.find<CurrencyPairDto[]>(url);
   }
 
   public getCurrencyPairs(
@@ -140,12 +137,12 @@ export class LookupService {
     const url = `${this.getFullPath(this.CURRENCY_PAIRS_PATH)}?pageNumber=${
       pageRequest.page
     }&pageSize=${pageRequest.size}`;
-    return this.httpService.find<PageResponse<CurrencyPairDto>>(url);
+    return this._httpService.find<PageResponse<CurrencyPairDto>>(url);
   }
 
   public getAllPaymentMethods(): Observable<PaymentMethodResponse[]> {
     const url = this.getFullPath(this.ALL_PAYMENT_METHODS_PATH);
-    return this.httpService.find<PaymentMethodDto[]>(url);
+    return this._httpService.find<PaymentMethodDto[]>(url);
   }
 
   public getPaymentMethods(
@@ -154,7 +151,7 @@ export class LookupService {
     const url = `${this.getFullPath(this.ALL_PAYMENT_METHODS_PATH)}?pageNumber=${
       pageRequest.page
     }&pageSize=${pageRequest.size}`;
-    return this.httpService.find<PageResponse<PaymentMethodDto>>(url);
+    return this._httpService.find<PageResponse<PaymentMethodDto>>(url);
   }
 
   private getFullPath(path: string): string {

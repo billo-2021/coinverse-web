@@ -1,9 +1,10 @@
-import { Component, HostBinding, Inject } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { WalletResponse } from '../../../../common/domain-models/wallet';
+import { Component, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingService } from '../../../../core/services/loading/loading.service';
-import { WalletService } from '../../../../common/domain-services';
+import { map, Observable } from 'rxjs';
+
+import { LoadingService } from '../../../../core';
+import { WalletService } from '../../../../common';
+import { WalletResponse } from '../../../../common/domain-models/wallet';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,11 +20,11 @@ export class DashboardComponent {
   @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    @Inject(Router) private readonly router: Router,
-    @Inject(LoadingService) private readonly loadingService: LoadingService,
-    @Inject(WalletService) private readonly walletService: WalletService
+    private readonly _router: Router,
+    private readonly _loadingService: LoadingService,
+    private readonly _walletService: WalletService
   ) {
-    this.wallets$ = walletService.getBalances({ page: 0, size: 100 }).pipe(
+    this.wallets$ = _walletService.getBalances({ page: 0, size: 100 }).pipe(
       map((walletPageResponse) => {
         return walletPageResponse.data.sort((a, b) => b.balance - a.balance).slice(0, 5);
       })

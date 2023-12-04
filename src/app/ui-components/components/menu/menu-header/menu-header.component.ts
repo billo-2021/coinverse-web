@@ -7,9 +7,8 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { UserPrincipal } from '../../../../common/domain-models';
-import { UserPrincipalStoreService } from '../../../../common/services';
-import { NavigationService } from '../../../../core/services';
+
+import { NavigationService, UserPrincipal, UserPrincipalStoreService } from '../../../../common';
 
 @Component({
   selector: 'app-menu-header',

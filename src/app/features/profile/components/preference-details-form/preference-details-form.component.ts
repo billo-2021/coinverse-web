@@ -1,15 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { combineLatest, map, Observable, shareReplay, tap } from 'rxjs';
-import { Option } from '../../../../form-components/types';
-import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProfileService } from '../../../../common/domain-services';
+import { combineLatest, map, Observable, shareReplay, tap } from 'rxjs';
+
+import { AlertService } from '../../../../core';
+import { LookupService, ProfileService } from '../../../../common';
+import { CurrencyResponse } from '../../../../common/domain-models/lookup';
+
 import {
   UserProfilePreferenceUpdate,
   UserProfileResponse,
 } from '../../../../common/domain-models/profile';
-import { CurrencyResponse } from '../../../../common/domain-models';
-import { AlertService } from '../../../../core/services';
+
+import { Option } from '../../../../form-components/types';
 
 @Component({
   selector: 'app-preference-details-form',

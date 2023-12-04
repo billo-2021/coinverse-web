@@ -9,12 +9,12 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
+
 import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
-import { LoadingService } from '../../../../core/services/loading/loading.service';
-import { BaseComponent } from '../../../../common/components';
-import { UserAccountService } from '../../../../common/domain-services';
-import { UserAccountEventResponse } from '../../../../common/domain-models';
-import { AlertService } from '../../../../core/services';
+
+import { AlertService, LoadingService } from '../../../../core';
+import { BaseComponent, UserAccountService } from '../../../../common';
+import { UserAccountEventResponse } from '../../../../common/domain-models/account';
 
 type Pagination = {
   readonly page: number;
@@ -52,7 +52,7 @@ export class AccountActivityComponent extends BaseComponent {
 
   protected readonly request$ = combineLatest([this.pagination$]).pipe(
     switchMap((query) =>
-      this.userAccountService.getUserAccountEvents(...query).pipe(startWith(null))
+      this._userAccountService.getUserAccountEvents(...query).pipe(startWith(null))
     ),
     shareReplay(1)
   );
@@ -70,12 +70,12 @@ export class AccountActivityComponent extends BaseComponent {
     startWith(1)
   );
 
-  protected readonly loading$: Observable<boolean> = this.loadingService.loading$;
+  protected readonly loading$: Observable<boolean> = this._loadingService.loading$;
 
   public constructor(
-    private readonly loadingService: LoadingService,
-    private readonly alertService: AlertService,
-    private readonly userAccountService: UserAccountService
+    private readonly _loadingService: LoadingService,
+    private readonly _alertService: AlertService,
+    private readonly _userAccountService: UserAccountService
   ) {
     super();
   }
@@ -89,6 +89,6 @@ export class AccountActivityComponent extends BaseComponent {
   }
 
   public onReportActivity(): void {
-    this.alertService.showMessage('Activity reported');
+    this._alertService.showMessage('Activity reported');
   }
 }

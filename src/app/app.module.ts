@@ -13,9 +13,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UiComponentsModule } from './ui-components/ui-components.module';
-import { PROVIDERS } from './core/providers';
+import { PROVIDERS as CORE_PROVIDERS } from './core/providers';
+import { PROVIDERS as COMMON_PROVIDERS } from './common';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { GlobalRoutingService } from './global-routing/services/global-routing/global-routing.service';
+import { GlobalRoutingService } from './global-routing';
 import { GlobalRoutingModule } from './global-routing/global-routing.module';
 
 @NgModule({
@@ -33,7 +34,7 @@ import { GlobalRoutingModule } from './global-routing/global-routing.module';
     HttpClientModule,
     GlobalRoutingModule,
   ],
-  providers: [...PROVIDERS, GlobalRoutingService, JwtHelperService],
+  providers: [...CORE_PROVIDERS, ...COMMON_PROVIDERS, GlobalRoutingService, JwtHelperService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

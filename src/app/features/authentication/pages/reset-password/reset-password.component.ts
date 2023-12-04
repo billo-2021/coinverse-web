@@ -6,19 +6,20 @@ import {
   Self,
   ViewEncapsulation,
 } from '@angular/core';
+
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { finalize, map, Subject, switchMap, take, tap } from 'rxjs';
 
-import { ApiError } from '../../../../core/models';
-import { AlertService, NavigationService } from '../../../../core/services';
+import { AlertService, ApiError } from '../../../../core';
+import { NavigationService, PasswordResetService } from '../../../../common';
 import {
-  PasswordResetService,
   PasswordTokenUserResponse,
   ResetPasswordRequest,
-} from '../../../../common';
+} from '../../../../common/domain-models/authentication';
 
 import { ResetPasswordFormService } from '../../services/reset-password-form.service';
+
 import { ResetPasswordForm } from '../../models';
 
 enum Steps {

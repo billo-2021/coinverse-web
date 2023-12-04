@@ -1,5 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { BaseComponent } from '../../../../common/components';
+import { Component } from '@angular/core';
+import { AdministrationService, BaseComponent, webRoutesConfig } from '../../../../common';
+import { Router } from '@angular/router';
 import {
   BehaviorSubject,
   combineLatest,
@@ -12,12 +13,9 @@ import {
   tap,
 } from 'rxjs';
 import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
-import { Router } from '@angular/router';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+
+import { AlertService, LoadingService } from '../../../../core';
 import { UserResponse } from '../../../../common/domain-models/administration';
-import { AdministrationService } from '../../../../common/domain-services';
-import { LoadingService } from '../../../../core/services/loading/loading.service';
-import { AlertService } from '../../../../core/services';
 
 interface Pagination {
   page: number;
@@ -77,7 +75,7 @@ export class ManageUsersComponent extends BaseComponent {
     size: 5,
   });
   protected readonly request$ = combineLatest([this.reload$, this.pagination$]).pipe(
-    switchMap((query) => this.administrationService.getUsers(query[1]).pipe(startWith(null))),
+    switchMap((query) => this._administrationService.getUsers(query[1]).pipe(startWith(null))),
     shareReplay(1)
   );
 
@@ -93,25 +91,24 @@ export class ManageUsersComponent extends BaseComponent {
     startWith(1)
   );
 
-  protected readonly loading$ = this.loadingService.loading$;
+  protected readonly loading$ = this._loadingService.loading$;
 
   public constructor(
-    @Inject(Router) private readonly router: Router,
-    @Inject(LoadingService) private readonly loadingService: LoadingService,
-    @Inject(AlertService) private readonly alertService: AlertService,
-    @Inject(AdministrationService)
-    private administrationService: AdministrationService
+    private readonly _router: Router,
+    private readonly _loadingService: LoadingService,
+    private readonly _alertService: AlertService,
+    private readonly _administrationService: AdministrationService
   ) {
     super();
   }
 
   public async onViewUserDetails(username: string): Promise<void> {
     const url = `${this.manageUsersUrl}/${username}`;
-    await this.router.navigate([url]);
+    await this._router.navigate([url]);
   }
 
   public async onNewUser(): Promise<void> {
-    await this.router.navigate([this.newUserUrl]);
+    await this._router.navigate([this.newUserUrl]);
   }
 
   public isMatch(value: unknown): boolean {
@@ -123,11 +120,11 @@ export class ManageUsersComponent extends BaseComponent {
   }
 
   public onDisableAccount(username: string): void {
-    this.administrationService
+    this._administrationService
       .disableAccount(username)
       .pipe(
         tap((response) => {
-          this.alertService.showMessage(response.message);
+          this._alertService.showMessage(response.message);
           this.reload$.next(true);
         })
       )
@@ -135,11 +132,11 @@ export class ManageUsersComponent extends BaseComponent {
   }
 
   public onEnableAccount(username: string): void {
-    this.administrationService
+    this._administrationService
       .enableAccount(username)
       .pipe(
         tap((response) => {
-          this.alertService.showMessage(response.message);
+          this._alertService.showMessage(response.message);
           this.reload$.next(true);
         })
       )

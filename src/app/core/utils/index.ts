@@ -1,4 +1,5 @@
-import { ObjectUtils } from './object-util';
-import { RandomUtil } from './random-util';
+import { ObjectUtils } from './object-utils';
+import { RandomUtils } from './random-utils';
+import { CrudUtils } from './crud-utils';
 
-export { ObjectUtils, RandomUtil };
+export { ObjectUtils, RandomUtils, CrudUtils };

@@ -1,16 +1,16 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AdministrationService } from '../../../../common/domain-services';
 import { finalize, tap } from 'rxjs';
+
+import { AlertService } from '../../../../core';
+import { AdministrationService, webRoutesConfig } from '../../../../common';
 import {
   UserAccountRequest,
   UserAddressRequest,
   UserPreferenceRequest,
   UserRequest,
 } from '../../../../common/domain-models/administration';
-import { AlertService } from '../../../../core/services';
-import { Router } from '@angular/router';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
 
 enum FormSteps {
   PERSONAL_INFORMATION,
@@ -37,16 +37,16 @@ export class ManageUserComponent {
   protected formSteps = ['Personal Information', 'Address', 'Preference', 'Account'];
 
   public constructor(
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly router: Router,
-    private formBuilder: FormBuilder,
-    private alertService: AlertService,
-    private administrationService: AdministrationService
+    private readonly _changeDetectorRef: ChangeDetectorRef,
+    private readonly _router: Router,
+    private readonly _formBuilder: FormBuilder,
+    private readonly _alertService: AlertService,
+    private readonly _administrationService: AdministrationService
   ) {
-    this.personalInformationForm = this.getPersonalInformationForm(formBuilder);
-    this.addressDetailsForm = this.getAddressForm(formBuilder);
-    this.preferenceDetailsForm = this.getPreferenceForm(formBuilder);
-    this.accountDetailsForm = this.getAccountForm(formBuilder);
+    this.personalInformationForm = this.getPersonalInformationForm(_formBuilder);
+    this.addressDetailsForm = this.getAddressForm(_formBuilder);
+    this.preferenceDetailsForm = this.getPreferenceForm(_formBuilder);
+    this.accountDetailsForm = this.getAccountForm(_formBuilder);
   }
 
   public getPersonalInformationForm(formBuilder: FormBuilder): FormGroup {
@@ -115,12 +115,12 @@ export class ManageUserComponent {
       account: this.getUserAccountRequest(),
     };
 
-    this.administrationService
+    this._administrationService
       .addUser(registerRequest)
       .pipe(
         tap((response) => {
-          this.alertService.showMessage(response.message);
-          this.router.navigate([webRoutesConfig.manageUsers]).then();
+          this._alertService.showMessage(response.message);
+          this._router.navigate([webRoutesConfig.manageUsers]).then();
         }),
         finalize(() => this.resetForms())
       )

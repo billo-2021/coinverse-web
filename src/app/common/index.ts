@@ -9,6 +9,7 @@ export * from './guards';
 export * from './mappers';
 export * from './models';
 export * from './pipes';
+export * from './providers';
 export * from './services';
 export * from './types';
 export * from './utils';

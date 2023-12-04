@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { map, Observable } from 'rxjs';
+
+import { BaseComponent, LookupService } from '../../../../common';
+import { CountryResponse } from '../../../../common/domain-models/lookup';
+
 import { Option } from '../../../../form-components/types';
-import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
-import { BaseComponent } from '../../../../common/components';
-import { CountryResponse } from '../../../../common/domain-models';
 
 @Component({
   selector: 'app-address-details-form',

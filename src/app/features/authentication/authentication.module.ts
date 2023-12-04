@@ -2,21 +2,26 @@ import { NgModule } from '@angular/core';
 import { CommonModule as NgCommon } from '@angular/common';
 
 import { CommonModule } from '../../common/common.module';
-import { FormComponentsModule } from '../../form-components/form-components.module';
 import { UiComponentsModule } from '../../ui-components/ui-components.module';
+import { FormComponentsModule } from '../../form-components/form-components.module';
+
+import {
+  OtpFormComponent,
+  ResetPasswordFormComponent,
+  ResetPasswordRequestFormComponent,
+  ResetPasswordRequestResultComponent,
+  ResetPasswordResultComponent,
+} from './components';
+
+import {
+  LoginPage,
+  RegisterPage,
+  ResetPasswordPage,
+  ResetPasswordRequestPage,
+  VerifyAccountPage,
+} from './pages';
 
 import { AuthenticationRoutingModule } from './authentication-routing.module';
-import { LoginComponent } from './pages/login/login.component';
-import { RegisterComponent } from './pages/register/register.component';
-import { GetFormStepPipe } from './pipes/get-form-step/get-form-step.pipe';
-import { VerifyAccountComponent } from './pages/verify-account/verify-account.component';
-import { OtpFormComponent } from './components/otp-form/otp-form.component';
-import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
-import { ResetPasswordRequestComponent } from './pages/reset-password-request/reset-password-request.component';
-import { ResetPasswordRequestFormComponent } from './components/reset-password-request-form/reset-password-request-form.component';
-import { ResetPasswordRequestResultComponent } from './components/reset-password-request-result/reset-password-request-result.component';
-import { ResetPasswordFormComponent } from './components/reset-password-form/reset-password-form.component';
-import { ResetPasswordResultComponent } from './components/reset-password-result/reset-password-result.component';
 
 @NgModule({
   imports: [
@@ -27,18 +32,23 @@ import { ResetPasswordResultComponent } from './components/reset-password-result
     UiComponentsModule,
   ],
   declarations: [
-    LoginComponent,
-    RegisterComponent,
-    GetFormStepPipe,
-    VerifyAccountComponent,
     OtpFormComponent,
-    ResetPasswordComponent,
-    ResetPasswordRequestComponent,
     ResetPasswordRequestFormComponent,
     ResetPasswordRequestResultComponent,
     ResetPasswordFormComponent,
     ResetPasswordResultComponent,
+    LoginPage,
+    RegisterPage,
+    VerifyAccountPage,
+    ResetPasswordPage,
+    ResetPasswordRequestPage,
   ],
-  exports: [LoginComponent, RegisterComponent, VerifyAccountComponent],
+  exports: [
+    LoginPage,
+    RegisterPage,
+    VerifyAccountPage,
+    ResetPasswordPage,
+    ResetPasswordRequestPage,
+  ],
 })
 export class AuthenticationModule {}

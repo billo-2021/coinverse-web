@@ -9,9 +9,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+
+import { TextFieldComponent } from '../../../../form-components/components/text-field/text-field.component';
+
 import { ResetPasswordRequestForm } from '../../models';
 import { ResetPasswordRequestFormService } from '../../services/reset-password-request-form.service';
-import { TextFieldComponent } from '../../../../form-components/components/text-field/text-field.component';
 
 @Component({
   selector: 'app-reset-password-request-form',

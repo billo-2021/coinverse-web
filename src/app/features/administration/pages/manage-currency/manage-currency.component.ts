@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, Component, Inject, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, filter, finalize, map, Observable, switchMap, tap } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
+import { BehaviorSubject, filter, finalize, map, Observable, switchMap, tap } from 'rxjs';
 import { tuiIsPresent } from '@taiga-ui/cdk';
-import { CryptoCurrencyResponse } from '../../../../common/domain-models';
-import { AdministrationService } from '../../../../common/domain-services';
-import { AlertService } from '../../../../core/services';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+
+import { AlertService } from '../../../../core';
+import { AdministrationService, LookupService, webRoutesConfig } from '../../../../common';
+import { CryptoCurrencyResponse } from '../../../../common/domain-models/lookup';
 
 type Mode = 'create' | 'edit';
 
@@ -45,15 +44,14 @@ export class ManageCurrencyComponent {
   protected currencyForm: FormGroup;
 
   public constructor(
-    @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
-    @Inject(Router) private readonly router: Router,
-    @Inject(FormBuilder) private readonly formBuilder: FormBuilder,
-    @Inject(LookupService) private readonly lookupService: LookupService,
-    @Inject(AdministrationService)
-    private readonly administrationService: AdministrationService,
-    @Inject(AlertService) private readonly alertService: AlertService
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _formBuilder: FormBuilder,
+    private readonly _lookupService: LookupService,
+    private readonly _administrationService: AdministrationService,
+    private readonly _alertService: AlertService
   ) {
-    this.currencyForm = this.getCurrencyForm(formBuilder, {
+    this.currencyForm = this.getCurrencyForm(_formBuilder, {
       id: 0,
       code: '',
       name: '',
@@ -61,7 +59,7 @@ export class ManageCurrencyComponent {
       circulatingSupply: NaN,
     });
 
-    this.currencyCode$ = route.params.pipe(
+    this.currencyCode$ = _route.params.pipe(
       map((params) => {
         const currencyCode = params['currencyCode'] as string | null | undefined;
         this.mode$.next(currencyCode ? 'edit' : 'create');
@@ -73,7 +71,7 @@ export class ManageCurrencyComponent {
       .pipe(
         filter(tuiIsPresent),
         switchMap((currencyCode) => {
-          return this.lookupService.getCryptoCurrencyByCurrencyCode(currencyCode);
+          return this._lookupService.getCryptoCurrencyByCurrencyCode(currencyCode);
         }),
         tap((currencyResponse) => {
           const code = this.currencyForm.controls['code'];
@@ -119,7 +117,7 @@ export class ManageCurrencyComponent {
     const mode = this.mode$.getValue();
 
     if (mode === 'create') {
-      this.administrationService
+      this._administrationService
         .addNewCryptoCurrency({
           code,
           name,
@@ -132,8 +130,8 @@ export class ManageCurrencyComponent {
             this.currencyForm.markAsUntouched();
           }),
           tap(async () => {
-            this.alertService.showMessage('Currency Added');
-            await this.router.navigate([this.manageCurrenciesUrl]);
+            this._alertService.showMessage('Currency Added');
+            await this._router.navigate([this.manageCurrenciesUrl]);
           })
         )
         .subscribe();
@@ -141,7 +139,7 @@ export class ManageCurrencyComponent {
       return;
     }
 
-    this.administrationService
+    this._administrationService
       .updateCryptoCurrency(code, {
         name,
         symbol,
@@ -149,8 +147,8 @@ export class ManageCurrencyComponent {
       })
       .pipe(
         tap(async () => {
-          this.alertService.showMessage('Currency Updated');
-          await this.router.navigate([this.manageCurrenciesUrl]);
+          this._alertService.showMessage('Currency Updated');
+          await this._router.navigate([this.manageCurrenciesUrl]);
         })
       )
       .subscribe();

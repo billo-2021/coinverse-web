@@ -1,13 +1,12 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, tap } from 'rxjs';
-import { BaseComponent } from '../../../../common/components';
 import { FormBuilder } from '@angular/forms';
+import { BehaviorSubject, tap } from 'rxjs';
+
+import { BaseComponent, TransactService, webRoutesConfig } from '../../../../common';
+import { PaymentRequest, PaymentResponse } from '../../../../common/domain-models/transact';
+
 import { PaymentModel } from '../../models';
-import { TransactService } from '../../../../common/domain-services';
-import { PaymentRequest } from '../../../../common/domain-models/transact/payment-request';
-import { PaymentResponse } from '../../../../common/domain-models/transact/payment-response';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
 
 type Mode = 'deposit' | 'withdraw';
 
@@ -45,13 +44,13 @@ export class TransactComponent extends BaseComponent {
   protected paymentResponse: PaymentResponse | null = null;
 
   public constructor(
-    @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
-    @Inject(Router) private readonly router: Router,
-    @Inject(FormBuilder) private readonly formBuilder: FormBuilder,
-    @Inject(TransactService) private readonly transactService: TransactService
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _formBuilder: FormBuilder,
+    private readonly _transactService: TransactService
   ) {
     super();
-    this.route.queryParams.subscribe((params) => {
+    this._route.queryParams.subscribe((params) => {
       const action = params['action'] as string | undefined;
 
       if (!action) {
@@ -92,7 +91,7 @@ export class TransactComponent extends BaseComponent {
     };
 
     if (this.activeTabIndex === 0) {
-      this.transactService
+      this._transactService
         .deposit(paymentRequest)
         .pipe(
           tap((paymentResponse) => {
@@ -105,7 +104,7 @@ export class TransactComponent extends BaseComponent {
     }
 
     if (this.activeTabIndex === 1) {
-      this.transactService
+      this._transactService
         .withdraw(paymentRequest)
         .pipe(
           tap((paymentResponse) => {
@@ -131,10 +130,10 @@ export class TransactComponent extends BaseComponent {
   }
 
   public async onViewPayments(): Promise<void> {
-    await this.router.navigate([this.manageTransactionsUrl]);
+    await this._router.navigate([this.manageTransactionsUrl]);
   }
 
   public async onViewTransactions(): Promise<void> {
-    await this.router.navigate([webRoutesConfig.manageTransactions]);
+    await this._router.navigate([webRoutesConfig.manageTransactions]);
   }
 }

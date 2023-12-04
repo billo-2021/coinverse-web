@@ -7,10 +7,15 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { NavigationService } from '../../services';
-import { apiErrorCodes, apiErrorMessages } from '../../../common/constants';
-import { isApiErrorDto } from '../../../common/validators';
-import { UserPermissionsService } from '../../../common/services';
+
+import {
+  apiErrorCodes,
+  apiErrorMessages,
+  isApiErrorDto,
+  NavigationService,
+  UserPermissionsService,
+} from '../../../common';
+
 import { ApiError } from '../../models';
 
 @Injectable()

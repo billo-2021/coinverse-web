@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
-import { UserPrincipalStoreService } from '../../services';
-import { NavigationService } from '../../../core/services';
-import { RedirectService } from '../../../core/services/redirect/redirect.service';
-import { WebRoutesConfigType } from '../../../core/types';
-import { AuthGuardOptions } from '../../types';
+
+import { RedirectService } from '../../../core';
+
+import { NavigationService, UserPrincipalStoreService } from '../../services';
+import { AuthGuardOptions, WebRoutesConfigType } from '../../types';
 
 function authGuard(options: AuthGuardOptions) {
   const navigationService = inject(NavigationService);

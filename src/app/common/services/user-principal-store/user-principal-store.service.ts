@@ -10,12 +10,12 @@ import {
   takeUntil,
   tap,
 } from 'rxjs';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { UserAccessCredentialsStoreService } from '../user-access-credentials-store/user-access-credentials-store.service';
-import { LocalStorageService } from '../../../core/services/local-storage/local-storage.service';
-import { StorageKey } from '../../../core/constants';
 import { DateTime } from 'luxon';
-import { DestroyService } from '../../../core/services/destroy/destroy.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
+
+import { DestroyService, LocalStorageService, StorageKey } from '../../../core';
+
+import { UserAccessCredentialsStoreService } from '../user-access-credentials-store/user-access-credentials-store.service';
 
 type TokenExpiryOffset = {
   seconds: number;

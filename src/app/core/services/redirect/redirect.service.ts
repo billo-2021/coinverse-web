@@ -1,9 +1,14 @@
 import { Injectable, Self } from '@angular/core';
-import { BehaviorSubject, filter, Observable, takeUntil, tap } from 'rxjs';
-import { NavigationService } from '../navigation/navigation.service';
 import { Params, Router } from '@angular/router';
-import { NavigationParam, WebRoutesConfigType } from '../../types';
-import { webRoutesConfig } from '../../../common/config/web-routes-config';
+import { BehaviorSubject, filter, Observable, takeUntil, tap } from 'rxjs';
+
+import {
+  NavigationParam,
+  NavigationService,
+  webRoutesConfig,
+  WebRoutesConfigType,
+} from '../../../common';
+
 import { DestroyService } from '../destroy/destroy.service';
 
 type RedirectServiceKey = {

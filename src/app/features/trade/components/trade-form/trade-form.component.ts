@@ -1,13 +1,12 @@
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
 import { combineLatest, map, Observable, Subject, tap } from 'rxjs';
-import { Option } from '../../../../form-components/types';
-import { CurrencyPairResponse } from '../../../../common/domain-models/lookup/currency-pair-response';
-import { TradeModel } from '../../models';
-import { CurrencyResponse } from '../../../../common/domain-models';
 
-type ActionType = 'buy' | 'sell';
+import { LookupService } from '../../../../common';
+import { CurrencyPairResponse, CurrencyResponse } from '../../../../common/domain-models/lookup';
+
+import { TradeModel } from '../../models';
+import { Option } from '../../../../form-components/types';
 
 type Tab = {
   text: string;
@@ -41,12 +40,12 @@ export class TradeFormComponent {
   private currencyPairName$ = new Subject<string>();
 
   public constructor(
-    @Inject(LookupService) private readonly lookupService: LookupService,
-    @Inject(FormBuilder) private readonly formBuilder: FormBuilder
+    private readonly _lookupService: LookupService,
+    private readonly _formBuilder: FormBuilder
   ) {
-    this.form = this.getTradeForm(formBuilder);
+    this.form = this.getTradeForm(_formBuilder);
 
-    this.currencyPairOptions$ = lookupService.getAllCurrencyPairs().pipe(
+    this.currencyPairOptions$ = _lookupService.getAllCurrencyPairs().pipe(
       map((currencyPairs) => {
         return currencyPairs.map((currencyPair) => ({
           code: currencyPair.type,
@@ -57,7 +56,7 @@ export class TradeFormComponent {
       })
     );
 
-    this.currencyOptions$ = lookupService.getAllCurrencies().pipe(
+    this.currencyOptions$ = _lookupService.getAllCurrencies().pipe(
       map((currencyResponse) =>
         currencyResponse.map((currency) => ({
           code: currency.code,

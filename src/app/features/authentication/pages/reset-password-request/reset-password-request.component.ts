@@ -6,17 +6,16 @@ import {
   Self,
   ViewEncapsulation,
 } from '@angular/core';
+
 import { FormGroup } from '@angular/forms';
-import { PasswordResetService } from '../../../../common/domain-services';
-import { PasswordResetTokenRequest } from '../../../../common/domain-models';
 import { Subject } from 'rxjs';
-import { ResetPasswordRequestFormService } from '../../services/reset-password-request-form.service';
+
+import { AlertService, ApiError, MessagingChannel, messagingChannelToken } from '../../../../core';
+import { apiErrorCodes, PasswordResetService } from '../../../../common';
+import { PasswordResetTokenRequest } from '../../../../common/domain-models/authentication';
+
 import { ResetPasswordRequestForm } from '../../models';
-import { ApiError } from '../../../../core/models';
-import { apiErrorCodes } from '../../../../common/constants';
-import { messagingChannelToken } from '../../../../core/config';
-import { MessagingChannel } from '../../../../core/types';
-import { AlertService } from '../../../../core/services';
+import { ResetPasswordRequestFormService } from '../../services/reset-password-request-form.service';
 
 enum Steps {
   PASSWORD_REQUEST,

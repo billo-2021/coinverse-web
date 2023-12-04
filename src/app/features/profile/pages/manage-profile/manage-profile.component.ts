@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { ProfileService } from '../../../../common/domain-services';
 import { BehaviorSubject, Observable, switchMap } from 'rxjs';
+
+import { ProfileService } from '../../../../common';
 import { UserProfileResponse } from '../../../../common/domain-models/profile';
 
 type Tab = {
@@ -37,8 +38,8 @@ export class ManageProfileComponent {
   protected readonly userProfileResponse$: Observable<UserProfileResponse>;
   protected reload$ = new BehaviorSubject<boolean>(true);
 
-  public constructor(private readonly profileService: ProfileService) {
-    this.userProfileResponse$ = this.reload$.pipe(switchMap(() => profileService.getProfile()));
+  public constructor(private readonly _profileService: ProfileService) {
+    this.userProfileResponse$ = this.reload$.pipe(switchMap(() => _profileService.getProfile()));
   }
 
   public onPasswordChanged(): void {

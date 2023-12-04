@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output, SkipSelf } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+
+import { PersonalInformationFormService } from '../../services';
 import { PersonalInformationForm } from '../../models';
-import { PersonalInformationFormService } from '../../services/personal-information-form/personal-information-form.service';
 
 @Component({
   selector: 'app-personal-information-form',

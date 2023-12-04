@@ -1,3 +1,6 @@
+import { ObjectKeysMap, ObjectUtils } from '../../../core';
+
+import { UserDto, UserResponse } from '../../domain-models';
 import {
   LoginDto,
   LoginResponse,
@@ -5,11 +8,8 @@ import {
   PasswordResetTokenResponse,
   PasswordTokenUserDto,
   PasswordTokenUserResponse,
-  UserDto,
-  UserResponse,
-} from '../../domain-models';
-import { ObjectUtils } from '../../../core/utils';
-import { ObjectKeysMap } from '../../../core/types';
+} from '../../domain-models/authentication';
+
 import { AccountDto } from '../../domain-models/account-dto.model';
 import { AccountResponse } from '../../domain-models/account-response.model';
 

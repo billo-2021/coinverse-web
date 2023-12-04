@@ -1,14 +1,10 @@
-import { Inject, Injectable } from '@angular/core';
-import { HttpCrudService } from '../../../core/services';
-import { apiRoutesConfig } from '../../config';
-import { PageResponse } from '../../../core/types/crud';
-import { WalletDto, WalletResponse } from '../../domain-models/wallet';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-interface PageRequest {
-  page: number;
-  size: number;
-}
+import { HttpCrudService, PageRequest, PageResponse } from '../../../core';
+
+import { apiRoutesConfig } from '../../config';
+import { WalletDto, WalletResponse } from '../../domain-models/wallet';
 
 @Injectable({
   providedIn: 'root',
@@ -16,11 +12,11 @@ interface PageRequest {
 export class WalletService {
   public readonly BASE_PATH = apiRoutesConfig.balances.root;
 
-  constructor(@Inject(HttpCrudService) private readonly httpService: HttpCrudService) {}
+  constructor(private readonly _httpService: HttpCrudService) {}
 
   public getBalances(pageRequest: PageRequest): Observable<PageResponse<WalletResponse>> {
     const url = `${this.BASE_PATH}?pageNumber=${pageRequest.page}&pageSize=${pageRequest.size}`;
-    return this.httpService.find<PageResponse<WalletDto>>(url);
+    return this._httpService.find<PageResponse<WalletDto>>(url);
   }
 
   private getFullPath(path: string): string {

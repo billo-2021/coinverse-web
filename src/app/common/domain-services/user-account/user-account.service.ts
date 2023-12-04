@@ -1,19 +1,14 @@
-import { Inject, Injectable } from '@angular/core';
-import { HttpCrudService } from '../../../core/services';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { HttpCrudService, HttpMessageResponse, PageRequest, PageResponse } from '../../../core';
+
 import { apiRoutesConfig } from '../../config';
 import {
   ChangePasswordRequest,
   UserAccountEventDto,
   UserAccountEventResponse,
-} from '../../domain-models';
-import { PageResponse } from '../../../core/types/crud';
-import { Observable } from 'rxjs';
-import { HttpMessageResponse } from '../../../core/types';
-
-interface PageRequest {
-  page: number;
-  size: number;
-}
+} from '../../domain-models/account';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +18,7 @@ export class UserAccountService {
   public readonly ACCOUNT_ACTIVITY_PATH = apiRoutesConfig.account.activity;
   public readonly CHANGE_PASSWORD_PATH = apiRoutesConfig.account.changePassword;
 
-  constructor(@Inject(HttpCrudService) private httpService: HttpCrudService) {}
+  constructor(private readonly _httpService: HttpCrudService) {}
 
   public getUserAccountEvents(
     pageRequest: PageRequest
@@ -32,7 +27,7 @@ export class UserAccountService {
       pageRequest.page
     }&pageSize=${pageRequest.size}`;
 
-    return this.httpService.find<PageResponse<UserAccountEventDto>>(url);
+    return this._httpService.find<PageResponse<UserAccountEventDto>>(url);
   }
 
   public changePassword(
@@ -40,7 +35,7 @@ export class UserAccountService {
   ): Observable<HttpMessageResponse> {
     const url = this.getFullPath(this.CHANGE_PASSWORD_PATH);
 
-    return this.httpService.patch<ChangePasswordRequest, HttpMessageResponse>(
+    return this._httpService.patch<ChangePasswordRequest, HttpMessageResponse>(
       url,
       changePasswordRequest
     );

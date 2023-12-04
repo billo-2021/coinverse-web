@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { LoadingService } from '../../../../core/services/loading/loading.service';
+
+import { LoadingService } from '../../../../core';
 
 @Component({
   selector: 'app-reset-password-request-result',

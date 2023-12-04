@@ -2,23 +2,23 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Inject,
   Input,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { combineLatest, map, Observable, shareReplay, tap } from 'rxjs';
-import { ListOption, Option } from '../../../../form-components/types';
-import { BaseComponent } from '../../../../common/components';
-import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
-import { AlertService } from '../../../../core/services';
-import { ProfileService } from '../../../../common/domain-services';
-import { CountryResponse } from '../../../../common/domain-models';
+
+import { AlertService } from '../../../../core';
+import { BaseComponent, LookupService, ProfileService } from '../../../../common';
 import {
   UserProfileAddressUpdate,
   UserProfileResponse,
 } from '../../../../common/domain-models/profile';
+import { CountryResponse } from '../../../../common/domain-models/lookup';
+
+import { ListOption, Option } from '../../../../form-components/types';
 
 @Component({
   selector: 'app-address-details-form',
@@ -36,15 +36,15 @@ export class AddressDetailsFormComponent extends BaseComponent {
   protected readonly userProfileResponse$: Observable<UserProfileResponse>;
 
   public constructor(
-    private formBuilder: FormBuilder,
-    private readonly alertService: AlertService,
-    private readonly profileService: ProfileService,
-    @Inject(LookupService) private readonly lookupService: LookupService
+    private _formBuilder: FormBuilder,
+    private readonly _alertService: AlertService,
+    private readonly _profileService: ProfileService,
+    private readonly _lookupService: LookupService
   ) {
     super();
-    this.form = this.getAddressDetailsForm(formBuilder);
+    this.form = this.getAddressDetailsForm(_formBuilder);
 
-    this.countryOptions$ = this.lookupService.getAllCountries().pipe(
+    this.countryOptions$ = this._lookupService.getAllCountries().pipe(
       map((countryResponse) => {
         return countryResponse.map((country) => ({
           code: country.code,
@@ -56,7 +56,7 @@ export class AddressDetailsFormComponent extends BaseComponent {
       shareReplay(1)
     );
 
-    this.userProfileResponse$ = profileService.getProfile();
+    this.userProfileResponse$ = _profileService.getProfile();
 
     combineLatest([this.countryOptions$, this.userProfileResponse$])
       .pipe(
@@ -98,11 +98,11 @@ export class AddressDetailsFormComponent extends BaseComponent {
       postalCode: addressFormValue.postalCode,
     };
 
-    this.profileService
+    this._profileService
       .updateAddress(addressUpdateRequest)
       .pipe(
         tap(() => {
-          this.alertService.showMessage('Address Updated');
+          this._alertService.showMessage('Address Updated');
           this.saveClicked.emit();
         })
       )

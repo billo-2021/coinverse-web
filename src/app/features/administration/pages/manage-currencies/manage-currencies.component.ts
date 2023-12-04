@@ -1,7 +1,7 @@
-import { Component, Inject } from '@angular/core';
-import { BaseComponent } from '../../../../common/components';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+
+import { BaseComponent, webRoutesConfig } from '../../../../common';
 
 type Tab = {
   text: string;
@@ -32,16 +32,16 @@ export class ManageCurrenciesComponent extends BaseComponent {
 
   protected readonly subtitle = 'Manage currencies here.';
 
-  public constructor(@Inject(Router) private readonly router: Router) {
+  public constructor(private readonly _router: Router) {
     super();
   }
 
   public async onEditCurrency(currencyCode: string): Promise<void> {
     const url = `${this.manageCurrenciesUrl}/${currencyCode}`;
-    await this.router.navigate([url]);
+    await this._router.navigate([url]);
   }
 
   public async onNewCurrency(): Promise<void> {
-    await this.router.navigate([this.newCurrencyUrl]);
+    await this._router.navigate([this.newCurrencyUrl]);
   }
 }

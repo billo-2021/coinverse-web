@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   BehaviorSubject,
   combineLatest,
@@ -10,12 +10,11 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { CurrencyResponse } from '../../../../common/domain-models';
 import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
-import { Router } from '@angular/router';
-import { LoadingService } from '../../../../core/services/loading/loading.service';
-import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
-import { BaseComponent } from '../../../../common/components';
+
+import { LoadingService } from '../../../../core';
+import { BaseComponent, LookupService, webRoutesConfig } from '../../../../common';
+import { CurrencyResponse } from '../../../../common/domain-models/lookup';
 
 interface Pagination {
   page: number;
@@ -48,7 +47,7 @@ export class FiatCurrenciesComponent extends BaseComponent {
 
   protected readonly request$ = combineLatest([this.pagination$]).pipe(
     switchMap((query) =>
-      this.lookupService.getCurrenciesByType('fiat', ...query).pipe(startWith(null))
+      this._lookupService.getCurrenciesByType('fiat', ...query).pipe(startWith(null))
     ),
     shareReplay(1)
   );
@@ -65,19 +64,19 @@ export class FiatCurrenciesComponent extends BaseComponent {
     startWith(1)
   );
 
-  protected readonly loading$ = this.loadingService.loading$;
+  protected readonly loading$ = this._loadingService.loading$;
 
   public constructor(
-    @Inject(Router) private readonly router: Router,
-    @Inject(LoadingService) private readonly loadingService: LoadingService,
-    @Inject(LookupService) private readonly lookupService: LookupService
+    private readonly _router: Router,
+    private readonly _loadingService: LoadingService,
+    private readonly _lookupService: LookupService
   ) {
     super();
   }
 
   public async onEditCurrency(currencyCode: string): Promise<void> {
     const url = `${this.manageCurrenciesUrl}/${currencyCode}`;
-    await this.router.navigate([url]);
+    await this._router.navigate([url]);
   }
 
   public isMatch(value: unknown): boolean {

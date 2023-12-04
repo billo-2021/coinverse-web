@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output, SkipSelf } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { map, Observable, tap } from 'rxjs';
-import { LookupService } from '../../domain-services/lookup/lookup.service';
+
 import { Option } from '../../../form-components/types';
-import { CurrencyResponse } from '../../domain-models';
+import { LookupService } from '../../domain-services';
 import { NotificationMethodsForm, PreferenceForm } from '../../models';
-import { PreferenceFormService } from '../../services/preference-form/preference-form.service';
+import { PreferenceFormService } from '../../services';
+import { CurrencyResponse } from '../../domain-models/lookup';
 
 @Component({
   selector: 'app-preference-form',

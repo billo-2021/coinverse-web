@@ -1,6 +1,6 @@
+import { ObjectKeysMap, ObjectUtils } from '../../../core';
+
 import { WalletDto, WalletResponse } from '../../domain-models/wallet';
-import { ObjectKeysMap } from '../../../core/types';
-import { ObjectUtils } from '../../../core/utils';
 import { cryptoCurrencyDtoToCryptoCurrencyResponse } from '../lookup';
 
 type WalletKeys = 'id' | 'address' | 'balance';

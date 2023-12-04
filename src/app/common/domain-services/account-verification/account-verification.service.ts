@@ -1,12 +1,15 @@
-import { Inject, Injectable } from '@angular/core';
-import { OtpTokenRequest, VerifyAccountRequest } from '../../domain-models';
+import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { HttpMessageResponse } from '../../../core/types';
-import { HttpCrudService } from '../../../core/services';
+
+import { HttpCrudService, HttpMessageResponse } from '../../../core';
+
 import { apiRoutesConfig } from '../../config';
-import { AccountVerificationStoreService } from '../../services/account-verification-store/account-verification-store.service';
-import { UserPrincipalStoreService } from '../../services/user-principal-store/user-principal-store.service';
-import { UserPermissionsService } from '../../services/user-permissions/user-permissions.service';
+import {
+  AccountVerificationStoreService,
+  UserPermissionsService,
+  UserPrincipalStoreService,
+} from '../../services';
+import { OtpTokenRequest, VerifyAccountRequest } from '../../domain-models/authentication';
 
 @Injectable({
   providedIn: 'root',
@@ -17,16 +20,14 @@ export class AccountVerificationService {
   public readonly REQUEST_TOKEN_PATH = apiRoutesConfig.authentication.requestToken;
 
   constructor(
-    @Inject(HttpCrudService) private readonly httpService: HttpCrudService,
-    @Inject(AccountVerificationStoreService)
-    private readonly accountVerificationStore: AccountVerificationStoreService,
-    @Inject(UserPrincipalStoreService)
-    private readonly userPrincipalStore: UserPrincipalStoreService,
+    private readonly _httpService: HttpCrudService,
+    private readonly _accountVerificationStore: AccountVerificationStoreService,
+    private readonly _userPrincipalStore: UserPrincipalStoreService,
     private readonly _userPermissionsService: UserPermissionsService
   ) {}
 
   public requestOtpToken(otpTokenRequest: OtpTokenRequest): Observable<HttpMessageResponse> {
-    return this.httpService.create<OtpTokenRequest, HttpMessageResponse>(
+    return this._httpService.create<OtpTokenRequest, HttpMessageResponse>(
       this.getFullPath(this.REQUEST_TOKEN_PATH),
       otpTokenRequest
     );
@@ -35,7 +36,7 @@ export class AccountVerificationService {
   public verifyAccount(
     verifyAccountRequest: VerifyAccountRequest
   ): Observable<HttpMessageResponse> {
-    return this.httpService
+    return this._httpService
       .create<VerifyAccountRequest, HttpMessageResponse>(
         this.getFullPath(this.VERIFY_ACCOUNT_PATH),
         verifyAccountRequest

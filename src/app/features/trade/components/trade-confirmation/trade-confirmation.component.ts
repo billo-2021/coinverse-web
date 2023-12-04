@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CurrencyTransactionResponse } from '../../../../common/domain-models/trade/currency-transaction-response';
+
+import { CurrencyTransactionResponse } from '../../../../common/domain-models/trade';
 
 @Component({
   selector: 'app-trade-confirmation',

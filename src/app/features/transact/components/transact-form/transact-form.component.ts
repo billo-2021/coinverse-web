@@ -2,24 +2,23 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
-import { filter, map, Observable, shareReplay, tap } from 'rxjs';
-import { ListOption, Option } from '../../../../form-components/types';
-import { OptionUtils } from '../../../../form-components/utils';
-import { WalletService } from '../../../../common/domain-services';
-import { WalletResponse } from '../../../../common/domain-models/wallet';
-import { tuiIsPresent } from '@taiga-ui/cdk';
-import { PaymentModel } from '../../models';
-import { CurrencyResponse, PaymentMethodResponse } from '../../../../common/domain-models';
 
-type ActionType = 'deposit' | 'withdraw';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { filter, map, Observable, shareReplay, tap } from 'rxjs';
+import { tuiIsPresent } from '@taiga-ui/cdk';
+
+import { LookupService, WalletService } from '../../../../common';
+import { WalletResponse } from '../../../../common/domain-models/wallet';
+import { CurrencyResponse, PaymentMethodResponse } from '../../../../common/domain-models/lookup';
+
+import { OptionUtils } from '../../../../form-components/utils';
+import { ListOption, Option } from '../../../../form-components/types';
+import { PaymentModel } from '../../models';
 
 type Tab = {
   text: string;
@@ -65,13 +64,13 @@ export class TransactFormComponent implements OnInit {
   protected selectedWallet$: Observable<WalletResponse> | null = null;
 
   public constructor(
-    @Inject(FormBuilder) private formBuilder: FormBuilder,
-    @Inject(LookupService) private readonly lookupService: LookupService,
-    @Inject(WalletService) private readonly walletService: WalletService
+    private readonly _formBuilder: FormBuilder,
+    private readonly _lookupService: LookupService,
+    private readonly _walletService: WalletService
   ) {
-    this.form = this.getTransactForm(formBuilder);
+    this.form = this.getTransactForm(_formBuilder);
 
-    this.paymentMethodOptions$ = lookupService.getAllPaymentMethods().pipe(
+    this.paymentMethodOptions$ = _lookupService.getAllPaymentMethods().pipe(
       map((response) =>
         OptionUtils.toOptions(response, { code: 'code', name: 'name', avatar: 'code' })
       ),
@@ -80,7 +79,7 @@ export class TransactFormComponent implements OnInit {
       })
     );
 
-    this.currencyOptions$ = lookupService.getAllCurrenciesByType('fiat').pipe(
+    this.currencyOptions$ = _lookupService.getAllCurrenciesByType('fiat').pipe(
       map((currencyResponse) => {
         return currencyResponse.map((currencyResponse) => ({
           code: currencyResponse.code,
@@ -95,7 +94,7 @@ export class TransactFormComponent implements OnInit {
       shareReplay(1)
     );
 
-    this.walletOptions$ = walletService.getBalances({ page: 0, size: 100 }).pipe(
+    this.walletOptions$ = _walletService.getBalances({ page: 0, size: 100 }).pipe(
       map((response) => {
         const wallets = response.data;
         return wallets.map((wallet) => {

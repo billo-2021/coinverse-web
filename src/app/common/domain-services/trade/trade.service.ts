@@ -1,16 +1,14 @@
-import { Inject, Injectable } from '@angular/core';
-import { PageResponse } from '../../../core/types/crud';
-import { CurrencyTransactionResponse } from '../../domain-models/trade/currency-transaction-response';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { apiRoutesConfig } from '../../config';
-import { HttpCrudService } from '../../../core/services';
-import { CurrencyTransactionDto } from '../../domain-models/trade/currency-transaction-dto';
-import { TradeRequest } from '../../domain-models/trade/trade-request';
 
-interface PageRequest {
-  page: number;
-  size: number;
-}
+import { HttpCrudService, PageRequest, PageResponse } from '../../../core';
+
+import { apiRoutesConfig } from '../../config';
+import {
+  CurrencyTransactionDto,
+  CurrencyTransactionResponse,
+  TradeRequest,
+} from '../../domain-models/trade';
 
 @Injectable({
   providedIn: 'root',
@@ -18,17 +16,17 @@ interface PageRequest {
 export class TradeService {
   public readonly BASE_PATH = apiRoutesConfig.trades.root;
 
-  constructor(@Inject(HttpCrudService) private httpService: HttpCrudService) {}
+  constructor(private readonly _httpService: HttpCrudService) {}
 
   public getTrades(
     pageRequest: PageRequest
   ): Observable<PageResponse<CurrencyTransactionResponse>> {
     const url = `${this.BASE_PATH}?pageNumber=${pageRequest.page}&pageSize=${pageRequest.size}`;
-    return this.httpService.find<PageResponse<CurrencyTransactionDto>>(url);
+    return this._httpService.find<PageResponse<CurrencyTransactionDto>>(url);
   }
 
   public requestTrade(tradeRequest: TradeRequest): Observable<CurrencyTransactionResponse> {
-    return this.httpService.create<TradeRequest, CurrencyTransactionDto>(
+    return this._httpService.create<TradeRequest, CurrencyTransactionDto>(
       this.BASE_PATH,
       tradeRequest
     );

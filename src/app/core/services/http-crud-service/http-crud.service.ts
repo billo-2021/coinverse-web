@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { HttpOptions, HttpOptionsBuilder } from '../../types/http-options';
+import { HttpOptions, HttpOptionsBuilder } from '../../types/http-options.type';
 import { apiBaseUrlToken, httpHeadersConfigToken } from '../../config';
 import { ObjectUtils } from '../../utils';
 import { LocalStorageService } from '../local-storage/local-storage.service';

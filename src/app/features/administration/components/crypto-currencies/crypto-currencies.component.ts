@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   BehaviorSubject,
   combineLatest,
@@ -9,13 +10,12 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { Router } from '@angular/router';
 import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
-import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
-import { CryptoCurrencyResponse } from '../../../../common/domain-models';
-import { LoadingService } from '../../../../core/services/loading/loading.service';
-import { BaseComponent } from '../../../../common/components';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+
+import { LoadingService } from '../../../../core';
+
+import { BaseComponent, LookupService, webRoutesConfig } from '../../../../common';
+import { CryptoCurrencyResponse } from '../../../../common/domain-models/lookup';
 
 interface Pagination {
   page: number;
@@ -50,7 +50,7 @@ export class CryptoCurrenciesComponent extends BaseComponent {
   });
 
   protected readonly request$ = combineLatest([this.pagination$]).pipe(
-    switchMap((query) => this.lookupService.getCryptoCurrencies(...query).pipe(startWith(null))),
+    switchMap((query) => this._lookupService.getCryptoCurrencies(...query).pipe(startWith(null))),
     shareReplay(1)
   );
 
@@ -66,12 +66,12 @@ export class CryptoCurrenciesComponent extends BaseComponent {
     startWith(1)
   );
 
-  protected readonly loading$ = this.loadingService.loading$;
+  protected readonly loading$ = this._loadingService.loading$;
 
   public constructor(
-    @Inject(Router) private readonly router: Router,
-    @Inject(LoadingService) private readonly loadingService: LoadingService,
-    @Inject(LookupService) private readonly lookupService: LookupService
+    private readonly _router: Router,
+    private readonly _loadingService: LoadingService,
+    private readonly _lookupService: LookupService
   ) {
     super();
   }

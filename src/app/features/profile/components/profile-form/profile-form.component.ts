@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertService } from '../../../../core/services';
-import { ProfileService } from '../../../../common/domain-services';
 import { Observable, tap } from 'rxjs';
+
+import { AlertService } from '../../../../core';
+import { ProfileService } from '../../../../common';
 import {
   UserProfilePersonalInformationUpdate,
   UserProfileResponse,
@@ -22,12 +23,12 @@ export class ProfileFormComponent {
   protected readonly userProfileResponse$: Observable<UserProfileResponse>;
 
   public constructor(
-    private formBuilder: FormBuilder,
-    private readonly alertService: AlertService,
-    private readonly profileService: ProfileService
+    private readonly _formBuilder: FormBuilder,
+    private readonly _alertService: AlertService,
+    private readonly _profileService: ProfileService
   ) {
-    this.form = this.getProfileForm(formBuilder);
-    this.userProfileResponse$ = profileService.getProfile();
+    this.form = this.getProfileForm(_formBuilder);
+    this.userProfileResponse$ = _profileService.getProfile();
 
     this.userProfileResponse$
       .pipe(
@@ -51,11 +52,11 @@ export class ProfileFormComponent {
       phoneNumber: personaInformationFormValue.phoneNumber,
     };
 
-    this.profileService
+    this._profileService
       .updatePersonalInformation(personalInformationUpdateRequest)
       .pipe(
         tap(() => {
-          this.alertService.showMessage('Personal Information Updated');
+          this._alertService.showMessage('Personal Information Updated');
           this.saveClicked.emit();
         })
       )

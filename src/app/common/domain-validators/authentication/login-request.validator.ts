@@ -1,4 +1,4 @@
-import { LoginRequest } from '../../domain-models';
+import { LoginRequest } from '../../domain-models/authentication';
 
 export function isLoginRequest(value: unknown): value is LoginRequest {
   return (

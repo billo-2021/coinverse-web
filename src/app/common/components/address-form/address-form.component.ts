@@ -7,12 +7,15 @@ import {
   SkipSelf,
   ViewEncapsulation,
 } from '@angular/core';
+
 import { FormGroup } from '@angular/forms';
-import { LookupService } from '../../domain-services/lookup/lookup.service';
 import { map, Observable } from 'rxjs';
+
+import { LookupService } from '../../domain-services';
+
 import { Option } from '../../../form-components/types';
-import { CountryResponse } from '../../domain-models';
-import { AddressFormService } from '../../services/address-form/address-form.service';
+import { AddressFormService } from '../../services';
+import { CountryResponse } from '../../domain-models/lookup';
 
 @Component({
   selector: 'app-address-form',

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, SkipSelf } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { AccountFormService } from '../../services/account-form/account-form.service';
+
+import { AccountFormService } from '../../services';
 
 @Component({
   selector: 'app-account-form',

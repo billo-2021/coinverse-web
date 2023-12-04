@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
-import { Option } from '../../../../form-components/types';
-import { LookupService } from '../../../../common/domain-services/lookup/lookup.service';
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { CurrencyResponse } from '../../../../common/domain-models';
+import { map, Observable, tap } from 'rxjs';
+
+import { LookupService } from '../../../../common';
+import { CurrencyResponse } from '../../../../common/domain-models/lookup';
+
+import { Option } from '../../../../form-components/types';
 
 @Component({
   selector: 'app-preference-details-form',

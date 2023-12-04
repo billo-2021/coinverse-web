@@ -6,14 +6,20 @@ import {
   OnChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import { NavigationService } from '../../../core/services';
-import { tuiWidthCollapse } from '@taiga-ui/core';
+
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
-import { UserPrincipal } from '../../../common/domain-models';
+import { tuiWidthCollapse } from '@taiga-ui/core';
+
+import {
+  getUpdatedChanges,
+  MenuService,
+  NavigationService,
+  SimpleChangesTyped,
+  UserPrincipal,
+} from '../../../common';
+
 import { MenuComponentInput } from './types';
 import { MenuViewModel } from './menu.view-model';
-import { getUpdatedChanges, SimpleChangesTyped } from '../../../common/utils';
-import { MenuService } from '../../../common/services';
 
 const DEFAULT_ANIMATION_DURATION = 250;
 

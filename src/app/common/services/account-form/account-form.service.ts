@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AccountForm } from '../../models';
 import { BehaviorSubject } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { AccountForm } from '../../models';
 
 @Injectable({
   providedIn: 'root',

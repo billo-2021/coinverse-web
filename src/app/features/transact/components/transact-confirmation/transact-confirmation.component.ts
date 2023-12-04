@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PaymentResponse } from '../../../../common/domain-models/transact/payment-response';
+
+import { PaymentResponse } from '../../../../common/domain-models/transact';
 
 @Component({
   selector: 'app-transact-confirmation',

@@ -1,5 +1,5 @@
 import { WebRoutesConfigType } from './web-routes-config.type';
-import { QueryParams } from './query-params.type';
+import { QueryParams } from '../../core';
 
 export type NavigationParam =
   | WebRoutesConfigType

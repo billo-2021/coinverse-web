@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { QuoteService } from '../../../../common/domain-services';
 import { tap } from 'rxjs';
+
+import { QuoteService } from '../../../../common';
 import {
   CurrencyExchangeRateResponse,
   CurrencyExchangeResponseData,
@@ -21,10 +22,10 @@ export class TradeQuoteComponent implements OnInit {
   protected exchangeRate: CurrencyExchangeRateResponse | null = null;
   protected exchangeRateData: CurrencyExchangeResponseData | null = null;
 
-  constructor(private readonly quoteService: QuoteService) {}
+  constructor(private readonly _quoteService: QuoteService) {}
 
   ngOnInit(): void {
-    this.quoteService
+    this._quoteService
       .getCurrencyExchangeRateByCurrencyPairName(this.currencyPairName)
       .pipe(
         tap((response) => {

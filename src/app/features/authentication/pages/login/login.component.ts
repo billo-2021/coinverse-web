@@ -11,12 +11,13 @@ import {
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { finalize, Subject, timer } from 'rxjs';
 
-import { ApiError } from '../../../../core/models';
-import { AuthenticationService, LoginRequest } from '../../../../common';
+import { AlertService, ApiError } from '../../../../core';
+import { AuthenticationService } from '../../../../common';
+import { LoginRequest } from '../../../../common/domain-models/authentication';
+
 import { TextFieldComponent } from '../../../../form-components/components/text-field/text-field.component';
 import { PasswordFieldComponent } from '../../../../form-components/components/password-field/password-field.component';
 
-import { AlertService } from '../../../../core/services';
 import { LoginForm } from '../../models';
 import { LoginFormService } from '../../services';
 

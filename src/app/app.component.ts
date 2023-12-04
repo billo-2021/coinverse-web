@@ -1,13 +1,11 @@
 import { Component, Inject, Self } from '@angular/core';
 import { Observable, takeUntil, tap, throttleTime } from 'rxjs';
-import { appTitleToken } from './common/config';
-import { MenuService, UserPermissionsService } from './common/services';
+
+import { AlertService, DestroyService, LoggingService } from './core';
+import { appTitleToken, isKnownErrorLog, MenuService, UserPermissionsService } from './common';
+
+import { GlobalRoutingService } from './global-routing';
 import { AppViewModel } from './app.view-model';
-import { GlobalRoutingService } from './global-routing/services/global-routing/global-routing.service';
-import { LoggingService } from './core/services/logging/logging.service';
-import { AlertService } from './core/services';
-import { DestroyService } from './core/services/destroy/destroy.service';
-import { isKnownErrorLog } from './common/utils';
 
 @Component({
   selector: 'app-root',

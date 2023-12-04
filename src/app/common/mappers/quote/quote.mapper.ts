@@ -1,11 +1,11 @@
+import { ObjectKeysMap, ObjectUtils } from '../../../core';
+
 import {
   CurrencyExchangeRateDto,
   CurrencyExchangeRateDtoData,
   CurrencyExchangeRateResponse,
   CurrencyExchangeResponseData,
 } from '../../domain-models/quote';
-import { ObjectKeysMap } from '../../../core/types';
-import { ObjectUtils } from '../../../core/utils';
 
 type CurrencyExchangeRateKeys = 'currencyPairName' | 'currencyPairType';
 

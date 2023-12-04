@@ -1,5 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { webRoutesConfig } from '../../../../common/config/web-routes-config';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
 import {
   BehaviorSubject,
   combineLatest,
@@ -9,11 +10,11 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { Router } from '@angular/router';
+
 import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
-import { BaseComponent } from '../../../../common/components';
-import { LoadingService } from '../../../../core/services/loading/loading.service';
-import { WalletService } from '../../../../common/domain-services';
+
+import { LoadingService } from '../../../../core';
+import { BaseComponent, WalletService, webRoutesConfig } from '../../../../common';
 import { WalletResponse } from '../../../../common/domain-models/wallet';
 
 interface Pagination {
@@ -50,9 +51,9 @@ export class ManageWalletsComponent extends BaseComponent {
     size: 5,
   });
 
-  protected loading$ = this.loadingService.loading$;
+  protected loading$ = this._loadingService.loading$;
   protected readonly request$ = combineLatest([this.pagination$]).pipe(
-    switchMap((query) => this.walletService.getBalances(...query).pipe(startWith(null)))
+    switchMap((query) => this._walletService.getBalances(...query).pipe(startWith(null)))
   );
 
   protected wallets$: Observable<readonly WalletResponse[]> = this.request$.pipe(
@@ -67,16 +68,16 @@ export class ManageWalletsComponent extends BaseComponent {
   );
 
   public constructor(
-    @Inject(Router) private readonly router: Router,
-    @Inject(LoadingService) private readonly loadingService: LoadingService,
-    @Inject(WalletService) private readonly walletService: WalletService
+    private readonly _router: Router,
+    private readonly _loadingService: LoadingService,
+    private readonly _walletService: WalletService
   ) {
     super();
   }
 
   public async onWithdraw(currencyCode: string): Promise<void> {
     const url = `${this.transactUrl}/${currencyCode}`;
-    await this.router.navigate([url], {
+    await this._router.navigate([url], {
       queryParams: {
         action: 'WITHDRAW',
         currencyCode: currencyCode,
@@ -86,7 +87,7 @@ export class ManageWalletsComponent extends BaseComponent {
 
   public async onDeposit(currencyCode: string): Promise<void> {
     const url = `${this.transactUrl}/${currencyCode}`;
-    await this.router.navigate([url], {
+    await this._router.navigate([url], {
       queryParams: {
         action: 'DEPOSIT',
         currencyCode: currencyCode,

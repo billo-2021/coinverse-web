@@ -1,4 +1,4 @@
-import { RegisterAddressRequest } from '../../domain-models';
+import { RegisterAddressRequest } from '../../domain-models/authentication';
 
 export function isRegisterAddressRequest(request: unknown): request is RegisterAddressRequest {
   return (

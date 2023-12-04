@@ -1,6 +1,7 @@
 import { FormControl, FormGroup } from '@angular/forms';
+
 import { ListOption } from '../../../form-components/types';
-import { CurrencyResponse } from '../../domain-models';
+import { CurrencyResponse } from '../../domain-models/lookup';
 
 interface NotificationMethodsForm {
   sms: FormControl<boolean>;

@@ -1,4 +1,4 @@
-import { RegisterPreferenceRequest } from '../../domain-models';
+import { RegisterPreferenceRequest } from '../../domain-models/authentication';
 
 export function isRegisterPreferenceRequest(request: unknown): request is Omit<
   RegisterPreferenceRequest,

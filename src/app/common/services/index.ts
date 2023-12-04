@@ -1,3 +1,4 @@
+import { NavigationService } from './navigation/navigation.service';
 import { MenuService } from './menu/menu.service';
 import { UserPermissionsService } from './user-permissions/user-permissions.service';
 import { AccountVerificationStoreService } from './account-verification-store/account-verification-store.service';
@@ -10,6 +11,7 @@ import { PreferenceFormService } from './preference-form/preference-form.service
 import { AccountFormService } from './account-form/account-form.service';
 
 export {
+  NavigationService,
   MenuService,
   UserPermissionsService,
   AccountVerificationStoreService,
