@@ -11,14 +11,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { combineLatest, map, Observable, shareReplay, tap } from 'rxjs';
 
 import { AlertService } from '../../../../core';
+import { ListOption } from '../../../../form-components';
 import { BaseComponent, LookupService, ProfileService } from '../../../../common';
 import {
   UserProfileAddressUpdate,
   UserProfileResponse,
 } from '../../../../common/domain-models/profile';
 import { CountryResponse } from '../../../../common/domain-models/lookup';
-
-import { ListOption, Option } from '../../../../form-components/types';
 
 @Component({
   selector: 'app-address-details-form',
@@ -32,7 +31,7 @@ export class AddressDetailsFormComponent extends BaseComponent {
   @Input() public saveText = 'Save Changes';
   @Output() public saveClicked = new EventEmitter<void>();
 
-  protected countryOptions$: Observable<Option<CountryResponse>[]>;
+  protected countryOptions$: Observable<ListOption<CountryResponse>[]>;
   protected readonly userProfileResponse$: Observable<UserProfileResponse>;
 
   public constructor(

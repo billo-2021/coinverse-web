@@ -1,39 +1,43 @@
-.table {
-  width: 100%;
-  margin-top: 1rem;
-}
+//.table {
+//  width: 100%;
+//  margin-top: 1rem;
+//}
+//
+//td,
+//th {
+//  white-space: nowrap;
+//  border-color: transparent;
+//  border-right-color: var(--tui-base-04);
+//
+//  &:last-child {
+//    border-right-color: transparent;
+//  }
+//}
+//
+//tbody {
+//  border-color: transparent;
+//}
+//
+//tr:nth-child(even) td {
+//  background: var(--tui-base-02);
+//}
+//
+//.filters {
+//  display: flex;
+//}
+//
+//.input {
+//  flex: 1;
+//}
+//
+//.columns {
+//  width: 10.625rem;
+//}
+//
+//.match {
+//  background: var(--tui-selection);
+//}
 
-td,
-th {
-  white-space: nowrap;
-  border-color: transparent;
-  border-right-color: var(--tui-base-04);
+@use '../../../styles/mixin/mixin' as mixin;
 
-  &:last-child {
-    border-right-color: transparent;
-  }
-}
-
-tbody {
-  border-color: transparent;
-}
-
-tr:nth-child(even) td {
-  background: var(--tui-base-02);
-}
-
-.filters {
-  display: flex;
-}
-
-.input {
-  flex: 1;
-}
-
-.columns {
-  width: 10.625rem;
-}
-
-.match {
-  background: var(--tui-selection);
-}
+@include mixin.add-table-styles();

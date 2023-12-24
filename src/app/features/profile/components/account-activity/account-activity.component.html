@@ -14,7 +14,7 @@
           </ng-container>
         </tr>
       </thead>
-      <tbody [data]="userAccountEvents" class="tbody" tuiTbody>
+      <tbody [data]="userAccountEvents" tuiTbody>
         <tr *ngFor="let userAccountEvent of userAccountEvents" tuiTr>
           <td *tuiCell="'device'" [class.match]="isMatch(userAccountEvent.deviceDetails)" tuiTd>
             {{ userAccountEvent.deviceDetails }}
@@ -35,11 +35,10 @@
             {{ userAccountEvent.createdAt | date: 'dd/MM/yy HH:mm' }}
           </td>
           <td *tuiCell="'actions'" tuiTd>
-            <app-button
+            <app-icon-button
               (clicked)="onReportActivity()"
-              appearance="outline"
-              size="s"
-              text="Report"></app-button>
+              icon="tuiIconFlag"
+              title="Report"></app-icon-button>
           </td>
         </tr>
       </tbody>
@@ -49,17 +48,15 @@
 </tui-loader>
 
 <ng-template #tableFoot>
-  <tfoot class="tfoot">
+  <tfoot *ngIf="pagination$ | async as pagination" class="tfoot">
     <tr class="tr">
       <td [colSpan]="columns.length" class="td">
-        <ng-container *ngIf="pagination$ | async as pagination">
-          <tui-table-pagination
-            (paginationChange)="onPagination($event)"
-            [page]="pagination.page"
-            [size]="pagination.size"
-            [total]="(total$ | async) || 0"
-            class="tui_space-top-2"></tui-table-pagination>
-        </ng-container>
+        <tui-table-pagination
+          (paginationChange)="onPagination($event)"
+          [page]="pagination.page"
+          [size]="pagination.size"
+          [total]="(total$ | async) || 0"
+          class="tui_space-top-2"></tui-table-pagination>
       </td>
     </tr>
   </tfoot>

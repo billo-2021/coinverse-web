@@ -1,7 +1,12 @@
 import { ListOption, ListOptionType } from '../types';
 
 function toListOption<T extends ListOptionType>(data: T): ListOption<T> {
-  return new ListOption(data.code, data.name, data);
+  return {
+    code: data.code,
+    name: data.name,
+    avatar: data.code,
+    value: data,
+  };
 }
 
 const ListOptionUtils = {

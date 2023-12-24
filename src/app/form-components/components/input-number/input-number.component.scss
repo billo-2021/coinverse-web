@@ -1,0 +1,11 @@
+.input-number {
+  [data-size="m"] {
+    --tui-height-m: 4rem;
+    --tui-radius-m: 0.5rem;
+  }
+
+  [data-size="m"] .t-placeholder_raised {
+    line-height: 1.25rem;
+    transform: translateY(-.85rem) !important;
+  }
+}

@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { combineLatest, map, Observable, shareReplay, tap } from 'rxjs';
 
 import { AlertService } from '../../../../core';
+import { ListOption } from '../../../../form-components';
 import { LookupService, ProfileService } from '../../../../common';
 import { CurrencyResponse } from '../../../../common/domain-models/lookup';
 
@@ -10,8 +11,6 @@ import {
   UserProfilePreferenceUpdate,
   UserProfileResponse,
 } from '../../../../common/domain-models/profile';
-
-import { Option } from '../../../../form-components/types';
 
 @Component({
   selector: 'app-preference-details-form',
@@ -24,7 +23,7 @@ export class PreferenceDetailsFormComponent {
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
   protected readonly FormGroup = FormGroup;
-  protected readonly currencyOptions$: Observable<Option<CurrencyResponse>[]>;
+  protected readonly currencyOptions$: Observable<ListOption<CurrencyResponse>[]>;
   protected readonly userProfileResponse$: Observable<UserProfileResponse>;
 
   public constructor(
@@ -87,7 +86,7 @@ export class PreferenceDetailsFormComponent {
   }
 
   public onSaveChanges(): void {
-    const currencyOption = this.form.controls['currency'].value as Option<CurrencyResponse>;
+    const currencyOption = this.form.controls['currency'].value as ListOption<CurrencyResponse>;
     const currency = currencyOption.value;
 
     const notificationMethodsValue = this.form.controls['notificationMethods'].value;

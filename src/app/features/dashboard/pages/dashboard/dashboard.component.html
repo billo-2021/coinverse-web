@@ -1,19 +1,37 @@
-<div class="row">
+<div *ngIf="viewModel$ | async as viewModel" class="row">
   <app-card
-    class="col-sm-12 col-md-12 col-lg-5 mr-6"
+    [actionsContent]="transactActions"
+    class="col-sm-12 col-md-12 col-lg-5"
     subtitle="Balance in ZAR"
     title="Estimated Balance">
     <app-ring-chart
-      [extraLabels]="(currencyCodes$ | async) ?? []"
-      [labels]="(labels$ | async) ?? []"
-      [total]="(total$ | async) ?? 0"
-      [value]="(values$ | async) ?? []"></app-ring-chart>
+      [extraLabels]="viewModel.walletCurrencySymbols"
+      [labels]="viewModel.walletCurrencyNames"
+      [total]="viewModel.totalBalance"
+      [value]="viewModel.walletBalances"></app-ring-chart>
   </app-card>
   <app-card
-    class="col-sm-12 col-md-12 col-lg-5 mr-6 max-w-3xl"
+    [actionsContent]="tradeActions"
+    class="col-sm-12 col-md-12 col-lg-5 max-w-3xl"
     subtitle="Your balance history"
     title="Balance History">
     <app-line-chart></app-line-chart>
   </app-card>
 </div>
-<app-markets class="mt-10"></app-markets>
+<app-markets
+  (buyClicked)="onBuy($event)"
+  (paginationChanged)="onCryptoCurrencyPagination($event)"
+  (sellClicked)="onSell($event)"
+  *ngIf="viewModel$ | async as viewModel"
+  [currencies]="viewModel.cryptoCurrencies"
+  [pagination]="viewModel.cryptoCurrencyPagination"
+  [total]="viewModel.totalCryptoCurrencies"
+  class="mt-10"></app-markets>
+<ng-template #transactActions>
+  <app-button appearance="flat" icon="tuiIconCreditCard" size="s" text="Deposit"></app-button>
+  <app-button appearance="flat" icon="tuiIconCreditCard" size="s" text="Withdraw"></app-button>
+</ng-template>
+
+<ng-template #tradeActions>
+  <app-button appearance="flat" icon="tuiIconShuffle" size="s" text="Trade"></app-button>
+</ng-template>

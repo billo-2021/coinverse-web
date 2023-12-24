@@ -1,41 +1,40 @@
-<div *ngIf="paymentResponse" class="flex-col border-top pt-8">
-  <div class="flex-col flex-center">
+<div *ngIf="paymentResponse" class="col pt-8">
+  <div class="col justify-center items-center">
     <app-avatar avatarUrl="tuiIconCheckLarge" class="mb-10" size="l"></app-avatar>
     <p class="tui-text_body-s mb-10">Your payment has been created successfully</p>
   </div>
-  <div class="flex-row justify-space-between">
-    <p class="col-8 row-item-title">Id</p>
-    <p class="col-3 ml-4 row-item-description">{{ paymentResponse.id }}</p>
+  <div class="row justify-space-between items-center">
+    <p class="mr-4 col-7 row-item-title">Id</p>
+    <p class="col-4 row-item-description">{{ paymentResponse.id }}</p>
   </div>
-  <div class="flex-row justify-space-between">
-    <p class="col-8 row-item-title">Amount</p>
-    <p class="col-3 ml-4 row-item-description">
-      <app-money
-        [currency]="paymentResponse.currency"
-        [precision]="6"
-        [value]="paymentResponse.amount"></app-money>
-    </p>
+  <div class="row justify-space-between items-center">
+    <p class="mr-4 col-7 row-item-title">Amount</p>
+    <app-money
+      [currency]="paymentResponse.currency"
+      [precision]="6"
+      [value]="paymentResponse.amount"
+      class="col-4"></app-money>
   </div>
-  <div class="flex-row justify-space-between">
-    <p class="col-8 row-item-title">Method</p>
-    <p class="col-3 ml-4 row-item-description">{{ paymentResponse.method }}</p>
+  <div class="row justify-space-between items-center">
+    <p class="mr-4 col-7 row-item-title">Method</p>
+    <p class="col-4 row-item-description">{{ paymentResponse.method }}</p>
   </div>
-  <div class="flex-row justify-space-between">
-    <p class="col-8 row-item-title">Status</p>
-    <p class="col-3 ml-4 row-item-description">{{ paymentResponse.status }}</p>
+  <div class="row justify-space-between items-center">
+    <p class="mr-4 col-7 row-item-title">Status</p>
+    <p class="col-4 row-item-description">{{ paymentResponse.status }}</p>
   </div>
-  <div class="flex-row justify-space-between">
-    <p class="col-8 row-item-title">Created At</p>
-    <p class="col-3 ml-4 row-item-description">
+  <div class="row justify-space-between items-center">
+    <p class="mr-4 col-7 row-item-title">Created At</p>
+    <p class="col-4 row-item-description">
       {{ paymentResponse.createdAt | date: 'dd/MM/yy HH:mm' }}
     </p>
   </div>
-  <div class="flex-row justify-space-between">
+  <div class="row justify-space-between">
     <app-button
       (clicked)="onViewPayments()"
       appearance="accent"
-      class="grow"
+      class="mr-4 grow"
       text="View Payments"></app-button>
-    <app-button (clicked)="onPayAgain()" class="grow ml-4" text="Pay Again"></app-button>
+    <app-button (clicked)="onPayAgain()" class="grow" text="Pay Again"></app-button>
   </div>
 </div>

@@ -20,6 +20,7 @@ export class NotificationComponent {
   @Input() public status: StatusType = 'info';
   @Input() public hasIcon = false;
   @Output() public closeClicked = new EventEmitter<void>();
+
   @HostBinding('class') private _classes = 'block max-w-md m-auto mb-6';
 
   public onClose() {

@@ -1,3 +1,4 @@
 import { Tab } from './tab';
+import { Pagination } from './pagination.type';
 
-export { Tab };
+export { Tab, Pagination };

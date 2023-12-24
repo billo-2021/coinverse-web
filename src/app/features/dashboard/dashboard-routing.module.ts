@@ -1,19 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { pagesConfig } from './config';
 
-const routes: Routes = [
+import { pagesConfig } from './config';
+import { DashboardPage } from './pages';
+
+const ROUTES: Routes = [
   {
     path: pagesConfig.dashboard.path,
-    component: DashboardComponent,
+    component: DashboardPage,
     title: pagesConfig.dashboard.title,
   },
   { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
 export class DashboardRoutingModule {}

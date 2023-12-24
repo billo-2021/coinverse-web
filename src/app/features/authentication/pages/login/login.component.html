@@ -25,8 +25,8 @@
     (keydown.enter)="!loginForm.disabled && loginForm.valid && onLogin()"
     label="Password"
     name="password"></app-password-field>
-  <div class="item flex-row justify-space-between">
-    <app-check-box class="mr-2" label="Remember me" name="rememberMe"></app-check-box>
+  <div class="mb-4 row justify-space-between">
+    <app-check-box label="Remember me" name="rememberMe"></app-check-box>
     <app-link text="Forgot password?" to="../reset-password"></app-link>
   </div>
 </app-form>

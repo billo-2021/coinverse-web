@@ -1,6 +1,6 @@
 import { FormControl, FormGroup } from '@angular/forms';
 
-import { ListOption } from '../../../form-components/types';
+import { ListOption } from '../../../form-components';
 import { CurrencyResponse } from '../../domain-models/lookup';
 
 interface NotificationMethodsForm {

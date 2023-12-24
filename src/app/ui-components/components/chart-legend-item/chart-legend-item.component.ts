@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
   Input,
   Output,
   ViewEncapsulation,
@@ -20,6 +21,8 @@ export class ChartLegendItemComponent {
   @Input() public text = '';
 
   @Output() public hoveredChange = new EventEmitter<boolean>();
+
+  @HostBinding('class') private _classes = 'block';
 
   public onHover(hovered: boolean): void {
     this.hoveredChange.emit(hovered);

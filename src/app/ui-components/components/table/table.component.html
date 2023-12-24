@@ -1,38 +1,48 @@
-<p class="filters" tuiTextfieldSize="m">
-  <tui-input [(ngModel)]="search" [tuiTextfieldCleaner]="true" class="input" tuiTextfieldSize="m">
-    Find on page
-  </tui-input>
-</p>
-<tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">
-  <table *ngIf="data$ | async as data" [columns]="columns" class="table" tuiTable>
+<tui-loader [overlay]="true" [showLoader]="(loading$ | async) ?? false">
+  <table [columns]="isStringArray(columns) && columns || []" class="table" tuiTable>
     <thead>
       <tr tuiThGroup>
-        <th tuiTh>Name</th>
-        <th tuiTh>Price</th>
-        <th tuiTh>24hr %</th>
-        <th tuiTh>Circulating Supply</th>
+        <ng-container *ngFor="let column of columns">
+          <ng-container *ngIf="isString(column)">
+            <th *tuiHead="column" [sorter]="null" class="th" tuiTh>
+              <div *ngIf="keys; else elseBlock" class="col flex-center">{{ keys[column] }}</div>
+              <ng-template #elseBlock>{{ column }}</ng-template>
+            </th>
+          </ng-container>
+        </ng-container>
       </tr>
     </thead>
     <tbody [data]="data" tuiTbody>
-      <tr *ngFor="let item of data" tuiTr>
-        <td *tuiCell="'name'" [class.match]="isMatch(item.name)" tuiTd>{{ item.name }}</td>
-        <td *tuiCell="'price'" [class.match]="isMatch(item.price)" tuiTd>{{ item.price }}</td>
-        <td *tuiCell="'change'" [class.match]="isMatch(item.change)" tuiTd>{{ item.change }}</td>
-        <td *tuiCell="'circulatingSupply'" [class.match]="isMatch(item.change)" tuiTd>
-          {{ item.circulatingSupply }}
-        </td>
+      <tr *ngFor="let item of data" class="tr" tuiTr>
+        <ng-container *ngFor="let column of columns">
+          <td *tuiCell="isString(column) && column || ''" tuiTd>
+            <ng-container
+              *ngIf="rowDataTemplates && rowDataTemplates[column] as templateRef; else elseBlock">
+              <ng-container
+                *ngTemplateOutlet="templateRef; context: { $implicit: item }"></ng-container>
+            </ng-container>
+            <ng-template #elseBlock>
+              <ng-container *ngIf="hasColumn(item, column)">{{ item[column] }}</ng-container>
+            </ng-template>
+          </td>
+        </ng-container>
       </tr>
     </tbody>
-    <tfoot>
-      <tr>
-        <td [colSpan]="columns.length">
-          <tui-table-pagination
-            (pageChange)="onPage($event)"
-            (sizeChange)="onSize($event)"
-            [total]="(total$ | async) || 0"
-            class="tui_space-top-2"></tui-table-pagination>
-        </td>
-      </tr>
-    </tfoot>
+    <ng-container *ngTemplateOutlet="tableFoot"></ng-container>
   </table>
 </tui-loader>
+
+<ng-template #tableFoot>
+  <tfoot class="tfoot">
+    <tr class="tr">
+      <td [colSpan]="columns.length" class="td">
+        <tui-table-pagination
+          (paginationChange)="onPagination($event)"
+          [page]="pagination.page"
+          [size]="pagination.size"
+          [total]="total"
+          class="tui_space-top-2"></tui-table-pagination>
+      </td>
+    </tr>
+  </tfoot>
+</ng-template>

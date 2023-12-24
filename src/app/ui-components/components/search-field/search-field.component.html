@@ -1,0 +1,9 @@
+<tui-input
+  (ngModelChange)="onValueChange($event)"
+  [disabled]="isDisabled"
+  [ngModel]="value"
+  [tuiTextfieldCleaner]="true"
+  [tuiTextfieldIcon]="'tuiIconSearchLarge'"
+  tuiTextfieldSize="s">
+  <input [placeholder]="placeholder" tuiTextfield />
+</tui-input>

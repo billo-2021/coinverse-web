@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
+
+import { otpLengthToken } from '../../../core';
+
 import { OtpForm } from '../models';
-import { otpLengthToken } from '../../../core/config';
 
 @Injectable({
   providedIn: 'root',

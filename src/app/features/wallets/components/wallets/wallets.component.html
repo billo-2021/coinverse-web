@@ -1,1 +1,39 @@
-<p>wallets works!</p>
+<div class="mb-10 pb-4 border-bottom row items-center justify-space-between">
+  <app-header [subtitle]="subtitle" [title]="title"></app-header>
+</div>
+
+<app-table
+  (paginationChanged)="onPagination($event)"
+  [columns]="columns"
+  [data]="wallets"
+  [keys]="keys"
+  [pagination]="pagination"
+  [rowDataTemplates]="{ code, name, balance, actions }"
+  [total]="total"
+  class="mt-6 col-sm-12 col-md-10 col-lg-10"></app-table>
+
+<ng-template #code let-wallet> {{ wallet.currency.code }} </ng-template>
+
+<ng-template #name let-wallet> {{ wallet.currency.name }} </ng-template>
+
+<ng-template #balance let-wallet>
+  <app-money
+    [currency]="wallet.currency.symbol"
+    [precision]="6"
+    [value]="wallet.balance"></app-money>
+</ng-template>
+
+<ng-template #actions let-wallet>
+  <div class="row-nowrap col-spacing-sm justify-end">
+    <app-button
+      (clicked)="onDeposit(wallet.currency.code)"
+      appearance="outline"
+      size="s"
+      text="Deposit"></app-button>
+    <app-button
+      (clicked)="onWithdraw(wallet.currency.code)"
+      appearance="outline"
+      size="s"
+      text="Withdraw"></app-button>
+  </div>
+</ng-template>

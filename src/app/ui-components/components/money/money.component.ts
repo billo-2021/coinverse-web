@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Input,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Decimal, MoneySign } from './money.type';
 
 @Component({
@@ -16,4 +22,6 @@ export class MoneyComponent {
   @Input() public sign: MoneySign = 'negative-only';
   @Input() public singleColor = false;
   @Input() public value = 0;
+
+  @HostBinding('class') private _classes = 'block';
 }

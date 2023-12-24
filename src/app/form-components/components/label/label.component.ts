@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   Input,
   Optional,
   ViewEncapsulation,
@@ -17,6 +18,8 @@ import { FormGroup, FormGroupDirective } from '@angular/forms';
 export class LabelComponent {
   @Input() public labelFor = '';
   @Input() public text = '';
+
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
 

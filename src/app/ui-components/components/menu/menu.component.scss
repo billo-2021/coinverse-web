@@ -1,11 +1,9 @@
 .side-menu {
   height: 100%;
   width: 12rem;
-  //background: var(--tui-base-02);
+  background: var(--tui-clear);
   position: fixed;
-  top: 0;
   border-right: 1px solid var(--tui-base-02);
-  z-index: 100;
 }
 
 .side-menu,
@@ -15,8 +13,18 @@
 }
 
 .menu-header {
-  background: var(--tui-base-02);
-  z-index: 100;
-  top: 0;
+  background: var(--tui-base-01);
   position: sticky;
+  z-index: 100;
 }
+
+.menu-header, .side-menu {
+  top: 0;
+  z-index: 100;
+}
+
+.menu-header, .side-menu, .main {
+  overflow-x: hidden;
+}
+
+

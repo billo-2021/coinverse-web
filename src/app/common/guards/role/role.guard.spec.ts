@@ -1,3 +1,5 @@
 import { roleGuard } from './role.guard';
 
-describe('roleGuard', () => {});
+describe('roleGuard', () => {
+  roleGuard('admin');
+});

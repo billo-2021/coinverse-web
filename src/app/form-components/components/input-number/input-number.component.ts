@@ -1,13 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   Input,
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
+
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { SizeType } from '../text-field/text-field.component';
 import { BehaviorSubject } from 'rxjs';
+
+import { SizeType } from '../text-field/text-field.component';
 
 type DecimalType = 'not-zero' | 'always' | 'never';
 
@@ -28,6 +31,7 @@ export class InputNumberComponent {
   @Input() public precision = 2;
   @Input() public decimal: DecimalType = 'not-zero';
 
+  @HostBinding('class') private _classes = 'block input-number';
   private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}

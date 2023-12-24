@@ -5,15 +5,25 @@ import {
   Input,
   OnChanges,
   Optional,
-  SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
+
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { Option } from '../../types';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { TUI_DEFAULT_MATCHER } from '@taiga-ui/cdk';
 
+import { SimpleChangesTyped } from '../../../common';
+
+import { ListOption, Option } from '../../types';
+
 export type SizeType = 's' | 'm' | 'l';
+
+export type ComboboxInput<T> = {
+  size: SizeType;
+  name: string;
+  label: string;
+  options: readonly ListOption<T>[];
+};
 
 const DEFAULT_HEIGHT = 44;
 
@@ -25,18 +35,21 @@ const DEFAULT_HEIGHT = 44;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboBoxComponent<T = unknown> implements OnChanges {
-  @Input() size: SizeType = 'm';
+  @Input() public size: SizeType = 'm';
   @Input() public name = '';
   @Input() public label = '';
-  @Input() public options: Option<T>[] = [];
+  @Input() public options: readonly ListOption<T>[] = [];
+
   private readonly _search$ = new Subject<string | null>();
-  private readonly _options$: BehaviorSubject<Option<T>[]>;
+  private readonly _options$: BehaviorSubject<readonly ListOption<T>[]>;
   private readonly _height$: BehaviorSubject<number>;
 
   private _disabled = new BehaviorSubject<boolean>(false);
 
+  @HostBinding('class') private _classes = 'block combo-box';
+
   public constructor(@Optional() private _formGroupDirective: FormGroupDirective) {
-    this._options$ = new BehaviorSubject<Option<T>[]>(this.options);
+    this._options$ = new BehaviorSubject<readonly ListOption<T>[]>(this.options);
     this._height$ = new BehaviorSubject(
       (this.options.length && this.options.length * DEFAULT_HEIGHT) || DEFAULT_HEIGHT
     );
@@ -45,18 +58,6 @@ export class ComboBoxComponent<T = unknown> implements OnChanges {
   @Input()
   public set isDisabled(value: boolean) {
     this._disabled.next(value);
-  }
-
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `combo-box ${this._classes}`;
   }
 
   protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
@@ -75,8 +76,8 @@ export class ComboBoxComponent<T = unknown> implements OnChanges {
     return this._height$.asObservable();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['options']) {
+  ngOnChanges(changes: SimpleChangesTyped<ComboboxInput<T>>): void {
+    if (!changes.options) {
       return;
     }
 

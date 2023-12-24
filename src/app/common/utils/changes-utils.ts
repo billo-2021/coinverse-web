@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-Object.typedKeys = Object.keys as any;
+Object.typedKeys = Object.keys;
 
 export type SimpleChangeTyped<T> = Omit<
   SimpleChange,
@@ -17,10 +17,10 @@ export type SimpleChangeTyped<T> = Omit<
 };
 
 export type SimpleChangesTyped<T> = Omit<SimpleChanges, keyof T> & {
-  [K in keyof T]: SimpleChangeTyped<T[K]>;
+  [K in keyof T]?: SimpleChangeTyped<T[K]>;
 };
 
-export function getUpdatedChanges<T extends Object>(changes: SimpleChangesTyped<T>): Partial<T> {
+export function getUpdatedChanges<T extends object>(changes: SimpleChangesTyped<T>): Partial<T> {
   return Object.typedKeys(changes).reduce((prev, curr) => {
     const currentChangeValue = changes[curr].currentValue;
     const previousChangeValue = changes[curr].previousValue;

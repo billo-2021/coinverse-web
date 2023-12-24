@@ -1,4 +1,4 @@
-<tui-root *ngIf="viewModel$ | async as viewModel" class="tui-root h-100" tuiMode="onLight">
+<tui-root *ngIf="viewModel$ | async as viewModel" class="tui-root h-full" tuiMode="onLight">
   <app-menu [user]="viewModel.userPrincipal">
     <router-outlet></router-outlet>
   </app-menu>

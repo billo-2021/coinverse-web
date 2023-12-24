@@ -1,13 +1,14 @@
-<div *ngIf="user" class="app-bar-wrapper color gray p-2 flex-row items-center text-center">
+<div *ngIf="user" class="app-bar-wrapper p-2 row-nowrap middle color gray">
   <tui-marker-icon
     (click)="onMenuToggle(true)"
     *ngIf="isMobile"
     [src]="'tuiIconMenu'"
-    class="mx-5"
+    class="ml-5"
     mode="primary"
     size="xs"></tui-marker-icon>
-  <p *ngIf="isMobile" class="tui-text_body-s">Coinverse</p>
-  <div class="ml-auto flex-row items-center text-center">
+  <p *ngIf="isMobile" class="tui-text_body-s">{{ appName }}</p>
+  <app-search-field class="max-w-md"></app-search-field>
+  <div class="ml-auto row-nowrap middle">
     <app-button
       (clicked)="onSignOut()"
       appearance="outline"
@@ -28,10 +29,8 @@
 </div>
 
 <ng-template #tooltip>
-  <ng-container *ngIf="user">
-    <div class="flex-col">
-      <p class="tui-text_body-s ml-5">{{ user.firstName + ' ' }}{{ user.lastName }}</p>
-      <p class="tui-text_body-s ml-5">{{ user.username }}</p>
-    </div>
-  </ng-container>
+  <div *ngIf="user" class="col">
+    <p class="tui-text_body-s ml-5">{{ user.firstName + ' ' }}{{ user.lastName }}</p>
+    <p class="tui-text_body-s ml-5">{{ user.username }}</p>
+  </div>
 </ng-template>

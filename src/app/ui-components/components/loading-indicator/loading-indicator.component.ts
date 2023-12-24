@@ -17,15 +17,5 @@ export class LoadingIndicatorComponent {
   @Input() public overlay = true;
   @Input() public showLoader = true;
 
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `loading-indicator ${this._classes}`;
-  }
+  @HostBinding('class') private _classes = 'block loading-indicator';
 }

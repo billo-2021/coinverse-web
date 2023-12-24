@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
   Input,
   Output,
   ViewEncapsulation,
@@ -28,6 +29,7 @@ export class ButtonComponent {
   @Input() public shape: ShapeType = null;
 
   @Output() public clicked = new EventEmitter<void>();
+  @HostBinding('class') private _classes = 'block';
 
   public onClick() {
     this.clicked.emit();

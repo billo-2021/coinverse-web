@@ -27,7 +27,7 @@ export class LineChartComponent {
   ];
   protected readonly stringify = TUI_DEFAULT_STRINGIFY;
 
-  @HostBinding('class') private _classes = 'full-width block';
+  @HostBinding('class') private _classes = 'block w-full';
 
   protected readonly hintContent = ({
     $implicit,

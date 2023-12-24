@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
   Input,
   Output,
   ViewEncapsulation,
@@ -17,15 +18,13 @@ import { Tab } from '../../types';
 })
 export class TabsComponent {
   @Input() public title: string | null = null;
-  @Input() public tabs: Tab[] = [
-    { text: 'Maps', icon: 'tuiIconCreditCard', isDisabled: false },
-    { text: 'Calls', icon: 'tuiIconPhone', isDisabled: false },
-    { text: 'Settings', icon: 'tuiIconSettings', isDisabled: false },
-  ];
+  @Input() public tabs: Tab[] = [];
 
   @Input() public activeItemIndex = 0;
 
   @Output() public activeItemIndexChange = new EventEmitter<number>();
+
+  @HostBinding('class') private _classes = 'block';
 
   public onActiveItemIndexChange(activeItemIndex: number): void {
     if (activeItemIndex === this.activeItemIndex) {

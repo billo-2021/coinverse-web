@@ -1,158 +1,57 @@
-import { Component, HostBinding } from '@angular/core';
-import { Router } from '@angular/router';
-import {
-  BehaviorSubject,
-  combineLatest,
-  filter,
-  forkJoin,
-  map,
-  Observable,
-  shareReplay,
-  startWith,
-  switchMap,
-} from 'rxjs';
+import { Component, EventEmitter, HostBinding, Inject, Input, Output } from '@angular/core';
 
-import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
+import { PageRequest } from '../../../../core';
+import { LookupService, QuoteService, webRoutesConfig } from '../../../../common';
+import { Pagination, paginationToken } from '../../../../ui-components';
 
-import { LoadingService } from '../../../../core';
-import { BaseComponent, LookupService, QuoteService, webRoutesConfig } from '../../../../common';
+import { CryptoCurrencyModel } from '../../models';
 
-import { CryptoCurrencyResponse } from '../../../../common/domain-models/lookup';
-import { CurrencyExchangeResponseData } from '../../../../common/domain-models/quote';
-
-type Key = 'name' | 'askRate' | 'bidRate' | 'change' | 'circulatingSupply' | 'actions';
-
-interface Pagination {
-  page: number;
-  size: number;
-}
-
-const KEYS: Record<Key, string> = {
+const KEYS = {
   name: 'Name',
   askRate: 'Sell $',
   bidRate: 'Buy $',
   change: '24hr %',
   circulatingSupply: 'Circulating Supply',
   actions: '',
-};
-
-type CryptoCurrencyModel = CryptoCurrencyResponse & {
-  askRate: number;
-  bidRate: number;
-};
+} as const;
 
 @Component({
   selector: 'app-markets',
   templateUrl: './markets.component.html',
   styleUrls: ['./markets.component.scss'],
 })
-export class MarketsComponent extends BaseComponent {
+export class MarketsComponent {
+  @Input() public pagination: Pagination = this._paginationToken;
+  @Input() public currencies: CryptoCurrencyModel[] = [];
+  @Input() public total = 1;
+
+  @Output() public paginationChanged = new EventEmitter<PageRequest>();
+  @Output() public buyClicked = new EventEmitter<string>();
+  @Output() public sellClicked = new EventEmitter<string>();
+
   protected readonly transactUrl = webRoutesConfig.transact;
   protected readonly title = 'Markets';
   protected readonly subtitle = 'Latest market prices.';
-  protected search = '';
-  protected readonly columns: Key[] = [
-    'name',
-    'askRate',
-    'bidRate',
-    'change',
-    'circulatingSupply',
-    'actions',
-  ];
+  protected readonly columns = Object.keys(KEYS) as Array<keyof typeof KEYS>;
   protected readonly keys = KEYS;
-  protected total$: Observable<number>;
-  protected readonly pagination$ = new BehaviorSubject({ page: 0, size: 5 });
-  protected request$ = combineLatest([this.pagination$]).pipe(
-    switchMap((query) => this._lookupService.getCryptoCurrencies(...query).pipe(startWith(null))),
-    shareReplay(1)
-  );
-  protected cryptoCurrencies$ = this.request$.pipe(
-    filter(tuiIsPresent),
-    switchMap((currencyPage) => this.getCryptoCurrencyModels(currencyPage.data)),
-    startWith([])
-  );
-  protected loading$ = this._loadingService.loading$;
   @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    private readonly _router: Router,
-    private readonly _loadingService: LoadingService,
+    @Inject(paginationToken) private readonly _paginationToken: Pagination,
     private readonly _lookupService: LookupService,
     private readonly _quoteService: QuoteService
-  ) {
-    super();
-    this.total$ = this.request$.pipe(
-      filter(tuiIsPresent),
-      map((currencyPage) => currencyPage.total),
-      startWith(1)
-    );
-  }
-
-  public async onWithdraw(): Promise<void> {
-    await this._router.navigate([this.transactUrl]);
-  }
+  ) {}
 
   public async onBuy(currencyCode: string): Promise<void> {
-    const url = webRoutesConfig.trade;
-    await this._router.navigate([url], {
-      queryParams: {
-        action: 'BUY',
-        currencyPairName: this.getCurrencyPairName(currencyCode),
-      },
-    });
+    this.buyClicked.emit(this.getCurrencyPairName(currencyCode));
   }
 
   public async onSell(currencyCode: string): Promise<void> {
-    const url = webRoutesConfig.trade;
-    await this._router.navigate([url], {
-      queryParams: {
-        action: 'SELL',
-        currencyPairName: this.getCurrencyPairName(currencyCode),
-      },
-    });
+    this.sellClicked.emit(this.getCurrencyPairName(currencyCode));
   }
 
-  public async onDeposit(): Promise<void> {
-    await this._router.navigate([this.transactUrl]);
-  }
-
-  public isMatch(value: unknown): boolean {
-    return !!this.search && TUI_DEFAULT_MATCHER(value, this.search);
-  }
-
-  public onPagination(pagination: Pagination): void {
-    this.pagination$.next(pagination);
-  }
-
-  public getCryptoCurrencyModels(
-    cryptoCurrencies: CryptoCurrencyResponse[]
-  ): Observable<CryptoCurrencyModel[]> {
-    return forkJoin(
-      cryptoCurrencies.map((currency) => {
-        return this.getCurrencyExchangeRate(currency).pipe(
-          map((exchangeRate) => {
-            return {
-              id: currency.id,
-              code: currency.code,
-              name: currency.name,
-              symbol: currency.symbol,
-              circulatingSupply: currency.circulatingSupply,
-              askRate: exchangeRate.askRate,
-              bidRate: exchangeRate.bidRate,
-            };
-          })
-        );
-      })
-    );
-  }
-
-  public getCurrencyExchangeRate(
-    currency: CryptoCurrencyResponse
-  ): Observable<CurrencyExchangeResponseData> {
-    const currencyPairName = this.getCurrencyPairName(currency.code);
-    return this._quoteService
-      .getCurrencyExchangeRateByCurrencyPairName(currencyPairName)
-      .pipe(map((currencyExchangeRates) => currencyExchangeRates.data[0]));
+  public onPagination(page: PageRequest): void {
+    this.paginationChanged.next(page);
   }
 
   private getCurrencyPairName(currencyCode: string): string {

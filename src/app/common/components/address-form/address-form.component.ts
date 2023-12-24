@@ -13,7 +13,7 @@ import { map, Observable } from 'rxjs';
 
 import { LookupService } from '../../domain-services';
 
-import { Option } from '../../../form-components/types';
+import { ListOption } from '../../../form-components';
 import { AddressFormService } from '../../services';
 import { CountryResponse } from '../../domain-models/lookup';
 
@@ -31,7 +31,7 @@ export class AddressFormComponent {
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
   protected readonly form: FormGroup;
-  protected countryOptions$: Observable<Option<CountryResponse>[]>;
+  protected countryOptions$: Observable<ListOption<CountryResponse>[]>;
 
   public constructor(
     @SkipSelf() private readonly _addressForm$: AddressFormService,

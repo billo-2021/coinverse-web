@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, HostBinding } from '@angular/core';
 
 import { DestroyService } from '../../../core';
 import { NavigationService, UserPrincipalStoreService } from '../../../common';
@@ -10,6 +10,8 @@ import { NavigationService, UserPrincipalStoreService } from '../../../common';
   providers: [DestroyService],
 })
 export class GlobalRoutingComponent implements AfterViewInit {
+  @HostBinding('class') private _classes = 'col align-items-center h-full';
+
   public constructor(
     private readonly _userPrincipalStore: UserPrincipalStoreService,
     private readonly _navigationService: NavigationService

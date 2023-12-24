@@ -1,139 +1,127 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
-import { BehaviorSubject, tap } from 'rxjs';
+import { Component, Self } from '@angular/core';
+import { tap } from 'rxjs';
 
-import { BaseComponent, TransactService, webRoutesConfig } from '../../../../common';
-import { PaymentRequest, PaymentResponse } from '../../../../common/domain-models/transact';
+import { NavigationService, TransactService } from '../../../../common';
+import { PaymentRequest } from '../../../../common/domain-models/transact';
 
 import { PaymentModel } from '../../models';
-
-type Mode = 'deposit' | 'withdraw';
-
-enum TransactSteps {
-  TRANSACT_REQUEST,
-  BANK_DETAILS,
-  TRANSACT_CONFIRMATION,
-}
+import { TransactViewModelService } from '../../services/transact-view-model.service';
+import { TransactBankDetailsFormService, TransactFormService } from '../../services';
+import { Tabs, TransactSteps } from './transact.view-model';
 
 @Component({
   selector: 'app-transact',
   templateUrl: './transact.component.html',
   styleUrls: ['./transact.component.scss'],
+  providers: [TransactFormService, TransactBankDetailsFormService, TransactViewModelService],
 })
-export class TransactComponent extends BaseComponent {
-  protected readonly manageTransactionsUrl = webRoutesConfig.manageTransactions;
+export class TransactComponent {
   protected readonly title = 'Transact';
   protected readonly subtitle = 'Deposit or withdraw here.';
 
+  protected readonly TABS = Tabs;
   protected readonly MAX_NUMBER_OF_STEPS = 3;
   protected readonly TRANSACT_STEPS = TransactSteps;
-  protected currentStepIndex = 0;
   protected readonly transactSteps = ['Transact Request', 'Bank Details'];
 
-  protected activeTabIndex = 0;
-  protected readonly mode$ = new BehaviorSubject<Mode>('deposit');
-  protected currencyCode: string | null = null;
-  protected paymentModel: PaymentModel = {
-    paymentMethod: '',
-    fromCurrency: '',
-    toCurrency: '',
-    amountCurrency: '',
-    amount: 0,
-  };
-  protected paymentResponse: PaymentResponse | null = null;
+  protected viewModel$: TransactViewModelService;
 
   public constructor(
-    private readonly _route: ActivatedRoute,
-    private readonly _router: Router,
-    private readonly _formBuilder: FormBuilder,
+    private readonly _navigationService: NavigationService,
+    @Self() private readonly _viewModel: TransactViewModelService,
+    @Self() private readonly _transactForm: TransactFormService,
+    @Self() private readonly _transactBankDetailsForm: TransactBankDetailsFormService,
     private readonly _transactService: TransactService
   ) {
-    super();
-    this._route.queryParams.subscribe((params) => {
-      const action = params['action'] as string | undefined;
-
-      if (!action) {
-        return;
-      }
-
-      this.activeTabIndex = 'withdraw'.includes(action.toLowerCase()) ? 1 : 0;
-
-      const currencyCode = params['currencyCode'] as string | undefined;
-
-      if (!currencyCode) {
-        return;
-      }
-
-      this.currencyCode = currencyCode;
-    });
+    this.viewModel$ = _viewModel;
   }
 
   public onStepChanged(nextStepIndex: number) {
     if (nextStepIndex < this.MAX_NUMBER_OF_STEPS) {
-      this.currentStepIndex = nextStepIndex;
-      return;
+      this._viewModel.currentStepIndex = nextStepIndex;
     }
   }
 
   public onRequestTransaction(paymentModel: PaymentModel): void {
-    this.paymentModel = paymentModel;
-    this.currentStepIndex = TransactSteps.BANK_DETAILS;
+    this.viewModel$.paymentModel = paymentModel;
+    this.viewModel$.currentStepIndex = TransactSteps.BANK_DETAILS;
   }
 
-  public onSaveBankingDetails(): void {
-    const paymentRequest: PaymentRequest = {
-      paymentMethod: this.paymentModel.paymentMethod,
-      amount: this.paymentModel.amount,
-      amountCurrencyCode: this.paymentModel.amountCurrency,
-      fromCurrencyCode: this.paymentModel.fromCurrency,
-      toCurrencyCode: this.paymentModel.toCurrency,
-    };
+  public onDeposit() {
+    const paymentRequest = this.getPaymentRequest();
 
-    if (this.activeTabIndex === 0) {
-      this._transactService
-        .deposit(paymentRequest)
-        .pipe(
-          tap((paymentResponse) => {
-            this.paymentResponse = paymentResponse;
-            this.currentStepIndex = TransactSteps.TRANSACT_CONFIRMATION;
-          })
-        )
-        .subscribe();
+    if (!paymentRequest) {
       return;
     }
 
-    if (this.activeTabIndex === 1) {
-      this._transactService
-        .withdraw(paymentRequest)
-        .pipe(
-          tap((paymentResponse) => {
-            this.paymentResponse = paymentResponse;
-            this.currentStepIndex = TransactSteps.TRANSACT_CONFIRMATION;
-          })
-        )
-        .subscribe();
+    this._transactService
+      .deposit(paymentRequest)
+      .pipe(
+        tap((paymentResponse) => {
+          this.viewModel$.paymentResponse = paymentResponse;
+          this.viewModel$.currentStepIndex = TransactSteps.TRANSACT_CONFIRMATION;
+        })
+      )
+      .subscribe();
+  }
+
+  public onWithDraw() {
+    const paymentRequest = this.getPaymentRequest();
+
+    if (!paymentRequest) {
       return;
     }
+
+    this._transactService
+      .withdraw(paymentRequest)
+      .pipe(
+        tap((paymentResponse) => {
+          this.viewModel$.paymentResponse = paymentResponse;
+          this.viewModel$.currentStepIndex = TransactSteps.TRANSACT_CONFIRMATION;
+        })
+      )
+      .subscribe();
   }
 
   public onAcceptRate(): void {
-    this.currentStepIndex = TransactSteps.TRANSACT_CONFIRMATION;
+    this.viewModel$.currentStepIndex = TransactSteps.TRANSACT_CONFIRMATION;
   }
 
   public onDeclineRate(): void {
-    this.currentStepIndex = TransactSteps.TRANSACT_REQUEST;
+    this._viewModel.currentStepIndex = TransactSteps.TRANSACT_REQUEST;
   }
 
   public onPayAgain(): void {
-    this.currentStepIndex = TransactSteps.TRANSACT_REQUEST;
+    this._transactForm.value.reset();
+    this._transactBankDetailsForm.value.reset();
+    this.viewModel$.currentStepIndex = TransactSteps.TRANSACT_REQUEST;
   }
 
-  public async onViewPayments(): Promise<void> {
-    await this._router.navigate([this.manageTransactionsUrl]);
+  public onViewPayments(): void {
+    this._navigationService.to('manageTransactions').then();
   }
 
-  public async onViewTransactions(): Promise<void> {
-    await this._router.navigate([webRoutesConfig.manageTransactions]);
+  public onViewTransactions(): void {
+    this._navigationService.to('manageTransactions').then();
+  }
+
+  public onActiveTabIndexChange(index: Tabs) {
+    this.viewModel$.activeTabIndex = index;
+  }
+
+  private getPaymentRequest(): PaymentRequest | null {
+    const paymentModel = this._viewModel.paymentModel;
+
+    if (!paymentModel) {
+      return null;
+    }
+
+    return {
+      paymentMethod: paymentModel.paymentMethod,
+      amount: paymentModel.amount,
+      amountCurrencyCode: paymentModel.amountCurrency,
+      fromCurrencyCode: paymentModel.fromCurrency,
+      toCurrencyCode: paymentModel.toCurrency,
+    };
   }
 }

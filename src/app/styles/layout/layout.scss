@@ -5,8 +5,16 @@
   padding: 16px;
 }
 
-.full-width {
+.h-full {
+  height: 100%;
+}
+
+.w-full {
   width: 100%;
+}
+
+.relative {
+  position: relative;
 }
 
 .container {
@@ -18,12 +26,51 @@
   }
 }
 
+.row, .col {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .row {
-  width: 100%;
+  flex-direction: row;
+  column-gap: 0.75rem;
+}
+
+.col {
+  flex-direction: column;
+  column-gap: 0.5rem;
+}
+
+.row-nowrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  column-gap: 1rem;
+}
+
+.col-nowrap {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.row-center {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  row-gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  column-gap: 1rem;
+}
+
+.col-center {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .item {
@@ -35,34 +82,22 @@
   margin-bottom: 0.5rem;
 }
 
-.flex {
-  display: flex;
-  flex-wrap: wrap;
+center {
+  justify-content: center;
+  text-align: center;
 }
 
-.flex-row {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+.middle {
+  align-items: center;
 }
 
-.flex-col {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-}
-
-.flex-center {
+.middle-center {
   justify-content: center;
   align-items: center;
   text-align: center;
 }
 
 .col {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-
   @each $modifier, $break-point in variables.$map_grid_props {
     @include mixin.create-col-classes($modifier, variables.$grid_cols, $break-point);
   }
@@ -184,14 +219,6 @@ mr-auto {
   flex-grow: 1;
 }
 
-.h-100 {
-  height: 100%;
-}
-
-.w-100 {
-  width: 100%;
-}
-
 .self-stretch {
   align-self: stretch;
 }
@@ -202,6 +229,10 @@ mr-auto {
 
 .block {
   display: block;
+}
+
+.inline-block {
+  display: inline-block;
 }
 
 .border-bottom {
@@ -249,4 +280,61 @@ mr-auto {
 
 .flex-nowrap {
   flex-wrap: nowrap;
+}
+
+.overflow-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+overflow-scroll {
+  overflow: scroll;
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.border {
+  // background: var(--tui-base-02);
+  //@include mixins.shadow(4);
+  border: 1px solid var(--tui-base-03);
+  border-radius: 0.5rem;
+}
+
+.col-spacing-sm {
+  column-gap: 0.5rem;
+}
+
+.col-spacing-xs {
+  column-gap: 0.25rem;
 }

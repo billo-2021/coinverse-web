@@ -3,22 +3,20 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
+  OnChanges,
   Output,
+  Self,
+  SkipSelf,
   ViewEncapsulation,
 } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { filter, map, Observable, shareReplay, tap } from 'rxjs';
-import { tuiIsPresent } from '@taiga-ui/cdk';
+import { FormGroup } from '@angular/forms';
 
-import { LookupService, WalletService } from '../../../../common';
-import { WalletResponse } from '../../../../common/domain-models/wallet';
-import { CurrencyResponse, PaymentMethodResponse } from '../../../../common/domain-models/lookup';
+import { LookupService, SimpleChangesTyped, WalletService } from '../../../../common';
 
-import { OptionUtils } from '../../../../form-components/utils';
-import { ListOption, Option } from '../../../../form-components/types';
-import { PaymentModel } from '../../models';
+import { PaymentModel, TransactForm } from '../../models';
+import { TransactFormService, TransactFormViewModelService } from '../../services';
+import { Tabs } from '../../pages/transact/transact.view-model';
 
 type Tab = {
   text: string;
@@ -29,11 +27,16 @@ type Tab = {
 const ACTION: Record<number, string> = {
   0: 'Deposit',
   1: 'Withdraw',
-};
+} as const;
 
 const WALLET_LABEL: Record<number, string> = {
   0: 'To Wallet',
   1: 'From Wallet',
+} as const;
+
+type TransactFormInput = {
+  activeTabIndex: number;
+  currencyCode: string | null;
 };
 
 @Component({
@@ -42,14 +45,18 @@ const WALLET_LABEL: Record<number, string> = {
   styleUrls: ['./transact-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [TransactFormViewModelService],
 })
-export class TransactFormComponent implements OnInit {
-  public form: FormGroup;
-  @Input() public activeTabIndex = 0;
+export class TransactFormComponent implements OnChanges {
+  @Input() public activeTabIndex: Tabs = 0;
   @Input() public currencyCode: string | null = null;
 
-  @Output() public actionClicked = new EventEmitter<PaymentModel>();
-  @Output() public activeTabIndexChange = new EventEmitter<number>();
+  @Output() public submitClicked = new EventEmitter<PaymentModel>();
+
+  @Output() public activeTabIndexChange = new EventEmitter<Tabs>();
+
+  protected readonly form: FormGroup<TransactForm>;
+  protected readonly viewModel$: TransactFormViewModelService;
 
   protected readonly tabs: Tab[] = [
     { text: 'Deposit', icon: null, isDisabled: false },
@@ -58,122 +65,60 @@ export class TransactFormComponent implements OnInit {
 
   protected readonly action = ACTION;
   protected readonly walletLabel = WALLET_LABEL;
-  protected readonly paymentMethodOptions$: Observable<Option<PaymentMethodResponse>[]>;
-  protected readonly currencyOptions$: Observable<Option<CurrencyResponse>[]>;
-  protected readonly walletOptions$: Observable<Option<WalletResponse>[]>;
-  protected selectedWallet$: Observable<WalletResponse> | null = null;
 
   public constructor(
-    private readonly _formBuilder: FormBuilder,
+    @SkipSelf() private readonly _transactForm$: TransactFormService,
+    @Self() private readonly _viewModel$: TransactFormViewModelService,
     private readonly _lookupService: LookupService,
     private readonly _walletService: WalletService
   ) {
-    this.form = this.getTransactForm(_formBuilder);
-
-    this.paymentMethodOptions$ = _lookupService.getAllPaymentMethods().pipe(
-      map((response) =>
-        OptionUtils.toOptions(response, { code: 'code', name: 'name', avatar: 'code' })
-      ),
-      tap((paymentMethods) => {
-        this.form?.controls['paymentMethod']?.setValue(paymentMethods[0]);
-      })
-    );
-
-    this.currencyOptions$ = _lookupService.getAllCurrenciesByType('fiat').pipe(
-      map((currencyResponse) => {
-        return currencyResponse.map((currencyResponse) => ({
-          code: currencyResponse.code,
-          name: currencyResponse.name,
-          avatar: currencyResponse.code,
-          value: currencyResponse,
-        }));
-      }),
-      tap((currencyOptions) => {
-        this.form.controls['amountCurrency']?.setValue(currencyOptions[0]);
-      }),
-      shareReplay(1)
-    );
-
-    this.walletOptions$ = _walletService.getBalances({ page: 0, size: 100 }).pipe(
-      map((response) => {
-        const wallets = response.data;
-        return wallets.map((wallet) => {
-          return {
-            code: wallet.currency.code,
-            name: wallet.currency.name + ' Wallet',
-            avatar: wallet.currency.code,
-            value: wallet,
-          };
-        });
-      })
-    );
+    this.form = _transactForm$.value;
+    this.viewModel$ = _viewModel$;
   }
 
   public onActiveTabIndexChange(index: number): void {
-    this.activeTabIndexChange.emit(index);
+    if (index < 2) {
+      this.activeTabIndexChange.emit(index);
+    }
   }
 
-  public onAction(): void {
-    const paymentMethod = this.form.controls['paymentMethod'].value.code as string;
-    const walletOption = this.form.controls['wallet'].value.value as ListOption<WalletResponse>;
-    const wallet = walletOption.value as WalletResponse;
-    const walletCurrency = wallet.currency;
-    const amountCurrency = this.form.controls['amountCurrency'].value.value as CurrencyResponse;
-    const amount = this.form.controls['amount'].value as number;
+  public onSubmit(): void {
+    const transactFormValue = this.form.getRawValue();
 
-    const fromCurrency = this.activeTabIndex === 0 ? amountCurrency.code : walletCurrency.code;
-    const toCurrency = this.activeTabIndex === 0 ? walletCurrency.code : amountCurrency.code;
+    if (
+      !transactFormValue.paymentMethod ||
+      !transactFormValue.wallet ||
+      !transactFormValue.amountCurrency
+    ) {
+      return;
+    }
+
+    const wallet = transactFormValue.wallet.value;
+    const walletCurrency = wallet.currency;
+    const amountCurrency = transactFormValue.amountCurrency.value;
+
+    const fromCurrencyCode = this.activeTabIndex === 0 ? amountCurrency.code : walletCurrency.code;
+    const toCurrencyCode = this.activeTabIndex === 0 ? walletCurrency.code : amountCurrency.code;
 
     const paymentModel: PaymentModel = {
-      paymentMethod,
-      fromCurrency,
-      toCurrency,
+      paymentMethod: transactFormValue.paymentMethod.value.code,
+      fromCurrency: fromCurrencyCode,
+      toCurrency: toCurrencyCode,
       amountCurrency: amountCurrency.code,
-      amount,
+      amount: transactFormValue.amount,
     };
 
-    this.actionClicked.emit(paymentModel);
+    this.submitClicked.emit(paymentModel);
   }
 
-  ngOnInit(): void {
-    this.walletOptions$
-      .pipe(
-        tap((walletOptions) => {
-          const currencyCode = this.currencyCode;
+  ngOnChanges(changes: SimpleChangesTyped<TransactFormInput>): void {
+    const currencyCodeChanges = changes.currencyCode;
 
-          if (!currencyCode) {
-            return;
-          }
-
-          const foundWalletOption = walletOptions.find((option) => {
-            const wallet = option.value as WalletResponse;
-
-            return wallet.currency.code.toLowerCase() === currencyCode.toLowerCase();
-          });
-
-          if (!foundWalletOption) {
-            return;
-          }
-
-          this.form.controls['wallet']?.setValue(foundWalletOption);
-        })
-      )
-      .subscribe();
-
-    this.selectedWallet$ = this.form.controls['wallet'].valueChanges.pipe(
-      filter((option) => tuiIsPresent(option)),
-      map((option) => {
-        return option.value as WalletResponse;
-      })
-    );
-  }
-
-  private getTransactForm(formBuilder: FormBuilder): FormGroup {
-    return formBuilder.group({
-      paymentMethod: [null, [Validators.required]],
-      wallet: [null, Validators.required],
-      amountCurrency: [null, [Validators.required]],
-      amount: [0, [Validators.required, Validators.min(1)]],
-    });
+    if (
+      currencyCodeChanges &&
+      currencyCodeChanges.currentValue !== currencyCodeChanges.previousValue
+    ) {
+      this.viewModel$.currencyCode = currencyCodeChanges.currentValue;
+    }
   }
 }

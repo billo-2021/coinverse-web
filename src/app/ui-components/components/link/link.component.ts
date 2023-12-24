@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 
 @Component({
   selector: 'app-link',
@@ -9,4 +9,6 @@ export class LinkComponent {
   @Input() public to: string | undefined;
   @Input() public text: string | undefined;
   @Input() public isDisabled = false;
+
+  @HostBinding('class') private _classes = 'inline-block';
 }

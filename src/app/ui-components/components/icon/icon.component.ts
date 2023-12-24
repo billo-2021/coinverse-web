@@ -16,15 +16,5 @@ import {
 export class IconComponent {
   @Input() public src = '';
 
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `icon-wrapper ${this._classes}`;
-  }
+  @HostBinding('class') private _classes = 'block icon-wrapper';
 }

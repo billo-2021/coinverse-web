@@ -4,11 +4,7 @@ import { CommonModule as ngCommonModule } from '@angular/common';
 import { UiComponentsModule } from '../ui-components/ui-components.module';
 import { FormComponentsModule } from '../form-components/form-components.module';
 
-import {
-  PolymorphicOutletDirective,
-  PolymorphicTemplate,
-  UserFormBaseDirective,
-} from './directives';
+import { UserFormBaseDirective } from './directives';
 import {
   AccountFormComponent,
   AddressFormComponent,
@@ -19,8 +15,6 @@ import { MaskEmailPipe } from './pipes';
 
 @NgModule({
   declarations: [
-    PolymorphicOutletDirective,
-    PolymorphicTemplate,
     UserFormBaseDirective,
     PersonalInformationFormComponent,
     AddressFormComponent,
@@ -31,8 +25,6 @@ import { MaskEmailPipe } from './pipes';
   imports: [ngCommonModule, UiComponentsModule, FormComponentsModule],
   providers: [],
   exports: [
-    PolymorphicOutletDirective,
-    PolymorphicTemplate,
     UserFormBaseDirective,
     PersonalInformationFormComponent,
     AddressFormComponent,

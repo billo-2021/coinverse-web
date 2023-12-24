@@ -1,7 +1,7 @@
-<app-card [subtitle]="subtitle" [title]="title" class="full-width">
-  <form class="form flex-col">
+<app-card [subtitle]="subtitle" [title]="title" class="w-full">
+  <form class="form col">
     <ng-content></ng-content>
-    <div class="flex-row justify-space-between mt-6">
+    <div class="row justify-space-between mt-6">
       <app-button
         (clicked)="onCancelClicked()"
         *ngIf="isCancelShown"

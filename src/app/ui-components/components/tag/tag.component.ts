@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
   Input,
   Output,
   ViewEncapsulation,
@@ -29,6 +30,8 @@ export class TagComponent {
   @Input() public value = '';
 
   @Output() public edited = new EventEmitter<string>();
+
+  @HostBinding('class') private _classes = 'block';
 
   public onEdited(edited: string): void {
     this.edited.emit(edited);

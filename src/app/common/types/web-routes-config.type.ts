@@ -1,3 +1,3 @@
-import { webRoutesConfig } from '../config/web-routes-config';
+import { webRoutesConfig } from '../config';
 
 export type WebRoutesConfigType = keyof typeof webRoutesConfig;

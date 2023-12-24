@@ -1,5 +1,11 @@
 .combo-box,
 tui-dropdown {
-  --tui-height-m: 3.5rem;
+  --tui-height-m: 4rem;
   --tui-radius-m: 0.5rem;
+}
+
+.combo-box {
+  [data-size="m"] .t-placeholder_raised {
+    transform: translateY(-1rem) !important;
+  }
 }

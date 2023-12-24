@@ -3,6 +3,7 @@ import {
   Component,
   HostBinding,
   Input,
+  TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -14,18 +15,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {
-  @Input() title?: string;
-  @Input() subtitle?: string;
+  @Input() public title?: string;
+  @Input() public subtitle?: string;
+  @Input() public actionsContent: TemplateRef<unknown> | null = null;
 
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `block full-width ${this._classes}`;
-  }
+  @HostBinding('class') private _classes = 'block w-full';
 }

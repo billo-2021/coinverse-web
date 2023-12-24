@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PreferenceForm } from '../../models';
 import { BehaviorSubject } from 'rxjs';
-import { ListOption } from '../../../form-components/types';
+
+import { ListOption } from '../../../form-components';
 import { CurrencyResponse } from '../../domain-models/lookup';
 
 @Injectable({

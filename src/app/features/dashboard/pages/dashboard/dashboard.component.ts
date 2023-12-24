@@ -1,10 +1,11 @@
 import { Component, HostBinding } from '@angular/core';
-import { Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { LoadingService } from '../../../../core';
-import { WalletService } from '../../../../common';
-import { WalletResponse } from '../../../../common/domain-models/wallet';
+import { NavigationService, webRoutesConfig } from '../../../../common';
+import { Pagination } from '../../../../ui-components';
+
+import { DashboardViewModelService } from '../../services';
+import { DashboardViewModel } from './dashboard.view-model';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,48 +13,37 @@ import { WalletResponse } from '../../../../common/domain-models/wallet';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
-  protected wallets$: Observable<readonly WalletResponse[]>;
-  protected labels$: Observable<string[]>;
-  protected values$: Observable<number[]>;
-  protected currencyCodes$: Observable<string[]>;
-  protected total$: Observable<number>;
+  protected viewModel$: Observable<DashboardViewModel>;
   @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    private readonly _router: Router,
-    private readonly _loadingService: LoadingService,
-    private readonly _walletService: WalletService
+    private readonly _dashboardViewModel$: DashboardViewModelService,
+    private readonly _navigationService: NavigationService
   ) {
-    this.wallets$ = _walletService.getBalances({ page: 0, size: 100 }).pipe(
-      map((walletPageResponse) => {
-        return walletPageResponse.data.sort((a, b) => b.balance - a.balance).slice(0, 5);
-      })
-    );
+    this.viewModel$ = _dashboardViewModel$;
+  }
 
-    this.labels$ = this.wallets$.pipe(
-      map((wallets) => {
-        return wallets.map((wallet) => wallet.currency.name);
-      })
-    );
+  public onCryptoCurrencyPagination(pagination: Pagination) {
+    this._dashboardViewModel$.cryptoCurrencyPagination = pagination;
+  }
 
-    this.values$ = this.wallets$.pipe(
-      map((wallets) => {
-        return wallets.map((wallet) => wallet.balance);
+  public onBuy(currencyPairName: string): void {
+    const url = webRoutesConfig.trade;
+    this._navigationService
+      .to({
+        route: url,
+        queryParams: { action: 'buy', currencyPairName },
       })
-    );
+      .then();
+  }
 
-    this.currencyCodes$ = this.wallets$.pipe(
-      map((wallets) => {
-        return wallets.map((wallet) => wallet.currency.symbol);
+  public onSell(currencyPairName: string): void {
+    const url = webRoutesConfig.trade;
+    this._navigationService
+      .to({
+        route: url,
+        queryParams: { action: 'sell', currencyPairName },
       })
-    );
-
-    this.total$ = this.wallets$.pipe(
-      map((wallets) => {
-        return wallets.reduce((total, current) => {
-          return total + current.balance;
-        }, 0);
-      })
-    );
+      .then();
   }
 }

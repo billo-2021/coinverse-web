@@ -10,11 +10,13 @@ import {
   Self,
   ViewEncapsulation,
 } from '@angular/core';
-import { LoadingService } from '../../../core/services/loading/loading.service';
-import { BehaviorSubject, Observable, takeUntil } from 'rxjs';
+
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
+import { BehaviorSubject, Observable, takeUntil } from 'rxjs';
+
+import { DestroyService, LoadingService } from '../../../core';
+
 import { disableWhenLoading } from '../../utils';
-import { DestroyService } from '../../../core/services/destroy/destroy.service';
 
 @Component({
   selector: 'app-form',
@@ -32,10 +34,12 @@ export class FormComponent implements OnInit {
   @Input() public cancelText = 'Cancel';
   @Input() public saveText = 'Save';
   @Input() public isCancelDisabled = false;
+
   @Input() public isSaveDisabled = false;
   @Output() public cancelClicked = new EventEmitter<void>();
   @Output() public saveClicked = new EventEmitter<void>();
 
+  @HostBinding('class') private _classes = 'block';
   private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(
@@ -43,18 +47,6 @@ export class FormComponent implements OnInit {
     @Optional() private _formGroupDirective: FormGroupDirective,
     @Self() private readonly _destroy$: DestroyService
   ) {}
-
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `block ${this._classes}`;
-  }
 
   protected get loading$(): Observable<boolean> {
     return this._loadingService.loading$;

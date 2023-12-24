@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, SkipSelf } from '@angular/core'
 import { FormGroup } from '@angular/forms';
 import { map, Observable, tap } from 'rxjs';
 
-import { Option } from '../../../form-components/types';
+import { ListOption } from '../../../form-components';
 import { LookupService } from '../../domain-services';
 import { NotificationMethodsForm, PreferenceForm } from '../../models';
 import { PreferenceFormService } from '../../services';
@@ -18,7 +18,7 @@ export class PreferenceFormComponent {
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
   protected readonly form: FormGroup<PreferenceForm>;
-  protected readonly currencyOptions$: Observable<Option<CurrencyResponse>[]>;
+  protected readonly currencyOptions$: Observable<ListOption<CurrencyResponse>[]>;
 
   public constructor(
     @SkipSelf() private readonly _preferenceForm$: PreferenceFormService,

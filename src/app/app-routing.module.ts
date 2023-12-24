@@ -1,9 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { adminRoleGuard } from './common/guards/role/role.guard';
-import { GlobalRoutingComponent } from './global-routing/pages/global-routing/global-routing.component';
-import { webRoutesConfig } from './common/config/web-routes-config';
-import { isAuthenticatedGuard, unAuthenticatedGuard } from './common/guards/auth/auth.guard';
+
+import {
+  adminRoleGuard,
+  isAuthenticatedGuard,
+  unAuthenticatedGuard,
+  webRoutesConfig,
+} from './common';
+
+import { GlobalRoutingPage } from './global-routing/pages';
 
 const routes: Routes = [
   {
@@ -61,13 +66,18 @@ const routes: Routes = [
   },
   {
     path: webRoutesConfig.root,
-    component: GlobalRoutingComponent,
+    component: GlobalRoutingPage,
   },
   { path: '**', redirectTo: webRoutesConfig.root },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      scrollPositionRestoration: 'enabled',
+      anchorScrolling: 'enabled',
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

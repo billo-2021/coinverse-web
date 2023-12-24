@@ -1,60 +1,56 @@
-<div class="flex-col">
-  <div class="flex-row justify-space-between border-bottom">
-    <app-header [subtitle]="subtitle" [title]="title"></app-header>
-    <div class="flex-row">
-      <app-button
-        (clicked)="onTrade()"
-        appearance="primary"
-        icon="tuiIconShuffle"
-        size="s"
-        text="Trade"></app-button>
-    </div>
-  </div>
-  <div class="mt-6 col-sm-12 col-md-10 col-lg-10">
-    <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">
-      <table *ngIf="trades$ | async as trades" [columns]="columns" class="table" tuiTable>
-        <thead>
-          <tr tuiThGroup>
-            <ng-container *ngFor="let column of columns">
-              <th *tuiHead="column" [sorter]="null" tuiTh>{{ keys[column] }}</th>
-            </ng-container>
-          </tr>
-        </thead>
-        <tbody [data]="trades" class="tbody" tuiTbody>
-          <tr *ngFor="let trade of trades" tuiTr>
-            <td *tuiCell="'id'" [class.match]="isMatch(trade.id)" tuiTd>{{ trade.id }}</td>
-            <td *tuiCell="'amount'" [class.match]="isMatch(trade.amount)" tuiTd>
-              {{ trade.currency + ' ' }}{{ trade.amount }}
-            </td>
-            <td
-              *tuiCell="'sourceWallet'"
-              [class.match]="isMatch(trade.sourceWallet.address)"
-              class="td"
-              tuiTd>
-              {{ trade.sourceWallet.address }}
-            </td>
-            <td
-              *tuiCell="'destinationWallet'"
-              [class.match]="isMatch(trade.destinationWallet.address)"
-              class="td"
-              tuiTd>
-              {{ trade.destinationWallet.address }}
-            </td>
-            <td *tuiCell="'action'" [class.match]="isMatch(trade.action)" tuiTd>
-              {{ trade.action }}
-            </td>
-            <td *tuiCell="'status'" [class.match]="isMatch(trade.status)" tuiTd>
-              {{ trade.status }}
-            </td>
-            <td *tuiCell="'createdAt'" [class.match]="isMatch(trade.createdAt)" tuiTd>
-              {{ trade.createdAt | date: 'dd/MM/yy HH:mm' }}
-            </td>
-          </tr>
-        </tbody>
-        <ng-container *ngTemplateOutlet="tableFoot"></ng-container>
-      </table>
-    </tui-loader>
-  </div>
+<div class="mb-10 pb-4 row items-center justify-space-between border-bottom">
+  <app-header [subtitle]="subtitle" [title]="title"></app-header>
+  <app-button
+    (clicked)="onTrade()"
+    appearance="outline"
+    icon="tuiIconShuffle"
+    size="s"
+    text="Trade"></app-button>
+</div>
+<div class="mt-6 col-sm-12 col-md-10 col-lg-10">
+  <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">
+    <table *ngIf="trades$ | async as trades" [columns]="columns" class="table" tuiTable>
+      <thead>
+        <tr tuiThGroup>
+          <ng-container *ngFor="let column of columns">
+            <th *tuiHead="column" [sorter]="null" tuiTh>{{ keys[column] }}</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody [data]="trades" class="tbody" tuiTbody>
+        <tr *ngFor="let trade of trades" tuiTr>
+          <td *tuiCell="'id'" [class.match]="isMatch(trade.id)" tuiTd>{{ trade.id }}</td>
+          <td *tuiCell="'amount'" [class.match]="isMatch(trade.amount)" tuiTd>
+            {{ trade.currency + ' ' }}{{ trade.amount }}
+          </td>
+          <td
+            *tuiCell="'sourceWallet'"
+            [class.match]="isMatch(trade.sourceWallet.address)"
+            class="td"
+            tuiTd>
+            {{ trade.sourceWallet.address }}
+          </td>
+          <td
+            *tuiCell="'destinationWallet'"
+            [class.match]="isMatch(trade.destinationWallet.address)"
+            class="td"
+            tuiTd>
+            {{ trade.destinationWallet.address }}
+          </td>
+          <td *tuiCell="'action'" [class.match]="isMatch(trade.action)" tuiTd>
+            {{ trade.action }}
+          </td>
+          <td *tuiCell="'status'" [class.match]="isMatch(trade.status)" tuiTd>
+            {{ trade.status }}
+          </td>
+          <td *tuiCell="'createdAt'" [class.match]="isMatch(trade.createdAt)" tuiTd>
+            {{ trade.createdAt | date: 'dd/MM/yy HH:mm' }}
+          </td>
+        </tr>
+      </tbody>
+      <ng-container *ngTemplateOutlet="tableFoot"></ng-container>
+    </table>
+  </tui-loader>
 </div>
 
 <ng-template #tableFoot>

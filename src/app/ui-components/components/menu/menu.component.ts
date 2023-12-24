@@ -35,6 +35,8 @@ export class MenuComponent implements OnChanges {
   @Input() public animationDuration = DEFAULT_ANIMATION_DURATION;
   @Input() public user: UserPrincipal | null = null;
 
+  @HostBinding('class') private _classes = 'block h-full';
+
   private readonly _state$ = new BehaviorSubject<MenuComponentInput>({
     isMenuShown: false,
     animationDuration: this.animationDuration,
@@ -45,18 +47,6 @@ export class MenuComponent implements OnChanges {
     private readonly _navigationService: NavigationService,
     private readonly _menuService: MenuService
   ) {}
-
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `flex-col ${this._classes}`;
-  }
 
   protected get viewModel$(): Observable<MenuViewModel> {
     return combineLatest([

@@ -1,10 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   Input,
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
+
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
@@ -29,6 +31,7 @@ export class InputCardComponent {
   @Input() public hasClear = true;
   @Input() public autocompleteEnabled = true;
 
+  @HostBinding('class') private _classes = 'block';
   private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}

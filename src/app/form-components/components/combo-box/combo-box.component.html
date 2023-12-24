@@ -36,12 +36,8 @@
 </div>
 
 <ng-template #content let-item>
-  <div class="row mt-2 items-center text-center">
-    <div>
-      <tui-avatar [autoColor]="true" [text]="item.code" size="xs"></tui-avatar>
-    </div>
-    <div class="ml-4">
-      <span>{{ item.name }}</span>
-    </div>
+  <div class="row-nowrap mt-2 items-center text-center overflow-ellipsis">
+    <tui-avatar [autoColor]="true" [text]="item.code" size="xs"></tui-avatar>
+    <p class="overflow-ellipsis">{{ item.name }}</p>
   </div>
 </ng-template>

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   Input,
   Optional,
   ViewEncapsulation,
@@ -23,6 +24,8 @@ export class CheckBoxComponent {
   @Input() public label = '';
 
   private _disabled = new BehaviorSubject<boolean>(false);
+
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(@Optional() private _formGroupDirective: FormGroupDirective) {}
 

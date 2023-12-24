@@ -1,89 +1,59 @@
-<div class="border-bottom">
-  <app-header [subtitle]="subtitle" [title]="title" class="border-bottom"></app-header>
-</div>
-<div class="max-w-3xl">
-  <tui-loader [overlay]="true" [showLoader]="(loading$ | async) ?? false">
-    <table
-      *ngIf="cryptoCurrencies$ | async as cryptoCurrencies"
-      [columns]="columns"
-      class="table"
-      tuiTable>
-      <thead>
-        <tr tuiThGroup>
-          <ng-container *ngFor="let column of columns">
-            <th *tuiHead="column" [sorter]="null" class="th" tuiTh>
-              <div class="flex-col flex-center">{{ keys[column] }}</div>
-            </th>
-          </ng-container>
-        </tr>
-      </thead>
-      <tbody [data]="cryptoCurrencies" tuiTbody>
-        <tr *ngFor="let cryptoCurrency of cryptoCurrencies" class="tr" tuiTr>
-          <td *tuiCell="'name'" [class.match]="isMatch(cryptoCurrency.name)" tuiTd>
-            <div class="row items-center">
-              <app-avatar
-                [text]="cryptoCurrency.code"
-                class="mr-2 currency-avatar"
-                size="s"></app-avatar>
-              <p class="mr-2">{{ cryptoCurrency.name }}</p>
-            </div>
-          </td>
-          <td *tuiCell="'askRate'" [class.match]="isMatch(cryptoCurrency.askRate)" tuiTd>
-            <div class="row items-center justify-space-between">
-              <p>{{ cryptoCurrency.askRate }}</p>
-              <app-button
-                (clicked)="onSell(cryptoCurrency.code)"
-                appearance="outline"
-                class="ml-4"
-                size="s"
-                text="SELL"></app-button>
-            </div>
-          </td>
-          <td *tuiCell="'bidRate'" [class.match]="isMatch(cryptoCurrency.bidRate)" tuiTd>
-            <div class="row items-center justify-space-between">
-              <p>{{ cryptoCurrency.bidRate }}</p>
-              <app-button
-                (clicked)="onBuy(cryptoCurrency.code)"
-                appearance="outline"
-                size="s"
-                text="BUY"></app-button>
-            </div>
-          </td>
-          <td *tuiCell="'change'" [class.match]="isMatch(cryptoCurrency.bidRate)" tuiTd>
-            <div class="flex-row justify-end">0</div>
-          </td>
-          <td
-            *tuiCell="'circulatingSupply'"
-            [class.match]="isMatch(cryptoCurrency.circulatingSupply)"
-            tuiTd>
-            <div class="flex-row justify-end">
-              {{ cryptoCurrency.circulatingSupply + ' ' }} {{ cryptoCurrency.code }}
-            </div>
-          </td>
-          <td *tuiCell="'actions'" tuiTd>
-            <div class="flex-row justify-end">
-              <app-button appearance="flat" icon="tuiIconInfo" size="s"></app-button>
-              <app-button appearance="flat" icon="tuiIconChevronRight" size="s"></app-button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-      <ng-container *ngTemplateOutlet="tableFoot"></ng-container>
-    </table>
-  </tui-loader>
+<div class="mb-10 pb-4 row items-center border-bottom">
+  <app-header [subtitle]="subtitle" [title]="title"></app-header>
 </div>
 
-<ng-template #tableFoot>
-  <tfoot *ngIf="pagination$ | async as pagination" class="tfoot">
-    <tr class="tr">
-      <td [colSpan]="columns.length" class="td">
-        <tui-table-pagination
-          (paginationChange)="onPagination($event)"
-          [page]="pagination.page"
-          [size]="pagination.size"
-          [total]="(total$ | async) || 0"
-          class="tui_space-top-2"></tui-table-pagination>
-      </td>
-    </tr>
-  </tfoot>
+<app-table
+  (paginationChanged)="onPagination($event)"
+  [columns]="columns"
+  [data]="currencies"
+  [keys]="keys"
+  [pagination]="pagination"
+  [rowDataTemplates]="{ name, askRate, bidRate, change,circulatingSupply, actions }"
+  [total]="total"
+  class="max-w-3xl"></app-table>
+
+<ng-template #name let-currency>
+  <div class="row-nowrap col-spacing-xs items-center">
+    <app-avatar [text]="currency.code" class="currency-avatar" size="s"></app-avatar>
+    <p>{{ currency.name }}</p>
+  </div>
+</ng-template>
+
+<ng-template #askRate let-currency>
+  <div class="row-nowrap col-spacing-xs items-center justify-space-between">
+    <p>{{ currency.askRate }}</p>
+    <app-button
+      (clicked)="onSell(currency.code)"
+      appearance="outline"
+      size="s"
+      text="SELL"></app-button>
+  </div>
+</ng-template>
+
+<ng-template #bidRate let-currency>
+  <div class="row-nowrap col-spacing-xs items-center justify-space-between">
+    <p>{{ currency.bidRate }}</p>
+    <app-button
+      (clicked)="onBuy(currency.code)"
+      appearance="outline"
+      size="s"
+      text="BUY"></app-button>
+  </div>
+</ng-template>
+
+<ng-template #change let-currency>
+  <div class="row justify-end">{{ currency.change}}%</div>
+</ng-template>
+
+<ng-template #circulatingSupply let-currency>
+  <div class="row justify-end">
+    <app-money [currency]="currency.code" [value]="currency.circulatingSupply"></app-money>
+  </div>
+</ng-template>
+
+<ng-template #actions>
+  <div class="row-nowrap col-spacing-xs items-center justify-end">
+    <app-icon-button icon="tuiIconInfo"></app-icon-button>
+    <app-icon-button icon="tuiIconChevronRight"></app-icon-button>
+  </div>
 </ng-template>

@@ -3,12 +3,18 @@ import {
   Component,
   EventEmitter,
   HostBinding,
+  Inject,
   Input,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
 
-import { NavigationService, UserPrincipal, UserPrincipalStoreService } from '../../../../common';
+import {
+  appNameToken,
+  NavigationService,
+  UserPrincipal,
+  UserPrincipalStoreService,
+} from '../../../../common';
 
 @Component({
   selector: 'app-menu-header',
@@ -23,21 +29,16 @@ export class MenuHeaderComponent {
 
   @Output() public toggleMenuClicked = new EventEmitter<boolean>();
 
+  @HostBinding('class') private _classes = 'block header';
+
   public constructor(
     private readonly _navigationService: NavigationService,
-    private readonly _userPrincipalService: UserPrincipalStoreService
+    private readonly _userPrincipalService: UserPrincipalStoreService,
+    @Inject(appNameToken) private readonly _appNameToken: string
   ) {}
 
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `header ${this._classes}`;
+  protected get appName(): string {
+    return this._appNameToken;
   }
 
   public onMenuToggle(open: boolean): void {

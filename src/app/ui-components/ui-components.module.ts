@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import {
   TuiButtonModule,
   TuiExpandModule,
@@ -16,14 +18,13 @@ import {
   TuiSvgModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
-import { TuiReorderModule, TuiTableModule, TuiTablePaginationModule } from '@taiga-ui/addon-table';
-import { TuiAppBarModule, TuiSidebarModule } from '@taiga-ui/addon-mobile';
+
 import {
-  TuiAxesModule,
-  TuiLegendItemModule,
-  TuiLineChartModule,
-  TuiRingChartModule,
-} from '@taiga-ui/addon-charts';
+  TuiActiveZoneModule,
+  TuiAutoFocusModule,
+  TuiHoveredModule,
+  TuiLetModule,
+} from '@taiga-ui/cdk';
 import {
   TuiAvatarModule,
   TuiInputCountModule,
@@ -34,47 +35,52 @@ import {
   TuiTabsModule,
   TuiTagModule,
 } from '@taiga-ui/kit';
+
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
 
-import { ButtonComponent } from './components/button/button.component';
-import { ContainerComponent } from './components/container/container.component';
-import { HeaderComponent } from './components/header/header.component';
-import { CardComponent } from './components/card/card.component';
-import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
-import { LogoComponent } from './components/logo/logo.component';
-import { LinkComponent } from './components/link/link.component';
-import { IconComponent } from './components/icon/icon.component';
-import { StepperComponent } from './components/stepper/stepper.component';
-import { StepComponent } from './components/stepper/step/step.component';
-import { NotificationComponent } from './components/notification/notification.component';
-import { MenuComponent } from './components/menu/menu.component';
-import { MenuHeaderComponent } from './components/menu/menu-header/menu-header.component';
-import { SideMenuComponent } from './components/menu/side-menu/side-menu.component';
-import { MenuFooterComponent } from './components/menu/menu-footer/menu-footer.component';
+import { TuiReorderModule, TuiTableModule, TuiTablePaginationModule } from '@taiga-ui/addon-table';
+import { TuiAppBarModule, TuiSidebarModule } from '@taiga-ui/addon-mobile';
 import {
-  TuiActiveZoneModule,
-  TuiAutoFocusModule,
-  TuiHoveredModule,
-  TuiLetModule,
-} from '@taiga-ui/cdk';
-import { MoneyComponent } from './components/money/money.component';
-import { LineChartComponent } from './components/line-chart/line-chart.component';
-import { RingChartComponent } from './components/ring-chart/ring-chart.component';
-import { ChartLegendItemComponent } from './components/chart-legend-item/chart-legend-item.component';
-import { TableComponent } from './components/table/table.component';
+  TuiAxesModule,
+  TuiLegendItemModule,
+  TuiLineChartModule,
+  TuiRingChartModule,
+} from '@taiga-ui/addon-charts';
+
 import { TuiMoneyModule } from '@taiga-ui/addon-commerce';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TabsComponent } from './components/tabs/tabs.component';
-import { AvatarComponent } from './components/avatar/avatar.component';
-import { TagComponent } from './components/tag/tag.component';
-import { GroupComponent } from './components/group/group.component';
-import { BlockStatusComponent } from './components/block-status/block-status.component';
-import { ExpandComponent } from './components/expand/expand.component';
+
+import {
+  AvatarComponent,
+  BlockStatusComponent,
+  ButtonComponent,
+  CardComponent,
+  ChartLegendItemComponent,
+  ExpandComponent,
+  GroupComponent,
+  HeaderComponent,
+  IconButtonComponent,
+  IconComponent,
+  LineChartComponent,
+  LinkComponent,
+  LoadingIndicatorComponent,
+  LogoComponent,
+  MenuComponent,
+  MenuFooterComponent,
+  MenuHeaderComponent,
+  MoneyComponent,
+  NotificationComponent,
+  RingChartComponent,
+  SearchFieldComponent,
+  SideMenuComponent,
+  StepperComponent,
+  TableComponent,
+  TabsComponent,
+  TagComponent,
+} from './components';
 
 @NgModule({
   declarations: [
     ButtonComponent,
-    ContainerComponent,
     HeaderComponent,
     CardComponent,
     LoadingIndicatorComponent,
@@ -82,7 +88,6 @@ import { ExpandComponent } from './components/expand/expand.component';
     LinkComponent,
     IconComponent,
     StepperComponent,
-    StepComponent,
     NotificationComponent,
     MenuComponent,
     MenuHeaderComponent,
@@ -99,6 +104,8 @@ import { ExpandComponent } from './components/expand/expand.component';
     GroupComponent,
     BlockStatusComponent,
     ExpandComponent,
+    SearchFieldComponent,
+    IconButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -144,7 +151,6 @@ import { ExpandComponent } from './components/expand/expand.component';
   ],
   exports: [
     ButtonComponent,
-    ContainerComponent,
     CardComponent,
     HeaderComponent,
     LogoComponent,
@@ -152,7 +158,6 @@ import { ExpandComponent } from './components/expand/expand.component';
     LinkComponent,
     LoadingIndicatorComponent,
     StepperComponent,
-    StepComponent,
     NotificationComponent,
     MenuComponent,
     MenuHeaderComponent,
@@ -168,6 +173,8 @@ import { ExpandComponent } from './components/expand/expand.component';
     GroupComponent,
     BlockStatusComponent,
     ExpandComponent,
+    SearchFieldComponent,
+    IconButtonComponent,
   ],
 })
 export class UiComponentsModule {}

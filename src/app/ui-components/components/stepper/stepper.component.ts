@@ -29,22 +29,12 @@ export class StepperComponent {
 
   @ViewChild('tuiStepper') private tuiStepper?: TuiStepperComponent;
 
+  @HostBinding('class') private _classes = 'block stepper';
+
   public constructor(
     @Inject(TuiBreakpointService)
     protected readonly _breakpoint$: TuiBreakpointService
   ) {}
-
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `block stepper ${this._classes}`;
-  }
 
   protected get breakpoint$() {
     return this._breakpoint$;

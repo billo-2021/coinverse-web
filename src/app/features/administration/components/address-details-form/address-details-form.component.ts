@@ -2,10 +2,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { map, Observable } from 'rxjs';
 
+import { ListOption } from '../../../../form-components';
 import { BaseComponent, LookupService } from '../../../../common';
 import { CountryResponse } from '../../../../common/domain-models/lookup';
-
-import { Option } from '../../../../form-components/types';
 
 @Component({
   selector: 'app-address-details-form',
@@ -19,7 +18,7 @@ export class AddressDetailsFormComponent extends BaseComponent {
   @Output() public formChange = new EventEmitter<FormGroup>();
   @Output() public saveClicked = new EventEmitter<FormGroup>();
 
-  protected countryOptions$: Observable<Option<CountryResponse>[]>;
+  protected countryOptions$: Observable<ListOption<CountryResponse>[]>;
 
   public constructor(private readonly lookupService: LookupService) {
     super();

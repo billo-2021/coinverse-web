@@ -1,13 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   Input,
   Optional,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { LoadingService } from '../../../core/services/loading/loading.service';
+import { LoadingService } from '../../../core';
 import { BehaviorSubject } from 'rxjs';
 import { TuiInputPasswordComponent } from '@taiga-ui/kit';
 
@@ -28,8 +29,9 @@ export class PasswordFieldComponent {
   @Input() hasClear = false;
   @Input() public autocomplete = 'current-password';
 
-  private _disabled = new BehaviorSubject<boolean>(false);
   @ViewChild(TuiInputPasswordComponent) private _inputPasswordRef?: TuiInputPasswordComponent;
+  @HostBinding('class') private _classes = 'block';
+  private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(
     private readonly _loadingService: LoadingService,

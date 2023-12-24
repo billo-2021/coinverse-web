@@ -1,21 +1,22 @@
-<div class="ring-chart-wrapper flex-row">
-  <tui-ring-chart [(activeItemIndex)]="activeItemIndex" [value]="value">
-    <div class="flex-col flex-center justify-space-between">
-      <p>Total</p>
-      <p>{{ total | number }}</p>
-    </div>
-  </tui-ring-chart>
-  <div class="legend flex-col">
-    <app-chart-legend-item
-      (hoveredChange)="onHover(index, $event)"
-      *ngFor="let label of labels; let index = index"
-      [color]="getColor(index)"
-      [isActive]="isItemActive(index)"
-      [text]="label">
-      <app-money
-        [currency]="extraLabels[index]"
-        [singleColor]="true"
-        [value]="value[index]"></app-money>
-    </app-chart-legend-item>
-  </div>
+<tui-ring-chart
+  [(activeItemIndex)]="activeItemIndex"
+  [value]="value"
+  class="col justify-space-between"
+  size="l">
+  <p>Total</p>
+  <p>{{ total | number }}</p>
+</tui-ring-chart>
+<div class="col">
+  <app-chart-legend-item
+    (hoveredChange)="onHover(index, $event)"
+    *ngFor="let label of labels; let index = index"
+    [color]="getColor(index)"
+    [isActive]="isItemActive(index)"
+    [text]="label">
+    <app-money
+      [currency]="extraLabels[index]"
+      [singleColor]="true"
+      [value]="value[index]"
+      class="ml-auto"></app-money>
+  </app-chart-legend-item>
 </div>

@@ -6,6 +6,7 @@ import {
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
+
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
@@ -27,6 +28,7 @@ export class PhoneNumberFieldComponent {
   @Input() public phoneMaskAfterCountryCode = '(###) ###-##-##';
   @Input() public hasClear = true;
 
+  @HostBinding('class') private _classes = 'block input-text-field-wrapper';
   private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
@@ -34,18 +36,6 @@ export class PhoneNumberFieldComponent {
   @Input()
   public set isDisabled(value: boolean) {
     this._disabled.next(value);
-  }
-
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `input-text-field-wrapper ${this._classes}`;
   }
 
   protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {

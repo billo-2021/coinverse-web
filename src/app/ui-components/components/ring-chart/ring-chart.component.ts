@@ -18,20 +18,9 @@ export class RingChartComponent {
   @Input() public labels: string[] = [];
   @Input() public extraLabels: string[] = [];
   @Input() public total = 0;
-
   protected activeItemIndex = NaN;
-
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `full-width ${this._classes}`;
-  }
+  protected readonly NaN = NaN;
+  @HostBinding('class') private _classes = 'ring-chart row-nowrap items-center w-full';
 
   public getColor(index: number): string {
     return `var(--tui-chart-${index})`;

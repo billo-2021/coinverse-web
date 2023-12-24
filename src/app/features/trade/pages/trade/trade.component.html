@@ -1,17 +1,15 @@
-<div *ngIf="mode$ | async as mode" class="flex-col">
-  <div class="flex-row justify-space-between border-bottom mb-10">
+<div *ngIf="mode$ | async as mode" class="col">
+  <div class="mb-10 border-bottom pb-4 row items-center justify-space-between">
     <app-header [subtitle]="subtitle" [title]="title"></app-header>
-    <div class="flex-row">
-      <app-button
-        (clicked)="onTradeHistory()"
-        appearance="outline"
-        text="Trade History"></app-button>
-    </div>
+    <app-button
+      (clicked)="onTradeHistory()"
+      appearance="flat"
+      icon="tuiIconEye"
+      size="s"
+      text="View History"></app-button>
   </div>
-  <div class="flex-col">
-    <app-card
-      *ngIf="currentStepIndex !== TRADE_STEPS.TRADE_CONFIRMATION"
-      class="col-sm-12 col-md-9 col-lg-5">
+  <div class="col">
+    <app-card *ngIf="currentStepIndex !== TRADE_STEPS.TRADE_CONFIRMATION" class="max-w-md">
       <div class="mt-6">
         <app-stepper
           (currentStepIndexChange)="onStepChanged($event)"

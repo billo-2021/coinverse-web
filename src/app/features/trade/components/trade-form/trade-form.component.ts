@@ -5,8 +5,8 @@ import { combineLatest, map, Observable, Subject, tap } from 'rxjs';
 import { LookupService } from '../../../../common';
 import { CurrencyPairResponse, CurrencyResponse } from '../../../../common/domain-models/lookup';
 
+import { ListOption } from '../../../../form-components';
 import { TradeModel } from '../../models';
-import { Option } from '../../../../form-components/types';
 
 type Tab = {
   text: string;
@@ -34,9 +34,9 @@ export class TradeFormComponent {
     { text: 'SELL', icon: null, isDisabled: false },
   ];
   protected readonly action = ACTION;
-  protected readonly currencyPairOptions$: Observable<Option<CurrencyPairResponse>[]>;
-  protected readonly currencyOptions$: Observable<Option<CurrencyResponse>[]>;
-  protected readonly filteredCurrencyOptions$: Observable<Option<CurrencyResponse>[]>;
+  protected readonly currencyPairOptions$: Observable<ListOption<CurrencyPairResponse>[]>;
+  protected readonly currencyOptions$: Observable<ListOption<CurrencyResponse>[]>;
+  protected readonly filteredCurrencyOptions$: Observable<ListOption<CurrencyResponse>[]>;
   private currencyPairName$ = new Subject<string>();
 
   public constructor(
@@ -93,7 +93,7 @@ export class TradeFormComponent {
       map(([currencyOptions, control]) => {
         this.form.controls['amountCurrency'].setValue(null);
 
-        const option = control?.value as Option<CurrencyPairResponse> | null;
+        const option = control?.value as ListOption<CurrencyPairResponse> | null;
 
         if (!option) {
           return currencyOptions;

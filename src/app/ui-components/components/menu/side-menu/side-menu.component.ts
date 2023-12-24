@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, Component, Inject, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Inject,
+  ViewEncapsulation,
+} from '@angular/core';
 import { combineLatest, map, Observable } from 'rxjs';
+
 import { SideMenuViewModel } from './side-menu.view-model';
-import { MenuService } from '../../../../common/services';
-import { appNameToken } from '../../../../common/config';
+import { appNameToken, MenuService } from '../../../../common';
 
 @Component({
   selector: 'app-side-menu',
@@ -12,8 +18,10 @@ import { appNameToken } from '../../../../common/config';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SideMenuComponent {
+  @HostBinding('class') private _classes = 'block';
+
   public constructor(
-    @Inject(MenuService) private readonly _menuService: MenuService,
+    private readonly _menuService: MenuService,
     @Inject(appNameToken) private readonly _appNameToken: string
   ) {}
 

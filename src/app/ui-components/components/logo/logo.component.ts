@@ -3,10 +3,10 @@ import {
   Component,
   HostBinding,
   Inject,
-  Input,
   ViewEncapsulation,
 } from '@angular/core';
-import { appNameToken } from '../../../common/config';
+
+import { appNameToken } from '../../../common';
 
 @Component({
   selector: 'app-logo',
@@ -16,19 +16,9 @@ import { appNameToken } from '../../../common/config';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogoComponent {
+  @HostBinding('class') private _classes = 'block w-full p-8 mx-auto';
+
   constructor(@Inject(appNameToken) private readonly _appNameToken: string) {}
-
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `block col-12 p-8 m-auto ${this._classes}`;
-  }
 
   protected get appName(): string {
     return this._appNameToken;

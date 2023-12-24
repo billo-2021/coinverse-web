@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Input,
+  ViewEncapsulation,
+} from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -10,4 +16,6 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
 export class HeaderComponent {
   @Input() title = '';
   @Input() subtitle: string | null = null;
+
+  @HostBinding('class') private _classes = 'block';
 }

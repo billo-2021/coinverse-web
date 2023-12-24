@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Input,
+  ViewEncapsulation,
+} from '@angular/core';
 
 @Component({
   selector: 'app-block-status',
@@ -9,4 +15,6 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
 })
 export class BlockStatusComponent {
   @Input() public card = false;
+
+  @HostBinding('class') private _classes = 'block';
 }

@@ -7,10 +7,12 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+
 import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { LoadingService } from '../../../core/services/loading/loading.service';
 import { BehaviorSubject } from 'rxjs';
 import { TuiInputComponent } from '@taiga-ui/kit';
+
+import { LoadingService } from '../../../core';
 
 export type SizeType = 's' | 'm' | 'l';
 
@@ -30,8 +32,9 @@ export class TextFieldComponent {
   @Input() public hasClear = true;
   @Input() public autocomplete = 'on';
 
-  private _disabled = new BehaviorSubject<boolean>(false);
   @ViewChild(TuiInputComponent) private _inputRef?: TuiInputComponent;
+  @HostBinding('class') private _classes = 'block input-text-field-wrapper';
+  private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(
     private readonly _loadingService: LoadingService,
@@ -41,18 +44,6 @@ export class TextFieldComponent {
   @Input()
   public set isDisabled(value: boolean) {
     this._disabled.next(value);
-  }
-
-  @Input()
-  public set classNames(value: string) {
-    this._classes = value;
-  }
-
-  private _classes = '';
-
-  @HostBinding('class')
-  protected get classes(): string {
-    return `input-text-field-wrapper ${this._classes}`;
   }
 
   protected get formGroup(): FormGroup | null {

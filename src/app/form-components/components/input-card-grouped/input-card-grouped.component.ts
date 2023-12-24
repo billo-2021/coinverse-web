@@ -1,13 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   Input,
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
+
 import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { DestroyService } from '../../../core/services/destroy/destroy.service';
+
+import { DestroyService } from '../../../core';
 
 @Component({
   selector: 'app-input-card-grouped',
@@ -21,6 +24,7 @@ export class InputCardGroupedComponent {
   @Input() public name = '';
   @Input() public label = '';
 
+  @HostBinding('class') private _classes = 'block';
   private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}

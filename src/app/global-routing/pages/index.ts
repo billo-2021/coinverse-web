@@ -1,3 +1,3 @@
-import { GlobalRoutingComponent } from './global-routing/global-routing.component';
+import { GlobalRoutingComponent as GlobalRoutingPage } from './global-routing/global-routing.component';
 
-export { GlobalRoutingComponent };
+export { GlobalRoutingPage };

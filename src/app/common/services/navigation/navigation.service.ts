@@ -77,6 +77,13 @@ export class NavigationService extends Observable<NavigationServiceKey> {
     return (currentHistory.length && currentHistory[currentHistory.length - 1]) || null;
   }
 
+  public queryParam(param: string): Observable<string> {
+    return this._activatedRoute.queryParams.pipe(
+      map((params) => params[param] as string | undefined),
+      filter((param): param is string => typeof param === 'string')
+    );
+  }
+
   public async to(param: NavigationParam): Promise<boolean> {
     try {
       if (typeof param === 'string') {

@@ -1,14 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   Input,
   Optional,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+
 import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { NgOtpInputComponent } from 'ng-otp-input';
 import { BehaviorSubject } from 'rxjs';
+import { NgOtpInputComponent } from 'ng-otp-input';
 
 @Component({
   selector: 'app-otp-input',
@@ -25,6 +27,8 @@ export class OtpInputComponent {
   @ViewChild('ngOtpInput') ngOtpInputRef?: NgOtpInputComponent;
 
   private _disabled = new BehaviorSubject<boolean>(false);
+
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
 

@@ -8,18 +8,18 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+
 import { finalize, Subject, timer } from 'rxjs';
 
-import { AlertService, ApiError } from '../../../../core';
+import { ApiError } from '../../../../core';
 import { AuthenticationService } from '../../../../common';
 import { LoginRequest } from '../../../../common/domain-models/authentication';
 
-import { TextFieldComponent } from '../../../../form-components/components/text-field/text-field.component';
-import { PasswordFieldComponent } from '../../../../form-components/components/password-field/password-field.component';
+import { PasswordFieldComponent, TextFieldComponent } from '../../../../form-components';
 
 import { LoginForm } from '../../models';
 import { LoginFormService } from '../../services';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -37,11 +37,9 @@ export class LoginComponent implements AfterViewInit {
   @ViewChild(PasswordFieldComponent) private _passwordRef?: PasswordFieldComponent;
 
   public constructor(
-    private readonly _formBuilder: FormBuilder,
     @Self() private readonly _loginForm: LoginFormService,
     private readonly _changeDetectorRef: ChangeDetectorRef,
-    private readonly _authenticationService: AuthenticationService,
-    private readonly _alertService: AlertService
+    private readonly _authenticationService: AuthenticationService
   ) {
     this.loginForm = _loginForm.value;
   }

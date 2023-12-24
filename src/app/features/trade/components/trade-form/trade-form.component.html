@@ -1,4 +1,4 @@
-<div *ngIf="form" class="flex-col">
+<div *ngIf="form" class="col">
   <app-tabs
     (activeItemIndexChange)="onActiveTabIndexChange($event)"
     [activeItemIndex]="activeTabIndex"
@@ -8,13 +8,16 @@
       [options]="(currencyPairOptions$ | async) ?? []"
       label="Currency Pair"
       name="currencyPair"></app-combo-box>
-    <div class="flex-row justify-space-between">
+    <div class="mb-4 row justify-space-between">
       <app-combo-box
         [options]="(filteredCurrencyOptions$ | async) ?? []"
-        class="col-6"
+        class="col-12 col-sm-12 col-md-7"
         label="Currency"
         name="amountCurrency"></app-combo-box>
-      <app-input-number class="col-4" label="Amount" name="amount" size="l"></app-input-number>
+      <app-input-number
+        class="col-12 col-sm-12 col-md-4"
+        label="Amount"
+        name="amount"></app-input-number>
     </div>
     <app-button
       (clicked)="onAction()"

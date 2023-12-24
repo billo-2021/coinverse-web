@@ -2,40 +2,39 @@
   (activeItemIndexChange)="onActiveTabIndexChange($event)"
   [activeItemIndex]="activeTabIndex"
   [tabs]="tabs"></app-tabs>
-<form [formGroup]="form" class="mt-6">
+<form *ngIf="viewModel$ | async as viewModel" [formGroup]="form" class="mt-6">
   <app-combo-box
-    [options]="(paymentMethodOptions$ | async) ?? []"
+    [options]="viewModel.paymentMethodOptions"
     label="Payment Method"
     name="paymentMethod"></app-combo-box>
   <app-combo-box
     [label]="walletLabel[activeTabIndex]"
-    [options]="(walletOptions$ | async) ?? []"
+    [options]="viewModel.walletOptions"
     name="wallet"></app-combo-box>
-  <div *ngIf="selectedWallet$ | async as selectedWallet" class="flex-col justify-end border mb-6">
-    <div class="flex-row justify-space-between items-center p-4">
-      <p class="col-8 row-item-title">Available Balance</p>
-      <p class="col-3 ml-4 row-item-description">
+  <div *ngIf="viewModel.selectedWallet" class="mb-4 border col">
+    <div class="p-4 row items-center justify-space-between">
+      <p class="col-8">Available Balance</p>
+      <p class="col-3">
         <app-money
-          [currency]="selectedWallet.currency.symbol"
+          [currency]="viewModel.selectedWallet.value.currency.symbol"
           [precision]="6"
-          [value]="selectedWallet.balance"></app-money>
+          [value]="viewModel.selectedWallet.value.balance"></app-money>
       </p>
     </div>
   </div>
-  <div class="row justify-space-between mb-4">
+  <div class="mb-4 row justify-space-between">
     <app-combo-box
-      [options]="(currencyOptions$ | async) ?? []"
-      class="col-sm-12 col-md-6"
+      [options]="viewModel.currencyOptions"
+      class="col-12 col-sm-12 col-md-7"
       label="Currency"
       name="amountCurrency"></app-combo-box>
     <app-input-number
-      class="col-sm-12 col-md-4"
+      class="col-12 col-sm-12 col-md-4"
       label="Amount"
-      name="amount"
-      size="l"></app-input-number>
+      name="amount"></app-input-number>
   </div>
   <app-button
-    (clicked)="onAction()"
+    (clicked)="onSubmit()"
     [isDisabled]="!form.valid"
     [text]="action[activeTabIndex]"
     class="mt-4"></app-button>

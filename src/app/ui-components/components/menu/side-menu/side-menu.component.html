@@ -1,4 +1,4 @@
-<div *ngIf="viewModel$ | async as viewModel" class="flex-row menu-toggle items-center">
+<div *ngIf="viewModel$ | async as viewModel" class="row middle menu-toggle">
   <div *tuiSidebar="viewModel.isMobile && viewModel.isShown; direction: 'left'">
     <ng-container
       [ngTemplateOutletContext]="{ $implicit: viewModel.menuItems }"
@@ -12,10 +12,19 @@
 </div>
 
 <ng-template #menuContent let-data>
-  <div class="side-menu-header flex-row items-center">
-    <tui-svg [src]="'tuiIconApertureLarge'" class="icon ml-9 mr-4"></tui-svg>
-    <p class="tui-text_body-s logo">{{ appName }}</p>
+  <div class="side-menu-header row middle w-full">
+    <a
+      class="side-menu-logo ml-9"
+      icon="tuiIconApertureLarge"
+      iconAlign="left"
+      routerLink="dashboard"
+      tuiLink
+      >{{ appName }}</a
+    >
+    <!--    <tui-svg [src]="'tuiIconApertureLarge'" class="icon ml-9"></tui-svg>-->
+    <!--    <p class="tui-text_body-s logo">{{ appName }}</p>-->
   </div>
+
   <ul class="side-menu-content col-12">
     <li *ngFor="let menuItem of data" class="link">
       <a

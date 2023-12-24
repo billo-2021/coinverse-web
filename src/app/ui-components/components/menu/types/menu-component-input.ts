@@ -1,4 +1,4 @@
-import { UserPrincipal } from '../../../../common/domain-models';
+import { UserPrincipal } from '../../../../common';
 
 export type MenuComponentInput = {
   readonly isMenuShown: boolean;

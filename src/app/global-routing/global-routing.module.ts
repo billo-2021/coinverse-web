@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule as NgCommonModule } from '@angular/common';
 
+import { UiComponentsModule } from '../ui-components/ui-components.module';
+
+import { GlobalRoutingPage } from './pages';
 import { GlobalRoutingRoutingModule } from './global-routing-routing.module';
-import { GlobalRoutingComponent } from './pages';
 
 @NgModule({
-  declarations: [GlobalRoutingComponent],
-  exports: [GlobalRoutingComponent],
-  imports: [NgCommonModule, GlobalRoutingRoutingModule],
+  declarations: [GlobalRoutingPage],
+  exports: [GlobalRoutingPage],
+  imports: [NgCommonModule, UiComponentsModule, GlobalRoutingRoutingModule],
 })
 export class GlobalRoutingModule {}

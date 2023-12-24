@@ -11,7 +11,7 @@ import { PreferenceDetailsFormComponent } from './components/preference-details-
 import { ChangePasswordFormComponent } from './components/change-password-form/change-password-form.component';
 import { AddressDetailsFormComponent } from './components/address-details-form/address-details-form.component';
 import { AccountActivityComponent } from './components/account-activity/account-activity.component';
-import { TuiLoaderModule } from '@taiga-ui/core';
+import { TuiLoaderModule, TuiScrollbarModule } from '@taiga-ui/core';
 import { TuiTableModule, TuiTablePaginationModule } from '@taiga-ui/addon-table';
 
 @NgModule({
@@ -32,6 +32,7 @@ import { TuiTableModule, TuiTablePaginationModule } from '@taiga-ui/addon-table'
     TuiLoaderModule,
     TuiTableModule,
     TuiTablePaginationModule,
+    TuiScrollbarModule,
   ],
 })
 export class ProfileModule {}
