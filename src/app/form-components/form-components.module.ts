@@ -40,7 +40,7 @@ import {
 
 import { NgOtpInputModule } from 'ng-otp-input';
 
-import { UiComponentsModule } from '../ui-components/ui-components.module';
+import { UiComponentsModule } from '../ui-components';
 
 import {
   CheckBoxComponent,

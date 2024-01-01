@@ -1,5 +1,5 @@
-import { menuItems } from '../constants/menu-items.constant';
 import { MenuItem } from '../types';
+import { menuItems } from '../constants';
 
 function getMenuItems(isAdmin: boolean): MenuItem[] {
   if (isAdmin) {

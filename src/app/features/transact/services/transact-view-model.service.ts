@@ -5,7 +5,7 @@ import { NavigationService } from '../../../common';
 import { PaymentResponse } from '../../../common/domain-models/transact';
 
 import { PaymentModel } from '../models';
-import { Tabs, TransactSteps, TransactViewModel } from '../pages/transact/transact.view-model';
+import { Tabs, TransactSteps, TransactViewModel } from '../pages';
 
 @Injectable({
   providedIn: 'root',

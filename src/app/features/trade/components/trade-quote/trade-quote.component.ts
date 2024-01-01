@@ -1,47 +1,41 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { tap } from 'rxjs';
+import { Component, EventEmitter, Input, Output, Self } from '@angular/core';
 
-import { QuoteService } from '../../../../common';
-import {
-  CurrencyExchangeRateResponse,
-  CurrencyExchangeResponseData,
-} from '../../../../common/domain-models/quote';
-
-type ActionType = 'buy' | 'sell';
+import { TradeQuoteViewModelService } from '../../services';
 
 @Component({
   selector: 'app-trade-quote',
   templateUrl: './trade-quote.component.html',
   styleUrls: ['./trade-quote.component.scss'],
+  providers: [TradeQuoteViewModelService],
 })
-export class TradeQuoteComponent implements OnInit {
-  @Input() public currencyPairName = '';
-  @Input() public action: ActionType | null = null;
+export class TradeQuoteComponent {
   @Output() public acceptQuoteClicked = new EventEmitter<number>();
   @Output() public declineQuoteClicked = new EventEmitter<void>();
-  protected exchangeRate: CurrencyExchangeRateResponse | null = null;
-  protected exchangeRateData: CurrencyExchangeResponseData | null = null;
 
-  constructor(private readonly _quoteService: QuoteService) {}
+  protected viewModel$: TradeQuoteViewModelService;
 
-  ngOnInit(): void {
-    this._quoteService
-      .getCurrencyExchangeRateByCurrencyPairName(this.currencyPairName)
-      .pipe(
-        tap((response) => {
-          this.exchangeRate = response;
-          this.exchangeRateData = response.data[0];
-        })
-      )
-      .subscribe();
+  constructor(@Self() private readonly _viewModel$: TradeQuoteViewModelService) {
+    this.viewModel$ = _viewModel$;
   }
 
-  public onAcceptQuote(): void {
-    if (!this.exchangeRateData) {
+  @Input()
+  public set currencyPairName(value: string | null | undefined) {
+    if (!value) {
+      this.viewModel$.currencyPairName = null;
       return;
     }
 
-    this.acceptQuoteClicked.emit(this.exchangeRateData.id);
+    this.viewModel$.currencyPairName = value;
+  }
+
+  public onAcceptQuote(): void {
+    const exchangeRateData = this.viewModel$.exchangeRateData;
+
+    if (!exchangeRateData) {
+      return;
+    }
+
+    this.acceptQuoteClicked.emit(exchangeRateData.id);
   }
 
   public onDeclineQuote(): void {

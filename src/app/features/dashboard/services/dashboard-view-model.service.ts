@@ -26,7 +26,9 @@ import { DashboardViewModel } from '../pages/dashboard/dashboard.view-model';
 })
 export class DashboardViewModelService extends Observable<DashboardViewModel> {
   protected readonly walletModel$ = this.getWalletModel();
-  protected readonly cryptoCurrencyPagination$ = new BehaviorSubject(this._paginationToken);
+  protected readonly cryptoCurrencyPagination$ = new BehaviorSubject<Pagination>(
+    this._paginationToken
+  );
 
   protected cryptoCurrencyRequest$ = combineLatest([this.cryptoCurrencyPagination$]).pipe(
     switchMap((query) => this._lookupService.getCryptoCurrencies(...query).pipe(startWith(null))),

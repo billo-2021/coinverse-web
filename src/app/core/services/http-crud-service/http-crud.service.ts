@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { HttpOptions, HttpOptionsBuilder } from '../../types/http-options.type';
-import { apiBaseUrlToken, httpHeadersConfigToken } from '../../config';
 import { ObjectUtils } from '../../utils';
+import { HttpOptions, HttpOptionsBuilder } from '../../types';
+import { apiBaseUrlToken, httpHeadersConfigToken } from '../../config';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { StorageKey } from '../../constants';
 
@@ -46,39 +46,39 @@ export class HttpCrudService {
     return httpOptionsBuilder.build();
   }
 
-  public find<TResponse = void>(path: string): Observable<TResponse> {
+  public find(path: string): Observable<unknown> {
     const url = this.getUrl(path);
     const options = this.buildOptions();
 
-    return this.httpClient.get<TResponse>(url, options);
+    return this.httpClient.get<unknown>(url, options);
   }
 
-  public create<TRequest, TResponse = void>(path: string, data?: TRequest): Observable<TResponse> {
+  public create<TRequest>(path: string, data?: TRequest): Observable<unknown> {
     const url = this.getUrl(path);
     const options = this.buildOptions();
 
-    return this.httpClient.post<TResponse>(url, data, options);
+    return this.httpClient.post<unknown>(url, data, options);
   }
 
-  public update<TRequest, TResponse = void>(path: string, data?: TRequest): Observable<TResponse> {
+  public update<TRequest>(path: string, data?: TRequest): Observable<unknown> {
     const url = this.getUrl(path);
     const options = this.buildOptions();
 
-    return this.httpClient.put<TResponse>(url, data, options);
+    return this.httpClient.put<unknown>(url, data, options);
   }
 
-  public patch<TRequest, TResponse = void>(path: string, data?: TRequest): Observable<TResponse> {
+  public patch<TRequest>(path: string, data?: TRequest): Observable<unknown> {
     const url = this.getUrl(path);
     const options = this.buildOptions();
 
-    return this.httpClient.patch<TResponse>(url, data, options);
+    return this.httpClient.patch<unknown>(url, data, options);
   }
 
-  public remove<TResponse = void>(path: string): Observable<TResponse> {
+  public remove(path: string): Observable<unknown> {
     const url = this.getUrl(path);
     const options = this.buildOptions();
 
-    return this.httpClient.delete<TResponse>(url, options);
+    return this.httpClient.delete<unknown>(url, options);
   }
 
   private getUrl(path: string): string {

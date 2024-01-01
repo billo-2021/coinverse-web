@@ -2,8 +2,8 @@ import { Injectable, SkipSelf } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject, combineLatest, map, Observable, shareReplay, startWith, tap } from 'rxjs';
 
-import { ListOption, ListOptionUtils } from '../../../form-components';
-import { LookupService, WalletService } from '../../../common';
+import { ListOption } from '../../../form-components';
+import { ListOptionsService, WalletService } from '../../../common';
 import { CurrencyResponse, PaymentMethodResponse } from '../../../common/domain-models/lookup';
 import { WalletResponse } from '../../../common/domain-models/wallet';
 
@@ -27,46 +27,39 @@ export class TransactFormViewModelService extends Observable<TransactFormViewMod
 
   constructor(
     @SkipSelf() private readonly _transactForm: TransactFormService,
-    private readonly _lookupService: LookupService,
+    private readonly _listOptionsService: ListOptionsService,
     private readonly _walletService: WalletService
   ) {
     super((subscriber) => this._stream$.subscribe(subscriber));
 
     this.form = _transactForm.value;
 
-    this.paymentMethodOptions$ = _lookupService.getAllPaymentMethods().pipe(
-      map((response) =>
-        response.map((paymentMethodResponse) => ListOptionUtils.toListOption(paymentMethodResponse))
-      ),
+    this.paymentMethodOptions$ = _listOptionsService.getPaymentMethodOptions().pipe(
+      startWith([]),
       tap((paymentMethods) => {
+        if (!paymentMethods.length) {
+          return;
+        }
+
         this.form.controls.paymentMethod.setValue(paymentMethods[0]);
-      }),
-      startWith([])
+      })
     );
 
-    this.currencyOptions$ = _lookupService.getAllCurrenciesByType('fiat').pipe(
-      map((response) =>
-        response.map((currencyResponse) => ListOptionUtils.toListOption(currencyResponse))
-      ),
+    this.currencyOptions$ = _listOptionsService.getFiatCurrencyOptions().pipe(
+      startWith([]),
+      shareReplay(1),
       tap((currencyOptions) => {
+        if (!currencyOptions.length) {
+          return;
+        }
+
         this.form.controls.amountCurrency.setValue(currencyOptions[0]);
-      }),
-      startWith([]),
-      shareReplay(1)
+      })
     );
 
-    this.walletOptions$ = _walletService.getBalances({ page: 0, size: 100 }).pipe(
-      map((response) =>
-        response.data.map((wallet) => ({
-          code: wallet.currency.code,
-          name: wallet.currency.name + ' Wallet',
-          avatar: wallet.currency.code,
-          value: wallet,
-        }))
-      ),
-      startWith([]),
-      shareReplay(1)
-    );
+    this.walletOptions$ = _listOptionsService
+      .getWalletOptions()
+      .pipe(startWith([]), shareReplay(1));
 
     this.walletCurrencyCode$ = combineLatest([
       this.walletOptions$,

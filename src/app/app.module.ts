@@ -12,10 +12,12 @@ import {
 } from '@taiga-ui/core';
 
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { MapperModule } from '@dynamic-mapper/angular';
 
 import { PROVIDERS as CORE_PROVIDERS } from './core';
-import { PROVIDERS as UI_COMPONENTS_PROVIDERS, UiComponentsModule } from './ui-components';
 import { PROVIDERS as COMMON_PROVIDERS } from './common';
+import { PROVIDERS as UI_COMPONENTS_PROVIDERS, UiComponentsModule } from './ui-components';
+import { MappingProfile } from './domain';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,6 +38,7 @@ import { GlobalRoutingModule, GlobalRoutingService } from './global-routing';
     TuiThemeNightModule,
     HttpClientModule,
     GlobalRoutingModule,
+    MapperModule.withProfiles([MappingProfile]),
   ],
   providers: [
     ...CORE_PROVIDERS,

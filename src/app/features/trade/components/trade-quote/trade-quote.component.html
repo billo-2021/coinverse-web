@@ -1,23 +1,23 @@
-<div *ngIf="exchangeRate && exchangeRateData" class="flex-col border-top pt-8">
-  <div class="flex-row justify-space-between">
-    <p class="col-8 row-item-title">Currency Pair</p>
-    <p class="col-3 ml-4 row-item-description">{{ exchangeRate.currencyPairName }}</p>
+<div *ngIf="viewModel$ | async as viewModel" class="col border-top pt-8">
+  <div class="row justify-space-between">
+    <p class="mr-4 col-8 row-item-title">Currency Pair</p>
+    <p class="col-3 row-item-description">{{ viewModel.exchangeRate?.currencyPairName }}</p>
   </div>
-  <div class="flex-row justify-space-between">
-    <p class="col-8 row-item-title">Currency Pair Type</p>
-    <p class="col-3 ml-4 row-item-description">{{ exchangeRate.currencyPairType }}</p>
+  <div class="row justify-space-between">
+    <p class="mr-4 col-8 row-item-title">Currency Pair Type</p>
+    <p class="col-3 row-item-description">{{ viewModel.exchangeRate?.currencyPairType }}</p>
   </div>
-  <div class="flex-row justify-space-between">
-    <p class="col-8 row-item-title">Ask Rate</p>
-    <p class="col-3 ml-4 row-item-description">{{ exchangeRateData.askRate }}</p>
+  <div class="row justify-space-between">
+    <p class="mr-4 col-8 row-item-title">Ask Rate</p>
+    <p class="col-3 row-item-description">{{ viewModel.exchangeRateData?.askRate }}</p>
   </div>
-  <div class="flex-row justify-space-between">
-    <p class="col-8 row-item-title">Bid Rate</p>
-    <p class="col-3 ml-4 row-item-description">{{ exchangeRateData.bidRate }}</p>
+  <div class="row justify-space-between">
+    <p class="mr-4 col-8 row-item-title">Bid Rate</p>
+    <p class="col-3 row-item-description">{{ viewModel.exchangeRateData?.bidRate }}</p>
   </div>
-  <div class="flex-row justify-space-between">
-    <p class="col-8 row-item-title">Time to Live</p>
-    <p class="col-3 ml-4 row-item-description">{{ exchangeRateData.timeToLive }}</p>
+  <div class="row justify-space-between">
+    <p class="mr-4 col-8 row-item-title">Time to Live</p>
+    <p class="col-3 row-item-description">{{ viewModel.exchangeRateData?.timeToLive }}</p>
   </div>
   <div class="flex-row justify-space-between mt-2">
     <app-button

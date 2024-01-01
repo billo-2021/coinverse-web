@@ -1,16 +1,16 @@
-<div *ngIf="form" class="col">
+<div *ngIf="viewModel$ | async as viewModel" class="col">
   <app-tabs
     (activeItemIndexChange)="onActiveTabIndexChange($event)"
     [activeItemIndex]="activeTabIndex"
     [tabs]="tabs"></app-tabs>
   <form [formGroup]="form" class="flex-col mt-10">
     <app-combo-box
-      [options]="(currencyPairOptions$ | async) ?? []"
+      [options]="viewModel.currencyPairOptions"
       label="Currency Pair"
       name="currencyPair"></app-combo-box>
     <div class="mb-4 row justify-space-between">
       <app-combo-box
-        [options]="(filteredCurrencyOptions$ | async) ?? []"
+        [options]="viewModel.filteredCurrencyOptions"
         class="col-12 col-sm-12 col-md-7"
         label="Currency"
         name="amountCurrency"></app-combo-box>

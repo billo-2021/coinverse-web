@@ -1,4 +1,4 @@
-<div *ngIf="mode$ | async as mode" class="col">
+<div *ngIf="viewModel$ | async as viewModel" class="col">
   <div class="mb-10 border-bottom pb-4 row items-center justify-space-between">
     <app-header [subtitle]="subtitle" [title]="title"></app-header>
     <app-button
@@ -9,33 +9,36 @@
       text="View History"></app-button>
   </div>
   <div class="col">
-    <app-card *ngIf="currentStepIndex !== TRADE_STEPS.TRADE_CONFIRMATION" class="max-w-md">
+    <app-card
+      *ngIf="viewModel.currentStepIndex !== TRADE_STEPS.TRADE_CONFIRMATION"
+      class="max-w-md">
       <div class="mt-6">
         <app-stepper
           (currentStepIndexChange)="onStepChanged($event)"
-          [currentStepIndex]="currentStepIndex"
+          [currentStepIndex]="viewModel.currentStepIndex"
           [steps]="formSteps">
         </app-stepper>
       </div>
       <app-trade-form
         (actionClicked)="onRequestTrade($event)"
-        *ngIf="currentStepIndex === TRADE_STEPS.TRADE_REQUEST"
-        [(activeTabIndex)]="activeTabIndex"
-        [CurrencyPairName]="currencyPairName">
+        (activeTabIndexChange)="onActiveTabIndexChanged($event)"
+        *ngIf="viewModel.currentStepIndex === TRADE_STEPS.TRADE_REQUEST"
+        [activeTabIndex]="viewModel.activeTabIndex"
+        [currencyPairName]="viewModel.currencyPairName">
       </app-trade-form>
       <app-trade-quote
         (acceptQuoteClicked)="onAcceptQuote($event)"
         (declineQuoteClicked)="onDeclineQuote()"
-        *ngIf="currentStepIndex === TRADE_STEPS.TRADE_QUOTE"
-        [currencyPairName]="trade.currencyPairName"></app-trade-quote>
+        *ngIf="viewModel.currentStepIndex === TRADE_STEPS.TRADE_QUOTE"
+        [currencyPairName]="viewModel.tradeModel && viewModel.tradeModel.currencyPairName || null"></app-trade-quote>
     </app-card>
     <app-card
-      *ngIf="currentStepIndex === TRADE_STEPS.TRADE_CONFIRMATION"
+      *ngIf="viewModel.currentStepIndex === TRADE_STEPS.TRADE_CONFIRMATION"
       class="col-sm-12 col-md-9 col-lg-5">
       <app-trade-confirmation
         (tradeAgainClicked)="onTradeAgainClicked()"
         (viewTradesClicked)="onViewTradesClicked()"
-        [tradeResponse]="tradeResponse"></app-trade-confirmation>
+        [tradeResponse]="viewModel.tradeResponse"></app-trade-confirmation>
     </app-card>
   </div>
 </div>

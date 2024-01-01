@@ -1,8 +1,9 @@
 import { ErrorHandler, Injectable } from '@angular/core';
+
+import { apiErrorCodes, apiErrorMessages, isKnownError } from '../../../common';
+
 import { LoggingService } from '../logging/logging.service';
-import { apiErrorCodes, apiErrorMessages } from '../../../common/constants';
 import { ApiError } from '../../models';
-import { isKnownError } from '../../../common/utils';
 
 @Injectable({
   providedIn: 'root',

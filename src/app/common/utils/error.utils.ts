@@ -1,5 +1,4 @@
-import { Log } from '../../core/types';
-import { ApiError, AppError } from '../../core/models';
+import { ApiError, AppError, Log } from '../../core';
 
 export function isKnownError(error: unknown): error is Error | ApiError | AppError {
   return error instanceof Error || error instanceof AppError || error instanceof AppError;

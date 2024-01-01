@@ -8,6 +8,7 @@ const commonServiceConfig = {
   webRoutesConfig: webRoutesConfig,
   apiRoutesConfig: apiRoutesConfig,
   menuItems: menuItems,
+  apiPageRequest: { page: 1, size: 10 },
 } as const;
 
 export { commonServiceConfig };

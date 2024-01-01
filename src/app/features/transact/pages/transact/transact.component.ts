@@ -5,8 +5,11 @@ import { NavigationService, TransactService } from '../../../../common';
 import { PaymentRequest } from '../../../../common/domain-models/transact';
 
 import { PaymentModel } from '../../models';
-import { TransactViewModelService } from '../../services/transact-view-model.service';
-import { TransactBankDetailsFormService, TransactFormService } from '../../services';
+import {
+  TransactBankDetailsFormService,
+  TransactFormService,
+  TransactViewModelService,
+} from '../../services';
 import { Tabs, TransactSteps } from './transact.view-model';
 
 @Component({

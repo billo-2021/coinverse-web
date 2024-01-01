@@ -1,20 +1,27 @@
+const authenticationRoute = 'authentication';
+const transactRoute = 'transact';
+const tradeRoute = 'trade';
+const administrationRoute = 'administration';
+const adminUsersRoute = `${administrationRoute}/users` as const;
+const adminCurrenciesRoute = `${administrationRoute}/currencies` as const;
+
 export const webRoutesConfig = {
   root: '',
   dashboard: 'dashboard',
-  authentication: 'authentication',
-  login: 'authentication/login',
-  register: 'authentication/register',
-  verifyAccount: 'authentication/verify',
-  resetPassword: 'authentication/reset-password',
+  authentication: authenticationRoute,
+  login: `${authenticationRoute}/login`,
+  register: `${authenticationRoute}/register`,
+  verifyAccount: `${authenticationRoute}/verify`,
+  resetPassword: `${authenticationRoute}/reset-password`,
   wallets: 'wallets',
-  transact: 'transact',
-  manageTransactions: 'transact/manage-transactions',
-  trade: 'trade',
-  manageTrades: 'trade/manage-trades',
+  transact: transactRoute,
+  manageTransactions: `${transactRoute}/manage-transactions`,
+  trade: tradeRoute,
+  manageTrades: `${tradeRoute}/manage-trades`,
   profile: 'profile',
-  administration: 'administration',
-  manageUsers: 'administration/users',
-  newUser: 'administration/users/new-user',
-  manageCurrencies: 'administration/currencies',
-  newCurrency: 'administration/currencies/new-currency',
+  administration: administrationRoute,
+  manageUsers: adminUsersRoute,
+  newUser: `${adminUsersRoute}/new-user`,
+  manageCurrencies: `${adminCurrenciesRoute}`,
+  newCurrency: `${adminCurrenciesRoute}/new-currency`,
 } as const;

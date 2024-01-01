@@ -1,99 +1,64 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
-import { BehaviorSubject, tap } from 'rxjs';
+import { Component, Self } from '@angular/core';
+import { tap } from 'rxjs';
 
-import { BaseComponent, TradeService, webRoutesConfig } from '../../../../common';
-import { CurrencyTransactionResponse, TradeRequest } from '../../../../common/domain-models/trade';
+import { NavigationService, TradeService } from '../../../../common';
+import { TradeRequest } from '../../../../common/domain-models/trade';
 
 import { TradeModel } from '../../models';
-
-type Mode = 'buy' | 'sell';
-
-type Link = {
-  path: string;
-  mode: Mode;
-};
-
-enum TradeSteps {
-  TRADE_REQUEST,
-  TRADE_QUOTE,
-  TRADE_CONFIRMATION,
-}
+import { TradeFormService } from '../../services/trade-form.service';
+import { TradeViewModelService } from '../../services/trade-view-model.service';
+import { TradeSteps, TradeTabs } from './trade.view-model';
 
 @Component({
   selector: 'app-trade',
   templateUrl: './trade.component.html',
   styleUrls: ['./trade.component.scss'],
+  providers: [TradeViewModelService, TradeFormService],
 })
-export class TradeComponent extends BaseComponent {
+export class TradeComponent {
+  protected readonly viewModel$: TradeViewModelService;
   protected readonly title = 'Trade';
   protected readonly subtitle = 'Make a trade here.';
-  protected readonly links: Link[] = [
-    { path: 'buy', mode: 'buy' },
-    { path: 'sell', mode: 'sell' },
-  ];
-  protected readonly manageTradesUrl = webRoutesConfig.trade;
 
+  protected readonly MAX_NUMBER_OF_TABS = 2;
   protected readonly MAX_NUMBER_OF_STEPS = 3;
   protected readonly TRADE_STEPS = TradeSteps;
-  protected currentStepIndex = 0;
   protected formSteps = ['Trade Request', 'Quote', 'Confirmation'];
 
-  protected activeTabIndex = 0;
-  protected readonly mode$ = new BehaviorSubject<Mode>('buy');
-  protected currencyPairName: string | null = null;
-  protected action: string | null = null;
-  protected trade: TradeModel = {
-    currencyPairName: '',
-    amountCurrency: '',
-    amount: 0,
-  };
-  protected tradeResponse: CurrencyTransactionResponse | null = null;
-
   public constructor(
-    private readonly _route: ActivatedRoute,
-    private readonly _router: Router,
-    private readonly _formBuilder: FormBuilder,
+    private readonly _navigationService: NavigationService,
+    @Self() private readonly _viewModel$: TradeViewModelService,
+    @Self() private readonly _tradeForm$: TradeFormService,
     private readonly _tradeService: TradeService
   ) {
-    super();
-    this._route.queryParams.subscribe((params) => {
-      const action = params['action'] as string | undefined;
-
-      if (!action) {
-        return;
-      }
-
-      this.activeTabIndex = 'sell'.includes(action.toLowerCase()) ? 1 : 0;
-
-      const currencyPairName = params['currencyPairName'] as string | undefined;
-
-      if (!currencyPairName) {
-        return;
-      }
-
-      this.currencyPairName = currencyPairName;
-    });
+    this.viewModel$ = _viewModel$;
   }
 
   public onStepChanged(nextStepIndex: number) {
-    if (nextStepIndex < this.MAX_NUMBER_OF_STEPS) {
-      this.currentStepIndex = nextStepIndex;
+    if (nextStepIndex >= this.MAX_NUMBER_OF_STEPS) {
       return;
     }
+
+    this.viewModel$.currentStepIndex = nextStepIndex;
   }
 
   public onRequestTrade(trade: TradeModel): void {
-    this.trade = trade;
-    this.currentStepIndex = TradeSteps.TRADE_QUOTE;
+    this.viewModel$.tradeModel = trade;
+    this.viewModel$.currentStepIndex = TradeSteps.TRADE_QUOTE;
   }
 
   public onAcceptQuote(quoteId: number): void {
+    const activeTabIndex = this.viewModel$.activeTabIndex;
+    const tradeModel = this._viewModel$.tradeModel;
+
+    if (!tradeModel) {
+      return;
+    }
+
     const tradeRequest: TradeRequest = {
-      action: this.activeTabIndex === 0 ? 'buy' : 'sell',
-      amount: this.trade.amount,
-      amountCurrencyCode: this.trade.amountCurrency,
+      action: activeTabIndex === TradeTabs.BUY ? 'buy' : 'sell',
+      amount: tradeModel.amount,
+      amountCurrencyCode: tradeModel.amountCurrency,
       quoteId,
     };
 
@@ -101,26 +66,34 @@ export class TradeComponent extends BaseComponent {
       .requestTrade(tradeRequest)
       .pipe(
         tap((response) => {
-          this.tradeResponse = response;
-          this.currentStepIndex = TradeSteps.TRADE_CONFIRMATION;
+          this.viewModel$.tradeResponse = response;
+          this.viewModel$.currentStepIndex = TradeSteps.TRADE_CONFIRMATION;
         })
       )
       .subscribe();
   }
 
   public onDeclineQuote(): void {
-    this.currentStepIndex = TradeSteps.TRADE_REQUEST;
+    this.viewModel$.currentStepIndex = TradeSteps.TRADE_REQUEST;
   }
 
-  public async onViewTradesClicked(): Promise<void> {
-    await this._router.navigate([this.manageTradesUrl]);
+  public onViewTradesClicked(): void {
+    this._navigationService.to('manageTrades').then();
   }
 
   public onTradeAgainClicked(): void {
-    this.currentStepIndex = TradeSteps.TRADE_REQUEST;
+    this.viewModel$.currentStepIndex = TradeSteps.TRADE_REQUEST;
   }
 
-  public async onTradeHistory(): Promise<void> {
-    await this._router.navigate([webRoutesConfig.manageTrades]);
+  public onTradeHistory(): void {
+    this._navigationService.to('manageTrades').then();
+  }
+
+  public onActiveTabIndexChanged(index: number): void {
+    if (index < 0 || index >= this.MAX_NUMBER_OF_TABS) {
+      return;
+    }
+
+    this.viewModel$.activeTabIndex = index;
   }
 }
