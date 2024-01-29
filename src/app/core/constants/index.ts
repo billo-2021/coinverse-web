@@ -1,3 +1,1 @@
-import { StorageKey } from './storage-key.constant';
-
-export { StorageKey };
+export { StorageKey } from './storage-key.constant';

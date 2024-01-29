@@ -1,12 +1,20 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, Output } from '@angular/core';
-
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostBinding,
+  Inject,
+  Input,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { PageRequest } from '../../../../core';
-import { LookupService, QuoteService, webRoutesConfig } from '../../../../common';
-import { Pagination, paginationToken } from '../../../../ui-components';
-
+import { Page } from '../../../../common';
+import { Pagination, paginationToken, TOTAL_ITEMS } from '../../../../ui-components';
+import { LookupService, QuoteService } from '../../../../domain';
 import { CryptoCurrencyModel } from '../../models';
 
-const KEYS = {
+export const KEYS = {
   name: 'Name',
   askRate: 'Sell $',
   bidRate: 'Buy $',
@@ -15,25 +23,42 @@ const KEYS = {
   actions: '',
 } as const;
 
+export type ColumnsType = (keyof typeof KEYS)[];
+export type KeysType = typeof KEYS;
+
+export interface MarketsComponentInput extends Page {
+  pagination: Pagination;
+  currencies: readonly CryptoCurrencyModel[];
+  total: number;
+}
+
+export interface MarketsComponentOutput {
+  paginationChanged: EventEmitter<Pagination>;
+  buyClicked: EventEmitter<string>;
+  sellClicked: EventEmitter<string>;
+}
+
 @Component({
   selector: 'app-markets',
   templateUrl: './markets.component.html',
   styleUrls: ['./markets.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketsComponent {
+export class MarketsComponent implements MarketsComponentInput, MarketsComponentOutput {
+  @Input() public title = 'Markets';
+  @Input() public subtitle = 'Latest market prices.';
   @Input() public pagination: Pagination = this._paginationToken;
-  @Input() public currencies: CryptoCurrencyModel[] = [];
-  @Input() public total = 1;
+  @Input() public currencies: readonly CryptoCurrencyModel[] = [];
+  @Input() public total: number = TOTAL_ITEMS;
 
   @Output() public paginationChanged = new EventEmitter<PageRequest>();
   @Output() public buyClicked = new EventEmitter<string>();
   @Output() public sellClicked = new EventEmitter<string>();
 
-  protected readonly transactUrl = webRoutesConfig.transact;
-  protected readonly title = 'Markets';
-  protected readonly subtitle = 'Latest market prices.';
-  protected readonly columns = Object.keys(KEYS) as Array<keyof typeof KEYS>;
-  protected readonly keys = KEYS;
+  public readonly Columns: ColumnsType = Object.keys(KEYS) as ColumnsType;
+  public readonly Keys: KeysType = KEYS;
+
   @HostBinding('class') private _classes = 'block';
 
   public constructor(
@@ -42,11 +67,11 @@ export class MarketsComponent {
     private readonly _quoteService: QuoteService
   ) {}
 
-  public async onBuy(currencyCode: string): Promise<void> {
+  public onBuy(currencyCode: string): void {
     this.buyClicked.emit(this.getCurrencyPairName(currencyCode));
   }
 
-  public async onSell(currencyCode: string): Promise<void> {
+  public onSell(currencyCode: string): void {
     this.sellClicked.emit(this.getCurrencyPairName(currencyCode));
   }
 

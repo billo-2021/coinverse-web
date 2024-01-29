@@ -1,4 +1,4 @@
 export interface RegisterPreferenceRequest {
-  currencyCode: string;
-  notificationMethods: string[];
+  readonly currencyCode: string;
+  readonly notificationMethods: readonly string[];
 }

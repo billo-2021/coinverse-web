@@ -1,94 +1,71 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
-  BehaviorSubject,
-  combineLatest,
-  filter,
-  map,
-  Observable,
-  shareReplay,
-  startWith,
-  switchMap,
-} from 'rxjs';
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostBinding,
+  Inject,
+  Input,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
+import { Page } from '../../../../common';
+import { Pagination, paginationToken, TOTAL_ITEMS } from '../../../../ui-components';
+import { UserAccountEvent } from '../../../../domain';
 
-import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
-
-import { AlertService, LoadingService } from '../../../../core';
-import { BaseComponent, UserAccountService } from '../../../../common';
-import { UserAccountEventResponse } from '../../../../common/domain-models/account';
-
-type Pagination = {
-  readonly page: number;
-  readonly size: number;
-};
-
-type Key = 'device' | 'ipAddress' | 'type' | 'description' | 'actions' | 'date';
-
-const KEYS: Record<Key, string> = {
+export const KEYS = {
   device: 'Device Details',
   ipAddress: 'IP Address',
   type: 'Type',
   description: 'Description',
   date: 'Date',
   actions: 'Actions',
-};
+} as const;
+
+export type ColumnsType = (keyof typeof KEYS)[];
+export type KeysType = typeof KEYS;
+
+export interface AccountActivityFormComponentInput extends Page {
+  pagination: Pagination;
+  userAccountEvents: readonly UserAccountEvent[];
+  total: number;
+}
+
+export interface AccountActivityFormComponentOutput {
+  paginationChanged: EventEmitter<Pagination>;
+  reportActivityClicked: EventEmitter<UserAccountEvent>;
+}
 
 @Component({
   selector: 'app-account-activity',
   templateUrl: './account-activity.component.html',
   styleUrls: ['./account-activity.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountActivityComponent extends BaseComponent {
-  protected readonly title = 'Account Activities';
-  protected readonly subtitle = 'Latest activities in your account';
-  protected columns: Key[] = ['device', 'ipAddress', 'type', 'description', 'date', 'actions'];
-  protected keys = KEYS;
-  protected search = '';
+export class AccountActivityComponent
+  implements AccountActivityFormComponentInput, AccountActivityFormComponentOutput
+{
+  @Input() public title = 'Account Activities';
+  @Input() public subtitle = 'Latest activities in your account.';
+  @Input() public pagination: Pagination = this._paginationToken;
+  @Input() public userAccountEvents: readonly UserAccountEvent[] = [];
+  @Input() public total: number = TOTAL_ITEMS;
 
-  protected readonly pagination$ = new BehaviorSubject<Pagination>({
-    page: 0,
-    size: 5,
-  });
+  @Output() public paginationChanged = new EventEmitter<Pagination>();
+  @Output() public reportActivityClicked = new EventEmitter<UserAccountEvent>();
 
-  protected readonly request$ = combineLatest([this.pagination$]).pipe(
-    switchMap((query) =>
-      this._userAccountService.getUserAccountEvents(...query).pipe(startWith(null))
-    ),
-    shareReplay(1)
-  );
+  public readonly Columns: ColumnsType = Object.keys(KEYS) as ColumnsType;
+  public readonly Keys: KeysType = KEYS;
 
-  protected readonly userAccountEvents$: Observable<readonly UserAccountEventResponse[]> =
-    this.request$.pipe(
-      filter(tuiIsPresent),
-      map((userAccountEventPage) => userAccountEventPage.data),
-      startWith([])
-    );
+  @HostBinding('class') private _classes = 'block';
 
-  protected total$: Observable<number> = this.request$.pipe(
-    filter(tuiIsPresent),
-    map((paymentPage) => paymentPage.total),
-    startWith(1)
-  );
+  public constructor(@Inject(paginationToken) private readonly _paginationToken: Pagination) {}
 
-  protected readonly loading$: Observable<boolean> = this._loadingService.loading$;
-
-  public constructor(
-    private readonly _loadingService: LoadingService,
-    private readonly _alertService: AlertService,
-    private readonly _userAccountService: UserAccountService
-  ) {
-    super();
+  public paginate(pagination: Pagination): void {
+    this.paginationChanged.emit(pagination);
   }
 
-  public onPagination(pagination: Pagination): void {
-    this.pagination$.next(pagination);
-  }
-
-  public isMatch(value: unknown): boolean {
-    return !!this.search && TUI_DEFAULT_MATCHER(value, this.search);
-  }
-
-  public onReportActivity(): void {
-    this._alertService.showMessage('Activity reported');
+  public reportActivity(userAccountEvent: UserAccountEvent): void {
+    this.reportActivityClicked.emit(userAccountEvent);
   }
 }

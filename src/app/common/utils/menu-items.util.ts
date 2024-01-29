@@ -1,14 +1,12 @@
 import { MenuItem } from '../types';
-import { menuItems } from '../constants';
+import { menuItemsConfig } from '../config';
 
-function getMenuItems(isAdmin: boolean): MenuItem[] {
+export function getMenuItems(isAdmin: boolean): MenuItem[] {
   if (isAdmin) {
-    return menuItems;
+    return menuItemsConfig;
   }
 
-  return menuItems.filter((menuItem) => {
+  return menuItemsConfig.filter((menuItem) => {
     return !(menuItem.text === 'Currencies' || menuItem.text === 'Users');
   });
 }
-
-export { getMenuItems };

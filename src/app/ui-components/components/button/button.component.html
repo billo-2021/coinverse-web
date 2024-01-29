@@ -1,7 +1,7 @@
 <button
   (click)="onClick()"
   [appearance]="appearance"
-  [disabled]="isDisabled"
+  [disabled]="disabled || loading"
   [icon]="icon"
   [shape]="shape"
   [size]="size"

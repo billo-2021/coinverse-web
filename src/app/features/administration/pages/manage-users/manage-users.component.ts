@@ -1,145 +1,100 @@
-import { Component } from '@angular/core';
-import { AdministrationService, BaseComponent, webRoutesConfig } from '../../../../common';
-import { Router } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Inject,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   BehaviorSubject,
   combineLatest,
-  filter,
   map,
   Observable,
+  ReplaySubject,
   shareReplay,
   startWith,
   switchMap,
-  tap,
 } from 'rxjs';
-import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
+import { AlertService, HttpMessage, PageResponse } from '../../../../core';
+import { getErrorMessage, NavigationService, Page } from '../../../../common';
+import { PAGE_OPTIONS, Pagination, paginationToken } from '../../../../ui-components';
+import { AdministrationService, AdminUser } from '../../../../domain';
 
-import { AlertService, LoadingService } from '../../../../core';
-import { UserResponse } from '../../../../common/domain-models/administration';
-
-interface Pagination {
-  page: number;
-  size: number;
+interface ManageUsersViewModel {
+  readonly usersPagination: Pagination;
+  readonly userPage: PageResponse<AdminUser>;
 }
-
-type Key =
-  | 'emailAddress'
-  | 'firstName'
-  | 'lastName'
-  | 'username'
-  | 'roles'
-  | 'status'
-  | 'createdAt'
-  | 'actions';
-
-const KEYS: Record<Key, string> = {
-  emailAddress: 'Email Address',
-  firstName: 'First Name',
-  lastName: 'Last Name',
-  username: 'Username',
-  roles: 'Roles',
-  status: 'Status',
-  createdAt: 'Created At',
-  actions: 'Actions',
-};
 
 @Component({
   selector: 'app-manage-users',
   templateUrl: './manage-users.component.html',
   styleUrls: ['./manage-users.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageUsersComponent extends BaseComponent {
-  protected readonly manageUsersUrl = webRoutesConfig.manageUsers;
-  protected readonly newUserUrl = webRoutesConfig.newUser;
+export class ManageUsersComponent implements Page {
+  public readonly title = 'Manage Users';
+  public readonly subtitle = 'Manage users here.';
 
-  protected readonly title = 'Manage Users';
+  @HostBinding('class') private _classes = 'block';
 
-  protected readonly subtitle = 'Manage users here.';
-  protected readonly columns: Key[] = [
-    'emailAddress',
-    'firstName',
-    'lastName',
-    'username',
-    'roles',
-    'status',
-    'createdAt',
-    'actions',
-  ];
-  protected readonly keys = KEYS;
+  private readonly _reload$ = new ReplaySubject<void>();
+  private readonly _usersPagination$ = new BehaviorSubject<Pagination>(this._paginationToken);
 
-  protected search = '';
-
-  protected readonly reload$ = new BehaviorSubject(true);
-  protected readonly pagination$ = new BehaviorSubject<Pagination>({
-    page: 0,
-    size: 5,
-  });
-  protected readonly request$ = combineLatest([this.reload$, this.pagination$]).pipe(
-    switchMap((query) => this._administrationService.getUsers(query[1]).pipe(startWith(null))),
-    shareReplay(1)
+  private readonly _userPage$ = combineLatest([this._usersPagination$]).pipe(
+    switchMap((query) => this._administrationService.getUsers(...query).pipe(shareReplay(1))),
+    startWith<PageResponse<AdminUser>>(PAGE_OPTIONS)
   );
 
-  protected readonly users$: Observable<UserResponse[]> = this.request$.pipe(
-    filter(tuiIsPresent),
-    map((userPage) => userPage.data),
-    startWith([])
-  );
-
-  protected total$: Observable<number> = this.request$.pipe(
-    filter(tuiIsPresent),
-    map((paymentPage) => paymentPage.total),
-    startWith(1)
-  );
-
-  protected readonly loading$ = this._loadingService.loading$;
+  public readonly viewModel$: Observable<ManageUsersViewModel> = combineLatest([
+    this._usersPagination$,
+    this._userPage$,
+  ]).pipe(map(([usersPagination, userPage]) => ({ usersPagination, userPage })));
 
   public constructor(
-    private readonly _router: Router,
-    private readonly _loadingService: LoadingService,
+    @Inject(paginationToken) private readonly _paginationToken: Pagination,
+    private readonly _navigationService: NavigationService,
     private readonly _alertService: AlertService,
     private readonly _administrationService: AdministrationService
-  ) {
-    super();
+  ) {}
+
+  public set usersPagination(pagination: Pagination) {
+    this._usersPagination$.next(pagination);
   }
 
-  public async onViewUserDetails(username: string): Promise<void> {
-    const url = `${this.manageUsersUrl}/${username}`;
-    await this._router.navigate([url]);
+  public reload(): void {
+    this._reload$.next();
   }
 
-  public async onNewUser(): Promise<void> {
-    await this._router.navigate([this.newUserUrl]);
+  public onViewUserDetails(username: string): void {
+    this._navigationService.to({ route: 'manageUsers', routePath: username }).then();
   }
 
-  public isMatch(value: unknown): boolean {
-    return !!this.search && TUI_DEFAULT_MATCHER(value, this.search);
+  public onAddUser(): void {
+    this._navigationService.to('newUser').then();
   }
 
   public onPagination(pagination: Pagination): void {
-    this.pagination$.next(pagination);
+    this.usersPagination = pagination;
   }
 
   public onDisableAccount(username: string): void {
-    this._administrationService
-      .disableAccount(username)
-      .pipe(
-        tap((response) => {
-          this._alertService.showMessage(response.message);
-          this.reload$.next(true);
-        })
-      )
-      .subscribe();
+    this._administrationService.disableAccount(username).subscribe(this.showMessage());
   }
 
   public onEnableAccount(username: string): void {
-    this._administrationService
-      .enableAccount(username)
-      .pipe(
-        tap((response) => {
-          this._alertService.showMessage(response.message);
-          this.reload$.next(true);
-        })
-      )
-      .subscribe();
+    this._administrationService.enableAccount(username).subscribe(this.showMessage());
+  }
+
+  public showMessage() {
+    return {
+      next: (response: HttpMessage) => {
+        this._alertService.showMessage(response.message);
+        this.reload();
+      },
+      error: (error: unknown) => {
+        this._alertService.showErrorMessage(getErrorMessage(error));
+      },
+    };
   }
 }

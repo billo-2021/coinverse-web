@@ -1,4 +1,2 @@
-import { WalletDto } from './wallet-dto';
-import { Wallet } from './wallet';
-
-export { WalletDto, Wallet };
+export { WalletDto } from './wallet-dto';
+export { Wallet } from './wallet';

@@ -1,5 +1,5 @@
 export interface PaymentMethodDto {
-  id: number;
-  code: string;
-  name: string;
+  readonly id: number;
+  readonly code: string;
+  readonly name: string;
 }

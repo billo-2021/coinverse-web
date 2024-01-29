@@ -1,41 +1,56 @@
-import { Component, EventEmitter, Input, Output, Self } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
+import { CurrencyExchangeRate, CurrencyQuote, QuoteService } from '../../../../domain';
 
-import { TradeQuoteViewModelService } from '../../services';
+export type TradeAction = 'buy' | 'sell';
+
+export interface TradeQuoteComponentInput {
+  currencyPairName: string | null;
+  tradeAction: TradeAction;
+  readonly exchangeRate: CurrencyExchangeRate | null;
+  readonly quote: CurrencyQuote | null;
+}
+
+export interface TradeQuoteComponentOutput {
+  acceptQuoteClicked: EventEmitter<number>;
+  declineQuoteClicked: EventEmitter<void>;
+}
 
 @Component({
   selector: 'app-trade-quote',
   templateUrl: './trade-quote.component.html',
   styleUrls: ['./trade-quote.component.scss'],
-  providers: [TradeQuoteViewModelService],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TradeQuoteComponent {
+export class TradeQuoteComponent implements TradeQuoteComponentInput, TradeQuoteComponentOutput {
+  @Input() public currencyPairName: string | null = null;
+  @Input() public tradeAction: TradeAction = 'buy';
+  @Input() public exchangeRate: CurrencyExchangeRate | null = null;
+  @Input() public quote: CurrencyQuote | null = null;
+
   @Output() public acceptQuoteClicked = new EventEmitter<number>();
   @Output() public declineQuoteClicked = new EventEmitter<void>();
 
-  protected viewModel$: TradeQuoteViewModelService;
+  @HostBinding('class') private _classes = 'block';
 
-  constructor(@Self() private readonly _viewModel$: TradeQuoteViewModelService) {
-    this.viewModel$ = _viewModel$;
-  }
-
-  @Input()
-  public set currencyPairName(value: string | null | undefined) {
-    if (!value) {
-      this.viewModel$.currencyPairName = null;
-      return;
-    }
-
-    this.viewModel$.currencyPairName = value;
-  }
+  constructor(private readonly _quoteService: QuoteService) {}
 
   public onAcceptQuote(): void {
-    const exchangeRateData = this.viewModel$.exchangeRateData;
+    const quote = this.quote;
 
-    if (!exchangeRateData) {
+    if (!quote) {
       return;
     }
 
-    this.acceptQuoteClicked.emit(exchangeRateData.id);
+    this.acceptQuoteClicked.emit(quote.id);
   }
 
   public onDeclineQuote(): void {

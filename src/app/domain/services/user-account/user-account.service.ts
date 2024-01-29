@@ -1,47 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { HttpCrudService, HttpMessageResponse, PageRequest, PageResponse } from '../../../core';
-
-import { apiRoutesConfig } from '../../config';
-import {
-  ChangePasswordRequest,
-  UserAccountEventDto,
-  UserAccountEventResponse,
-} from '../../domain-models/account';
+import { HttpMessage, HttpMessageDto, PageRequest, PageResponse } from '../../../core';
+import { ApiCrudClient } from '../../../common';
+import { MappingProfile } from '../../config';
+import { ChangePassword, UserAccountEvent, UserAccountEventDto } from '../../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserAccountService {
-  public readonly BASE_PATH = apiRoutesConfig.account.root;
-  public readonly ACCOUNT_ACTIVITY_PATH = apiRoutesConfig.account.activity;
-  public readonly CHANGE_PASSWORD_PATH = apiRoutesConfig.account.changePassword;
-
-  constructor(private readonly _httpService: HttpCrudService) {}
+  constructor(private readonly _apiCrudClient: ApiCrudClient) {}
 
   public getUserAccountEvents(
     pageRequest: PageRequest
-  ): Observable<PageResponse<UserAccountEventResponse>> {
-    const url = `${this.getFullPath(this.ACCOUNT_ACTIVITY_PATH)}?pageNumber=${
-      pageRequest.page
-    }&pageSize=${pageRequest.size}`;
-
-    return this._httpService.find<PageResponse<UserAccountEventDto>>(url);
-  }
-
-  public changePassword(
-    changePasswordRequest: ChangePasswordRequest
-  ): Observable<HttpMessageResponse> {
-    const url = this.getFullPath(this.CHANGE_PASSWORD_PATH);
-
-    return this._httpService.patch<ChangePasswordRequest, HttpMessageResponse>(
-      url,
-      changePasswordRequest
+  ): Observable<PageResponse<UserAccountEvent>> {
+    return this._apiCrudClient.findMany<UserAccountEventDto, UserAccountEvent>(
+      'accountActivity',
+      pageRequest,
+      MappingProfile.UserAccountEventDtoPageToUserAccountEventPage
     );
   }
 
-  private getFullPath(path: string): string {
-    return `${this.BASE_PATH}${path}`;
+  public changePassword(changePasswordRequest: ChangePassword): Observable<HttpMessage> {
+    return this._apiCrudClient.patch<ChangePassword, HttpMessageDto, HttpMessage>(
+      'accountChangePassword',
+      changePasswordRequest,
+      MappingProfile.HttpMessageDtoToHttpMessage
+    );
   }
 }

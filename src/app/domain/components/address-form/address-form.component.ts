@@ -2,20 +2,57 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
+  Injectable,
   Input,
+  Optional,
   Output,
   SkipSelf,
   ViewEncapsulation,
 } from '@angular/core';
-
-import { FormGroup } from '@angular/forms';
-import { map, Observable } from 'rxjs';
-
-import { LookupService } from '../../domain-services';
-
+import { FormControl, FormGroup } from '@angular/forms';
+import { FormBase, Required } from '../../../common';
 import { ListOption } from '../../../form-components';
-import { AddressFormService } from '../../services';
-import { CountryResponse } from '../../domain-models/lookup';
+import { Country } from '../../models';
+
+export interface AddressForm {
+  readonly addressLine: FormControl<string>;
+  readonly street: FormControl<string>;
+  readonly country: FormControl<ListOption<Country> | null>;
+  readonly province: FormControl<string>;
+  readonly city: FormControl<string>;
+  readonly postalCode: FormControl<string>;
+}
+
+export interface AddressFormComponentInput {
+  saveText: string;
+  countryOptions: readonly ListOption<Country>[];
+  formClasses: string;
+}
+
+export interface AddressFormComponentOutput {
+  saveClicked: EventEmitter<void>;
+}
+
+export function getAddressForm(): AddressForm {
+  return {
+    addressLine: new FormControl<string>('', Required),
+    street: new FormControl<string>('', Required),
+    country: new FormControl<ListOption<Country> | null>(null, Required),
+    province: new FormControl<string>('', Required),
+    city: new FormControl<string>('', Required),
+    postalCode: new FormControl<string>('', Required),
+  };
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AddressFormService extends FormBase<AddressForm> {
+  constructor() {
+    super(getAddressForm());
+  }
+}
 
 @Component({
   selector: 'app-address-form',
@@ -24,33 +61,26 @@ import { CountryResponse } from '../../domain-models/lookup';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressFormComponent {
-  @Input() public saveText = '';
+export class AddressFormComponent implements AddressFormComponentInput, AddressFormComponentOutput {
+  @Input() public saveText = 'Next';
+  @Input() public formClasses = '';
 
-  @Output() public formChange = new EventEmitter<FormGroup>();
-  @Output() public saveClicked = new EventEmitter<FormGroup>();
+  @Input() public countryOptions: readonly ListOption<Country>[] = [];
 
-  protected readonly form: FormGroup;
-  protected countryOptions$: Observable<ListOption<CountryResponse>[]>;
+  @Output() public saveClicked = new EventEmitter<void>();
+  public readonly form: FormBase<AddressForm> =
+    this._addressForm ?? new FormBase<AddressForm>(getAddressForm());
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    @SkipSelf() private readonly _addressForm$: AddressFormService,
-    private readonly lookupService: LookupService
-  ) {
-    this.form = _addressForm$.value;
-    this.countryOptions$ = this.lookupService.getAllCountries().pipe(
-      map((countryResponse) =>
-        countryResponse.map((country) => ({
-          code: country.code,
-          name: country.name,
-          value: country,
-          avatar: country.code,
-        }))
-      )
-    );
+    @SkipSelf() @Optional() private readonly _addressForm: AddressFormService | null
+  ) {}
+
+  protected get formGroup(): FormGroup<AddressForm> {
+    return this.form;
   }
 
   public onSaveClicked(): void {
-    this.saveClicked.emit(this.form);
+    this.saveClicked.emit();
   }
 }

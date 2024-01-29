@@ -1,4 +1,4 @@
 export interface PasswordTokenUserDto {
-  username: string;
-  emailAddress: string;
+  readonly username: string;
+  readonly emailAddress: string;
 }

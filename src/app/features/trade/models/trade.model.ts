@@ -1,5 +1,5 @@
 export interface TradeModel {
-  currencyPairName: string;
-  amountCurrency: string;
-  amount: number;
+  readonly currencyPairName: string;
+  readonly amountCurrency: string;
+  readonly amount: number;
 }

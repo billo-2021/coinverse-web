@@ -6,11 +6,23 @@ import {
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
-
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { InputFieldSize } from '../../types';
 
-export type SizeType = 's' | 'm' | 'l';
+export type InputCardType = 'text' | 'email';
+
+export interface InputCardComponentInput {
+  type: InputCardType;
+  size: InputFieldSize;
+  cardNumberName: string;
+  expiryDateName: string;
+  cvcName: string;
+  cardNumberLabel: string;
+  expiryDateLabel: string;
+  cvcLabel: string;
+  hasClear: boolean;
+  autocompleteEnabled: boolean;
+}
 
 @Component({
   selector: 'app-input-card',
@@ -19,37 +31,23 @@ export type SizeType = 's' | 'm' | 'l';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputCardComponent {
-  @Input() public type: 'text' | 'email' = 'text';
-  @Input() public size: SizeType = 'm';
+export class InputCardComponent implements InputCardComponentInput {
+  @Input() public type: InputCardType = 'text';
+  @Input() public size: InputFieldSize = 'm';
   @Input() public cardNumberName = 'cardNumber';
-  @Input() public expireName = 'expiryDate';
+  @Input() public expiryDateName = 'expiryDate';
   @Input() public cvcName = 'securityCode';
   @Input() public cardNumberLabel = 'Card Number';
-  @Input() public expireLabel = 'Expiry Date';
+  @Input() public expiryDateLabel = 'Expiry Date';
   @Input() public cvcLabel = 'Security Code';
   @Input() public hasClear = true;
   @Input() public autocompleteEnabled = true;
 
   @HostBinding('class') private _classes = 'block';
-  private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
 
-  @Input()
-  public set isDisabled(value: boolean) {
-    this._disabled.next(value);
-  }
-
   protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
     return this._formGroupDirective?.form || null;
-  }
-
-  protected get formControl(): AbstractControl<unknown>[] | null {
-    return [
-      this.formGroup?.controls[this.cardNumberName] || null,
-      this.formGroup?.controls[this.expireName] || null,
-      this.formGroup?.controls[this.cvcName] || null,
-    ].filter((value) => !!value);
   }
 }

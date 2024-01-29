@@ -1,10 +1,17 @@
-import { Component, EventEmitter, HostBinding, Inject, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostBinding,
+  Inject,
+  Input,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
+import { Pagination, paginationToken, TOTAL_ITEMS } from '../../../../ui-components';
+import { Wallet } from '../../../../domain';
 
-import { Pagination, paginationToken } from '../../../../ui-components';
-
-import { WalletResponse } from '../../../../common/domain-models/wallet';
-
-const KEYS = {
+export const KEYS = {
   id: 'Id',
   address: 'Address',
   code: 'Code',
@@ -13,23 +20,42 @@ const KEYS = {
   actions: '',
 } as const;
 
+export type ColumnsType = (keyof typeof KEYS)[];
+export type KeysType = typeof KEYS;
+
+export interface WalletsComponentInput {
+  pagination: Pagination;
+  wallets: readonly Wallet[];
+  total: number;
+}
+
+export interface WalletsComponentOutput {
+  paginationChanged: EventEmitter<Pagination>;
+  depositClicked: EventEmitter<string>;
+  withdrawClicked: EventEmitter<string>;
+}
+
 @Component({
   selector: 'app-wallets',
   templateUrl: './wallets.component.html',
   styleUrls: ['./wallets.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WalletsComponent {
+export class WalletsComponent implements WalletsComponentInput, WalletsComponentOutput {
   @Input() public pagination: Pagination = this._paginationToken;
-  @Input() public wallets: readonly WalletResponse[] = [];
-  @Input() public total = 1;
+  @Input() public wallets: readonly Wallet[] = [];
+  @Input() public total: number = TOTAL_ITEMS;
 
-  @Output() public readonly paginationChanged = new EventEmitter<Pagination>();
-  @Output() public readonly depositClicked = new EventEmitter<string>();
-  @Output() public readonly withdrawClicked = new EventEmitter<string>();
+  @Output() public paginationChanged = new EventEmitter<Pagination>();
+  @Output() public depositClicked = new EventEmitter<string>();
+  @Output() public withdrawClicked = new EventEmitter<string>();
+
   protected readonly title = 'Wallets';
   protected readonly subtitle = 'Your latest wallet balances.';
-  protected readonly columns = Object.keys(KEYS) as Array<keyof typeof KEYS>;
-  protected readonly keys = KEYS;
+  protected readonly Columns: ColumnsType = Object.keys(KEYS) as ColumnsType;
+  protected readonly Keys: KeysType = KEYS;
+
   @HostBinding('class') private _classes = 'block';
 
   public constructor(@Inject(paginationToken) private readonly _paginationToken: Pagination) {}

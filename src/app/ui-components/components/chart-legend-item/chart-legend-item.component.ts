@@ -8,6 +8,16 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+export interface ChartLegendItemComponentInput {
+  active: boolean;
+  color: string;
+  text: string;
+}
+
+export interface ChartLegendItemComponentOutput {
+  hoverChange: EventEmitter<boolean>;
+}
+
 @Component({
   selector: 'app-chart-legend-item',
   templateUrl: './chart-legend-item.component.html',
@@ -15,16 +25,18 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartLegendItemComponent {
-  @Input() public isActive = false;
+export class ChartLegendItemComponent
+  implements ChartLegendItemComponentInput, ChartLegendItemComponentOutput
+{
+  @Input() public active = false;
   @Input() public color = 'var(--tui-chart-0)';
   @Input() public text = '';
 
-  @Output() public hoveredChange = new EventEmitter<boolean>();
+  @Output() public hoverChange = new EventEmitter<boolean>();
 
   @HostBinding('class') private _classes = 'block';
 
   public onHover(hovered: boolean): void {
-    this.hoveredChange.emit(hovered);
+    this.hoverChange.emit(hovered);
   }
 }

@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
+import { UserPrincipalStoreService } from '../../../core';
+import { NavigationService } from '../../services';
 
-import { NavigationService, UserPrincipalStoreService } from '../../services';
-
-function roleGuard(role: string) {
+export function roleGuard(role: string) {
   const navigationService = inject(NavigationService);
   const userPrincipalStore$ = inject(UserPrincipalStoreService);
   const isLoggedIn = userPrincipalStore$.isLoggedIn();
@@ -18,8 +18,6 @@ function roleGuard(role: string) {
   return true;
 }
 
-function adminRoleGuard() {
+export function adminRoleGuard() {
   return roleGuard('admin');
 }
-
-export { roleGuard, adminRoleGuard };

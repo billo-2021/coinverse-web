@@ -4,9 +4,9 @@
 
 <app-table
   (paginationChanged)="onPagination($event)"
-  [columns]="columns"
+  [columns]="Columns"
   [data]="currencies"
-  [keys]="keys"
+  [keys]="Keys"
   [pagination]="pagination"
   [rowDataTemplates]="{ name, askRate, bidRate, change,circulatingSupply, actions }"
   [total]="total"

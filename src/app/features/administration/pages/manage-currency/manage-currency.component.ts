@@ -1,27 +1,59 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, filter, finalize, map, Observable, switchMap, tap } from 'rxjs';
+import { ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation } from '@angular/core';
+import {
+  BehaviorSubject,
+  combineLatest,
+  filter,
+  finalize,
+  map,
+  merge,
+  Observable,
+  ReplaySubject,
+  shareReplay,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { tuiIsPresent } from '@taiga-ui/cdk';
-
 import { AlertService } from '../../../../core';
-import { AdministrationService, LookupService, webRoutesConfig } from '../../../../common';
-import { CryptoCurrencyResponse } from '../../../../common/domain-models/lookup';
+import {
+  CrudMode,
+  CrudModeTitle,
+  FormBase,
+  getErrorMessage,
+  NavigationService,
+  ParamsService,
+} from '../../../../common';
+import {
+  AddCryptoCurrency,
+  AdministrationService,
+  CryptoCurrency,
+  LookupService,
+  UpdateCryptoCurrency,
+} from '../../../../domain';
+import { CurrencyForm, CurrencyFormService } from '../../components';
 
-type Mode = 'create' | 'edit';
+export interface ManageCurrencyViewModel {
+  readonly currencyCode: string | null;
+  readonly currency: CryptoCurrency | null;
+  readonly mode: CrudMode;
+  readonly title: string;
+  readonly subtitle: string;
+  readonly saveText: string;
+  readonly error: string | null;
+}
 
-const TITLE: Record<Mode, string> = {
-  create: 'Add new Crypto Currency',
-  edit: 'Update Crypto Currency',
+export const TITLE: CrudModeTitle = {
+  add: 'Add crypto currency',
+  edit: 'Update crypto currency',
 };
 
-const SUBTITLE: Record<Mode, string> = {
-  create: 'Add new Crypto Currency here.',
-  edit: 'Edit Crypto Currency here',
+export const SUBTITLE: CrudModeTitle = {
+  add: 'Add crypto currency here.',
+  edit: 'Edit crypto currency here.',
 };
 
-const SAVE_TEXT: Record<Mode, string> = {
-  create: 'Add',
+export const SAVE_TEXT: CrudModeTitle = {
+  add: 'Add',
   edit: 'Save Changes',
 };
 
@@ -31,126 +63,126 @@ const SAVE_TEXT: Record<Mode, string> = {
   styleUrls: ['./manage-currency.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [CurrencyFormService, ParamsService],
 })
 export class ManageCurrencyComponent {
-  public manageCurrenciesUrl = webRoutesConfig.manageCurrencies;
-  public readonly title = TITLE;
-  public readonly subtitle = SUBTITLE;
-  public readonly saveText = SAVE_TEXT;
+  public readonly CrudModeType: typeof CrudMode = CrudMode;
+  protected form: FormBase<CurrencyForm> = this._currencyForm;
+  @HostBinding('class') private _classes = 'block';
+  private readonly _currencyCode$ = this._paramsService.param('currencyCode').pipe(startWith(null));
 
-  public readonly mode$ = new BehaviorSubject<Mode>('create');
+  private readonly _currency$ = this._currencyCode$.pipe(
+    filter(tuiIsPresent),
+    switchMap((currencyCode) =>
+      this._lookupService.getCryptoCurrencyByCurrencyCode(currencyCode).pipe(shareReplay(1))
+    ),
+    startWith(null)
+  );
 
-  protected currencyCode$: Observable<string | null>;
-  protected currencyForm: FormGroup;
+  private readonly _mode$: Observable<CrudMode> = this._currency$.pipe(
+    map((currency) => (!currency ? CrudMode.add : CrudMode.edit)),
+    startWith(CrudMode.add)
+  );
+
+  private readonly _reload$ = new ReplaySubject<void>();
+
+  private readonly _error$ = new BehaviorSubject<string | null>(null);
+
+  private readonly _effects$ = merge(
+    this._reload$.pipe(
+      switchMap(() => this._currency$.pipe(startWith(null))),
+      filter(tuiIsPresent),
+      tap((currency) => this._currencyForm.setFromModel(currency)),
+      startWith(null)
+    )
+  );
+
+  public readonly viewModel$: Observable<ManageCurrencyViewModel> = combineLatest([
+    this._currencyCode$,
+    this._currency$,
+    this._mode$,
+    this._error$,
+    this._effects$,
+  ]).pipe(
+    map(([currencyCode, currency, mode, error]) => ({
+      currencyCode,
+      currency,
+      mode,
+      title: TITLE[mode],
+      subtitle: SUBTITLE[mode],
+      saveText: SAVE_TEXT[mode],
+      form: this.form,
+      error,
+    }))
+  );
 
   public constructor(
-    private readonly _route: ActivatedRoute,
-    private readonly _router: Router,
-    private readonly _formBuilder: FormBuilder,
-    private readonly _lookupService: LookupService,
+    private readonly _paramsService: ParamsService,
+    private readonly _alertService: AlertService,
+    private readonly _navigationService: NavigationService,
+    private readonly _currencyForm: CurrencyFormService,
     private readonly _administrationService: AdministrationService,
-    private readonly _alertService: AlertService
+    private readonly _lookupService: LookupService
   ) {
-    this.currencyForm = this.getCurrencyForm(_formBuilder, {
-      id: 0,
-      code: '',
-      name: '',
-      symbol: '',
-      circulatingSupply: NaN,
-    });
+    this.reload();
+  }
 
-    this.currencyCode$ = _route.params.pipe(
-      map((params) => {
-        const currencyCode = params['currencyCode'] as string | null | undefined;
-        this.mode$.next(currencyCode ? 'edit' : 'create');
-        return currencyCode || null;
-      })
-    );
+  public set error(value: string | null) {
+    this._error$.next(value);
+  }
 
-    this.currencyCode$
+  public reload(): void {
+    this._reload$.next();
+  }
+
+  public onAddCurrency(): void {
+    const currencyFormModel = this.form.getModel();
+
+    const addCryptoCurrencyRequest: AddCryptoCurrency = {
+      code: currencyFormModel.code,
+      name: currencyFormModel.name,
+      symbol: currencyFormModel.symbol,
+      circulatingSupply: currencyFormModel.circulatingSupply,
+    };
+
+    this._administrationService
+      .addCryptoCurrency(addCryptoCurrencyRequest)
       .pipe(
-        filter(tuiIsPresent),
-        switchMap((currencyCode) => {
-          return this._lookupService.getCryptoCurrencyByCurrencyCode(currencyCode);
-        }),
-        tap((currencyResponse) => {
-          const code = this.currencyForm.controls['code'];
-          const name = this.currencyForm.controls['name'];
-          const symbol = this.currencyForm.controls['symbol'];
-          const circulatingSupply = this.currencyForm.controls['circulatingSupply'];
-
-          code.setValue(currencyResponse.code);
-          name.setValue(currencyResponse.name);
-          symbol.setValue(currencyResponse.symbol);
-          circulatingSupply.setValue(currencyResponse.circulatingSupply);
-          code.disable();
+        finalize(() => {
+          this.form.reset();
+          this.form.markAsUntouched();
         })
       )
       .subscribe({
-        error: () => {
-          this.mode$.next('create');
+        error: (error) => (this.error = getErrorMessage(error)),
+        next: () => {
+          this._alertService.showMessage('Currency Added');
+          this._navigationService.to('manageCurrencies').then();
         },
       });
   }
 
-  public getCurrencyForm(
-    formBuilder: FormBuilder,
-    cryptoCurrencyResponse: CryptoCurrencyResponse
-  ): FormGroup {
-    return formBuilder.group({
-      code: [cryptoCurrencyResponse.code, [Validators.required]],
-      name: [cryptoCurrencyResponse.name, [Validators.required]],
-      symbol: [cryptoCurrencyResponse.symbol, [Validators.required]],
-      circulatingSupply: [
-        cryptoCurrencyResponse.circulatingSupply,
-        [Validators.required, Validators.min(1)],
-      ],
-    });
-  }
+  public onEditCurrency(): void {
+    const currencyFormModel = this.form.getModel();
 
-  public onSaveClicked(): void {
-    const code = this.currencyForm.controls['code']?.value as string;
-    const name = this.currencyForm.controls['name']?.value as string;
-    const symbol = this.currencyForm.controls['symbol']?.value as string;
-    const circulatingSupply = this.currencyForm.controls['circulatingSupply']?.value as number;
-
-    const mode = this.mode$.getValue();
-
-    if (mode === 'create') {
-      this._administrationService
-        .addNewCryptoCurrency({
-          code,
-          name,
-          symbol,
-          circulatingSupply,
-        })
-        .pipe(
-          finalize(() => {
-            this.currencyForm.reset();
-            this.currencyForm.markAsUntouched();
-          }),
-          tap(async () => {
-            this._alertService.showMessage('Currency Added');
-            await this._router.navigate([this.manageCurrenciesUrl]);
-          })
-        )
-        .subscribe();
-
-      return;
-    }
+    const updateCryptoCurrency: UpdateCryptoCurrency = {
+      name: currencyFormModel.name,
+      symbol: currencyFormModel.symbol,
+      circulatingSupply: currencyFormModel.circulatingSupply,
+    };
 
     this._administrationService
-      .updateCryptoCurrency(code, {
-        name,
-        symbol,
-        circulatingSupply,
-      })
-      .pipe(
-        tap(async () => {
+      .updateCryptoCurrency(currencyFormModel.code, updateCryptoCurrency)
+      .subscribe({
+        next: () => {
           this._alertService.showMessage('Currency Updated');
-          await this._router.navigate([this.manageCurrenciesUrl]);
-        })
-      )
-      .subscribe();
+          this._navigationService.to('manageCurrencies').then();
+        },
+        error: (error) => {
+          this.error = getErrorMessage(error);
+          this.form.markAsPristine();
+          this.reload();
+        },
+      });
   }
 }

@@ -1,65 +1,59 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { HttpCrudService } from '../../../core';
-
-import { apiRoutesConfig } from '../../config';
+import { ApiCrudClient } from '../../../common';
+import { MappingProfile } from '../../config';
 import {
-  UserProfileAddressUpdate,
+  UpdateUserProfileAddress,
+  UpdateUserProfilePersonalInformation,
+  UpdateUserProfilePreference,
+  UserProfile,
   UserProfileDto,
-  UserProfilePersonalInformationUpdate,
-  UserProfilePreferenceUpdate,
-  UserProfileResponse,
-} from '../../domain-models/profile';
+} from '../../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProfileService {
-  public readonly BASE_PATH = apiRoutesConfig.profile.root;
+  constructor(private readonly _apiCrudClient: ApiCrudClient) {}
 
-  constructor(private readonly _httpService: HttpCrudService) {}
-
-  public getProfile(): Observable<UserProfileResponse> {
-    const url = this.BASE_PATH;
-
-    return this._httpService.find<UserProfileDto>(url);
+  public getProfile(): Observable<UserProfile> {
+    return this._apiCrudClient.find<UserProfileDto, UserProfile>(
+      'profile',
+      MappingProfile.UserProfileDtoToUserProfile
+    );
   }
 
   public updatePreferenceDetails(
-    userProfilePreferenceUpdate: UserProfilePreferenceUpdate
-  ): Observable<UserProfileResponse> {
-    const url = this.getFullPath(apiRoutesConfig.profile.preference);
-
-    return this._httpService.patch<UserProfilePreferenceUpdate, UserProfileResponse>(
-      url,
-      userProfilePreferenceUpdate
+    userProfilePreferenceRequest: UpdateUserProfilePreference
+  ): Observable<UserProfile> {
+    return this._apiCrudClient.patch<UpdateUserProfilePreference, UserProfileDto, UserProfile>(
+      'profilePreference',
+      userProfilePreferenceRequest,
+      MappingProfile.UserProfileDtoToUserProfile
     );
   }
 
   public updateAddress(
-    userProfileAddressUpdate: UserProfileAddressUpdate
-  ): Observable<UserProfileResponse> {
-    const url = this.getFullPath(apiRoutesConfig.profile.address);
-
-    return this._httpService.patch<UserProfileAddressUpdate, UserProfileDto>(
-      url,
-      userProfileAddressUpdate
+    userProfileAddressRequest: UpdateUserProfileAddress
+  ): Observable<UserProfile> {
+    return this._apiCrudClient.patch<UpdateUserProfileAddress, UserProfileDto, UserProfile>(
+      'profileAddress',
+      userProfileAddressRequest,
+      MappingProfile.UserProfileDtoToUserProfile
     );
   }
 
   public updatePersonalInformation(
-    userProfilePersonalInformationUpdate: UserProfilePersonalInformationUpdate
-  ): Observable<UserProfileResponse> {
-    const url = this.getFullPath(apiRoutesConfig.profile.personalInformation);
-
-    return this._httpService.patch<UserProfilePersonalInformationUpdate, UserProfileDto>(
-      url,
-      userProfilePersonalInformationUpdate
+    userProfilePersonalInformationRequest: UpdateUserProfilePersonalInformation
+  ): Observable<UserProfile> {
+    return this._apiCrudClient.patch<
+      UpdateUserProfilePersonalInformation,
+      UserProfileDto,
+      UserProfile
+    >(
+      'profilePersonalInformation',
+      userProfilePersonalInformationRequest,
+      MappingProfile.UserProfileDtoToUserProfile
     );
-  }
-
-  private getFullPath(path: string): string {
-    return `${this.BASE_PATH}${path}`;
   }
 }

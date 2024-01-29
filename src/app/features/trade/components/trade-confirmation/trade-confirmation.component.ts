@@ -1,18 +1,42 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
+import { CurrencyTransaction } from '../../../../domain';
 
-import { CurrencyTransactionResponse } from '../../../../common/domain-models/trade';
+export interface TradeConfirmationComponentInput {
+  quoteId: number | null;
+  tradeResponse: CurrencyTransaction | null;
+}
+
+export interface TradeConfirmationComponentOutput {
+  viewTradesClicked: EventEmitter<void>;
+  tradeAgainClicked: EventEmitter<void>;
+}
 
 @Component({
   selector: 'app-trade-confirmation',
   templateUrl: './trade-confirmation.component.html',
   styleUrls: ['./trade-confirmation.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TradeConfirmationComponent {
+export class TradeConfirmationComponent
+  implements TradeConfirmationComponentInput, TradeConfirmationComponentOutput
+{
   @Input() public quoteId: number | null = null;
-  @Input() public tradeResponse: CurrencyTransactionResponse | null = null;
+  @Input() public tradeResponse: CurrencyTransaction | null = null;
 
   @Output() public viewTradesClicked = new EventEmitter<void>();
+
   @Output() public tradeAgainClicked = new EventEmitter<void>();
+
+  @HostBinding('class') private _classes = 'block';
 
   public onViewTradesClicked(): void {
     this.viewTradesClicked.emit();

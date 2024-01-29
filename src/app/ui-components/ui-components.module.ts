@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import {
   TuiButtonModule,
   TuiExpandModule,
@@ -18,7 +17,6 @@ import {
   TuiSvgModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
-
 import {
   TuiActiveZoneModule,
   TuiAutoFocusModule,
@@ -35,9 +33,7 @@ import {
   TuiTabsModule,
   TuiTagModule,
 } from '@taiga-ui/kit';
-
 import { TuiBlockStatusModule } from '@taiga-ui/layout';
-
 import { TuiReorderModule, TuiTableModule, TuiTablePaginationModule } from '@taiga-ui/addon-table';
 import { TuiAppBarModule, TuiSidebarModule } from '@taiga-ui/addon-mobile';
 import {
@@ -46,9 +42,7 @@ import {
   TuiLineChartModule,
   TuiRingChartModule,
 } from '@taiga-ui/addon-charts';
-
 import { TuiMoneyModule } from '@taiga-ui/addon-commerce';
-
 import {
   AvatarComponent,
   BlockStatusComponent,

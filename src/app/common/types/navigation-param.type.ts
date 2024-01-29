@@ -4,7 +4,7 @@ import { QueryParams } from '../../core';
 export type NavigationParam =
   | WebRoutesConfigType
   | {
-      route: WebRoutesConfigType;
-      routePath?: string;
-      queryParams: QueryParams;
+      readonly route: WebRoutesConfigType;
+      readonly routePath?: string;
+      readonly queryParams?: QueryParams;
     };

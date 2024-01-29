@@ -1,9 +1,16 @@
-import { ApiResponseMapper } from '../types';
+import { PageResponse } from '../../core';
 
-export function apiResponseMapper<TDto, TResponse>(): ApiResponseMapper<TDto, TResponse> {
-  return {
-    map: (response: unknown) => response as TResponse,
-  };
+function apiResponseMapper<TDto, TResponse = TDto>(response: TDto): TResponse;
+
+function apiResponseMapper<TDto, TResponse = TDto>(response: TDto[]): TResponse[];
+
+function apiResponseMapper<TDto, TResponse = TDto>(
+  response: PageResponse<TDto>
+): PageResponse<TResponse>;
+function apiResponseMapper<TDto, TResponse = TDto>(
+  response: TDto | TDto[] | PageResponse<TDto>
+): TResponse | TResponse[] | PageResponse<TResponse> {
+  return response as unknown as TResponse | TResponse[] | PageResponse<TResponse>;
 }
 
 export const MapperUtils = {

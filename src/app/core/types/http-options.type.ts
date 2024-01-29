@@ -1,11 +1,11 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 
-interface HttpOptions {
-  headers?: HttpHeaders;
-  params?: HttpParams;
+export interface HttpOptions {
+  readonly headers?: HttpHeaders;
+  readonly params?: HttpParams;
 }
 
-class HttpOptionsBuilder {
+export class HttpOptionsBuilder {
   private headers?: HttpHeaders;
   private params?: HttpParams;
 
@@ -26,5 +26,3 @@ class HttpOptionsBuilder {
     };
   }
 }
-
-export { HttpOptions, HttpOptionsBuilder };

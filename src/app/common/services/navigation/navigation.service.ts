@@ -8,13 +8,13 @@ import { DestroyService } from '../../../core';
 import { webRoutesConfig } from '../../config';
 import { NavigationParam } from '../../types';
 
-type NavigationServiceKey = {
+export type NavigationServiceKey = {
   url: string;
   urlAfterRedirects: string;
   params: Params;
 };
 
-const MAX_HISTORY_ITEMS = 12;
+export const MAX_HISTORY_ITEMS = 12;
 
 @Injectable({
   providedIn: 'root',
@@ -75,13 +75,6 @@ export class NavigationService extends Observable<NavigationServiceKey> {
     const currentHistory = this.history;
 
     return (currentHistory.length && currentHistory[currentHistory.length - 1]) || null;
-  }
-
-  public queryParam(param: string): Observable<string> {
-    return this._activatedRoute.queryParams.pipe(
-      map((params) => params[param] as string | undefined),
-      filter((param): param is string => typeof param === 'string')
-    );
   }
 
   public async to(param: NavigationParam): Promise<boolean> {

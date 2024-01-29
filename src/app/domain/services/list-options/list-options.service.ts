@@ -1,82 +1,109 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-
-import { ListOption, ListOptionUtils } from '../../../form-components';
-
-import { LookupService, WalletService } from '../../domain-services';
-import {
-  CurrencyPairResponse,
-  CurrencyResponse,
-  PaymentMethodResponse,
-} from '../../domain-models/lookup';
+import { Mapper } from '@dynamic-mapper/angular';
+import { PageRequest } from '../../../core';
+import { apiMaxPageRequestToken } from '../../../common';
+import { ListOption } from '../../../form-components';
+import { MappingProfile } from '../../config';
+import { Country, Currency, CurrencyPair, PaymentMethod, UserRole, Wallet } from '../../models';
+import { LookupService, WalletService } from '../../services';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ListOptionsService {
   constructor(
+    private readonly _mapper: Mapper,
+    @Inject(apiMaxPageRequestToken) private readonly _apiMaxPageRequestToken: PageRequest,
     private readonly _lookupService: LookupService,
     private readonly _walletService: WalletService
   ) {}
 
-  public getCurrencyOptions(): Observable<ListOption<CurrencyResponse>[]> {
-    return this._lookupService.getAllCurrencies().pipe(
-      map((currencyResponse) =>
-        currencyResponse.map((currency) => ({
-          code: currency.code,
-          name: currency.name,
-          avatar: currency.code,
-          value: currency,
-        }))
-      )
-    );
-  }
-
-  public getCurrencyPairOptions(): Observable<ListOption<CurrencyPairResponse>[]> {
-    return this._lookupService.getAllCurrencyPairs().pipe(
-      map((currencyPairs) => {
-        return currencyPairs.map((currencyPair) => ({
-          code: currencyPair.type,
-          name: currencyPair.name,
-          value: currencyPair,
-          avatar: currencyPair.type,
-        }));
-      })
-    );
-  }
-
-  public getFiatCurrencyOptions(): Observable<ListOption<CurrencyResponse>[]> {
+  public getCountryOptions(): Observable<ListOption<Country>[]> {
     return this._lookupService
-      .getAllCurrenciesByType('fiat')
+      .getAllCountries()
       .pipe(
-        map((response) =>
-          response.map((currencyResponse) => ListOptionUtils.toListOption(currencyResponse))
-        )
-      );
-  }
-
-  public getPaymentMethodOptions(): Observable<ListOption<PaymentMethodResponse>[]> {
-    return this._lookupService
-      .getAllPaymentMethods()
-      .pipe(
-        map((response) =>
-          response.map((paymentMethodResponse) =>
-            ListOptionUtils.toListOption(paymentMethodResponse)
+        map((countries) =>
+          this._mapper.map<Country, ListOption<Country>>(
+            MappingProfile.CurrencyToCurrencyListOption,
+            countries
           )
         )
       );
   }
 
-  public getWalletOptions() {
-    return this._walletService.getBalances({ page: 0, size: 100 }).pipe(
-      map((response) =>
-        response.data.map((wallet) => ({
-          code: wallet.currency.code,
-          name: wallet.currency.name + ' Wallet',
-          avatar: wallet.currency.code,
-          value: wallet,
-        }))
-      )
-    );
+  public getCurrencyOptions(): Observable<ListOption<Currency>[]> {
+    return this._lookupService
+      .getAllCurrencies()
+      .pipe(
+        map((currencies) =>
+          this._mapper.map<Currency, ListOption<Currency>>(
+            MappingProfile.CurrencyToCurrencyListOption,
+            currencies
+          )
+        )
+      );
+  }
+
+  public getCurrencyPairOptions(): Observable<ListOption<CurrencyPair>[]> {
+    return this._lookupService
+      .getAllCurrencyPairs()
+      .pipe(
+        map((currencyPairs) =>
+          this._mapper.map<CurrencyPair, ListOption<CurrencyPair>>(
+            MappingProfile.CurrencyPairToCurrencyPairListOption,
+            currencyPairs
+          )
+        )
+      );
+  }
+
+  public getFiatCurrencyOptions(): Observable<ListOption<Currency>[]> {
+    return this._lookupService
+      .getAllCurrenciesByType('fiat')
+      .pipe(
+        map((currencies) =>
+          this._mapper.map<Currency, ListOption<Currency>>(
+            MappingProfile.CurrencyToCurrencyListOption,
+            currencies
+          )
+        )
+      );
+  }
+
+  public getPaymentMethodOptions(): Observable<ListOption<PaymentMethod>[]> {
+    return this._lookupService
+      .getAllPaymentMethods()
+      .pipe(
+        map((paymentMethods) =>
+          this._mapper.map<PaymentMethod, ListOption<PaymentMethod>>(
+            MappingProfile.PaymentMethodToPaymentMethodListOption,
+            paymentMethods
+          )
+        )
+      );
+  }
+
+  public getWalletOptions(): Observable<ListOption<Wallet>[]> {
+    return this._walletService
+      .getBalances(this._apiMaxPageRequestToken)
+      .pipe(
+        map((walletPage) =>
+          walletPage.data.map((wallet) =>
+            this._mapper.map<Wallet, ListOption<Wallet>>(
+              MappingProfile.WalletToWalletListOption,
+              wallet
+            )
+          )
+        )
+      );
+  }
+
+  public getUserRoleOptions(): Observable<ListOption<UserRole>[]> {
+    return this._lookupService
+      .getAllUserRoles()
+      .pipe(
+        map((userRoles) => this._mapper.map(MappingProfile.UserRoleToUserRoleListOption, userRoles))
+      );
   }
 }

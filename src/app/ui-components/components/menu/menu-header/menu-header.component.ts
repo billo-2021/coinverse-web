@@ -8,13 +8,19 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
+import { UserPrincipal } from '../../../../core';
+import { appNameToken } from '../../../../common';
 
-import {
-  appNameToken,
-  NavigationService,
-  UserPrincipal,
-  UserPrincipalStoreService,
-} from '../../../../common';
+export interface MenuHeaderComponentInput {
+  isMobile: boolean;
+  user: UserPrincipal | null;
+}
+
+export interface MenuHeaderComponentOutput {
+  toggleMenuClicked: EventEmitter<boolean>;
+  signOutClicked: EventEmitter<void>;
+  gotoProfileClicked: EventEmitter<void>;
+}
 
 @Component({
   selector: 'app-menu-header',
@@ -23,19 +29,17 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MenuHeaderComponent {
+export class MenuHeaderComponent implements MenuHeaderComponentInput, MenuHeaderComponentOutput {
   @Input() public isMobile = false;
   @Input() public user: UserPrincipal | null = null;
 
   @Output() public toggleMenuClicked = new EventEmitter<boolean>();
+  @Output() public signOutClicked = new EventEmitter<void>();
+  @Output() public gotoProfileClicked = new EventEmitter<void>();
 
   @HostBinding('class') private _classes = 'block header';
 
-  public constructor(
-    private readonly _navigationService: NavigationService,
-    private readonly _userPrincipalService: UserPrincipalStoreService,
-    @Inject(appNameToken) private readonly _appNameToken: string
-  ) {}
+  public constructor(@Inject(appNameToken) private readonly _appNameToken: string) {}
 
   protected get appName(): string {
     return this._appNameToken;
@@ -45,12 +49,11 @@ export class MenuHeaderComponent {
     this.toggleMenuClicked.emit(open);
   }
 
-  public async onSignOut(): Promise<boolean> {
-    this._userPrincipalService.logOut();
-    return this._navigationService.to('root');
+  public onSignOut(): void {
+    this.signOutClicked.emit();
   }
 
-  public async onGotoProfile(): Promise<boolean> {
-    return this._navigationService.to('profile');
+  public onGotoProfile(): void {
+    this.gotoProfileClicked.emit();
   }
 }

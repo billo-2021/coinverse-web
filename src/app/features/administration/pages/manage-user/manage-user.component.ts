@@ -1,173 +1,100 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { finalize, tap } from 'rxjs';
-
-import { AlertService } from '../../../../core';
-import { AdministrationService, webRoutesConfig } from '../../../../common';
 import {
-  UserAccountRequest,
-  UserAddressRequest,
-  UserPreferenceRequest,
-  UserRequest,
-} from '../../../../common/domain-models/administration';
-
-enum FormSteps {
-  PERSONAL_INFORMATION,
-  ADDRESS_DETAILS,
-  PREFERENCE_DETAILS,
-  ACCOUNT_DETAILS,
-}
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Self,
+  ViewEncapsulation,
+} from '@angular/core';
+import { finalize } from 'rxjs';
+import { Mapper } from '@dynamic-mapper/angular';
+import { AlertService, DestroyService } from '../../../../core';
+import { getErrorMessage, NavigationService, Page } from '../../../../common';
+import {
+  AccountFormService,
+  AddressFormService,
+  AddUser,
+  AdministrationService,
+  MappingProfile,
+  PersonalInformationFormService,
+  PreferenceFormService,
+  UserFormController,
+  UserFormStep,
+} from '../../../../domain';
 
 @Component({
   selector: 'app-manage-user',
   templateUrl: './manage-user.component.html',
   styleUrls: ['./manage-user.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    UserFormController,
+    PersonalInformationFormService,
+    AddressFormService,
+    PreferenceFormService,
+    AccountFormService,
+    DestroyService,
+  ],
 })
-export class ManageUserComponent {
-  protected readonly title = 'Add new user';
-  protected readonly subtitle = 'Add new user here';
-  protected readonly personalInformationForm: FormGroup;
-  protected readonly addressDetailsForm: FormGroup;
-  protected readonly preferenceDetailsForm: FormGroup;
-  protected readonly accountDetailsForm: FormGroup;
-  protected readonly MAX_NUMBER_OF_STEPS = 4;
-  protected readonly FORM_STEPS = FormSteps;
-  protected currentStepIndex = 0;
-  protected formSteps = ['Personal Information', 'Address', 'Preference', 'Account'];
+export class ManageUserComponent implements Page {
+  public readonly title = 'Add new user';
+  public readonly subtitle = 'Add new user here.';
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    private readonly _changeDetectorRef: ChangeDetectorRef,
-    private readonly _router: Router,
-    private readonly _formBuilder: FormBuilder,
+    @Self() private readonly _personalInformationFormService: PersonalInformationFormService,
+    @Self() private readonly _addressFormService: AddressFormService,
+    @Self() private readonly _preferenceFormService: PreferenceFormService,
+    @Self() private readonly _accountFormService: AccountFormService,
+    @Self() private readonly _userFormController: UserFormController,
+    private readonly _navigationService: NavigationService,
     private readonly _alertService: AlertService,
-    private readonly _administrationService: AdministrationService
-  ) {
-    this.personalInformationForm = this.getPersonalInformationForm(_formBuilder);
-    this.addressDetailsForm = this.getAddressForm(_formBuilder);
-    this.preferenceDetailsForm = this.getPreferenceForm(_formBuilder);
-    this.accountDetailsForm = this.getAccountForm(_formBuilder);
-  }
+    private readonly _administrationService: AdministrationService,
+    private readonly _mapper: Mapper
+  ) {}
 
-  public getPersonalInformationForm(formBuilder: FormBuilder): FormGroup {
-    return formBuilder.group({
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      emailAddress: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required]],
-    });
-  }
-
-  public getAddressForm(formBuilder: FormBuilder): FormGroup {
-    return formBuilder.group({
-      addressLine: ['', [Validators.required]],
-      street: ['', [Validators.required]],
-      country: [null, [Validators.required]],
-      province: ['', [Validators.required]],
-      city: ['', [Validators.required]],
-      postalCode: ['', [Validators.required]],
-    });
-  }
-
-  public getPreferenceForm(formBuilder: FormBuilder): FormGroup {
-    return formBuilder.group({
-      currency: [null, [Validators.required]],
-      notificationMethods: formBuilder.group({
-        sms: [false],
-        email: [true],
-      }),
-    });
-  }
-
-  public getAccountForm(formBuilder: FormBuilder): FormGroup {
-    return formBuilder.group({
-      username: ['', [Validators.required]],
-      role: [null, [Validators.required]],
-      password: ['', [Validators.required]],
-    });
-  }
-
-  public onStepChanged(nextStepIndex: number) {
-    if (nextStepIndex === FormSteps.ACCOUNT_DETAILS) {
-      const emailAddress = this.personalInformationForm.controls['emailAddress'].value;
-
-      this.accountDetailsForm.controls['username'].setValue(emailAddress);
+  public onStepChanged(nextStepIndex: UserFormStep) {
+    if (nextStepIndex === UserFormStep.AccountDetails) {
+      const emailAddress = this._personalInformationFormService.controls.emailAddress.value;
+      this._accountFormService.controls.username.setValue(emailAddress);
     }
-
-    if (nextStepIndex < this.MAX_NUMBER_OF_STEPS) {
-      this.currentStepIndex = nextStepIndex;
-      return;
-    }
-
-    this.onAddUser();
   }
 
   public onAddUser(): void {
-    const personalInformationFormValue = this.personalInformationForm.value;
+    const personalInformationFormValue = this._personalInformationFormService.getModel();
 
-    const registerRequest: UserRequest = {
-      firstName: personalInformationFormValue.firstName,
-      lastName: personalInformationFormValue.lastName,
-      emailAddress: personalInformationFormValue.emailAddress.trim().toLowerCase(),
-      phoneNumber: personalInformationFormValue.phoneNumber,
-      address: this.getUserAddressRequest(),
-      preference: this.getUserPreferenceRequest(),
-      account: this.getUserAccountRequest(),
+    const addressFormValue = this._addressFormService.getModel();
+    const preferenceFormValue = this._preferenceFormService.getModel();
+    const accountFormValue = this._accountFormService.getModel();
+
+    const registerRequest: AddUser = {
+      ...this._mapper.map(
+        MappingProfile.PersonalInformationFormValueToUserPersonalInformationRequest,
+        personalInformationFormValue
+      ),
+      address: this._mapper.map(
+        MappingProfile.AddressFormValueToUserAddressRequest,
+        addressFormValue
+      ),
+      preference: this._mapper.map(
+        MappingProfile.PreferenceFormValueToUserPreferenceRequest,
+        preferenceFormValue
+      ),
+      account: this._mapper.map(
+        MappingProfile.AccountFormValueToUserAccountRequest,
+        accountFormValue
+      ),
     };
 
     this._administrationService
       .addUser(registerRequest)
-      .pipe(
-        tap((response) => {
-          this._alertService.showMessage(response.message);
-          this._router.navigate([webRoutesConfig.manageUsers]).then();
-        }),
-        finalize(() => this.resetForms())
-      )
-      .subscribe();
-  }
-
-  public getUserAccountRequest(): UserAccountRequest {
-    const accountDetailsFormValue = this.accountDetailsForm.value;
-    return {
-      username: accountDetailsFormValue.username.trim().toLowerCase(),
-      roles: [accountDetailsFormValue.role.value.name],
-      password: accountDetailsFormValue.password,
-    };
-  }
-
-  public getUserPreferenceRequest(): UserPreferenceRequest {
-    const preferenceDetailsValue = this.preferenceDetailsForm.value;
-    const notificationMethodsValue = preferenceDetailsValue.notificationMethods;
-
-    const notificationMethods = [notificationMethodsValue.email, notificationMethodsValue.sms]
-      .filter((item) => !!item)
-      .map((item, index) => (index === 0 ? 'email' : 'sms'));
-
-    return {
-      currencyCode: preferenceDetailsValue.currency.value.code,
-      notificationMethods,
-    };
-  }
-
-  public getUserAddressRequest(): UserAddressRequest {
-    const addressDetailsFormValue = this.addressDetailsForm.value;
-    return {
-      addressLine: addressDetailsFormValue.addressLine,
-      street: addressDetailsFormValue.street,
-      countryCode: addressDetailsFormValue.country.value.code,
-      province: addressDetailsFormValue.province,
-      city: addressDetailsFormValue.city,
-      postalCode: addressDetailsFormValue.postalCode,
-    };
-  }
-
-  private resetForms(): void {
-    this.personalInformationForm.controls['emailAddress'].setValue('');
-    this.personalInformationForm.markAsUntouched();
-    this.accountDetailsForm.controls['username'].setValue('');
-    this.accountDetailsForm.controls['password'].setValue('');
-    this.accountDetailsForm.markAsUntouched();
-    this.currentStepIndex = FormSteps.PERSONAL_INFORMATION;
+      .pipe(finalize(() => this._userFormController.resetForms()))
+      .subscribe({
+        next: () => {
+          this._alertService.showMessage('User added successfully');
+          this._navigationService.to('manageUsers').then();
+        },
+        error: (error) => (this._userFormController.formError = getErrorMessage(error)),
+      });
   }
 }

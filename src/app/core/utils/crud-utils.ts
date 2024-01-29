@@ -13,8 +13,6 @@ function isPageResponse<T>(value: PageResponse<unknown>): value is PageResponse<
   );
 }
 
-const CrudUtils = {
+export const CrudUtils = {
   isPageResponse,
 };
-
-export { CrudUtils };

@@ -4,18 +4,19 @@
     <div class="row justify-space-between mt-6">
       <app-button
         (clicked)="onCancelClicked()"
-        *ngIf="isCancelShown"
-        [isDisabled]="(loading$ | async) || false"
+        *ngIf="!cancelHidden"
+        [loading]="(loading$ | async) || false"
         [text]="cancelText"
         appearance="outline"
         type="reset">
       </app-button>
       <app-loading-indicator
-        [ngClass]="{ 'col-4': isCancelShown }"
-        [showLoader]="(loading$ | async) || false">
+        [ngClass]="{ 'col-4': !cancelHidden }"
+        [show]="(loading$ | async) || false">
         <app-button
           (clicked)="onSaveClicked()"
-          [isDisabled]="!isValid"
+          [disabled]="!valid"
+          [loading]="(loading$ | async) || false"
           [text]="saveText"></app-button>
       </app-loading-indicator>
     </div>

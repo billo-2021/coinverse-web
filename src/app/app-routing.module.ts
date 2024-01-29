@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import {
   adminRoleGuard,
   isAuthenticatedGuard,
   unAuthenticatedGuard,
   webRoutesConfig,
 } from './common';
-
 import { GlobalRoutingPage } from './global-routing/pages';
 
 const routes: Routes = [

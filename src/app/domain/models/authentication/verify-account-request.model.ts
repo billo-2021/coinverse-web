@@ -1,4 +1,4 @@
 export interface VerifyAccountRequest {
-  username: string;
-  token: string;
+  readonly username: string;
+  readonly token: string;
 }

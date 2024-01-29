@@ -1,31 +1,30 @@
-<div
-  (tuiActiveZoneChange)="onClickOutside($event)"
-  *ngIf="viewModel$ | async as viewModel"
-  class="h-full">
+<div (tuiActiveZoneChange)="onClickOutside($event)" class="h-full">
   <header
-    *ngIf="viewModel.isMenuShown"
-    [ngStyle]="{ 'margin-left.rem': viewModel.isMenuShown ? viewModel.sideMenuWidth : 0 }"
-    [style.width]="'calc(100% - ' + (viewModel.isMenuShown ? (viewModel.sideMenuWidth + 0.1) + 'rem' : '0rem') + ')'"
+    *ngIf="show"
+    [ngStyle]="{ 'margin-left.rem': show ? sideMenuWidth : 0 }"
+    [style.width]="'calc(100% - ' + (show ? (sideMenuWidth + 0.1) + 'rem' : '0rem') + ')'"
     class="menu-header">
     <app-menu-header
+      (gotoProfileClicked)="onGotoProfile()"
+      (signOutClicked)="onSignOut()"
       (toggleMenuClicked)="onToggleMenu($event)"
-      [isMobile]="viewModel.isMobile"
-      [user]="viewModel.user">
+      [isMobile]="isMobile"
+      [user]="user">
     </app-menu-header>
   </header>
-  <nav
-    *ngIf="viewModel.isMenuShown"
-    [ngStyle]="{ 'width.rem': viewModel.sideMenuWidth }"
-    class="side-menu">
-    <app-side-menu></app-side-menu>
+  <nav *ngIf="show" [ngStyle]="{ 'width.rem': sideMenuWidth }" class="side-menu">
+    <app-side-menu
+      [isMobile]="isMobile"
+      [menuItems]="menuItems"
+      [show]="showSideMenu"></app-side-menu>
   </nav>
   <main
     [ngStyle]="{
-      'margin-left.rem': viewModel.isMenuShown ? viewModel.sideMenuWidth : 0
+      'margin-left.rem': show ? sideMenuWidth : 0
     }"
-    [style.width]="'calc(100% - ' + (viewModel.isMenuShown ? (viewModel.sideMenuWidth + 0.1) + 'rem' : '0rem') + ')'"
+    [style.width]="'calc(100% - ' + (show ? (sideMenuWidth + 0.1) + 'rem' : '0rem') + ')'"
     class="h-full main">
-    <app-logo *ngIf="!viewModel.user || !viewModel.isMenuShown" class="mt-10"></app-logo>
+    <app-logo *ngIf="!user || !show" class="mt-10"></app-logo>
     <div class="grow main-content page full-width">
       <ng-content></ng-content>
     </div>

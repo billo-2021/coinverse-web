@@ -1,7 +1,7 @@
-import { CryptoCurrencyResponse } from '../../../common/domain-models/lookup';
+import { CryptoCurrency } from '../../../domain';
 
-export type CryptoCurrencyModel = CryptoCurrencyResponse & {
-  askRate: number;
-  bidRate: number;
-  change: number;
+export type CryptoCurrencyModel = CryptoCurrency & {
+  readonly askRate: number;
+  readonly bidRate: number;
+  readonly change: number;
 };

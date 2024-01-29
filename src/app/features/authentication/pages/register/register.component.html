@@ -1,39 +1,11 @@
-<app-stepper
+<app-user-form
   (currentStepIndexChange)="onStepChanged($event)"
-  [currentStepIndex]="currentStepIndex"
-  [stepsOptions]="(formStepOptions$ | async) || []"
-  [steps]="formSteps"
-  class="max-w-xl m-auto">
-  <app-expand
-    [isExpanded]="!personalInformationForm.valid || !addressForm.valid || !preferenceForm.valid || !accountForm.valid">
-    <app-notification *ngIf="formError$ | async as formError" status="error">
-      <p class="tui-text_body-s">{{ formError }}</p>
-    </app-notification>
-  </app-expand>
-  <app-personal-information-form
-    (saveClicked)="onStepChanged(FORM_STEPS.ADDRESS_DETAILS)"
-    *ngIf="currentStepIndex === FORM_STEPS.PERSONAL_INFORMATION"
-    saveText="Next">
-  </app-personal-information-form>
-  <app-address-form
-    (saveClicked)="onStepChanged(FORM_STEPS.PREFERENCE_DETAILS)"
-    *ngIf="currentStepIndex === FORM_STEPS.ADDRESS_DETAILS"
-    saveText="Next">
-  </app-address-form>
-
-  <app-preference-form
-    (saveClicked)="onStepChanged(FORM_STEPS.ACCOUNT_DETAILS)"
-    *ngIf="currentStepIndex === FORM_STEPS.PREFERENCE_DETAILS"
-    saveText="Next">
-  </app-preference-form>
-
-  <app-account-form
-    (saveClicked)="onStepChanged(MAX_NUMBER_OF_STEPS)"
-    *ngIf="currentStepIndex === FORM_STEPS.ACCOUNT_DETAILS"
-    saveText="Sign up">
-  </app-account-form>
-</app-stepper>
-<app-card class="max-w-md m-auto mt-6">
+  (saveClicked)="onRegister()"
+  class="max-w-xl m-auto"
+  formClasses="m-auto"
+  saveText="Sign up">
+</app-user-form>
+<app-card class="max-w-xl m-auto mt-6">
   <p class="tui-text_body-s text-center">
     Already have an account?
     <app-link text="Login." to="../login"></app-link>

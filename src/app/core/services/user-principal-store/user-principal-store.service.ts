@@ -1,5 +1,4 @@
 import { Injectable, Self } from '@angular/core';
-import { UserAccessCredentials, UserPrincipal } from '../../domain-models';
 import {
   BehaviorSubject,
   combineLatest,
@@ -10,18 +9,21 @@ import {
   takeUntil,
   tap,
 } from 'rxjs';
+
 import { DateTime } from 'luxon';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
-import { DestroyService, LocalStorageService, StorageKey } from '../../../core';
-
+import { StorageKey } from '../../constants';
+import { UserAccessCredentials, UserPrincipal } from '../../models';
+import { DestroyService } from '../destroy/destroy.service';
+import { LocalStorageService } from '../local-storage/local-storage.service';
 import { UserAccessCredentialsStoreService } from '../user-access-credentials-store/user-access-credentials-store.service';
 
-type TokenExpiryOffset = {
+export type TokenExpiryOffset = {
   seconds: number;
 };
 
-const TOKEN_EXPIRY_OFFSET: TokenExpiryOffset = {
+export const TOKEN_EXPIRY_OFFSET: TokenExpiryOffset = {
   seconds: 30,
 };
 

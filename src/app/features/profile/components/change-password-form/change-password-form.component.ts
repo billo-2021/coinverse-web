@@ -1,51 +1,83 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { finalize, tap } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostBinding,
+  Injectable,
+  Input,
+  Optional,
+  Output,
+  SkipSelf,
+  ViewEncapsulation,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { FormBase, Required } from '../../../../common';
+import { ChangePassword } from '../../../../domain';
 
-import { AlertService } from '../../../../core';
-import { UserAccountService } from '../../../../common';
+export interface ChangePasswordForm {
+  readonly currentPassword: FormControl<string>;
+  readonly newPassword: FormControl<string>;
+}
+
+export interface ChangePasswordFormComponentInput {
+  saveText: string;
+  error: string | null;
+}
+
+export interface ChangePasswordFormComponentOutput {
+  saveClicked: EventEmitter<ChangePassword>;
+}
+
+export function getChangePasswordForm(): ChangePasswordForm {
+  return {
+    currentPassword: new FormControl<string>('', Required),
+    newPassword: new FormControl<string>('', Required),
+  };
+}
+
+@Injectable()
+export class ChangePasswordFormService extends FormBase<ChangePasswordForm> {
+  public constructor() {
+    super(getChangePasswordForm());
+  }
+}
 
 @Component({
   selector: 'app-change-password-form',
   templateUrl: './change-password-form.component.html',
   styleUrls: ['./change-password-form.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChangePasswordFormComponent {
-  public form: FormGroup;
+export class ChangePasswordFormComponent
+  implements ChangePasswordFormComponentInput, ChangePasswordFormComponentOutput
+{
   @Input() public saveText = 'Change Password';
-  @Output() public passwordChanged = new EventEmitter<void>();
+  @Input() public error: string | null = null;
+
+  @Output() public saveClicked = new EventEmitter<ChangePassword>();
+
+  public readonly form: FormBase<ChangePasswordForm> =
+    this._changePasswordForm ?? new FormBase<ChangePasswordForm>(getChangePasswordForm());
+
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    private readonly _formBuilder: FormBuilder,
-    private readonly _alertService: AlertService,
-    private readonly _accountService: UserAccountService
-  ) {
-    this.form = this.getChangePasswordForm(_formBuilder);
+    @Optional() @SkipSelf() private readonly _changePasswordForm: ChangePasswordFormService | null
+  ) {}
+
+  protected get formGroup(): FormGroup<ChangePasswordForm> {
+    return this.form;
   }
 
   public onSaveChanges(): void {
-    const currentPassword = this.form.controls['currentPassword']?.value as string;
-    const newPassword = this.form.controls['newPassword'].value as string;
+    const changePasswordModel = this.form.getModel();
 
-    this._accountService
-      .changePassword({ currentPassword, newPassword })
-      .pipe(
-        finalize(() => {
-          this.form.reset();
-          this.form.markAsUntouched();
-        }),
-        tap((response) => {
-          this._alertService.showMessage(response.message);
-          this.passwordChanged.emit();
-        })
-      )
-      .subscribe();
-  }
+    const changePasswordRequest: ChangePassword = {
+      currentPassword: changePasswordModel.currentPassword,
+      newPassword: changePasswordModel.newPassword,
+    };
 
-  private getChangePasswordForm(formBuilder: FormBuilder): FormGroup {
-    return formBuilder.group({
-      currentPassword: ['', [Validators.required]],
-      newPassword: ['', [Validators.required]],
-    });
+    this.saveClicked.emit(changePasswordRequest);
   }
 }

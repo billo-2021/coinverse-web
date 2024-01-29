@@ -1,32 +1,30 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { UiComponentsModule } from '../ui-components';
 import { FormComponentsModule } from '../form-components';
-
-import { UserFormBaseDirective } from './directives';
 import {
   AccountFormComponent,
   AddressFormComponent,
   PersonalInformationFormComponent,
   PreferenceFormComponent,
+  UserFormComponent,
 } from './components';
 
 @NgModule({
   declarations: [
-    UserFormBaseDirective,
     AccountFormComponent,
     AddressFormComponent,
     PersonalInformationFormComponent,
     PreferenceFormComponent,
+    UserFormComponent,
   ],
   imports: [CommonModule, UiComponentsModule, FormComponentsModule],
   exports: [
-    UserFormBaseDirective,
     AccountFormComponent,
     AddressFormComponent,
     PersonalInformationFormComponent,
     PreferenceFormComponent,
+    UserFormComponent,
   ],
 })
 export class DomainModule {}

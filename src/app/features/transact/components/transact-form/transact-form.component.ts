@@ -2,42 +2,79 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
+  Injectable,
   Input,
   OnChanges,
+  Optional,
   Output,
-  Self,
   SkipSelf,
   ViewEncapsulation,
 } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Observable, startWith } from 'rxjs';
+import { FormBase, Required, RequiredAmount, SimpleChangesTyped } from '../../../../common';
+import { Tab } from '../../../../ui-components';
+import { ListOption } from '../../../../form-components';
+import {
+  Currency,
+  ListOptionsService,
+  LookupService,
+  PaymentMethod,
+  Wallet,
+  WalletService,
+} from '../../../../domain';
+import { TransactTab } from '../../enums';
+import { PaymentModel } from '../../models';
+import { isTransactTab } from '../../utils';
 
-import { FormGroup } from '@angular/forms';
+export type TransactActionsType = readonly ['Deposit', 'Withdraw'];
+export type WalletLabelsType = readonly [string, string];
+export type TransactTabsType = readonly [Tab, Tab];
 
-import { LookupService, SimpleChangesTyped, WalletService } from '../../../../common';
+export interface TransactForm {
+  readonly paymentMethod: FormControl<ListOption<PaymentMethod> | null>;
+  readonly wallet: FormControl<ListOption<Wallet> | null>;
+  readonly amountCurrency: FormControl<ListOption<Currency> | null>;
+  readonly amount: FormControl<number>;
+}
 
-import { PaymentModel, TransactForm } from '../../models';
-import { TransactFormService, TransactFormViewModelService } from '../../services';
-import { Tabs } from '../../pages/transact/transact.view-model';
-
-type Tab = {
-  text: string;
-  icon: string | null;
-  isDisabled: boolean;
-};
-
-const ACTION: Record<number, string> = {
-  0: 'Deposit',
-  1: 'Withdraw',
-} as const;
-
-const WALLET_LABEL: Record<number, string> = {
-  0: 'To Wallet',
-  1: 'From Wallet',
-} as const;
-
-type TransactFormInput = {
-  activeTabIndex: number;
+export interface TransactFormComponentInput {
+  activeTabIndex: TransactTab;
   currencyCode: string | null;
-};
+  paymentMethodOptions: readonly ListOption<PaymentMethod>[];
+  currencyOptions: readonly ListOption<Currency>[];
+  walletOptions: readonly ListOption<Wallet>[];
+}
+
+export interface TransactFormComponentOutput {
+  activeTabIndexChange: EventEmitter<TransactTab>;
+  submitClicked: EventEmitter<PaymentModel>;
+}
+
+export function getTransactForm(): TransactForm {
+  return {
+    paymentMethod: new FormControl<ListOption<PaymentMethod> | null>(null, Required),
+    wallet: new FormControl<ListOption<Wallet> | null>(null, Required),
+    amountCurrency: new FormControl<ListOption<Currency> | null>(null, Required),
+    amount: new FormControl<number>(0, RequiredAmount()),
+  };
+}
+
+export const TRANSACT_ACTIONS: TransactActionsType = ['Deposit', 'Withdraw'];
+export const WALLET_LABELS: WalletLabelsType = ['To Wallet', 'From Wallet'];
+
+export const TRANSACT_TABS: TransactTabsType = [
+  { text: 'Deposit', icon: null, isDisabled: false },
+  { text: 'Withdraw', icon: null, isDisabled: false },
+];
+
+@Injectable()
+export class TransactFormService extends FormBase<TransactForm> {
+  constructor() {
+    super(getTransactForm());
+  }
+}
 
 @Component({
   selector: 'app-transact-form',
@@ -45,80 +82,127 @@ type TransactFormInput = {
   styleUrls: ['./transact-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [TransactFormViewModelService],
 })
-export class TransactFormComponent implements OnChanges {
-  @Input() public activeTabIndex: Tabs = 0;
+export class TransactFormComponent
+  implements TransactFormComponentInput, TransactFormComponentOutput, OnChanges
+{
+  @Input() public activeTabIndex: TransactTab = TransactTab.DEPOSIT;
   @Input() public currencyCode: string | null = null;
+  @Input() public walletOptions: readonly ListOption<Wallet>[] = [];
+
+  @Output() public activeTabIndexChange = new EventEmitter<TransactTab>();
 
   @Output() public submitClicked = new EventEmitter<PaymentModel>();
 
-  @Output() public activeTabIndexChange = new EventEmitter<Tabs>();
+  public readonly form: FormBase<TransactForm> =
+    this._transactForm ?? new FormBase<TransactForm>(getTransactForm());
 
-  protected readonly form: FormGroup<TransactForm>;
-  protected readonly viewModel$: TransactFormViewModelService;
+  public readonly TransactActions: TransactActionsType = TRANSACT_ACTIONS;
+  public readonly WalletLabels: WalletLabelsType = WALLET_LABELS;
+  public readonly TransactTabs: TransactTabsType = TRANSACT_TABS;
 
-  protected readonly tabs: Tab[] = [
-    { text: 'Deposit', icon: null, isDisabled: false },
-    { text: 'Withdraw', icon: null, isDisabled: false },
-  ];
+  protected readonly selectedWallet$: Observable<ListOption<Wallet> | null> =
+    this.form.controls.wallet.valueChanges.pipe(startWith<ListOption<Wallet> | null>(null));
 
-  protected readonly action = ACTION;
-  protected readonly walletLabel = WALLET_LABEL;
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    @SkipSelf() private readonly _transactForm$: TransactFormService,
-    @Self() private readonly _viewModel$: TransactFormViewModelService,
+    @Optional() @SkipSelf() private readonly _transactForm: TransactFormService | null,
     private readonly _lookupService: LookupService,
-    private readonly _walletService: WalletService
-  ) {
-    this.form = _transactForm$.value;
-    this.viewModel$ = _viewModel$;
+    private readonly _walletService: WalletService,
+    private readonly _listOptionsService: ListOptionsService
+  ) {}
+
+  private _paymentMethodOptions: readonly ListOption<PaymentMethod>[] = [];
+
+  public get paymentMethodOptions(): readonly ListOption<PaymentMethod>[] {
+    return this._paymentMethodOptions;
+  }
+
+  @Input()
+  public set paymentMethodOptions(value: readonly ListOption<PaymentMethod>[]) {
+    this._paymentMethodOptions = value;
+    this.form.controls.paymentMethod.setValue(value.length ? value[0] : null);
+  }
+
+  private _currencyOptions: readonly ListOption<Currency>[] = [];
+
+  public get currencyOptions(): readonly ListOption<Currency>[] {
+    return this._currencyOptions;
+  }
+
+  @Input()
+  public set currencyOptions(value: readonly ListOption<Currency>[]) {
+    this._currencyOptions = value;
+    this.form.controls.amountCurrency.setValue(value.length ? value[0] : null);
+  }
+
+  public get formGroup(): FormGroup<TransactForm> {
+    return this.form;
   }
 
   public onActiveTabIndexChange(index: number): void {
-    if (index < 2) {
-      this.activeTabIndexChange.emit(index);
+    if (!isTransactTab(index)) {
+      return;
     }
+
+    this.activeTabIndexChange.emit(index);
+  }
+
+  public ngOnChanges(changes: SimpleChangesTyped<TransactFormComponentInput>): void {
+    if (!(changes.currencyCode || changes.walletOptions)) {
+      return;
+    }
+
+    this._updateWallet();
   }
 
   public onSubmit(): void {
-    const transactFormValue = this.form.getRawValue();
+    const transactFormModel = this.form.getModel();
 
     if (
-      !transactFormValue.paymentMethod ||
-      !transactFormValue.wallet ||
-      !transactFormValue.amountCurrency
+      !transactFormModel.paymentMethod ||
+      !transactFormModel.wallet ||
+      !transactFormModel.amountCurrency
     ) {
       return;
     }
 
-    const wallet = transactFormValue.wallet.value;
+    const wallet = transactFormModel.wallet.value;
     const walletCurrency = wallet.currency;
-    const amountCurrency = transactFormValue.amountCurrency.value;
+    const amountCurrency = transactFormModel.amountCurrency.value;
 
     const fromCurrencyCode = this.activeTabIndex === 0 ? amountCurrency.code : walletCurrency.code;
     const toCurrencyCode = this.activeTabIndex === 0 ? walletCurrency.code : amountCurrency.code;
 
     const paymentModel: PaymentModel = {
-      paymentMethod: transactFormValue.paymentMethod.value.code,
+      paymentMethod: transactFormModel.paymentMethod.value.code,
       fromCurrency: fromCurrencyCode,
       toCurrency: toCurrencyCode,
       amountCurrency: amountCurrency.code,
-      amount: transactFormValue.amount,
+      amount: transactFormModel.amount,
     };
 
     this.submitClicked.emit(paymentModel);
   }
 
-  ngOnChanges(changes: SimpleChangesTyped<TransactFormInput>): void {
-    const currencyCodeChanges = changes.currencyCode;
+  private _updateWallet(): void {
+    const currencyCode = this.currencyCode;
 
-    if (
-      currencyCodeChanges &&
-      currencyCodeChanges.currentValue !== currencyCodeChanges.previousValue
-    ) {
-      this.viewModel$.currencyCode = currencyCodeChanges.currentValue;
+    if (!currencyCode) {
+      this.form.controls.wallet.setValue(null);
+      return;
     }
+
+    const foundWalletOption = this.walletOptions.find(
+      (option) => option.value.currency.code.toLowerCase() === currencyCode.toLowerCase()
+    );
+
+    if (!foundWalletOption) {
+      this.form.controls.wallet.setValue(null);
+      return;
+    }
+
+    this.form.controls.wallet.setValue(foundWalletOption);
   }
 }

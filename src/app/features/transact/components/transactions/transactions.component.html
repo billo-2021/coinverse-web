@@ -1,1 +1,21 @@
-<p>transactions works!</p>
+<app-table
+  (paginationChanged)="onPagination($event)"
+  [columns]="Columns"
+  [data]="payments"
+  [keys]="Keys"
+  [pagination]="pagination"
+  [rowDataTemplates]="{id, amount, method, action, status, createdAt}"
+  [total]="total">
+</app-table>
+
+<ng-template #id let-payment> {{ payment.id }} </ng-template>
+
+<ng-template #amount let-payment> {{ payment.currency + ' ' }}{{ payment.amount }} </ng-template>
+
+<ng-template #method let-payment> {{ payment.method }} </ng-template>
+
+<ng-template #action let-payment> {{ payment.action }} </ng-template>
+
+<ng-template #status let-payment> {{ payment.status }} </ng-template>
+
+<ng-template #createdAt let-payment> {{ payment.createdAt | date: 'dd/MM/yy HH:mm' }} </ng-template>

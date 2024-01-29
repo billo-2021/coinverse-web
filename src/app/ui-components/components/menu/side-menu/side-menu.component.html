@@ -1,12 +1,12 @@
-<div *ngIf="viewModel$ | async as viewModel" class="row middle menu-toggle">
-  <div *tuiSidebar="viewModel.isMobile && viewModel.isShown; direction: 'left'">
+<div class="row middle menu-toggle">
+  <div *tuiSidebar="isMobile && show; direction: 'left'">
     <ng-container
-      [ngTemplateOutletContext]="{ $implicit: viewModel.menuItems }"
+      [ngTemplateOutletContext]="{ $implicit: menuItems }"
       [ngTemplateOutlet]="menuContent"></ng-container>
   </div>
-  <ng-container *ngIf="!viewModel.isMobile">
+  <ng-container *ngIf="!isMobile">
     <ng-container
-      [ngTemplateOutletContext]="{ $implicit: viewModel.menuItems }"
+      [ngTemplateOutletContext]="{ $implicit: menuItems }"
       [ngTemplateOutlet]="menuContent"></ng-container>
   </ng-container>
 </div>
@@ -21,8 +21,6 @@
       tuiLink
       >{{ appName }}</a
     >
-    <!--    <tui-svg [src]="'tuiIconApertureLarge'" class="icon ml-9"></tui-svg>-->
-    <!--    <p class="tui-text_body-s logo">{{ appName }}</p>-->
   </div>
 
   <ul class="side-menu-content col-12">

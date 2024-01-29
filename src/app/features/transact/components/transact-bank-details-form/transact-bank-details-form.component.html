@@ -1,9 +1,9 @@
-<form [formGroup]="form" class="col mt-10">
+<form [formGroup]="formGroup" class="col mt-10">
   <app-text-field label="Name" name="name" placeholder="i.e. John Done"></app-text-field>
   <app-input-card></app-input-card>
   <app-button
     (clicked)="onSave()"
-    [isDisabled]="!form.valid"
+    [disabled]="!form.valid"
     [text]="saveText"
     class="mt-6"></app-button>
 </form>

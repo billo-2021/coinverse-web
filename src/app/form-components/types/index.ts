@@ -1,5 +1,2 @@
-import { ListOption, ListOptionType } from './list-option';
-
-import { Option } from './option.type';
-
-export { ListOptionType, ListOption, Option };
+export { ListOption, ListOptionType } from './list-option';
+export { InputFieldSize } from './input-field-size.type';

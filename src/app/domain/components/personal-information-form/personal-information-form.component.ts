@@ -1,27 +1,83 @@
-import { Component, EventEmitter, Input, Output, SkipSelf } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostBinding,
+  Injectable,
+  Input,
+  Optional,
+  Output,
+  SkipSelf,
+  ViewEncapsulation,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { FormBase, Required, RequiredEmail } from '../../../common';
 
-import { PersonalInformationFormService } from '../../services';
-import { PersonalInformationForm } from '../../models';
+export interface PersonalInformationForm {
+  readonly firstName: FormControl<string>;
+  readonly lastName: FormControl<string>;
+  readonly emailAddress: FormControl<string>;
+  readonly phoneNumber: FormControl<string>;
+}
+
+export interface PersonalInformationFormComponentInput {
+  saveText: string;
+  formClasses: string;
+}
+
+export interface PersonalInformationFormComponentOutput {
+  saveClicked: EventEmitter<void>;
+}
+
+export function getPersonalInformationForm(): PersonalInformationForm {
+  return {
+    firstName: new FormControl<string>('', Required),
+    lastName: new FormControl<string>('', Required),
+    emailAddress: new FormControl<string>('', RequiredEmail),
+    phoneNumber: new FormControl<string>('', Required),
+  };
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PersonalInformationFormService extends FormBase<PersonalInformationForm> {
+  constructor() {
+    super(getPersonalInformationForm());
+  }
+}
 
 @Component({
   selector: 'app-personal-information-form',
   templateUrl: './personal-information-form.component.html',
   styleUrls: ['./personal-information-form.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PersonalInformationFormComponent {
-  @Input() public saveText = '';
-  @Output() public saveClicked = new EventEmitter<FormGroup>();
+export class PersonalInformationFormComponent
+  implements PersonalInformationFormComponentInput, PersonalInformationFormComponentOutput
+{
+  @Input() public saveText = 'Next';
+  @Input() public formClasses = '';
 
-  protected readonly form: FormGroup<PersonalInformationForm>;
+  @Output() public saveClicked: EventEmitter<void> = new EventEmitter<void>();
+  public readonly form: FormBase<PersonalInformationForm> =
+    this._personalInformationForm ??
+    new FormBase<PersonalInformationForm>(getPersonalInformationForm());
+
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    @SkipSelf() private readonly _personalInformationForm$: PersonalInformationFormService
-  ) {
-    this.form = _personalInformationForm$.value;
+    @SkipSelf()
+    @Optional()
+    private readonly _personalInformationForm: PersonalInformationFormService | null
+  ) {}
+
+  protected get formGroup(): FormGroup<PersonalInformationForm> {
+    return this.form;
   }
 
   public onSaveClicked(): void {
-    this.saveClicked.emit(this.form);
+    this.saveClicked.emit();
   }
 }

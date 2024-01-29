@@ -1,0 +1,26 @@
+<app-form
+  (keydown.enter)="form.valid && onLogin()"
+  (saveClicked)="onLogin()"
+  [formGroup]="formGroup"
+  [valid]="form.valid"
+  class="max-w-md m-auto"
+  saveText="Sign in"
+  subtitle="Please sign in to continue."
+  title="Welcome back!">
+  <app-text-field
+    (keydown.enter)="password.focusInput(false)"
+    label="Username"
+    name="username"
+    placeholder="john@gmail.com"
+    type="email">
+  </app-text-field>
+  <app-password-field
+    #password
+    (keydown.enter)="!form.disabled && form.valid && onLogin()"
+    label="Password"
+    name="password"></app-password-field>
+  <div class="mb-4 row justify-space-between">
+    <app-check-box label="Remember me" name="rememberMe"></app-check-box>
+    <app-link text="Forgot password?" to="../reset-password"></app-link>
+  </div>
+</app-form>

@@ -3,11 +3,11 @@ import { RegisterPreferenceRequest } from './register-preference-request.model';
 import { RegisterAccountRequest } from './register-account-request.model';
 
 export interface RegisterRequest {
-  firstName: string;
-  lastName: string;
-  emailAddress: string;
-  phoneNumber: string;
-  address: RegisterAddressRequest;
-  preference: RegisterPreferenceRequest;
-  account: RegisterAccountRequest;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly emailAddress: string;
+  readonly phoneNumber: string;
+  readonly address: RegisterAddressRequest;
+  readonly preference: RegisterPreferenceRequest;
+  readonly account: RegisterAccountRequest;
 }

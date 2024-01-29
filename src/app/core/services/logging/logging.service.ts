@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Log } from '../../types';
 import { ReplaySubject } from 'rxjs';
+import { Log } from '../../types';
 
 @Injectable({
   providedIn: 'root',

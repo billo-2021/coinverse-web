@@ -1,89 +1,66 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import {
-  BehaviorSubject,
-  combineLatest,
-  filter,
-  map,
-  Observable,
-  shareReplay,
-  startWith,
-  switchMap,
-} from 'rxjs';
-import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostBinding,
+  Inject,
+  Input,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
+import { Pagination, paginationToken, TOTAL_ITEMS } from '../../../../ui-components';
+import { Currency } from '../../../../domain';
 
-import { LoadingService } from '../../../../core';
-import { BaseComponent, LookupService, webRoutesConfig } from '../../../../common';
-import { CurrencyResponse } from '../../../../common/domain-models/lookup';
-
-interface Pagination {
-  page: number;
-  size: number;
-}
-
-type Key = 'code' | 'name' | 'symbol';
-
-const KEYS: Record<Key, string> = {
+export const KEYS = {
   code: 'Code',
   name: 'Name',
   symbol: 'Symbol',
-};
+} as const;
+
+export type ColumnsType = (keyof typeof KEYS)[];
+export type KeysType = typeof KEYS;
+
+export interface FiatCurrenciesComponentInput {
+  pagination: Pagination;
+  currencies: readonly Currency[];
+  total: number;
+}
+
+export interface FiatCurrenciesComponentOutput {
+  paginationChanged: EventEmitter<Pagination>;
+  editCurrencyClicked: EventEmitter<string>;
+}
 
 @Component({
   selector: 'app-fiat-currencies',
   templateUrl: './fiat-currencies.component.html',
   styleUrls: ['./fiat-currencies.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FiatCurrenciesComponent extends BaseComponent {
-  protected readonly manageCurrenciesUrl = webRoutesConfig.manageCurrencies;
-  protected readonly columns: Key[] = ['code', 'name', 'symbol'];
-  protected readonly keys = KEYS;
-  protected search = '';
+export class FiatCurrenciesComponent
+  implements FiatCurrenciesComponentInput, FiatCurrenciesComponentOutput
+{
+  @Input() public pagination: Pagination = this._paginationToken;
+  @Input() public currencies: readonly Currency[] = [];
+  @Input() public total: number = TOTAL_ITEMS;
 
-  protected readonly pagination$ = new BehaviorSubject<Pagination>({
-    page: 0,
-    size: 5,
-  });
+  @Output() public paginationChanged = new EventEmitter<Pagination>();
 
-  protected readonly request$ = combineLatest([this.pagination$]).pipe(
-    switchMap((query) =>
-      this._lookupService.getCurrenciesByType('fiat', ...query).pipe(startWith(null))
-    ),
-    shareReplay(1)
-  );
+  @Output() public editCurrencyClicked = new EventEmitter<string>();
 
-  protected currencies$: Observable<readonly CurrencyResponse[]> = this.request$.pipe(
-    filter(tuiIsPresent),
-    map((currencyPage) => currencyPage.data),
-    startWith([])
-  );
+  public readonly Columns: ColumnsType = Object.keys(KEYS) as ColumnsType;
+  public readonly Keys: KeysType = KEYS;
 
-  protected total$: Observable<number> = this.request$.pipe(
-    filter(tuiIsPresent),
-    map((paymentPage) => paymentPage.total),
-    startWith(1)
-  );
+  @HostBinding('class') private _classes = 'block';
 
-  protected readonly loading$ = this._loadingService.loading$;
-
-  public constructor(
-    private readonly _router: Router,
-    private readonly _loadingService: LoadingService,
-    private readonly _lookupService: LookupService
-  ) {
-    super();
-  }
+  public constructor(@Inject(paginationToken) private readonly _paginationToken: Pagination) {}
 
   public async onEditCurrency(currencyCode: string): Promise<void> {
-    const url = `${this.manageCurrenciesUrl}/${currencyCode}`;
-    await this._router.navigate([url]);
-  }
-
-  public isMatch(value: unknown): boolean {
-    return !!this.search && TUI_DEFAULT_MATCHER(value, this.search);
+    this.editCurrencyClicked.emit(currencyCode);
   }
 
   public onPagination(pagination: Pagination): void {
-    this.pagination$.next(pagination);
+    this.paginationChanged.emit(pagination);
   }
 }

@@ -1,7 +1,7 @@
 <div *ngIf="formGroup" [formGroup]="formGroup" class="item">
   <tui-combo-box
     (searchChange)="onSearch($event)"
-    *tuiLet="options$ | async as filteredOptions"
+    *tuiLet="filteredOptions"
     [formControlName]="name"
     [stringify]="toString"
     [tuiTextfieldSize]="size"
@@ -18,7 +18,7 @@
       <cdk-virtual-scroll-viewport
         (scrolledIndexChange)="list.handleFocusLossIfNecessary()"
         [itemSize]="44"
-        [style.height.px]="(height$ | async) || 44"
+        [style.height.px]="height"
         tuiScrollable>
         <tui-data-list #list>
           <button

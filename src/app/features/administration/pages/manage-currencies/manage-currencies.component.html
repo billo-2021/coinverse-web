@@ -1,20 +1,29 @@
-<div class="flex-col">
-  <div class="flex-row justify-space-between">
+<ng-container *ngIf="viewModel$ | async as viewModel">
+  <div class="mb-10 pb-4 row items-center justify-space-between border-bottom">
     <app-header [subtitle]="subtitle" [title]="title"></app-header>
-    <div class="mb-6">
-      <app-button
-        (clicked)="onNewCurrency()"
-        appearance="primary"
-        icon="tuiIconUserPlus"
-        shape="rounded"
-        size="s"
-        text="New crypto"></app-button>
-    </div>
+    <app-button
+      (clicked)="onAddCurrency()"
+      appearance="flat"
+      icon="tuiIconUserPlus"
+      size="s"
+      text="New crypto"></app-button>
   </div>
-  <app-tabs [(activeItemIndex)]="activeTabIndex" [tabs]="tabs">
+  <app-tabs
+    (activeItemIndexChange)="activeTabIndexChanged($event)"
+    [activeItemIndex]="viewModel.activeTabIndex"
+    [tabs]="CurrencyTabs">
     <app-crypto-currencies
       (editCurrencyClicked)="onEditCurrency($event)"
-      *ngIf="activeTabIndex === TABS.CryptoCurrencies"></app-crypto-currencies>
-    <app-fiat-currencies *ngIf="activeTabIndex === TABS.FiatCurrencies"></app-fiat-currencies>
+      (paginationChanged)="cryptoCurrenciesPaginationChanged($event)"
+      *ngIf="viewModel.activeTabIndex === CurrencyTabType.CryptoCurrencies"
+      [cryptoCurrencies]="viewModel.cryptoCurrencyPage.data"
+      [pagination]="viewModel.cryptoCurrenciesPagination"
+      [total]="viewModel.cryptoCurrencyPage.total"></app-crypto-currencies>
+    <app-fiat-currencies
+      (paginationChanged)="fiatCurrenciesPaginationChanged($event)"
+      *ngIf="viewModel.activeTabIndex === CurrencyTabType.FiatCurrencies"
+      [currencies]="viewModel.fiatCurrencyPage.data"
+      [pagination]="viewModel.fiatCurrenciesPagination"
+      [total]="viewModel.fiatCurrencyPage.total"></app-fiat-currencies>
   </app-tabs>
-</div>
+</ng-container>

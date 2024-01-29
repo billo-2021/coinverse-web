@@ -1,4 +1,5 @@
 import { Provider } from '@angular/core';
+
 import { messagingChannelToken, otpLengthToken, verificationMethodToken } from '../config';
 
 export const AUTHENTICATION_PROVIDERS: Provider[] = [

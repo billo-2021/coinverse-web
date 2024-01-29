@@ -8,10 +8,10 @@
 </tui-ring-chart>
 <div class="col">
   <app-chart-legend-item
-    (hoveredChange)="onHover(index, $event)"
+    (hoverChange)="onHover(index, $event)"
     *ngFor="let label of labels; let index = index"
+    [active]="isItemActive(index)"
     [color]="getColor(index)"
-    [isActive]="isItemActive(index)"
     [text]="label">
     <app-money
       [currency]="extraLabels[index]"

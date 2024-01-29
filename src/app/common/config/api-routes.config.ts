@@ -9,11 +9,11 @@ const profileRoute = '/profile';
 
 const apiRoutesConfig = {
   authentication: authenticationRoute,
-  register: `${administrationRoute}/register`,
-  login: `${administrationRoute}/login`,
-  verifyAccount: `${administrationRoute}/verify`,
-  requestToken: `${administrationRoute}/request-token`,
-  resetPassword: `${administrationRoute}/reset-password`,
+  register: `${authenticationRoute}/register`,
+  login: `${authenticationRoute}/login`,
+  verifyAccount: `${authenticationRoute}/verify`,
+  requestToken: `${authenticationRoute}/request-token`,
+  resetPassword: `${authenticationRoute}/reset-password`,
   lookup: lookupRoute,
   allCountries: `${lookupRoute}/all/countries`,
   countries: `${lookupRoute}/countries`,

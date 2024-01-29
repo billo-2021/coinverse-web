@@ -6,13 +6,21 @@ import {
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
-
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { InputFieldSize } from '../../types';
 
-import { SizeType } from '../text-field/text-field.component';
+export type DecimalType = 'not-zero' | 'always' | 'never';
 
-type DecimalType = 'not-zero' | 'always' | 'never';
+export interface InputNumberComponentInput {
+  size: InputFieldSize;
+  name: string;
+  label: string;
+  hasClear: boolean;
+  autocomplete: string;
+  prefix: string;
+  precision: number;
+  decimal: DecimalType;
+}
 
 @Component({
   selector: 'app-input-number',
@@ -21,8 +29,8 @@ type DecimalType = 'not-zero' | 'always' | 'never';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputNumberComponent {
-  @Input() public size: SizeType = 'm';
+export class InputNumberComponent implements InputNumberComponentInput {
+  @Input() public size: InputFieldSize = 'm';
   @Input() public name = '';
   @Input() public label = '';
   @Input() public hasClear = true;
@@ -32,20 +40,10 @@ export class InputNumberComponent {
   @Input() public decimal: DecimalType = 'not-zero';
 
   @HostBinding('class') private _classes = 'block input-number';
-  private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
 
-  @Input()
-  public set isDisabled(value: boolean) {
-    this._disabled.next(value);
-  }
-
   protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
     return this._formGroupDirective?.form || null;
-  }
-
-  protected get formControl(): AbstractControl<unknown> | null {
-    return this.formGroup?.controls[this.name] || null;
   }
 }

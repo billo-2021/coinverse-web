@@ -1,0 +1,5 @@
+export enum TransactStep {
+  TRANSACT_REQUEST,
+  BANK_DETAILS,
+  TRANSACT_CONFIRMATION,
+}

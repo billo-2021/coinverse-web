@@ -5,26 +5,21 @@ import {
   Self,
   ViewEncapsulation,
 } from '@angular/core';
-import { finalize, Subject } from 'rxjs';
-
-import { ApiError, AppError, DestroyService } from '../../../../core';
+import { finalize } from 'rxjs';
+import { Mapper } from '@dynamic-mapper/angular';
+import { DestroyService } from '../../../../core';
+import { getErrorMessage } from '../../../../common';
 import {
   AccountFormService,
   AddressFormService,
   AuthenticationService,
-  FormSteps,
-  messages,
+  MappingProfile,
   PersonalInformationFormService,
   PreferenceFormService,
-  UserFormBaseDirective,
-} from '../../../../common';
-
-import {
-  RegisterAccountRequest,
-  RegisterAddressRequest,
-  RegisterPreferenceRequest,
   RegisterRequest,
-} from '../../../../common/domain-models/authentication';
+  UserFormController,
+  UserFormStep,
+} from '../../../../domain';
 
 @Component({
   selector: 'app-register',
@@ -38,107 +33,60 @@ import {
     PreferenceFormService,
     AccountFormService,
     DestroyService,
+    UserFormController,
   ],
 })
-export class RegisterComponent extends UserFormBaseDirective {
-  protected readonly formError$ = new Subject<string>();
+export class RegisterComponent {
   @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    @Self() _personalInformationForm$: PersonalInformationFormService,
-    @Self() _addressForm$: AddressFormService,
-    @Self() _preferenceForm$: PreferenceFormService,
-    @Self() _accountForm$: AccountFormService,
+    @Self() private readonly _personalInformationFormService: PersonalInformationFormService,
+    @Self() private readonly _addressFormService: AddressFormService,
+    @Self() private readonly _preferenceFormService: PreferenceFormService,
+    @Self() private readonly _accountFormService: AccountFormService,
+    @Self() private readonly _userFormController: UserFormController,
     private readonly _authenticationService: AuthenticationService,
-    @Self() _destroy$: DestroyService
-  ) {
-    super(_personalInformationForm$, _addressForm$, _preferenceForm$, _accountForm$, _destroy$);
-  }
+    private readonly _mapper: Mapper
+  ) {}
 
-  public onStepChanged(nextStepIndex: number) {
-    if (nextStepIndex === FormSteps.ACCOUNT_DETAILS) {
-      const emailAddress = this.personalInformationForm.controls.emailAddress.value;
-      this.accountForm.controls.username.setValue(emailAddress);
+  public onStepChanged(nextStepIndex: UserFormStep) {
+    if (nextStepIndex === UserFormStep.AccountDetails) {
+      const emailAddress = this._personalInformationFormService.controls.emailAddress.value;
+      this._accountFormService.controls.username.setValue(emailAddress);
     }
-
-    if (nextStepIndex < this.MAX_NUMBER_OF_STEPS) {
-      this.currentStepIndex = nextStepIndex;
-      return;
-    }
-
-    this.onRegister();
   }
 
   public onRegister(): void {
-    this.formError$.next('');
-    const personalInformationFormValue = this.personalInformationForm.getRawValue();
+    const personalInformationFormValue = this._personalInformationFormService.getModel();
+
+    const addressFormValue = this._addressFormService.getModel();
+    const preferenceFormValue = this._preferenceFormService.getModel();
+    const accountFormValue = this._accountFormService.getModel();
 
     const registerRequest: RegisterRequest = {
-      firstName: personalInformationFormValue.firstName,
-      lastName: personalInformationFormValue.lastName,
-      emailAddress: personalInformationFormValue.emailAddress.trim().toLowerCase(),
-      phoneNumber: personalInformationFormValue.phoneNumber,
-      address: this.getAddressRequest(),
-      preference: this.getPreferenceRequest(),
-      account: this.getAccountRequest(),
+      ...this._mapper.map(
+        MappingProfile.PersonalInformationFormValueToRegisterPersonalInformationRequest,
+        personalInformationFormValue
+      ),
+      address: this._mapper.map(
+        MappingProfile.AddressFormValueToRegisterAddressRequest,
+        addressFormValue
+      ),
+      preference: this._mapper.map(
+        MappingProfile.PreferenceFormValueToRegisterPreferenceRequest,
+        preferenceFormValue
+      ),
+      account: this._mapper.map(
+        MappingProfile.AccountFormValueToRegisterAccountRequest,
+        accountFormValue
+      ),
     };
 
     this._authenticationService
       .register(registerRequest)
-      .pipe(finalize(() => this.resetForms()))
+      .pipe(finalize(() => this._userFormController.resetForms()))
       .subscribe({
-        error: (error) => {
-          if (error instanceof ApiError) {
-            this.formError$.next(error.message);
-            return;
-          }
-
-          throw error;
-        },
+        error: (error) => (this._userFormController.formError = getErrorMessage(error)),
       });
-  }
-
-  public getAccountRequest(): RegisterAccountRequest {
-    const accountFormValue = this.accountForm.getRawValue();
-
-    return {
-      username: accountFormValue.username.trim().toLowerCase(),
-      password: accountFormValue.password,
-    };
-  }
-
-  public getPreferenceRequest(): RegisterPreferenceRequest {
-    const preferenceFormValue = this.preferenceForm.getRawValue();
-    const rawNotificationMethods = preferenceFormValue.notificationMethods;
-
-    if (!preferenceFormValue.currency) {
-      throw new AppError(messages.invalidRegistrationDetails);
-    }
-
-    const notificationMethods = [rawNotificationMethods.email, rawNotificationMethods.sms]
-      .filter((item) => item)
-      .map((item, index) => (index === 0 ? 'email' : 'sms'));
-
-    return {
-      currencyCode: preferenceFormValue.currency.value.code,
-      notificationMethods,
-    };
-  }
-
-  public getAddressRequest(): RegisterAddressRequest {
-    const addressFormValue = this.addressForm.getRawValue();
-
-    if (!addressFormValue.country) {
-      throw new AppError(messages.invalidRegistrationDetails);
-    }
-
-    return {
-      addressLine: addressFormValue.addressLine,
-      street: addressFormValue.street,
-      countryCode: addressFormValue.country.value.code,
-      province: addressFormValue.province,
-      city: addressFormValue.city,
-      postalCode: addressFormValue.postalCode,
-    };
   }
 }

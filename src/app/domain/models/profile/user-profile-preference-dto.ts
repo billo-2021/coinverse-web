@@ -3,5 +3,5 @@ import { UserProfileNotificationMethodDto } from './user-profile-notification-me
 
 export interface UserProfilePreferenceDto {
   readonly currency: UserProfileCurrencyDto;
-  readonly notificationMethods: UserProfileNotificationMethodDto[];
+  readonly notificationMethods: readonly UserProfileNotificationMethodDto[];
 }

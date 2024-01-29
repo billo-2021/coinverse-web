@@ -10,30 +10,35 @@
   </div>
   <div class="col">
     <app-card
-      *ngIf="viewModel.currentStepIndex !== TRADE_STEPS.TRADE_CONFIRMATION"
+      *ngIf="viewModel.currentStepIndex !== TradeStepType.TRADE_CONFIRMATION"
       class="max-w-md">
       <div class="mt-6">
         <app-stepper
-          (currentStepIndexChange)="onStepChanged($event)"
-          [currentStepIndex]="viewModel.currentStepIndex"
-          [steps]="formSteps">
+          (activeStepIndexChange)="onStepChanged($event)"
+          [activeStepIndex]="viewModel.currentStepIndex"
+          [steps]="TradeSteps">
         </app-stepper>
       </div>
       <app-trade-form
         (actionClicked)="onRequestTrade($event)"
         (activeTabIndexChange)="onActiveTabIndexChanged($event)"
-        *ngIf="viewModel.currentStepIndex === TRADE_STEPS.TRADE_REQUEST"
+        *ngIf="viewModel.currentStepIndex === TradeStepType.TRADE_REQUEST"
         [activeTabIndex]="viewModel.activeTabIndex"
-        [currencyPairName]="viewModel.currencyPairName">
+        [currencyOptions]="viewModel.currencyOptions"
+        [currencyPairName]="viewModel.currencyPairName"
+        [currencyPairOptions]="viewModel.currencyPairOptions">
       </app-trade-form>
       <app-trade-quote
         (acceptQuoteClicked)="onAcceptQuote($event)"
         (declineQuoteClicked)="onDeclineQuote()"
-        *ngIf="viewModel.currentStepIndex === TRADE_STEPS.TRADE_QUOTE"
-        [currencyPairName]="viewModel.tradeModel && viewModel.tradeModel.currencyPairName || null"></app-trade-quote>
+        *ngIf="viewModel.currentStepIndex === TradeStepType.TRADE_QUOTE"
+        [currencyPairName]="viewModel.tradeModel && viewModel.tradeModel.currencyPairName || null"
+        [exchangeRate]="viewModel.currencyExchangeRate"
+        [quote]="viewModel.currencyQuote"
+        [tradeAction]="viewModel.tradeAction"></app-trade-quote>
     </app-card>
     <app-card
-      *ngIf="viewModel.currentStepIndex === TRADE_STEPS.TRADE_CONFIRMATION"
+      *ngIf="viewModel.currentStepIndex === TradeStepType.TRADE_CONFIRMATION"
       class="col-sm-12 col-md-9 col-lg-5">
       <app-trade-confirmation
         (tradeAgainClicked)="onTradeAgainClicked()"

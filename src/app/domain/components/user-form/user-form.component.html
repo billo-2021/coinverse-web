@@ -1,0 +1,42 @@
+<app-stepper
+  (activeStepIndexChange)="onStepIndexChanged($event)"
+  *ngIf="viewModel$ | async as viewModel"
+  [activeStepIndex]="viewModel.currentStepIndex"
+  [stepsOptions]="viewModel.formStepOptions"
+  [steps]="FormSteps">
+  <app-expand [expanded]="!viewModel.personalInformationForm.dirty || !viewModel.accountForm.dirty">
+    <app-notification *ngIf="viewModel.formError" class="max-w-xl" status="error">
+      <p class="tui-text_body-s">{{ viewModel.formError }}</p>
+    </app-notification>
+  </app-expand>
+  <app-personal-information-form
+    (saveClicked)="onStepIndexChanged(FormStepIndex.AddressDetails)"
+    *ngIf="viewModel.currentStepIndex === FormStepIndex.PersonalInformation"
+    [formClasses]="formClasses"
+    saveText="Next">
+  </app-personal-information-form>
+  <app-address-form
+    (saveClicked)="onStepIndexChanged(FormStepIndex.PreferenceDetails)"
+    *ngIf="viewModel.currentStepIndex === FormStepIndex.AddressDetails"
+    [countryOptions]="viewModel.countryOptions"
+    [formClasses]="formClasses"
+    saveText="Next">
+  </app-address-form>
+
+  <app-preference-form
+    (saveClicked)="onStepIndexChanged(FormStepIndex.AccountDetails)"
+    *ngIf="viewModel.currentStepIndex === FormStepIndex.PreferenceDetails"
+    [currencyOptions]="viewModel.currencyOptions"
+    [formClasses]="formClasses"
+    saveText="Next">
+  </app-preference-form>
+
+  <app-account-form
+    (saveClicked)="onSave()"
+    *ngIf="viewModel.currentStepIndex === FormStepIndex.AccountDetails"
+    [formClasses]="formClasses"
+    [hideRole]="hideUserRole"
+    [roleOptions]="viewModel.userRoleOptions"
+    [saveText]="saveText">
+  </app-account-form>
+</app-stepper>

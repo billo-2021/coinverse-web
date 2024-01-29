@@ -1,36 +1,9 @@
-<app-expand [isExpanded]="!loginForm.valid">
-  <app-notification *ngIf="formError$ | async as formError" status="error">
+<app-expand [expanded]="!loginForm.valid">
+  <app-notification *ngIf="formError$ | async as formError" class="max-w-md m-auto" status="error">
     <p class="tui-text_body-s">{{ formError }}</p>
   </app-notification>
 </app-expand>
-
-<app-form
-  (keydown.enter)="loginForm.valid && onLogin()"
-  (saveClicked)="onLogin()"
-  [formGroup]="loginForm"
-  [isValid]="loginForm.valid"
-  class="max-w-md m-auto"
-  saveText="Sign in"
-  subtitle="Please sign in to continue."
-  title="Welcome back!">
-  <app-text-field
-    (keydown.enter)="password.focusInput(false)"
-    label="Username"
-    name="username"
-    placeholder="john@gmail.com"
-    type="email">
-  </app-text-field>
-  <app-password-field
-    #password
-    (keydown.enter)="!loginForm.disabled && loginForm.valid && onLogin()"
-    label="Password"
-    name="password"></app-password-field>
-  <div class="mb-4 row justify-space-between">
-    <app-check-box label="Remember me" name="rememberMe"></app-check-box>
-    <app-link text="Forgot password?" to="../reset-password"></app-link>
-  </div>
-</app-form>
-
+<app-login-form (saveClicked)="onLogin()"></app-login-form>
 <app-card class="max-w-md m-auto mt-6">
   <p class="tui-text_body-s text-center">
     New here?

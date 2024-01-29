@@ -6,21 +6,36 @@ import {
   Self,
   ViewEncapsulation,
 } from '@angular/core';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { AlertService, MessagingChannel, messagingChannelToken } from '../../../../core';
+import { ApiError, apiErrorCodes, FormBase, View } from '../../../../common';
+import { PasswordResetService, PasswordResetTokenRequest } from '../../../../domain';
+import { ResetPasswordRequestForm, ResetPasswordRequestFormService } from '../../components';
 
-import { FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs';
-
-import { AlertService, ApiError, MessagingChannel, messagingChannelToken } from '../../../../core';
-import { apiErrorCodes, PasswordResetService } from '../../../../common';
-import { PasswordResetTokenRequest } from '../../../../common/domain-models/authentication';
-
-import { ResetPasswordRequestForm } from '../../models';
-import { ResetPasswordRequestFormService } from '../../services/reset-password-request-form.service';
-
-enum Steps {
-  PASSWORD_REQUEST,
-  PASSWORD_RESULT,
+export enum ResetPasswordRequestFormStep {
+  PasswordRequest,
+  PasswordResult,
 }
+
+export type ResetPasswordFormStepType = typeof ResetPasswordRequestFormStep;
+export type ResetPasswordFormStepsType = readonly [string, string];
+
+export interface ResetPasswordRequestViewModel {
+  readonly currentStepIndex: ResetPasswordRequestFormStep;
+  readonly passwordLinkRecipient: string;
+  readonly formError: string | null;
+}
+
+export interface ResetPasswordRequestView extends View<ResetPasswordRequestViewModel> {
+  readonly ResetPasswordFormStepType: ResetPasswordFormStepType;
+  readonly ResetPasswordFormSteps: ResetPasswordFormStepsType;
+  readonly messagingChannel: MessagingChannel;
+}
+
+export const RESET_PASSWORD_FORM_STEPS: ResetPasswordFormStepsType = [
+  'Forgot password',
+  'Password reset',
+];
 
 @Component({
   selector: 'app-reset-password-request',
@@ -30,25 +45,51 @@ enum Steps {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ResetPasswordRequestFormService],
 })
-export class ResetPasswordRequestComponent {
-  protected readonly STEPS = Steps;
-  protected readonly messagingChannel: MessagingChannel;
-  protected readonly MAX_NUMBER_OF_STEPS = 2;
-  protected currentStepIndex: Steps = 0;
-  protected readonly steps = ['Forgot password', 'Password reset'];
-  protected readonly resetPasswordRequestForm: FormGroup<ResetPasswordRequestForm>;
-  protected readonly formError$ = new Subject<string>();
-  protected passwordLinkRecipient = '';
+export class ResetPasswordRequestComponent implements ResetPasswordRequestView {
+  public readonly ResetPasswordFormStepType: ResetPasswordFormStepType =
+    ResetPasswordRequestFormStep;
+  public readonly ResetPasswordFormSteps: ResetPasswordFormStepsType = RESET_PASSWORD_FORM_STEPS;
+  public readonly messagingChannel: MessagingChannel = this._messagingChannelToken;
+  protected readonly resetPasswordRequestForm: FormBase<ResetPasswordRequestForm> =
+    this._resetPasswordRequestForm;
   @HostBinding('class') private _classes = 'block max-w-md m-auto';
+  private readonly _currentStepIndex$ = new BehaviorSubject<ResetPasswordRequestFormStep>(
+    ResetPasswordRequestFormStep.PasswordRequest
+  );
+
+  private readonly _passwordLinkRecipient$ = new BehaviorSubject<string>('');
+
+  private readonly _formError$ = new BehaviorSubject<string | null>(null);
+
+  public readonly viewModel$: Observable<ResetPasswordRequestViewModel> = combineLatest([
+    this._currentStepIndex$,
+    this._passwordLinkRecipient$,
+    this._formError$,
+  ]).pipe(
+    map(([currentStepIndex, passwordLinkRecipient, formError]) => ({
+      currentStepIndex,
+      passwordLinkRecipient,
+      formError,
+    }))
+  );
 
   public constructor(
-    @Self() private readonly _resetPasswordRequestForm$: ResetPasswordRequestFormService,
-    private _passwordResetService: PasswordResetService,
+    @Self() private readonly _resetPasswordRequestForm: ResetPasswordRequestFormService,
     @Inject(messagingChannelToken) private readonly _messagingChannelToken: MessagingChannel,
+    private readonly _passwordResetService: PasswordResetService,
     private readonly _alertService: AlertService
-  ) {
-    this.resetPasswordRequestForm = _resetPasswordRequestForm$.value;
-    this.messagingChannel = _messagingChannelToken;
+  ) {}
+
+  public set currentStepIndex(value: ResetPasswordRequestFormStep) {
+    this._currentStepIndex$.next(value);
+  }
+
+  public set passwordLinkRecipient(value: string) {
+    this._passwordLinkRecipient$.next(value);
+  }
+
+  public set formError(value: string | null) {
+    this._formError$.next(value);
   }
 
   public onStepChanged(nextStep: number): void {
@@ -60,10 +101,9 @@ export class ResetPasswordRequestComponent {
   }
 
   public onRequestPasswordReset(): void {
-    this.formError$.next('');
-    const resetPasswordFormValue = this.resetPasswordRequestForm.getRawValue();
-
-    const username: string = resetPasswordFormValue.username;
+    this.formError = '';
+    const resetPasswordFormModel = this.resetPasswordRequestForm.getModel();
+    const username: string = resetPasswordFormModel.username;
 
     const resetPasswordRequest: PasswordResetTokenRequest = {
       username,
@@ -74,12 +114,12 @@ export class ResetPasswordRequestComponent {
       next: (response) => {
         this._alertService.showMessage('Password reset sent');
         this.passwordLinkRecipient = response.emailAddress;
-        this.currentStepIndex = Steps.PASSWORD_RESULT;
+        this.currentStepIndex = ResetPasswordRequestFormStep.PasswordResult;
       },
       error: (error) => {
         this.resetForm();
         if (error instanceof ApiError && error.code === apiErrorCodes.VALIDATION_ERROR) {
-          this.formError$.next(`We were unable to find an account linked to ${username}`);
+          this.formError = `We were unable to find an account linked to ${username}`;
           return;
         }
 
@@ -90,11 +130,13 @@ export class ResetPasswordRequestComponent {
 
   public resetForm(): void {
     this.passwordLinkRecipient = '';
-    this.resetPasswordRequestForm.controls.username.reset();
-    this.resetPasswordRequestForm.markAsUntouched();
+    this._resetPasswordRequestForm.resetForm();
   }
 
-  private isSteps(step: number): step is Steps {
-    return step >= Steps.PASSWORD_REQUEST && step <= Steps.PASSWORD_RESULT;
+  private isSteps(step: number): step is ResetPasswordRequestFormStep {
+    return (
+      step >= ResetPasswordRequestFormStep.PasswordRequest &&
+      step <= ResetPasswordRequestFormStep.PasswordResult
+    );
   }
 }

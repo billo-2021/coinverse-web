@@ -8,11 +8,22 @@ import {
   Output,
   TemplateRef,
 } from '@angular/core';
-
 import { LoadingService } from '../../../core';
-
-import { Pagination } from '../../types';
 import { paginationToken } from '../../config';
+import { Pagination } from '../../types';
+
+export interface TableComponentInput<T extends object, K extends string | 'actions' | keyof T> {
+  columns: readonly K[];
+  keys: Record<K, string> | null;
+  data: readonly T[];
+  rowDataTemplates: Partial<Record<K, TemplateRef<unknown>>> | null;
+  pagination: Pagination;
+  total: number;
+}
+
+export interface TableComponentOutput {
+  paginationChanged: EventEmitter<Pagination>;
+}
 
 @Component({
   selector: 'app-table',
@@ -21,7 +32,9 @@ import { paginationToken } from '../../config';
   changeDetection: ChangeDetectionStrategy.OnPush,
   // encapsulation: ViewEncapsulation.None,
 })
-export class TableComponent<T extends object, K extends string | 'actions' | keyof T> {
+export class TableComponent<T extends object, K extends string | 'actions' | keyof T>
+  implements TableComponentInput<T, K>, TableComponentOutput
+{
   @Input() public columns: readonly K[] = [];
   @Input() public keys: Record<K, string> | null = null;
   @Input() public data: readonly T[] = [];
@@ -31,7 +44,7 @@ export class TableComponent<T extends object, K extends string | 'actions' | key
 
   @Output() public paginationChanged = new EventEmitter<Pagination>();
   protected loading$ = this._loadingService.loading$;
-  @HostBinding('class') private _classes = 'block';
+  @HostBinding('class') private _classes = 'block overflow-x-auto';
 
   public constructor(
     @Inject(paginationToken) private readonly _paginationToken: Pagination,
@@ -40,14 +53,6 @@ export class TableComponent<T extends object, K extends string | 'actions' | key
 
   public onPagination(pagination: Pagination): void {
     this.paginationChanged.emit(pagination);
-  }
-
-  public getColumnValue(data: T, column: K) {
-    if (this.hasColumn(data, column)) {
-      return data[column];
-    }
-
-    return null;
   }
 
   public hasColumn(data: T, column: unknown): column is keyof T {

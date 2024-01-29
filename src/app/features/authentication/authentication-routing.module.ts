@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
+import { pagesConfig } from './config';
 import {
   LoginPage,
   RegisterPage,
@@ -9,9 +9,7 @@ import {
   VerifyAccountPage,
 } from './pages';
 
-import { pagesConfig } from './config';
-
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: pagesConfig.login.path,
     component: LoginPage,
@@ -41,7 +39,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
 export class AuthenticationRoutingModule {}

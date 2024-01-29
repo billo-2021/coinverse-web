@@ -1,5 +1,5 @@
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { combineLatest, Observable, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 export function disableWhenLoading(
   form:
@@ -7,18 +7,15 @@ export function disableWhenLoading(
     | AbstractControl<unknown>
     | Array<AbstractControl<unknown> | null>
     | null,
-  disabled: Observable<boolean>,
   loading$: Observable<boolean>
 ) {
-  return combineLatest([loading$, disabled]).pipe(
-    tap(([isLoading, isDisabled]) => {
-      const disabled = isLoading || isDisabled;
-
+  return loading$.pipe(
+    tap((loading) => {
       if (!form) {
         return;
       }
 
-      if (!disabled) {
+      if (!loading) {
         if (Array.isArray(form)) {
           form.forEach((control) => control && control.enable());
           return;

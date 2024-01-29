@@ -1,1 +1,23 @@
-<p>trades works!</p>
+<app-table
+  (paginationChanged)="onPagination($event)"
+  [columns]="Columns"
+  [data]="trades"
+  [keys]="Keys"
+  [pagination]="pagination"
+  [rowDataTemplates]="{id, amount, sourceWallet, destinationWallet, action, status, createdAt}"
+  [total]="total">
+</app-table>
+
+<ng-template #id let-trade> {{ trade.id }} </ng-template>
+
+<ng-template #amount let-trade> {{ trade.currency + ' ' }}{{ trade.amount }} </ng-template>
+
+<ng-template #sourceWallet let-trade> {{ trade.sourceWallet.address }} </ng-template>
+
+<ng-template #destinationWallet let-trade> {{ trade.destinationWallet.address }} </ng-template>
+
+<ng-template #action let-trade> {{ trade.action }} </ng-template>
+
+<ng-template #status let-trade> {{ trade.status }} </ng-template>
+
+<ng-template #createdAt let-trade> {{ trade.createdAt | date: 'dd/MM/yy HH:mm' }} </ng-template>

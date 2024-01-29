@@ -1,50 +1,79 @@
-import { Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Inject,
+  ViewEncapsulation,
+} from '@angular/core';
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  Observable,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs';
+import { PageResponse } from '../../../../core';
+import { NavigationService } from '../../../../common';
+import { PAGE_OPTIONS, Pagination, paginationToken } from '../../../../ui-components';
+import { Wallet, WalletService } from '../../../../domain';
 
-import { Observable } from 'rxjs';
-
-import { Pagination } from '../../../../ui-components';
-import { NavigationService, webRoutesConfig } from '../../../../common';
-
-import { ManageWalletsViewModelService } from '../../services';
-import { ManageWalletsViewModel } from './manage-wallets.view-model';
+export interface ManageWalletsViewModel {
+  readonly walletsPagination: Pagination;
+  readonly walletPage: PageResponse<Wallet>;
+}
 
 @Component({
   selector: 'app-manage-wallets',
   templateUrl: './manage-wallets.component.html',
   styleUrls: ['./manage-wallets.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageWalletsComponent {
-  protected viewModel$: Observable<ManageWalletsViewModel>;
-  protected readonly transactUrl = webRoutesConfig.transact;
+  protected readonly _walletsPagination$ = new BehaviorSubject<Pagination>(this._paginationToken);
+  protected walletPage$: Observable<PageResponse<Wallet>> = combineLatest([
+    this._walletsPagination$,
+  ]).pipe(
+    switchMap((query) => this._walletService.getBalances(...query).pipe(shareReplay(1))),
+    startWith(PAGE_OPTIONS)
+  );
+  protected readonly viewModel$: Observable<ManageWalletsViewModel> = combineLatest([
+    this._walletsPagination$,
+    this.walletPage$,
+  ]).pipe(map(([walletsPagination, walletPage]) => ({ walletsPagination, walletPage })));
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(
+    @Inject(paginationToken) private readonly _paginationToken: Pagination,
     private readonly _navigationService: NavigationService,
-    private readonly _manageWalletsViewModel: ManageWalletsViewModelService
-  ) {
-    this.viewModel$ = _manageWalletsViewModel;
+    private readonly _walletService: WalletService
+  ) {}
+
+  public set walletsPagination(value: Pagination) {
+    this._walletsPagination$.next(value);
   }
 
   public onWithdraw(currencyCode: string): void {
-    const url = this.transactUrl;
     this._navigationService
       .to({
-        route: url,
+        route: 'transact',
         queryParams: { action: 'withdraw', currencyCode: currencyCode },
       })
       .then();
   }
 
   public onDeposit(currencyCode: string): void {
-    const url = this.transactUrl;
     this._navigationService
       .to({
-        route: url,
+        route: 'transact',
         queryParams: { action: 'deposit', currencyCode: currencyCode },
       })
       .then();
   }
 
   public onPagination(pagination: Pagination): void {
-    this._manageWalletsViewModel.pagination = pagination;
+    this.walletsPagination = pagination;
   }
 }

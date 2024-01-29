@@ -3,7 +3,7 @@
   (paginationChanged)="onPagination($event)"
   (withdrawClicked)="onWithdraw($event)"
   *ngIf="viewModel$ | async as viewModel"
-  [pagination]="viewModel.pagination"
-  [total]="viewModel.total"
-  [wallets]="viewModel.wallets">
+  [pagination]="viewModel.walletsPagination"
+  [total]="viewModel.walletPage.total"
+  [wallets]="viewModel.walletPage.data">
 </app-wallets>

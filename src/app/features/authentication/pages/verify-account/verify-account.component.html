@@ -1,13 +1,14 @@
-<app-expand [isExpanded]="!otpForm.valid">
-  <app-notification *ngIf="formError$ | async as formError" status="error">
-    <p class="tui-text_body-s">{{ formError }}</p>
-  </app-notification>
-</app-expand>
-
-<app-otp-form
-  #otpFormRef
-  (cancelClicked)="onResendOtp()"
-  (saveClicked)="onSubmitOtp()"
-  [autoSave]="true"
-  [otpRecipient]="otpRecipient">
-</app-otp-form>
+<ng-container *ngIf="viewModel$ | async as viewModel">
+  <app-expand [expanded]="!otpForm.valid">
+    <app-notification *ngIf="viewModel.formError" class="max-w-md m-auto" status="error">
+      <p class="tui-text_body-s">{{ viewModel.formError }}</p>
+    </app-notification>
+  </app-expand>
+  <app-otp-form
+    #otpFormRef
+    (cancelClicked)="onResendOtp()"
+    (saveClicked)="onSubmitOtp()"
+    [autoSave]="true"
+    [otpRecipient]="viewModel.otpRecipient">
+  </app-otp-form>
+</ng-container>

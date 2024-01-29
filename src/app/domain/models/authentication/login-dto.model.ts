@@ -1,21 +1,7 @@
-import { isUserDto, UserDto } from '../user-dto.model';
-import { KeysMap } from '../../../core/types';
-import { ObjectUtils } from '../../../core/utils';
+import { UserDto } from './user-dto.model';
 
-interface LoginDto {
-  accessToken: string;
-  refreshToken: string;
-  user: UserDto;
+export interface LoginDto {
+  readonly accessToken: string;
+  readonly refreshToken: string;
+  readonly user: UserDto;
 }
-
-const loginKeysMap: KeysMap<LoginDto, boolean> = {
-  accessToken: true,
-  refreshToken: true,
-  user: true,
-};
-
-function isLoginDto(value: unknown): value is LoginDto {
-  return ObjectUtils.hasKeys(value, loginKeysMap) && isUserDto(value.user);
-}
-
-export { LoginDto, isLoginDto };

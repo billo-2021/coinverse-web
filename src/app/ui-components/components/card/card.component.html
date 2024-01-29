@@ -1,10 +1,10 @@
 <tui-island class="overflow-hidden" size="s">
-  <div class="mb-8 row-nowrap items-center justify-space-between">
+  <div *ngIf="title || subtitle" class="mb-8 row-nowrap items-center justify-space-between">
     <div class="col justify-center">
       <h3 *ngIf="title" class="tui-island__title overflow-ellipsis">{{ title }}</h3>
       <p *ngIf="subtitle" class="tui-island__paragraph overflow-ellipsis">{{ subtitle }}</p>
     </div>
-    <div class="row col-spacing-xs">
+    <div *ngIf="actionsContent" class="col col-spacing-xs">
       <ng-container *ngTemplateOutlet="actionsContent"></ng-container>
     </div>
   </div>

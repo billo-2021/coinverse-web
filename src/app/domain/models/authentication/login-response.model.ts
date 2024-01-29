@@ -1,7 +1,7 @@
-import { UserResponse } from '../user-response.model';
+import { User } from './user.model';
 
 export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: UserResponse;
+  readonly accessToken: string;
+  readonly refreshToken: string;
+  readonly user: User;
 }

@@ -7,14 +7,21 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-
-import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { TuiInputComponent } from '@taiga-ui/kit';
+import { InputFieldSize } from '../../types';
 
-import { LoadingService } from '../../../core';
+export type TextFieldType = 'text' | 'email';
 
-export type SizeType = 's' | 'm' | 'l';
+export interface TextFieldComponentInput {
+  type: TextFieldType;
+  size: InputFieldSize;
+  name: string;
+  label: string;
+  placeholder: string;
+  hasClear: boolean;
+  autocomplete: string;
+}
 
 @Component({
   selector: 'app-text-field',
@@ -23,9 +30,9 @@ export type SizeType = 's' | 'm' | 'l';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextFieldComponent {
-  @Input() public type: 'text' | 'email' = 'text';
-  @Input() public size: SizeType = 'm';
+export class TextFieldComponent implements TextFieldComponentInput {
+  @Input() public type: TextFieldType = 'text';
+  @Input() public size: InputFieldSize = 'm';
   @Input() public name = '';
   @Input() public label = '';
   @Input() public placeholder = '';
@@ -34,24 +41,11 @@ export class TextFieldComponent {
 
   @ViewChild(TuiInputComponent) private _inputRef?: TuiInputComponent;
   @HostBinding('class') private _classes = 'block input-text-field-wrapper';
-  private _disabled = new BehaviorSubject<boolean>(false);
 
-  public constructor(
-    private readonly _loadingService: LoadingService,
-    @Optional() private readonly _formGroupDirective: FormGroupDirective
-  ) {}
-
-  @Input()
-  public set isDisabled(value: boolean) {
-    this._disabled.next(value);
-  }
+  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
 
   protected get formGroup(): FormGroup | null {
     return this._formGroupDirective?.form || null;
-  }
-
-  protected get formControl(): FormControl | null {
-    return (this.formGroup?.controls[this.name] as FormControl) || null;
   }
 
   public focusInput(preventScroll: boolean) {

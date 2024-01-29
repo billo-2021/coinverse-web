@@ -11,7 +11,21 @@ import {
 } from '@angular/core';
 import { TuiBreakpointService } from '@taiga-ui/core';
 import { TuiStepperComponent } from '@taiga-ui/kit';
-import { StepOptions } from './stepper.types';
+
+export type StepOptions = {
+  readonly state: 'error' | 'normal' | 'pass';
+  readonly isDisabled: boolean;
+};
+
+export interface StepperComponentInput {
+  activeStepIndex: number;
+  steps: readonly string[];
+  stepsOptions: readonly StepOptions[];
+}
+
+export interface StepperComponentOutput {
+  activeStepIndexChange: EventEmitter<number>;
+}
 
 @Component({
   selector: 'app-stepper',
@@ -20,12 +34,12 @@ import { StepOptions } from './stepper.types';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StepperComponent {
-  @Input() currentStepIndex = 0;
-  @Input() steps: string[] = [];
-  @Input() stepsOptions: StepOptions[] = [];
+export class StepperComponent implements StepperComponentInput, StepperComponentOutput {
+  @Input() activeStepIndex = 0;
+  @Input() steps: readonly string[] = [];
+  @Input() stepsOptions: readonly StepOptions[] = [];
 
-  @Output() currentStepIndexChange = new EventEmitter<number>();
+  @Output() activeStepIndexChange = new EventEmitter<number>();
 
   @ViewChild('tuiStepper') private tuiStepper?: TuiStepperComponent;
 
@@ -40,23 +54,7 @@ export class StepperComponent {
     return this._breakpoint$;
   }
 
-  public onCurrentStepChanged(currentStep: number) {
-    this.currentStepIndexChange.emit(currentStep);
-  }
-
-  public activate(index: number): void {
-    if (!this.tuiStepper) {
-      return;
-    }
-
-    this.tuiStepper.activate(index);
-  }
-
-  public isActive(index: number): boolean {
-    if (!this.tuiStepper) {
-      return false;
-    }
-
-    return this.tuiStepper.isActive(index);
+  public onActiveStepChanged(currentStep: number) {
+    this.activeStepIndexChange.emit(currentStep);
   }
 }

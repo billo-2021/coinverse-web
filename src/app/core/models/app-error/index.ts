@@ -1,3 +1,1 @@
-import { AppError } from './app-error.model';
-
-export { AppError };
+export { AppError } from './app-error.model';

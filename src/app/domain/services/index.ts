@@ -1,25 +1,12 @@
-import { AuthenticationService } from './authentication/authentication.service';
-import { AccountVerificationService } from './account-verification/account-verification.service';
-import { PasswordResetService } from './password-reset/password-reset.service';
-import { QuoteService } from './quote/quote.service';
-import { WalletService } from './wallet/wallet.service';
-import { TransactService } from './transact/transact.service';
-import { TradeService } from './trade/trade.service';
-import { AdministrationService } from './administration/administration.service';
-import { UserAccountService } from './user-account/user-account.service';
-import { ProfileService } from './profile/profile.service';
-import { LookupService } from './lookup/lookup.service';
-
-export {
-  AuthenticationService,
-  AccountVerificationService,
-  PasswordResetService,
-  QuoteService,
-  WalletService,
-  TransactService,
-  TradeService,
-  AdministrationService,
-  UserAccountService,
-  ProfileService,
-  LookupService,
-};
+export { AuthenticationService } from './authentication/authentication.service';
+export { AccountVerificationService } from './account-verification/account-verification.service';
+export { PasswordResetService } from './password-reset/password-reset.service';
+export { QuoteService } from './quote/quote.service';
+export { WalletService } from './wallet/wallet.service';
+export { TransactService } from './transact/transact.service';
+export { TradeService } from './trade/trade.service';
+export { AdministrationService } from './administration/administration.service';
+export { UserAccountService } from './user-account/user-account.service';
+export { ProfileService } from './profile/profile.service';
+export { LookupService } from './lookup/lookup.service';
+export { ListOptionsService } from './list-options/list-options.service';

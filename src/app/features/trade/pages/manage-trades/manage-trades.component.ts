@@ -1,110 +1,77 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Inject,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   BehaviorSubject,
   combineLatest,
-  filter,
   map,
   Observable,
   shareReplay,
   startWith,
   switchMap,
 } from 'rxjs';
+import { PageResponse } from '../../../../core';
+import { NavigationService, ViewPage } from '../../../../common';
+import { PAGE_OPTIONS, Pagination, paginationToken } from '../../../../ui-components';
+import { CurrencyTransaction, TradeService } from '../../../../domain';
 
-import { TUI_DEFAULT_MATCHER, tuiIsPresent } from '@taiga-ui/cdk';
-
-import { LoadingService } from '../../../../core';
-import { BaseComponent, TradeService, webRoutesConfig } from '../../../../common';
-import { CurrencyTransactionResponse } from '../../../../common/domain-models/trade';
-
-interface Pagination {
-  page: number;
-  size: number;
+export interface ManageTradesViewModel {
+  readonly tradesPagination: Pagination;
+  readonly tradePage: PageResponse<CurrencyTransaction>;
 }
 
-type Key =
-  | 'id'
-  | 'amount'
-  | 'sourceWallet'
-  | 'destinationWallet'
-  | 'action'
-  | 'status'
-  | 'createdAt';
-
-const KEYS: Record<Key, string> = {
-  id: 'id',
-  amount: 'Amount',
-  sourceWallet: 'Source Wallet',
-  destinationWallet: 'Destination Wallet',
-  action: 'Action',
-  status: 'Status',
-  createdAt: 'Created At',
-};
+export type ManageTradesView = ViewPage<ManageTradesViewModel>;
 
 @Component({
   selector: 'app-manage-trades',
   templateUrl: './manage-trades.component.html',
   styleUrls: ['./manage-trades.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageTradesComponent extends BaseComponent {
-  protected readonly tradeUrl = webRoutesConfig.trade;
+export class ManageTradesComponent implements ManageTradesView {
+  public readonly title = 'Trade History';
+  public readonly subtitle = 'Your trade history.';
 
-  protected readonly title = 'Trade History';
+  @HostBinding('class') private _classes = 'block';
+  private readonly _tradesPagination$ = new BehaviorSubject<Pagination>(this._paginationToken);
 
-  protected readonly subtitle = 'Your trade history.';
-  protected readonly columns: Key[] = [
-    'id',
-    'amount',
-    'sourceWallet',
-    'destinationWallet',
-    'action',
-    'status',
-    'createdAt',
-  ];
-  protected readonly keys = KEYS;
-  protected search = '';
-
-  protected readonly pagination$ = new BehaviorSubject<Pagination>({
-    page: 0,
-    size: 5,
-  });
-
-  protected readonly request$ = combineLatest([this.pagination$]).pipe(
-    switchMap((query) => this._tradeService.getTrades(...query).pipe(startWith(null))),
-    shareReplay(1)
+  private readonly _tradesRequest$ = combineLatest([this._tradesPagination$.asObservable()]).pipe(
+    switchMap((query) => this._tradeService.getTrades(...query).pipe(shareReplay(1))),
+    startWith(null)
   );
 
-  protected trades$: Observable<readonly CurrencyTransactionResponse[]> = this.request$.pipe(
-    filter(tuiIsPresent),
-    map((transactionPage) => transactionPage.data),
-    startWith([])
+  private readonly _tradePage$: Observable<PageResponse<CurrencyTransaction>> = combineLatest([
+    this._tradesPagination$.asObservable(),
+  ]).pipe(
+    switchMap((query) => this._tradeService.getTrades(...query).pipe(shareReplay(1))),
+    startWith<PageResponse<CurrencyTransaction>>(PAGE_OPTIONS)
   );
 
-  protected readonly total$: Observable<number> = this.request$.pipe(
-    filter(tuiIsPresent),
-    map((transactionPage) => transactionPage.total),
-    startWith(1)
-  );
-
-  protected loading$ = this._loadingService.loading$;
+  public readonly viewModel$: Observable<ManageTradesViewModel> = combineLatest([
+    this._tradesPagination$,
+    this._tradePage$,
+  ]).pipe(map(([tradesPagination, tradePage]) => ({ tradesPagination, tradePage })));
 
   public constructor(
-    private readonly _router: Router,
-    private readonly _loadingService: LoadingService,
+    @Inject(paginationToken) private readonly _paginationToken: Pagination,
+    private readonly _navigationService: NavigationService,
     private readonly _tradeService: TradeService
-  ) {
-    super();
+  ) {}
+
+  public set tradesPagination(value: Pagination) {
+    this._tradesPagination$.next(value);
   }
 
-  public async onTrade(): Promise<void> {
-    await this._router.navigate([this.tradeUrl]);
-  }
-
-  public isMatch(value: unknown): boolean {
-    return !!this.search && TUI_DEFAULT_MATCHER(value, this.search);
+  public onTrade(): void {
+    this._navigationService.to('trade').then();
   }
 
   public onPagination(pagination: Pagination): void {
-    this.pagination$.next(pagination);
+    this.tradesPagination = pagination;
   }
 }

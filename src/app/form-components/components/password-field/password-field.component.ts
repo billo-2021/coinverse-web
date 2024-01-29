@@ -8,11 +8,17 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { LoadingService } from '../../../core';
-import { BehaviorSubject } from 'rxjs';
 import { TuiInputPasswordComponent } from '@taiga-ui/kit';
+import { InputFieldSize } from '../../types';
 
-export type SizeType = 's' | 'm' | 'l';
+export interface PasswordFieldComponentInput {
+  size: InputFieldSize;
+  name: string;
+  label: string;
+  placeholder: string;
+  hasClear: boolean;
+  autocomplete: string;
+}
 
 @Component({
   selector: 'app-password-field',
@@ -21,34 +27,21 @@ export type SizeType = 's' | 'm' | 'l';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PasswordFieldComponent {
-  @Input() public size: SizeType = 'm';
+export class PasswordFieldComponent implements PasswordFieldComponentInput {
+  @Input() public size: InputFieldSize = 'm';
   @Input() public name = '';
   @Input() public label = '';
   @Input() public placeholder = '';
-  @Input() hasClear = false;
+  @Input() public hasClear = false;
   @Input() public autocomplete = 'current-password';
 
   @ViewChild(TuiInputPasswordComponent) private _inputPasswordRef?: TuiInputPasswordComponent;
   @HostBinding('class') private _classes = 'block';
-  private _disabled = new BehaviorSubject<boolean>(false);
 
-  public constructor(
-    private readonly _loadingService: LoadingService,
-    @Optional() private readonly _formGroupDirective: FormGroupDirective
-  ) {}
-
-  @Input()
-  public set isDisabled(value: boolean) {
-    this._disabled.next(value);
-  }
+  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
 
   protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
     return this._formGroupDirective?.form || null;
-  }
-
-  protected get formControl(): AbstractControl<unknown> | null {
-    return this.formGroup?.controls[this.name] || null;
   }
 
   public focusInput(preventScroll: boolean) {

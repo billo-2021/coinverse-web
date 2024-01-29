@@ -1,12 +1,11 @@
-import { CurrencyExchangeRateDto } from '../quote';
-
 export interface PaymentDto {
-  id: number;
-  amount: number;
-  currency: string;
-  exchangeRate: CurrencyExchangeRateDto;
-  method: string;
-  action: string;
-  status: string;
-  createdAt: Date;
+  readonly id: number;
+  readonly amount: number;
+  readonly currency: string;
+  readonly bidRate: number;
+  readonly askRate: number;
+  readonly method: string;
+  readonly action: string;
+  readonly status: string;
+  readonly createdAt: Date;
 }

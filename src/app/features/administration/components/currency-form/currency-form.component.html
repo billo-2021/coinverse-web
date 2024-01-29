@@ -1,11 +1,15 @@
+<app-expand [expanded]="!!error && !form.dirty">
+  <app-notification *ngIf="error" status="error">
+    <p class="tui-text_body-s">{{ error }}</p>
+  </app-notification>
+</app-expand>
 <app-form
   (saveClicked)="onSaveClicked()"
-  *ngIf="form"
-  [formGroup]="form"
-  [isValid]="form.valid"
-  [saveText]="saveText">
-  <app-text-field label="Code" name="code" placeholder="i.e. BTC"> </app-text-field>
-  <app-text-field label="Name" name="name" placeholder="i.e. Bitcoin"> </app-text-field>
-  <app-text-field label="Symbol" name="symbol" placeholder="i.e. BTC"> </app-text-field>
+  [formGroup]="formGroup"
+  [saveText]="saveText"
+  [valid]="form.dirty && form.valid">
+  <app-text-field label="Code" name="code" placeholder="i.e. BTC"></app-text-field>
+  <app-text-field label="Name" name="name" placeholder="i.e. Bitcoin"></app-text-field>
+  <app-text-field label="Symbol" name="symbol" placeholder="i.e. BTC"></app-text-field>
   <app-input-number label="Circulating Supply" name="circulatingSupply" size="l"></app-input-number>
 </app-form>

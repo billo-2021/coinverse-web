@@ -1,4 +1,2 @@
-import { CryptoCurrencyModel } from './crypto-currency.model';
-import { WalletModel } from './wallet.model';
-
-export { CryptoCurrencyModel, WalletModel };
+export { CryptoCurrencyModel } from './crypto-currency.model';
+export { WalletModel } from './wallet.model';

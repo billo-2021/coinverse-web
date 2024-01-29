@@ -1,6 +1,5 @@
 <div *ngIf="formGroup" [formGroup]="formGroup" class="item otp-wrapper mb-10">
-  <app-label [text]="label"></app-label>
-
+  <app-label [label]="label"></app-label>
   <ng-otp-input
     #ngOtpInput
     *ngIf="formControl"

@@ -1,19 +1,5 @@
-import { KeysMap, ObjectUtils } from '../../../core';
-
-interface CountryDto {
-  id: number;
-  code: string;
-  name: string;
+export interface CountryDto {
+  readonly id: number;
+  readonly code: string;
+  readonly name: string;
 }
-
-const countryKeysMap: KeysMap<CountryDto, boolean> = {
-  id: true,
-  code: true,
-  name: true,
-};
-
-function isCountryDto(value: unknown): value is CountryDto {
-  return ObjectUtils.hasKeys(value, countryKeysMap);
-}
-
-export { CountryDto, isCountryDto };

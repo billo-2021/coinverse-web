@@ -1,9 +1,13 @@
+<app-expand [expanded]="form.touched">
+  <app-notification *ngIf="error" status="error">
+    <p class="tui-text_body-s">{{ error }}</p>
+  </app-notification>
+</app-expand>
 <app-form
   (saveClicked)="onSaveChanges()"
-  *ngIf="form"
-  [formGroup]="form"
-  [isValid]="form.valid"
+  [formGroup]="formGroup"
   [saveText]="saveText"
+  [valid]="form.dirty && form.valid"
   class="w-full"
   subtitle="Edit your address."
   title="Edit Address">
@@ -19,10 +23,7 @@
     name="street"
     placeholder="i.e. 14 Jump Street">
   </app-text-field>
-  <app-combo-box
-    [options]="(countryOptions$ | async) ?? []"
-    label="Country"
-    name="country"></app-combo-box>
+  <app-combo-box [options]="countryOptions" label="Country" name="country"></app-combo-box>
   <app-text-field label="Province" name="province" placeholder="i.e. Western Cape">
   </app-text-field>
   <app-text-field label="City" name="city" placeholder="i.e. Cape Town"></app-text-field>

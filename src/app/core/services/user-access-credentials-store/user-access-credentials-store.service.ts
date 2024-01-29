@@ -1,8 +1,9 @@
 import { Injectable, Self } from '@angular/core';
-import { UserAccessCredentials } from '../../domain-models';
 import { BehaviorSubject, skip, takeUntil, tap } from 'rxjs';
-
-import { DestroyService, LocalStorageService, StorageKey } from '../../../core';
+import { StorageKey } from '../../constants';
+import { UserAccessCredentials } from '../../models';
+import { DestroyService } from '../destroy/destroy.service';
+import { LocalStorageService } from '../local-storage/local-storage.service';
 
 @Injectable({
   providedIn: 'root',

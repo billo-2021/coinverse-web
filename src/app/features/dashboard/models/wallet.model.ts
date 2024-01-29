@@ -1,9 +1,9 @@
-import { WalletResponse } from '../../../common/domain-models/wallet';
+import { Wallet } from '../../../domain';
 
 export type WalletModel = {
-  readonly wallets: WalletResponse[];
-  readonly walletCurrencyNames: string[];
-  readonly walletCurrencySymbols: string[];
-  readonly walletBalances: number[];
+  readonly wallets: readonly Wallet[];
+  readonly walletCurrencyNames: readonly string[];
+  readonly walletCurrencySymbols: readonly string[];
+  readonly walletBalances: readonly number[];
   readonly totalBalance: number;
 };

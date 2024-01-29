@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, HostBinding } from '@angular/core';
-
-import { DestroyService } from '../../../core';
-import { NavigationService, UserPrincipalStoreService } from '../../../common';
+import { DestroyService, UserPrincipalStoreService } from '../../../core';
+import { NavigationService } from '../../../common';
 
 @Component({
   selector: 'app-global-routing',
@@ -17,7 +16,7 @@ export class GlobalRoutingComponent implements AfterViewInit {
     private readonly _navigationService: NavigationService
   ) {}
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     const isLoggedIn = this._userPrincipalStore.isLoggedIn();
 
     if (isLoggedIn) {

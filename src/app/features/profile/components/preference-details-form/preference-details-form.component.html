@@ -1,18 +1,18 @@
+<app-expand [expanded]="form.touched">
+  <app-notification *ngIf="error" status="error">
+    <p class="tui-text_body-s">{{ error }}</p>
+  </app-notification>
+</app-expand>
 <app-form
   (saveClicked)="onSaveChanges()"
-  *ngIf="form"
-  [formGroup]="form"
-  [isValid]="form.valid"
+  [formGroup]="formGroup"
+  [saveDisabled]="!form.touched"
   [saveText]="saveText"
+  [valid]="form.dirty && form.valid"
   subtitle="Edit your preferences."
   title="Preferences and Notifications">
-  <app-combo-box
-    [options]="(currencyOptions$ | async) ?? []"
-    label="Currency"
-    name="currency"></app-combo-box>
-  <app-label
-    [formGroup]="getFormGroup(form.controls['notificationMethods'])"
-    text="Notification Methods">
+  <app-combo-box [options]="currencyOptions" label="Currency" name="currency"></app-combo-box>
+  <app-label [formGroup]="notificationMethodsFormGroup" label="Notification Methods">
     <app-check-box label="Sms" name="sms"></app-check-box>
     <app-check-box label="Email" name="email"></app-check-box>
   </app-label>

@@ -10,13 +10,26 @@ import {
   Self,
   ViewEncapsulation,
 } from '@angular/core';
-
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { BehaviorSubject, Observable, takeUntil } from 'rxjs';
-
+import { Observable, takeUntil } from 'rxjs';
 import { DestroyService, LoadingService } from '../../../core';
-
 import { disableWhenLoading } from '../../utils';
+
+export interface FormComponentInput {
+  valid: boolean;
+  title?: string;
+  subtitle?: string;
+  cancelHidden: boolean;
+  cancelText: string;
+  saveText: string;
+  cancelDisabled: boolean;
+  saveDisabled: boolean;
+}
+
+export interface FormComponentOutput {
+  cancelClicked: EventEmitter<void>;
+  saveClicked: EventEmitter<void>;
+}
 
 @Component({
   selector: 'app-form',
@@ -26,21 +39,20 @@ import { disableWhenLoading } from '../../utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DestroyService],
 })
-export class FormComponent implements OnInit {
-  @Input() public isValid = false;
+export class FormComponent implements FormComponentInput, FormComponentOutput, OnInit {
+  @Input() public valid = false;
   @Input() public title?: string;
   @Input() public subtitle?: string;
-  @Input() public isCancelShown = false;
+  @Input() public cancelHidden = true;
   @Input() public cancelText = 'Cancel';
   @Input() public saveText = 'Save';
-  @Input() public isCancelDisabled = false;
+  @Input() public cancelDisabled = false;
+  @Input() public saveDisabled = false;
 
-  @Input() public isSaveDisabled = false;
   @Output() public cancelClicked = new EventEmitter<void>();
   @Output() public saveClicked = new EventEmitter<void>();
 
   @HostBinding('class') private _classes = 'block';
-  private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(
     private readonly _loadingService: LoadingService,
@@ -57,9 +69,7 @@ export class FormComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    disableWhenLoading(this.formGroup, this._disabled.asObservable(), this.loading$)
-      .pipe(takeUntil(this._destroy$))
-      .subscribe();
+    disableWhenLoading(this.formGroup, this.loading$).pipe(takeUntil(this._destroy$)).subscribe();
   }
 
   public onCancelClicked(): void {

@@ -5,10 +5,10 @@ import { TuiAlertService, TuiNotification } from '@taiga-ui/core';
   providedIn: 'root',
 })
 export class AlertService {
-  constructor(@Inject(TuiAlertService) private readonly alerts: TuiAlertService) {}
+  constructor(@Inject(TuiAlertService) private readonly _alerts: TuiAlertService) {}
 
   public showErrorMessage(message: string, heading?: string): void {
-    this.alerts
+    this._alerts
       .open(this.getSimpleMessageTemplate(message), {
         label: heading || 'Error',
         status: TuiNotification.Error,
@@ -17,7 +17,7 @@ export class AlertService {
   }
 
   public showMessage(message: string, heading?: string): void {
-    this.alerts
+    this._alerts
       .open(this.getSimpleMessageTemplate(message), {
         label: heading || 'Message',
       })

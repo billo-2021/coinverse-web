@@ -2,30 +2,60 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
-  OnInit,
   Self,
   ViewEncapsulation,
 } from '@angular/core';
-
-import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { finalize, map, Subject, switchMap, take, tap } from 'rxjs';
-
-import { AlertService, ApiError } from '../../../../core';
-import { NavigationService, PasswordResetService } from '../../../../common';
 import {
-  PasswordTokenUserResponse,
-  ResetPasswordRequest,
-} from '../../../../common/domain-models/authentication';
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  filter,
+  finalize,
+  map,
+  merge,
+  Observable,
+  startWith,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
+import { tuiIsPresent } from '@taiga-ui/cdk';
+import { AlertService, AppError } from '../../../../core';
+import {
+  FormBase,
+  getErrorMessage,
+  NavigationService,
+  ParamsService,
+  View,
+} from '../../../../common';
+import { PasswordResetService, PasswordTokenUser, ResetPasswordRequest } from '../../../../domain';
+import { ResetPasswordForm, ResetPasswordFormService } from '../../components';
 
-import { ResetPasswordFormService } from '../../services/reset-password-form.service';
-
-import { ResetPasswordForm } from '../../models';
-
-enum Steps {
-  PASSWORD_RESET,
-  PASSWORD_RESET_RESULT,
+export enum ResetPasswordFormStep {
+  PasswordReset,
+  PasswordResetResult,
 }
+
+export type ResetPasswordFormStepType = typeof ResetPasswordFormStep;
+export type ResetPasswordFormStepsType = readonly [string, string];
+
+export interface ResetPasswordViewModel {
+  readonly currentStepIndex: ResetPasswordFormStep;
+  readonly passwordLinkToken: string | null;
+  readonly passwordTokenUser: PasswordTokenUser | null;
+  readonly formError: string | null;
+}
+
+export interface ResetPasswordView extends View<ResetPasswordViewModel> {
+  readonly ResetPasswordFormStepType: ResetPasswordFormStepType;
+  readonly ResetPasswordFormSteps: ResetPasswordFormStepsType;
+}
+
+export const RESET_PASSWORD_FORM_STEPS: ResetPasswordFormStepsType = [
+  'Set a new Password',
+  'Reset password result',
+];
 
 @Component({
   selector: 'app-reset-password',
@@ -33,67 +63,89 @@ enum Steps {
   styleUrls: ['./reset-password.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ResetPasswordFormService],
+  providers: [ResetPasswordFormService, ParamsService],
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent implements ResetPasswordView {
   @HostBinding('class') public classes = 'block max-w-md m-auto';
-  protected readonly STEPS = Steps;
-  protected currentStepIndex: Steps = Steps.PASSWORD_RESET;
-  protected readonly steps = ['Set a new Password', 'Reset password result'];
 
-  protected readonly formError$ = new Subject<string>();
-  protected readonly resetPasswordForm: FormGroup<ResetPasswordForm>;
-  protected passwordLinkToken = '';
+  public readonly ResetPasswordFormStepType: ResetPasswordFormStepType = ResetPasswordFormStep;
+  public readonly ResetPasswordFormSteps: ResetPasswordFormStepsType = RESET_PASSWORD_FORM_STEPS;
 
-  protected passwordTokenUser: PasswordTokenUserResponse | null = null;
+  protected readonly resetPasswordForm: FormBase<ResetPasswordForm> = this._resetPasswordForm;
+
+  private readonly _currentStepIndex$ = new BehaviorSubject<ResetPasswordFormStep>(
+    ResetPasswordFormStep.PasswordReset
+  );
+
+  private readonly _passwordLinkToken$ = new BehaviorSubject<string | null>(null);
+  private readonly _passwordTokenUser$ = new BehaviorSubject<PasswordTokenUser | null>(null);
+  private readonly _formError$ = new BehaviorSubject<string | null>(null);
+
+  private readonly _effects$ = merge(
+    this._paramsService.param('passwordToken').pipe(
+      tap((passwordToken) => {
+        if (!passwordToken) {
+          const message = 'Password token must be provided';
+          throw new AppError(message);
+        }
+
+        this._passwordLinkToken$.next(passwordToken);
+      })
+    ),
+    this._passwordLinkToken$.pipe(
+      filter(tuiIsPresent),
+      switchMap((passwordLinkToken) =>
+        this._passwordResetService
+          .requestPasswordTokenUser(passwordLinkToken)
+          .pipe(startWith<PasswordTokenUser | null>(null))
+      ),
+      catchError(() => {
+        const message = 'Invalid password token';
+        this._navigationService.to('login').then();
+        return throwError(() => new AppError(message));
+      }),
+      tap((passwordTokenUser) => this._passwordTokenUser$.next(passwordTokenUser))
+    )
+  );
+
+  public readonly viewModel$: Observable<ResetPasswordViewModel> = combineLatest([
+    this._currentStepIndex$,
+    this._passwordLinkToken$,
+    this._passwordTokenUser$,
+    this._formError$,
+    this._effects$,
+  ]).pipe(
+    map(([currentStepIndex, passwordLinkToken, passwordTokenUser, formError]) => ({
+      currentStepIndex,
+      passwordLinkToken,
+      passwordTokenUser,
+      formError,
+    }))
+  );
 
   public constructor(
+    private readonly _paramsService: ParamsService,
     private readonly _alertService: AlertService,
     private readonly _activatedRoute: ActivatedRoute,
     private readonly _navigationService: NavigationService,
-    @Self() private readonly _resetPasswordForm$: ResetPasswordFormService,
+    @Self() private readonly _resetPasswordForm: ResetPasswordFormService,
     private readonly _passwordResetService: PasswordResetService
-  ) {
-    this.resetPasswordForm = _resetPasswordForm$.value;
+  ) {}
+
+  public set currentStepIndex(value: ResetPasswordFormStep) {
+    this._currentStepIndex$.next(value);
   }
 
-  ngOnInit() {
-    const passwordLinkToken$ = this._activatedRoute.params.pipe(
-      take(1),
-      map((params) => {
-        const passwordToken = params['passwordToken'] as string | undefined;
+  public set formError(value: string | null) {
+    this._formError$.next(value);
+  }
 
-        if (!passwordToken) {
-          const message = 'Invalid password link';
-          throw new Error(message);
-        }
+  public get passwordTokenUser(): PasswordTokenUser | null {
+    return this._passwordTokenUser$.value;
+  }
 
-        return passwordToken;
-      }),
-      tap((passwordLinkToken) => (this.passwordLinkToken = passwordLinkToken))
-    );
-
-    passwordLinkToken$
-      .pipe(
-        switchMap((passwordToken) =>
-          this._passwordResetService.requestPasswordTokenUser(passwordToken)
-        )
-      )
-      .subscribe({
-        next: (passwordTokenUserResponse) => {
-          this.passwordTokenUser = passwordTokenUserResponse;
-        },
-        error: (error) => {
-          if (typeof error === 'string') {
-            this._alertService.showErrorMessage(error);
-            this._navigationService.to('login').then();
-            return;
-          }
-
-          this._navigationService.to('login').then();
-          throw error;
-        },
-      });
+  public get passwordLinkToken(): string | null {
+    return this._passwordLinkToken$.value;
   }
 
   public onStepChanged(nextStep: number): void {
@@ -105,45 +157,35 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   public onResetPassword() {
-    this.formError$.next('');
+    this.formError = '';
+    const passwordLLinkToken = this.passwordLinkToken;
+    const passwordTokenUser = this.passwordTokenUser;
 
-    if (!this.passwordTokenUser) {
+    if (!passwordLLinkToken || !passwordTokenUser) {
       return;
     }
 
-    const resetPasswordFormValue = this.resetPasswordForm.getRawValue();
-    const password = resetPasswordFormValue.password;
+    const resetPasswordFormModel = this.resetPasswordForm.getModel();
 
     const resetPasswordRequest: ResetPasswordRequest = {
-      username: this.passwordTokenUser.username,
-      token: this.passwordLinkToken,
-      password: password,
+      username: passwordTokenUser.username,
+      token: passwordLLinkToken,
+      password: resetPasswordFormModel.password,
     };
 
     this._passwordResetService
       .resetPassword(resetPasswordRequest)
-      .pipe(finalize(() => this.resetForm()))
+      .pipe(finalize(() => this._resetPasswordForm.resetForm()))
       .subscribe({
-        next: () => {
-          this.currentStepIndex = Steps.PASSWORD_RESET_RESULT;
-        },
-        error: (error) => {
-          if (error instanceof ApiError) {
-            this.formError$.next(error.message);
-            return;
-          }
-
-          throw error;
-        },
+        next: () => (this.currentStepIndex = ResetPasswordFormStep.PasswordResetResult),
+        error: (error) => (this.formError = getErrorMessage(error)),
       });
   }
 
-  public resetForm(): void {
-    this.resetPasswordForm.controls['password'].setValue('');
-    this.resetPasswordForm.markAsUntouched();
-  }
-
-  private isSteps(step: number): step is Steps {
-    return step >= Steps.PASSWORD_RESET && step <= Steps.PASSWORD_RESET_RESULT;
+  private isSteps(step: number): step is ResetPasswordFormStep {
+    return (
+      step >= ResetPasswordFormStep.PasswordReset &&
+      step <= ResetPasswordFormStep.PasswordResetResult
+    );
   }
 }

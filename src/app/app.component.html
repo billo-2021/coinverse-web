@@ -1,5 +1,13 @@
 <tui-root *ngIf="viewModel$ | async as viewModel" class="tui-root h-full" tuiMode="onLight">
-  <app-menu [user]="viewModel.userPrincipal">
+  <app-menu
+    (gotoProfileClicked)="onGotoProfile()"
+    (signOutClicked)="onSignOut()"
+    (toggleMenuClicked)="onToggleMenu($event)"
+    [isMobile]="viewModel.isMobile"
+    [menuItems]="viewModel.menuItems"
+    [showSideMenu]="viewModel.isSideMenuShown"
+    [show]="viewModel.isMenuShown"
+    [user]="viewModel.userPrincipal">
     <router-outlet></router-outlet>
   </app-menu>
 </tui-root>

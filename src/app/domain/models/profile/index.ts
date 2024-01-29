@@ -1,34 +1,15 @@
-import { UserProfileAddressDto } from './user-profile-address-dto';
-import { UserProfileAddressResponse } from './user-profile-address-response';
-import { UserProfileCountryDto } from './user-profile-country-dto';
-import { UserProfileCountryResponse } from './user-profile-country-response';
-import { UserProfileCurrencyDto } from './user-profile-currency-dto';
-import { UserProfileCurrencyResponse } from './user-profile-currency-response';
-import { UserProfileDto } from './user-profile-dto';
-import { UserProfileResponse } from './user-profile-response';
-import { UserProfileNotificationMethodDto } from './user-profile-notification-method-dto';
-import { UserProfileNotificationMethodResponse } from './user-profile-notification-method-response';
-import { UserProfilePreferenceDto } from './user-profile-preference-dto';
-import { UserProfilePreferenceResponse } from './user-profile-preference-response';
-
-import { UserProfilePreferenceUpdate } from './user-profile-preference-update';
-import { UserProfileAddressUpdate } from './user-profile-address-update';
-import { UserProfilePersonalInformationUpdate } from './user-profile-personal-information-update';
-
-export {
-  UserProfileAddressDto,
-  UserProfileAddressResponse,
-  UserProfileCountryDto,
-  UserProfileCountryResponse,
-  UserProfileCurrencyDto,
-  UserProfileCurrencyResponse,
-  UserProfileDto,
-  UserProfileResponse,
-  UserProfileNotificationMethodDto,
-  UserProfileNotificationMethodResponse,
-  UserProfilePreferenceDto,
-  UserProfilePreferenceResponse,
-  UserProfilePreferenceUpdate,
-  UserProfileAddressUpdate,
-  UserProfilePersonalInformationUpdate,
-};
+export { UserProfile } from './user-profile';
+export { UserProfileDto } from './user-profile-dto';
+export { UserProfileAddress } from './user-profile-address';
+export { UserProfileCountry } from './user-profile-country';
+export { UserProfileCurrency } from './user-profile-currency';
+export { UserProfilePreference } from './user-profile-preference';
+export { UserProfileAddressDto } from './user-profile-address-dto';
+export { UserProfileCountryDto } from './user-profile-country-dto';
+export { UserProfileCurrencyDto } from './user-profile-currency-dto';
+export { UserProfilePreferenceDto } from './user-profile-preference-dto';
+export { UserProfileNotificationMethod } from './user-profile-notification-method';
+export { UserProfileNotificationMethodDto } from './user-profile-notification-method-dto';
+export { UpdateUserProfileAddress } from './update-user-profile-address';
+export { UpdateUserProfilePreference } from './update-user-profile-preference';
+export { UpdateUserProfilePersonalInformation } from './update-user-profile-personal-information';

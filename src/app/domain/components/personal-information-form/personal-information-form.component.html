@@ -1,9 +1,9 @@
 <app-form
   (saveClicked)="onSaveClicked()"
-  [formGroup]="form"
-  [isValid]="form.valid"
+  [class]="'max-w-md' + formClasses"
+  [formGroup]="formGroup"
   [saveText]="saveText"
-  class="max-w-md m-auto"
+  [valid]="form.valid"
   subtitle="Please fill in your personal details."
   title="Personal Details">
   <app-text-field

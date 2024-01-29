@@ -1,19 +1,11 @@
-<ng-container
-  *ngIf="{
-    currencyCode: currencyCode$ | async,
-    mode: mode$ | async
-  } as viewModel">
-  <div *ngIf="viewModel.mode !== null" class="flex-col">
-    <div class="flex-row justify-space-between border-bottom">
-      <app-header
-        [subtitle]="subtitle[viewModel.mode]"
-        [title]="title[viewModel.mode]"></app-header>
-    </div>
-    <div class="mt-6 col-md-4">
-      <app-currency-form
-        (saveClicked)="onSaveClicked()"
-        [form]="currencyForm"
-        [saveText]="saveText[viewModel.mode]"></app-currency-form>
-    </div>
+<ng-container *ngIf="viewModel$ | async as viewModel">
+  <div class="mb-10 pb-4 border-bottom row items-center justify-space-between">
+    <app-header [subtitle]="viewModel.subtitle" [title]="viewModel.subtitle"></app-header>
   </div>
+
+  <app-currency-form
+    (saveClicked)="viewModel.mode === CrudModeType.add ? onAddCurrency() : onEditCurrency()"
+    [error]="viewModel.error"
+    [saveText]="viewModel.saveText"
+    class="max-w-md"></app-currency-form>
 </ng-container>

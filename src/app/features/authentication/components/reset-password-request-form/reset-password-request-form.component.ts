@@ -1,47 +1,93 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostBinding,
+  Injectable,
   Input,
+  Optional,
   Output,
   SkipSelf,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { FormBase, RequiredEmail } from '../../../../common';
+import { TextFieldComponent } from '../../../../form-components';
 
-import { TextFieldComponent } from '../../../../form-components/components/text-field/text-field.component';
+export interface ResetPasswordRequestForm {
+  readonly username: FormControl<string>;
+}
 
-import { ResetPasswordRequestForm } from '../../models';
-import { ResetPasswordRequestFormService } from '../../services/reset-password-request-form.service';
+export interface ResetPasswordRequestFormComponentInput {
+  saveText: string;
+}
+
+export interface ResetPasswordRequestFormComponentOutput {
+  saveClicked: EventEmitter<FormBase<ResetPasswordRequestForm>>;
+}
+
+export function getResetPasswordRequestForm(): ResetPasswordRequestForm {
+  return {
+    username: new FormControl<string>('', RequiredEmail),
+  };
+}
+
+@Injectable()
+export class ResetPasswordRequestFormService extends FormBase<ResetPasswordRequestForm> {
+  public constructor() {
+    super(getResetPasswordRequestForm());
+  }
+
+  public resetForm() {
+    this.controls.username.reset();
+    this.markAsUntouched();
+  }
+}
 
 @Component({
   selector: 'app-reset-password-request-form',
   templateUrl: './reset-password-request-form.component.html',
   styleUrls: ['./reset-password-request-form.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResetPasswordRequestFormComponent implements AfterViewInit {
+export class ResetPasswordRequestFormComponent
+  implements
+    ResetPasswordRequestFormComponentInput,
+    ResetPasswordRequestFormComponentOutput,
+    AfterViewInit
+{
   @Input() public saveText = 'Reset password';
 
-  @Output() saveClicked = new EventEmitter<FormGroup<ResetPasswordRequestForm>>();
+  @Output() public saveClicked = new EventEmitter<FormBase<ResetPasswordRequestForm>>();
+  public readonly form: FormBase<ResetPasswordRequestForm> =
+    this._resetPasswordRequestForm ??
+    new FormBase<ResetPasswordRequestForm>(getResetPasswordRequestForm());
 
-  @ViewChild(TextFieldComponent) usernameRef?: TextFieldComponent;
+  @HostBinding('class') private _classes = 'block';
 
-  protected form: FormGroup<ResetPasswordRequestForm>;
+  @ViewChild(TextFieldComponent) private readonly _usernameRef?: TextFieldComponent;
 
   public constructor(
-    @SkipSelf() private readonly _resetPasswordRequestForm$: ResetPasswordRequestFormService,
+    @Optional()
+    @SkipSelf()
+    private readonly _resetPasswordRequestForm: ResetPasswordRequestFormService | null,
     private readonly _changeDetectorRef: ChangeDetectorRef
-  ) {
-    this.form = _resetPasswordRequestForm$.value;
+  ) {}
+
+  protected get formGroup(): FormGroup<ResetPasswordRequestForm> {
+    return this.form;
   }
 
   public ngAfterViewInit(): void {
-    if (!this.usernameRef) {
+    if (!this._usernameRef) {
       return;
     }
 
-    this.usernameRef.focusInput(false);
+    this._usernameRef.focusInput(false);
     this._changeDetectorRef.detectChanges();
   }
 

@@ -8,26 +8,9 @@
     text="Deposit"></app-button>
   <app-button (clicked)="onWithdraw()" appearance="outline" size="s" text="Withdraw"></app-button>
 </div>
-
-<app-table
+<app-transactions
   (paginationChanged)="onPagination($event)"
   *ngIf="viewModel$ | async as viewModel"
-  [columns]="columns"
-  [data]="viewModel.payments"
-  [keys]="keys"
-  [pagination]="viewModel.pagination"
-  [rowDataTemplates]="{id, amount, method, action, status, createdAt}"
-  [total]="viewModel.total">
-</app-table>
-
-<ng-template #id let-payment> {{ payment.id }} </ng-template>
-
-<ng-template #amount let-payment> {{ payment.currency + ' ' }}{{ payment.amount }} </ng-template>
-
-<ng-template #method let-payment> {{ payment.method }} </ng-template>
-
-<ng-template #action let-payment> {{ payment.action }} </ng-template>
-
-<ng-template #status let-payment> {{ payment.status }} </ng-template>
-
-<ng-template #createdAt let-payment> {{ payment.createdAt | date: 'dd/MM/yy HH:mm' }} </ng-template>
+  [pagination]="viewModel.paymentsPagination"
+  [payments]="viewModel.paymentsPage.data"
+  [total]="viewModel.paymentsPage.total"></app-transactions>

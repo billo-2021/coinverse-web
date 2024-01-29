@@ -1,58 +1,50 @@
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-
-import { HttpCrudService, HttpMessageResponse } from '../../../core';
-
-import { apiRoutesConfig } from '../../config';
+import { Observable } from 'rxjs';
+import { HttpMessage, HttpMessageDto } from '../../../core';
+import { ApiCrudClient } from '../../../common';
+import { MappingProfile } from '../../config';
 import {
+  PasswordResetToken,
   PasswordResetTokenDto,
   PasswordResetTokenRequest,
-  PasswordResetTokenResponse,
+  PasswordTokenUser,
   PasswordTokenUserDto,
-  PasswordTokenUserResponse,
   ResetPasswordRequest,
-} from '../../domain-models/authentication';
-import {
-  passResetTokenDtoToPasswordResetTokenResponse,
-  passwordTokenUserDtoToPasswordTokenUserResponse,
-} from '../../mappers';
+} from '../../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PasswordResetService {
-  public readonly BASE_PATH = apiRoutesConfig.authentication.root;
-  public readonly RESET_PASSWORD_PATH = apiRoutesConfig.authentication.resetPassword;
-
-  constructor(private readonly _httpService: HttpCrudService) {}
+  constructor(private readonly _apiCrudClient: ApiCrudClient) {}
 
   public requestPasswordResetToken(
     passwordResetTokenRequest: PasswordResetTokenRequest
-  ): Observable<PasswordResetTokenResponse> {
-    return this._httpService
-      .create<PasswordResetTokenRequest, PasswordResetTokenDto>(
-        this.getFullPath(this.RESET_PASSWORD_PATH),
-        passwordResetTokenRequest
-      )
-      .pipe(map(passResetTokenDtoToPasswordResetTokenResponse));
-  }
-
-  public requestPasswordTokenUser(token: string): Observable<PasswordTokenUserResponse> {
-    return this._httpService
-      .find<PasswordTokenUserDto>(`${this.getFullPath(this.RESET_PASSWORD_PATH)}/${token}`)
-      .pipe(map(passwordTokenUserDtoToPasswordTokenUserResponse));
-  }
-
-  public resetPassword(
-    resetPasswordRequest: ResetPasswordRequest
-  ): Observable<HttpMessageResponse> {
-    return this._httpService.patch<ResetPasswordRequest, HttpMessageResponse>(
-      this.getFullPath(this.RESET_PASSWORD_PATH),
-      resetPasswordRequest
+  ): Observable<PasswordResetToken> {
+    return this._apiCrudClient.create<
+      PasswordResetTokenRequest,
+      PasswordResetTokenDto,
+      PasswordResetToken
+    >(
+      'resetPassword',
+      passwordResetTokenRequest,
+      MappingProfile.PasswordResetTokenDtoToPasswordResetToken
     );
   }
 
-  private getFullPath(path: string): string {
-    return `${this.BASE_PATH}${path}`;
+  public requestPasswordTokenUser(token: string): Observable<PasswordTokenUser> {
+    return this._apiCrudClient.findOne<PasswordTokenUserDto, PasswordTokenUser>(
+      'resetPassword',
+      token,
+      MappingProfile.PasswordTokenUserDtoToPasswordTokenUser
+    );
+  }
+
+  public resetPassword(resetPasswordRequest: ResetPasswordRequest): Observable<HttpMessage> {
+    return this._apiCrudClient.patch<ResetPasswordRequest, HttpMessageDto, HttpMessage>(
+      'resetPassword',
+      resetPasswordRequest,
+      MappingProfile.HttpMessageDtoToHttpMessage
+    );
   }
 }

@@ -1,13 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { MenuController } from './menu.service';
 
-import { MenuService } from './menu.service';
-
-describe('MenuService', () => {
-  let service: MenuService;
+describe('MenuController', () => {
+  let service: MenuController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(MenuService);
+    service = TestBed.inject(MenuController);
   });
 
   it('should be created', () => {

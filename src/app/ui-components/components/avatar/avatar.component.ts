@@ -1,5 +1,21 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-import { SizeType } from './avatar.type';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Input,
+  ViewEncapsulation,
+} from '@angular/core';
+import { SizeXXL, SizeXXS } from '../../../common';
+
+export type AvatarSize = SizeXXL | SizeXXS;
+
+export interface AvatarComponentInput {
+  text: string;
+  autoColor: boolean;
+  rounded: boolean;
+  size: AvatarSize;
+  avatarUrl: string | null;
+}
 
 @Component({
   selector: 'app-avatar',
@@ -8,10 +24,12 @@ import { SizeType } from './avatar.type';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AvatarComponent {
+export class AvatarComponent implements AvatarComponentInput {
   @Input() public text = '';
   @Input() public autoColor = false;
   @Input() public rounded = true;
-  @Input() public size: SizeType = 'm';
+  @Input() public size: AvatarSize = 'm';
   @Input() public avatarUrl: string | null = null;
+
+  @HostBinding('class') private _classes = 'block';
 }

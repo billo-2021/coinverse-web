@@ -1,1 +1,50 @@
-<p>users works!</p>
+<app-table
+  (paginationChanged)="onPagination($event)"
+  [columns]="Columns"
+  [data]="users"
+  [keys]="Keys"
+  [pagination]="pagination"
+  [rowDataTemplates]="{ emailAddress, firstName, lastName, username, roles, status, createdAt, actions }"
+  [total]="total"
+  class="col-sm-12 col-md-10 col-lg-10"></app-table>
+
+<ng-template #emailAddress let-user> {{ user.emailAddress }} </ng-template>
+
+<ng-template #firstName let-user> {{ user.firstName }} </ng-template>
+
+<ng-template #lastName let-user> {{ user.lastName }} </ng-template>
+
+<ng-template #username let-user> {{ user.account.username }} </ng-template>
+
+<ng-template #roles let-user> {{ user.account.roles }} </ng-template>
+
+<ng-template #status let-user>
+  <app-tag [autoColor]="true" [value]="user.account.status"></app-tag>
+</ng-template>
+
+<ng-template #createdAt let-user>
+  {{ user.account.createdAt | date: 'dd/MM/yy HH:mm' }}
+</ng-template>
+
+<ng-template #actions let-user>
+  <div class="row">
+    <app-button
+      (click)="onViewUserDetails(user.account.username)"
+      appearance="flat"
+      icon="tuiIconEye"
+      size="xs"
+      title="View"></app-button>
+    <app-button
+      (clicked)="onEnableAccount(user.account.username)"
+      *ngIf="!user.account.isEnabled"
+      appearance="flat"
+      icon="tuiIconUnlock"
+      size="xs"></app-button>
+    <app-button
+      (clicked)="onDisableAccount(user.account.username)"
+      *ngIf="user.account.isEnabled"
+      appearance="flat"
+      icon="tuiIconLock"
+      size="xs"></app-button>
+  </div>
+</ng-template>

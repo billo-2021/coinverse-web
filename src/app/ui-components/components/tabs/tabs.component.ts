@@ -7,7 +7,22 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { Tab } from '../../types';
+
+export type Tab = {
+  readonly text: string;
+  readonly icon: string | null;
+  readonly isDisabled: boolean;
+};
+
+export interface TabsComponentInput {
+  title: string | null;
+  tabs: readonly Tab[];
+  activeItemIndex: number;
+}
+
+export interface TabsComponentOutput {
+  activeItemIndexChange: EventEmitter<number>;
+}
 
 @Component({
   selector: 'app-tabs',
@@ -16,10 +31,9 @@ import { Tab } from '../../types';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TabsComponent {
+export class TabsComponent implements TabsComponentInput, TabsComponentOutput {
   @Input() public title: string | null = null;
-  @Input() public tabs: Tab[] = [];
-
+  @Input() public tabs: readonly Tab[] = [];
   @Input() public activeItemIndex = 0;
 
   @Output() public activeItemIndexChange = new EventEmitter<number>();

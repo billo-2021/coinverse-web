@@ -1,27 +1,31 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   HostBinding,
   Input,
-  OnChanges,
+  Output,
   ViewEncapsulation,
 } from '@angular/core';
-
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { tuiWidthCollapse } from '@taiga-ui/core';
+import { UserPrincipal } from '../../../core';
+import { MenuItem } from '../../../common';
 
-import {
-  getUpdatedChanges,
-  MenuService,
-  NavigationService,
-  SimpleChangesTyped,
-  UserPrincipal,
-} from '../../../common';
+export interface MenuComponentInput {
+  user: UserPrincipal | null;
+  animationDuration: number;
+  isMobile: boolean;
+  show: boolean;
+  showSideMenu: boolean;
+  sideMenuWidth: number;
+  menuItems: readonly MenuItem[];
+}
 
-import { MenuComponentInput } from './types';
-import { MenuViewModel } from './menu.view-model';
-
-const DEFAULT_ANIMATION_DURATION = 250;
+export interface MenuComponentOutput {
+  toggleMenuClicked: EventEmitter<boolean>;
+  signOutClicked: EventEmitter<void>;
+  gotoProfileClicked: EventEmitter<void>;
+}
 
 @Component({
   selector: 'app-menu',
@@ -31,54 +35,48 @@ const DEFAULT_ANIMATION_DURATION = 250;
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [tuiWidthCollapse],
 })
-export class MenuComponent implements OnChanges {
-  @Input() public animationDuration = DEFAULT_ANIMATION_DURATION;
+export class MenuComponent implements MenuComponentInput, MenuComponentOutput {
   @Input() public user: UserPrincipal | null = null;
+  @Input() public animationDuration = 250;
+  @Input() public isMobile = false;
+  @Input() public show = true;
+  @Input() public showSideMenu = true;
+  @Input() public menuItems: readonly MenuItem[] = [];
+
+  @Output() public toggleMenuClicked = new EventEmitter<boolean>();
+  @Output() public signOutClicked = new EventEmitter<void>();
+  @Output() public gotoProfileClicked = new EventEmitter<void>();
 
   @HostBinding('class') private _classes = 'block h-full';
 
-  private readonly _state$ = new BehaviorSubject<MenuComponentInput>({
-    isMenuShown: false,
-    animationDuration: this.animationDuration,
-    user: this.user,
-  });
+  private _sideMenuWidth = 12;
 
-  public constructor(
-    private readonly _navigationService: NavigationService,
-    private readonly _menuService: MenuService
-  ) {}
-
-  protected get viewModel$(): Observable<MenuViewModel> {
-    return combineLatest([
-      this._menuService.isMobile$,
-      this._menuService.isMenuShown$,
-      this._menuService.isSideMenuShown$,
-      this._state$,
-    ]).pipe(
-      map(([isMobile, isMenuShown, isSideMenuShown, state]) => {
-        return {
-          ...state,
-          isMobile: isMobile,
-          isMenuShown: isMenuShown,
-          isSideMenuShown: isSideMenuShown,
-          sideMenuWidth: isMobile ? 0 : 12,
-        };
-      })
-    );
+  public get sideMenuWidth(): number {
+    return this.isMobile ? 0 : this._sideMenuWidth;
   }
 
-  public ngOnChanges(changes: SimpleChangesTyped<MenuComponentInput>): void {
-    const nextState = getUpdatedChanges(changes);
-    this._state$.next({ ...this._state$.value, ...nextState });
+  @Input()
+  public set sideMenuWidth(value) {
+    this._sideMenuWidth = value;
   }
 
   public onToggleMenu(open: boolean): void {
-    this._menuService.setIsSideMenuShown(open);
+    this.toggleMenuClicked.emit(open);
   }
 
   public onClickOutside(open: boolean): void {
-    if (this._menuService.isSideMenuShown) {
-      this.onToggleMenu(open);
+    if (!this.isMobile) {
+      return;
     }
+
+    this.onToggleMenu(open);
+  }
+
+  public onSignOut(): void {
+    this.signOutClicked.emit();
+  }
+
+  public onGotoProfile(): void {
+    this.gotoProfileClicked.emit();
   }
 }

@@ -6,6 +6,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+export interface ExpandComponentInput {
+  expanded: boolean;
+}
+
 @Component({
   selector: 'app-expand',
   templateUrl: './expand.component.html',
@@ -13,8 +17,8 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpandComponent {
-  @Input() isExpanded = false;
+export class ExpandComponent implements ExpandComponentInput {
+  @Input() expanded = false;
 
   @HostBinding('class') private _classes = 'block';
 }

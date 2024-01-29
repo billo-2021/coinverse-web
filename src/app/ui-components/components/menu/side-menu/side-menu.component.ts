@@ -3,12 +3,16 @@ import {
   Component,
   HostBinding,
   Inject,
+  Input,
   ViewEncapsulation,
 } from '@angular/core';
-import { combineLatest, map, Observable } from 'rxjs';
+import { appNameToken, MenuItem } from '../../../../common';
 
-import { SideMenuViewModel } from './side-menu.view-model';
-import { appNameToken, MenuService } from '../../../../common';
+export interface SideMenuComponentInput {
+  isMobile: boolean;
+  show: boolean;
+  menuItems: readonly MenuItem[];
+}
 
 @Component({
   selector: 'app-side-menu',
@@ -17,29 +21,14 @@ import { appNameToken, MenuService } from '../../../../common';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SideMenuComponent {
+export class SideMenuComponent implements SideMenuComponentInput {
+  @Input() public isMobile = false;
+  @Input() public show = true;
+  @Input() public menuItems: readonly MenuItem[] = [];
+
   @HostBinding('class') private _classes = 'block';
 
-  public constructor(
-    private readonly _menuService: MenuService,
-    @Inject(appNameToken) private readonly _appNameToken: string
-  ) {}
-
-  public get viewModel$(): Observable<SideMenuViewModel> {
-    return combineLatest([
-      this._menuService.isMobile$,
-      this._menuService.isSideMenuShown$,
-      this._menuService.menuItems$,
-    ]).pipe(
-      map(([isMobile, isSideMenuShown, menuItems]) => {
-        return {
-          isMobile: isMobile,
-          isShown: isSideMenuShown,
-          menuItems: menuItems,
-        };
-      })
-    );
-  }
+  public constructor(@Inject(appNameToken) private readonly _appNameToken: string) {}
 
   protected get appName(): string {
     return this._appNameToken;

@@ -6,6 +6,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+export interface HeaderComponentInput {
+  title: string;
+  subtitle: string | null;
+}
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -13,7 +18,7 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent {
+export class HeaderComponent implements HeaderComponentInput {
   @Input() title = '';
   @Input() subtitle: string | null = null;
 

@@ -1,11 +1,9 @@
 import { inject } from '@angular/core';
-
-import { RedirectService } from '../../../core';
-
-import { NavigationService, UserPrincipalStoreService } from '../../services';
+import { UserPrincipalStoreService } from '../../../core';
 import { AuthGuardOptions, WebRoutesConfigType } from '../../types';
+import { NavigationService, RedirectService } from '../../services';
 
-function authGuard(options: AuthGuardOptions) {
+export function authGuard(options: AuthGuardOptions) {
   const navigationService = inject(NavigationService);
   const redirectService = inject(RedirectService);
   const userPrincipalService = inject(UserPrincipalStoreService);
@@ -30,12 +28,10 @@ function authGuard(options: AuthGuardOptions) {
   return true;
 }
 
-function isAuthenticatedGuard(route: WebRoutesConfigType) {
+export function isAuthenticatedGuard(route: WebRoutesConfigType) {
   return authGuard({ isAuthenticated: true, route: route });
 }
 
-function unAuthenticatedGuard() {
+export function unAuthenticatedGuard() {
   return authGuard({ isAuthenticated: false });
 }
-
-export { authGuard, isAuthenticatedGuard, unAuthenticatedGuard };

@@ -5,35 +5,30 @@ import {
   Component,
   HostBinding,
   Inject,
-  OnInit,
+  Self,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-
-import { FormGroup } from '@angular/forms';
-import { finalize, Subject } from 'rxjs';
-
+import { BehaviorSubject, combineLatest, finalize, map, Observable, tap } from 'rxjs';
 import {
+  AccountVerification,
+  AccountVerificationStoreService,
   AlertService,
-  ApiError,
   MessagingChannel,
   verificationMethodToken,
 } from '../../../../core';
-
+import { FormBase, getErrorMessage, NavigationService, View } from '../../../../common';
 import {
   AccountVerificationService,
-  AccountVerificationStoreService,
-  NavigationService,
-} from '../../../../common';
-
-import {
   OtpTokenRequest,
   VerifyAccountRequest,
-} from '../../../../common/domain-models/authentication';
+} from '../../../../domain';
+import { OtpForm, OtpFormComponent, OtpFormService } from '../../components';
 
-import { OtpForm } from '../../models';
-import { OtpFormService } from '../../services';
-import { OtpFormComponent } from '../../components/otp-form/otp-form.component';
+export interface VerifyAccountViewModel {
+  readonly otpRecipient: string;
+  readonly formError: string | null;
+}
 
 @Component({
   selector: 'app-verify-account',
@@ -41,40 +36,61 @@ import { OtpFormComponent } from '../../components/otp-form/otp-form.component';
   styleUrls: ['./verify-account.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [OtpFormService],
 })
-export class VerifyAccountComponent implements OnInit, AfterViewInit {
-  protected otpRecipient = '';
-  protected readonly otpForm: FormGroup<OtpForm>;
-  protected readonly formError$ = new Subject<string>();
-  protected readonly verificationMethod: MessagingChannel;
+export class VerifyAccountComponent implements View<VerifyAccountViewModel>, AfterViewInit {
+  protected readonly verificationMethod: MessagingChannel = this._verificationMethodToken;
+  protected readonly otpForm: FormBase<OtpForm> = this._otpFormService;
+
   @HostBinding('class') private _classes = 'block col-12 col-md-10 m-auto';
+
   @ViewChild('otpFormRef') private otpFormRef?: OtpFormComponent;
+
+  private readonly _otpRecipient$ = new BehaviorSubject<string>('');
+
+  private readonly _accountVerification$: Observable<AccountVerification | null> =
+    this._accountVerificationStore$.pipe(
+      tap((accountVerification) => {
+        if (!accountVerification) {
+          this._navigationService.to('root').then();
+          return;
+        }
+
+        this.otpRecipient = accountVerification.username;
+      })
+    );
+
+  private readonly _formError$ = new BehaviorSubject<string | null>(null);
+
+  public readonly viewModel$: Observable<VerifyAccountViewModel> = combineLatest([
+    this._otpRecipient$,
+    this._formError$,
+    this._accountVerification$,
+  ]).pipe(map(([otpRecipient, formError]) => ({ otpRecipient, formError })));
 
   public constructor(
     private readonly _changeDetectorRef: ChangeDetectorRef,
     @Inject(verificationMethodToken) private readonly _verificationMethodToken: MessagingChannel,
-    private readonly _otpForm$: OtpFormService,
+    @Self() private readonly _otpFormService: OtpFormService,
     private readonly _navigationService: NavigationService,
     private readonly _accountVerificationService: AccountVerificationService,
     private readonly _accountVerificationStore$: AccountVerificationStoreService,
     private readonly _alertService: AlertService
-  ) {
-    this.otpForm = _otpForm$.value;
-    this.verificationMethod = _verificationMethodToken;
+  ) {}
+
+  public set formError(value: string | null) {
+    this._formError$.next(value);
   }
 
-  ngOnInit(): void {
-    const accountVerification = this._accountVerificationStore$.getValue();
-
-    if (!accountVerification) {
-      this._navigationService.to('root').then();
-      return;
-    }
-
-    this.otpRecipient = accountVerification.username;
+  public get otpRecipient(): string {
+    return this._otpRecipient$.value;
   }
 
-  ngAfterViewInit(): void {
+  public set otpRecipient(value: string) {
+    this._otpRecipient$.next(value);
+  }
+
+  public ngAfterViewInit(): void {
     if (!this.otpFormRef) {
       return;
     }
@@ -84,15 +100,12 @@ export class VerifyAccountComponent implements OnInit, AfterViewInit {
   }
 
   public onSubmitOtp(): void {
-    this.formError$.next('');
-    const otp = this.otpForm.value.otp;
-
-    if (!otp) {
-      return;
-    }
+    this.formError = '';
+    const otp = this.otpForm.getModel().otp;
+    const otpRecipient = this.otpRecipient;
 
     const verifyAccountRequest: VerifyAccountRequest = {
-      username: this.otpRecipient,
+      username: otpRecipient,
       token: otp,
     };
 
@@ -100,37 +113,24 @@ export class VerifyAccountComponent implements OnInit, AfterViewInit {
       .verifyAccount(verifyAccountRequest)
       .pipe(finalize(() => this.resetOtpForm()))
       .subscribe({
-        next: (response) => {
-          this._alertService.showMessage(response.message);
-        },
-        error: (error) => {
-          if (error instanceof ApiError) {
-            this.formError$.next(error.message);
-            return;
-          }
-          throw error;
-        },
+        next: (response) => this._alertService.showMessage(response.message),
+        error: (error) => (this.formError = getErrorMessage(error)),
       });
   }
 
   public onResendOtp(): void {
-    this.formError$.next('');
+    const otpRecipient = this.otpRecipient;
+    this.formError = '';
 
     const otpTokenRequest: OtpTokenRequest = {
-      username: this.otpRecipient,
+      username: otpRecipient,
       messagingChannel: this.verificationMethod,
     };
 
     this._accountVerificationService
       .requestOtpToken(otpTokenRequest)
-      .pipe(
-        finalize(() => {
-          this.resetOtpForm();
-        })
-      )
-      .subscribe((response) => {
-        this._alertService.showMessage(response.message);
-      });
+      .pipe(finalize(() => this.resetOtpForm()))
+      .subscribe((response) => this._alertService.showMessage(response.message));
   }
 
   public resetOtpForm(): void {

@@ -1,160 +1,138 @@
-import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-
-import { HttpCrudService, PageRequest, PageResponse } from '../../../core';
-
-import { apiRoutesConfig } from '../../config';
+import { Inject, Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { PageRequest, PageResponse } from '../../../core';
+import { ApiCrudClient, apiMaxPageRequestToken } from '../../../common';
+import { MappingProfile } from '../../config';
 import {
+  Country,
   CountryDto,
-  CountryResponse,
+  CryptoCurrency,
   CryptoCurrencyDto,
-  CryptoCurrencyResponse,
+  Currency,
   CurrencyDto,
+  CurrencyPair,
   CurrencyPairDto,
-  CurrencyPairResponse,
-  CurrencyResponse,
+  PaymentMethod,
   PaymentMethodDto,
-  PaymentMethodResponse,
-} from '../../domain-models/lookup';
-
-import {
-  countryDtoToCountryResponse,
-  cryptoCurrencyDtoToCryptoCurrencyResponse,
-  currencyDtoToCurrencyResponse,
-} from '../../mappers/lookup';
+  UserRole,
+} from '../../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LookupService {
-  public readonly BASE_PATH = apiRoutesConfig.lookup.root;
-  public readonly ALL_COUNTRIES_PATH = apiRoutesConfig.lookup.allCountries;
-  public readonly COUNTRIES_PATH = apiRoutesConfig.lookup.countries;
-  public readonly ALL_CURRENCIES_PATH = apiRoutesConfig.lookup.allCurrencies;
-  public readonly CURRENCIES_PATH = apiRoutesConfig.lookup.currencies;
-  public readonly ALL_CRYPTO_CURRENCIES_PATH = apiRoutesConfig.lookup.allCryptoCurrencies;
-  public readonly CRYPTO_CURRENCIES_PATH = apiRoutesConfig.lookup.cryptoCurrencies;
-  public readonly ALL_CURRENCY_PAIRS_PATH = apiRoutesConfig.lookup.allCurrencyPairs;
-  public readonly CURRENCY_PAIRS_PATH = apiRoutesConfig.lookup.currencyPairs;
-  public readonly ALL_PAYMENT_METHODS_PATH = apiRoutesConfig.lookup.allPaymentMethods;
-  public readonly PAYMENT_METHODS_PATH = apiRoutesConfig.lookup.paymentMethods;
+  constructor(
+    private readonly _apiCrudClient: ApiCrudClient,
+    @Inject(apiMaxPageRequestToken) private readonly _apiMaxPageRequestToken: PageRequest
+  ) {}
 
-  constructor(private readonly _httpService: HttpCrudService) {}
-
-  public getAllCountries(): Observable<CountryResponse[]> {
-    return this._httpService
-      .find<CountryDto[]>(this.getFullPath(this.ALL_COUNTRIES_PATH))
-      .pipe(map((response) => response.map(countryDtoToCountryResponse)));
+  public getAllCountries(): Observable<Country[]> {
+    return this._apiCrudClient.findAll<CountryDto, Country>(
+      'allCountries',
+      MappingProfile.CountryDtoToCountry
+    );
   }
 
-  public getCountries(): Observable<PageResponse<CountryResponse>> {
-    return this._httpService
-      .find<PageResponse<CountryDto>>(this.getFullPath(this.COUNTRIES_PATH))
-      .pipe(
-        map((response) => ({
-          count: response.count,
-          total: response.total,
-          data: response.data.map(countryDtoToCountryResponse),
-        }))
-      );
+  public getCountries(): Observable<PageResponse<Country>> {
+    return this._apiCrudClient.findMany<CountryDto, Country>(
+      'countries',
+      this._apiMaxPageRequestToken,
+      MappingProfile.CountryDtoPageToCountryPage
+    );
   }
 
-  public getAllCurrencies(): Observable<CurrencyResponse[]> {
-    return this._httpService
-      .find<CurrencyDto[]>(this.getFullPath(this.ALL_CURRENCIES_PATH))
-      .pipe(map((response) => response.map(currencyDtoToCurrencyResponse)));
+  public getAllCurrencies(): Observable<Currency[]> {
+    return this._apiCrudClient.findAll<CurrencyDto, Currency>(
+      'allCurrencies',
+      MappingProfile.CurrencyDtoToCurrency
+    );
   }
 
-  public getCurrencies(): Observable<PageResponse<CurrencyResponse>> {
-    return this._httpService
-      .find<PageResponse<CurrencyDto>>(this.getFullPath(this.CURRENCIES_PATH))
-      .pipe(
-        map((response) => ({
-          count: response.count,
-          total: response.total,
-          data: response.data.map(currencyDtoToCurrencyResponse),
-        }))
-      );
+  public getCurrencies(): Observable<PageResponse<Currency>> {
+    return this._apiCrudClient.findMany<CurrencyDto, Currency>(
+      'currencies',
+      this._apiMaxPageRequestToken,
+      MappingProfile.CurrencyDtoPageToCurrencyPage
+    );
   }
 
-  public getAllCurrenciesByType(type: string): Observable<CurrencyResponse[]> {
-    const url = `${this.getFullPath(this.ALL_CURRENCIES_PATH)}?type=${type}`;
-
-    return this._httpService.find<CurrencyDto[]>(url);
+  public getAllCurrenciesByType(type: string): Observable<Currency[]> {
+    return this._apiCrudClient.findAllBy<CurrencyDto, Currency>(
+      'allCurrencies',
+      { type: type },
+      MappingProfile.CurrencyDtoToCurrency
+    );
   }
 
   public getCurrenciesByType(
     type: string,
     pageRequest: PageRequest
-  ): Observable<PageResponse<CurrencyResponse>> {
-    const url = `${this.getFullPath(this.CURRENCIES_PATH)}?type=${type}&pageNumber=${
-      pageRequest.page
-    }&pageSize=${pageRequest.size}`;
-
-    return this._httpService.find<PageResponse<CurrencyDto>>(url);
-  }
-
-  public getAllCryptoCurrencies(): Observable<CryptoCurrencyResponse[]> {
-    const url = this.getFullPath(this.ALL_CRYPTO_CURRENCIES_PATH);
-
-    return this._httpService
-      .find<CryptoCurrencyDto[]>(url)
-      .pipe(map((response) => response.map(cryptoCurrencyDtoToCryptoCurrencyResponse)));
-  }
-
-  public getCryptoCurrencies(
-    pageRequest: PageRequest
-  ): Observable<PageResponse<CryptoCurrencyResponse>> {
-    const url = `${this.getFullPath(this.CRYPTO_CURRENCIES_PATH)}?pageNumber=${
-      pageRequest.page
-    }&pageSize=${pageRequest.size}`;
-
-    return this._httpService.find<PageResponse<CryptoCurrencyDto>>(url).pipe(
-      map((response) => {
-        return {
-          count: response.count,
-          total: response.total,
-          data: response.data.map(cryptoCurrencyDtoToCryptoCurrencyResponse),
-        };
-      })
+  ): Observable<PageResponse<Currency>> {
+    return this._apiCrudClient.findManyBy<CurrencyDto, Currency>(
+      'currencies',
+      [{ type: type }],
+      pageRequest,
+      MappingProfile.CurrencyDtoPageToCurrencyPage
     );
   }
 
-  public getCryptoCurrencyByCurrencyCode(currencyCode: string): Observable<CryptoCurrencyResponse> {
-    const url = `${this.getFullPath(this.CRYPTO_CURRENCIES_PATH)}/${currencyCode}`;
-
-    return this._httpService.find<CryptoCurrencyDto>(url);
+  public getAllCryptoCurrencies(): Observable<CryptoCurrency[]> {
+    return this._apiCrudClient.findAll<CryptoCurrencyDto, CryptoCurrency>(
+      'allCryptoCurrencies',
+      MappingProfile.CryptoCurrencyDtoToCryptoCurrency
+    );
   }
 
-  public getAllCurrencyPairs(): Observable<CurrencyPairResponse[]> {
-    const url = `${this.getFullPath(this.ALL_CURRENCY_PAIRS_PATH)}`;
-    return this._httpService.find<CurrencyPairDto[]>(url);
+  public getCryptoCurrencies(pageRequest: PageRequest): Observable<PageResponse<CryptoCurrency>> {
+    return this._apiCrudClient.findMany<CryptoCurrencyDto, CryptoCurrency>(
+      'cryptoCurrencies',
+      pageRequest,
+      MappingProfile.CryptoCurrencyDtoPageToCryptoCurrencyPage
+    );
   }
 
-  public getCurrencyPairs(
-    pageRequest: PageRequest
-  ): Observable<PageResponse<CurrencyPairResponse>> {
-    const url = `${this.getFullPath(this.CURRENCY_PAIRS_PATH)}?pageNumber=${
-      pageRequest.page
-    }&pageSize=${pageRequest.size}`;
-    return this._httpService.find<PageResponse<CurrencyPairDto>>(url);
+  public getCryptoCurrencyByCurrencyCode(currencyCode: string): Observable<CryptoCurrency> {
+    return this._apiCrudClient.findOne<CryptoCurrencyDto, CryptoCurrency>(
+      'cryptoCurrencies',
+      currencyCode,
+      MappingProfile.CryptoCurrencyDtoToCryptoCurrency
+    );
   }
 
-  public getAllPaymentMethods(): Observable<PaymentMethodResponse[]> {
-    const url = this.getFullPath(this.ALL_PAYMENT_METHODS_PATH);
-    return this._httpService.find<PaymentMethodDto[]>(url);
+  public getAllCurrencyPairs(): Observable<CurrencyPair[]> {
+    return this._apiCrudClient.findAll<CurrencyPairDto, CurrencyPair>(
+      'allCurrencyPairs',
+      MappingProfile.CurrencyPairDtoToCurrencyPair
+    );
   }
 
-  public getPaymentMethods(
-    pageRequest: PageRequest
-  ): Observable<PageResponse<PaymentMethodResponse>> {
-    const url = `${this.getFullPath(this.ALL_PAYMENT_METHODS_PATH)}?pageNumber=${
-      pageRequest.page
-    }&pageSize=${pageRequest.size}`;
-    return this._httpService.find<PageResponse<PaymentMethodDto>>(url);
+  public getCurrencyPairs(pageRequest: PageRequest): Observable<PageResponse<CurrencyPair>> {
+    return this._apiCrudClient.findMany<CurrencyPairDto, CurrencyPair>(
+      'currencyPairs',
+      pageRequest,
+      MappingProfile.CurrencyPairDtoPageToCurrencyPairPage
+    );
   }
 
-  private getFullPath(path: string): string {
-    return `${this.BASE_PATH}${path}`;
+  public getAllPaymentMethods(): Observable<PaymentMethod[]> {
+    return this._apiCrudClient.findAll<PaymentMethodDto, PaymentMethod>(
+      'allPaymentMethods',
+      MappingProfile.PaymentMethodDtoToPaymentMethod
+    );
+  }
+
+  public getPaymentMethods(pageRequest: PageRequest): Observable<PageResponse<PaymentMethod>> {
+    return this._apiCrudClient.findMany<PaymentMethodDto, PaymentMethod>(
+      'paymentMethods',
+      pageRequest,
+      MappingProfile.PaymentMethodDtoPageToPaymentMethodPage
+    );
+  }
+
+  public getAllUserRoles(): Observable<UserRole[]> {
+    return of([
+      { code: 'CS', name: 'customer' },
+      { code: 'AD', name: 'admin' },
+    ]);
   }
 }

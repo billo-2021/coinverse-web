@@ -1,5 +1,5 @@
 export interface UserAccountRequest {
-  username: string;
-  roles: string[];
-  password: string;
+  readonly username: string;
+  readonly roles: readonly string[];
+  readonly password: string;
 }

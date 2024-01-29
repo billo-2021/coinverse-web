@@ -8,6 +8,10 @@ import {
 import { TuiPoint } from '@taiga-ui/core';
 import { TUI_DEFAULT_STRINGIFY, TuiContextWithImplicit } from '@taiga-ui/cdk';
 
+export interface LineChartComponentInput {
+  data: TuiPoint[];
+}
+
 @Component({
   selector: 'app-line-chart',
   templateUrl: './line-chart.component.html',
@@ -15,7 +19,7 @@ import { TUI_DEFAULT_STRINGIFY, TuiContextWithImplicit } from '@taiga-ui/cdk';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LineChartComponent {
+export class LineChartComponent implements LineChartComponentInput {
   @Input() public data: TuiPoint[] = [
     [50, 50],
     [100, 75],

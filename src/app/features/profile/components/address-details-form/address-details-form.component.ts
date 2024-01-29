@@ -2,22 +2,58 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
+  Injectable,
   Input,
+  OnChanges,
+  Optional,
   Output,
+  SkipSelf,
   ViewEncapsulation,
 } from '@angular/core';
-
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { combineLatest, map, Observable, shareReplay, tap } from 'rxjs';
-
+import { FormControl, FormGroup } from '@angular/forms';
 import { AlertService } from '../../../../core';
+import { FormBase, Required, SimpleChangesTyped } from '../../../../common';
 import { ListOption } from '../../../../form-components';
-import { BaseComponent, LookupService, ProfileService } from '../../../../common';
-import {
-  UserProfileAddressUpdate,
-  UserProfileResponse,
-} from '../../../../common/domain-models/profile';
-import { CountryResponse } from '../../../../common/domain-models/lookup';
+import { Country, UpdateUserProfileAddress, UserProfileAddress } from '../../../../domain';
+
+export interface AddressDetailsForm {
+  addressLine: FormControl<string>;
+  street: FormControl<string>;
+  country: FormControl<ListOption<Country> | null>;
+  province: FormControl<string>;
+  city: FormControl<string>;
+  postalCode: FormControl<string>;
+}
+
+export interface AddressDetailsFormComponentInput {
+  saveText: string;
+  error: string | null;
+  userProfileAddress: UserProfileAddress | null;
+  countryOptions: readonly ListOption<Country>[];
+}
+
+export interface AddressDetailsFormComponentOutput {
+  saveClicked: EventEmitter<UpdateUserProfileAddress>;
+}
+
+export function getAddressDetailsForm(): AddressDetailsForm {
+  return {
+    addressLine: new FormControl<string>('', Required),
+    street: new FormControl<string>('', Required),
+    country: new FormControl<ListOption<Country> | null>(null, Required),
+    province: new FormControl<string>('', Required),
+    city: new FormControl<string>('', Required),
+    postalCode: new FormControl<string>('', Required),
+  };
+}
+
+@Injectable()
+export class AddressDetailsFormService extends FormBase<AddressDetailsForm> {
+  public constructor() {
+    super(getAddressDetailsForm());
+  }
+}
 
 @Component({
   selector: 'app-address-details-form',
@@ -26,96 +62,69 @@ import { CountryResponse } from '../../../../common/domain-models/lookup';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressDetailsFormComponent extends BaseComponent {
-  public form: FormGroup;
+export class AddressDetailsFormComponent
+  implements AddressDetailsFormComponentInput, AddressDetailsFormComponentOutput, OnChanges
+{
   @Input() public saveText = 'Save Changes';
-  @Output() public saveClicked = new EventEmitter<void>();
+  @Input() public error: string | null = null;
 
-  protected countryOptions$: Observable<ListOption<CountryResponse>[]>;
-  protected readonly userProfileResponse$: Observable<UserProfileResponse>;
+  @Input() public userProfileAddress: UserProfileAddress | null = null;
+
+  @Input() public countryOptions: readonly ListOption<Country>[] = [];
+
+  @Output() public saveClicked = new EventEmitter<UpdateUserProfileAddress>();
+
+  public readonly form: FormBase<AddressDetailsForm> =
+    this._addressDetailsForm ?? new FormBase<AddressDetailsForm>(getAddressDetailsForm());
+
+  @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    private _formBuilder: FormBuilder,
-    private readonly _alertService: AlertService,
-    private readonly _profileService: ProfileService,
-    private readonly _lookupService: LookupService
-  ) {
-    super();
-    this.form = this.getAddressDetailsForm(_formBuilder);
+    @Optional() @SkipSelf() private readonly _addressDetailsForm: AddressDetailsFormService | null,
+    private readonly _alertService: AlertService
+  ) {}
 
-    this.countryOptions$ = this._lookupService.getAllCountries().pipe(
-      map((countryResponse) => {
-        return countryResponse.map((country) => ({
-          code: country.code,
-          name: country.name,
-          avatar: country.code,
-          value: country,
-        }));
-      }),
-      shareReplay(1)
-    );
-
-    this.userProfileResponse$ = _profileService.getProfile();
-
-    combineLatest([this.countryOptions$, this.userProfileResponse$])
-      .pipe(
-        tap(([countryOptions, userProfile]) => {
-          const userProfileAddress = userProfile.address;
-
-          this.form.controls['addressLine']?.setValue(userProfileAddress.addressLine);
-          this.form.controls['street']?.setValue(userProfileAddress.street);
-          this.form.controls['province']?.setValue(userProfileAddress.province);
-          this.form.controls['city']?.setValue(userProfileAddress.city);
-          this.form.controls['postalCode']?.setValue(userProfileAddress.postalCode);
-
-          const foundCountryOption = countryOptions.find((currencyOption) => {
-            const country = currencyOption.value as CountryResponse;
-
-            return country.code === userProfile?.address?.country?.code;
-          });
-
-          if (!foundCountryOption) {
-            return;
-          }
-
-          this.form.controls['country']?.setValue(foundCountryOption);
-        })
-      )
-      .subscribe();
+  protected get formGroup(): FormGroup<AddressDetailsForm> {
+    return this.form;
   }
 
   public onSaveChanges(): void {
-    const addressFormValue = this.form.value;
-    const countryOption = this.form.controls['country'].value as ListOption<CountryResponse>;
+    const address = this.form.getModel();
+    const countryOption = address.country;
 
-    const addressUpdateRequest: UserProfileAddressUpdate = {
-      addressLine: addressFormValue.addressLine,
-      street: addressFormValue.street,
+    if (!countryOption) {
+      return;
+    }
+
+    const addressUpdateRequest: UpdateUserProfileAddress = {
+      addressLine: address.addressLine,
+      street: address.street,
       countryCode: countryOption.value.code,
-      province: addressFormValue.province,
-      city: addressFormValue.city,
-      postalCode: addressFormValue.postalCode,
+      province: address.province,
+      city: address.city,
+      postalCode: address.postalCode,
     };
 
-    this._profileService
-      .updateAddress(addressUpdateRequest)
-      .pipe(
-        tap(() => {
-          this._alertService.showMessage('Address Updated');
-          this.saveClicked.emit();
-        })
-      )
-      .subscribe();
+    this.saveClicked.emit(addressUpdateRequest);
   }
 
-  private getAddressDetailsForm(formBuilder: FormBuilder): FormGroup {
-    return formBuilder.group({
-      addressLine: ['', [Validators.required]],
-      street: ['', [Validators.required]],
-      country: [null, [Validators.required]],
-      province: ['', [Validators.required]],
-      city: ['', [Validators.required]],
-      postalCode: ['', [Validators.required]],
-    });
+  public ngOnChanges(changes: SimpleChangesTyped<AddressDetailsFormComponentInput>): void {
+    const userProfileAddress = this.userProfileAddress;
+
+    if (!(changes.userProfileAddress || changes.countryOptions) || !userProfileAddress) {
+      this.form.controls.country.setValue(null);
+      return;
+    }
+
+    const foundCountryOption = this.countryOptions.find(
+      (countryOption) => countryOption.value.code === userProfileAddress.country.code
+    );
+
+    if (!foundCountryOption) {
+      // Something went wrong?
+      return;
+    }
+
+    this.form.setFromModel({ ...userProfileAddress, country: foundCountryOption });
   }
 }

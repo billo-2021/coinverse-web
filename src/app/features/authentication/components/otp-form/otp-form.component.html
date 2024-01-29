@@ -1,12 +1,12 @@
 <app-form
   (cancelClicked)="onCancelClicked()"
   (saveClicked)="onSaveClicked()"
+  [cancelHidden]="true"
   [cancelText]="cancelText"
-  [formGroup]="form"
-  [isCancelShown]="true"
-  [isValid]="form.valid"
+  [formGroup]="formGroup"
   [saveText]="saveText"
   [subtitle]="'A verification code has been sent to your ' + verificationMethod + ' ' + (otpRecipient | maskEmail)"
+  [valid]="form.valid"
   class="max-w-md m-auto"
   title="Verification Code">
   <app-otp-input

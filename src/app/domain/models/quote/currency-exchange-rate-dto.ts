@@ -1,15 +1,7 @@
-interface CurrencyExchangeRateDtoData {
-  readonly id: number;
-  readonly bidRate: number;
-  readonly askRate: number;
-  readonly timeToLive: number;
-  readonly createdAt: Date;
-}
+import { CurrencyExchangeRateDataDto } from './currency-exchange-rate-data-dto.model';
 
-interface CurrencyExchangeRateDto {
+export interface CurrencyExchangeRateDto {
   readonly currencyPairName: string;
   readonly currencyPairType: string;
-  data: readonly CurrencyExchangeRateDtoData[];
+  readonly data: readonly CurrencyExchangeRateDataDto[];
 }
-
-export { CurrencyExchangeRateDtoData, CurrencyExchangeRateDto };

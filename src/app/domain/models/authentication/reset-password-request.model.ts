@@ -1,5 +1,5 @@
 export interface ResetPasswordRequest {
-  username: string;
-  token: string;
-  password: string;
+  readonly username: string;
+  readonly token: string;
+  readonly password: string;
 }

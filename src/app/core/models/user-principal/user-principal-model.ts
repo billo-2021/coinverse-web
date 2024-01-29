@@ -1,9 +1,9 @@
 export interface UserPrincipal {
-  username: string;
-  emailAddress: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  isVerified: boolean;
-  roles: string[];
+  readonly username: string;
+  readonly emailAddress: string;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly phoneNumber: string;
+  readonly isVerified: boolean;
+  readonly roles: readonly string[];
 }

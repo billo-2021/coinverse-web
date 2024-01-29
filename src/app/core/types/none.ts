@@ -1,7 +1,5 @@
-type None = null | undefined;
+export type None = null | undefined;
 
-function isNone<T>(value: T | None): value is None {
+export function isNone<T>(value: T | None): value is None {
   return value === null || value == undefined;
 }
-
-export { None, isNone };

@@ -1,9 +1,9 @@
 import { CurrencyDto } from './currency-dto.model';
 
 export interface CurrencyPairDto {
-  id: number;
-  type: string;
-  name: string;
-  baseCurrency: CurrencyDto;
-  quoteCurrency: CurrencyDto;
+  readonly id: number;
+  readonly type: string;
+  readonly name: string;
+  readonly baseCurrency: CurrencyDto;
+  readonly quoteCurrency: CurrencyDto;
 }

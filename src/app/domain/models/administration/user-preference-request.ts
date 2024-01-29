@@ -1,4 +1,4 @@
 export interface UserPreferenceRequest {
-  currencyCode: string;
-  notificationMethods: string[];
+  readonly currencyCode: string;
+  readonly notificationMethods: readonly string[];
 }

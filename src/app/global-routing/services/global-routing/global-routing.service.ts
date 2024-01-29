@@ -1,16 +1,18 @@
 import { Injectable, Self } from '@angular/core';
 import { combineLatest, filter, map, merge, Observable, switchMap, tap, timer } from 'rxjs';
-
-import { DestroyService, RedirectService } from '../../../core';
 import {
   AccountVerificationStoreService,
+  DestroyService,
+  UserAccessCredentials,
+  UserPrincipalStoreService,
+} from '../../../core';
+import {
   NavigationParam,
   NavigationService,
-  UserAccessCredentials,
+  RedirectService,
   UserPermissionsService,
-  UserPrincipalStoreService,
 } from '../../../common';
-import { AccountVerification } from '../../../common/domain-models/authentication';
+import { AccountVerification } from '../../../domain';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalRoutingService extends Observable<void> {

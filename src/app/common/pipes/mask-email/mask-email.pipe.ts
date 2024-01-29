@@ -5,6 +5,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class MaskEmailPipe implements PipeTransform {
   transform(email: string): unknown {
+    if (!email || !email.includes('@')) {
+      return email;
+    }
+
     const [username, domain] = email.split('@');
 
     const maskedUsername = this.maskFromEnd(username, '.', 3);

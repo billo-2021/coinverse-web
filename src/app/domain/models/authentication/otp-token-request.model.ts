@@ -1,4 +1,4 @@
 export interface OtpTokenRequest {
-  username: string;
-  messagingChannel: string;
+  readonly username: string;
+  readonly messagingChannel: string;
 }

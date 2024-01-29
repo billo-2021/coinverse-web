@@ -1,18 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule as NgCommon } from '@angular/common';
-
-import { CommonModule } from '../../common/common.module';
-import { UiComponentsModule } from '../../ui-components/ui-components.module';
-import { FormComponentsModule } from '../../form-components/form-components.module';
-
+import { CommonModule } from '../../common';
+import { UiComponentsModule } from '../../ui-components';
+import { FormComponentsModule } from '../../form-components';
+import { DomainModule } from '../../domain';
 import {
+  LoginFormComponent,
   OtpFormComponent,
   ResetPasswordFormComponent,
   ResetPasswordRequestFormComponent,
   ResetPasswordRequestResultComponent,
   ResetPasswordResultComponent,
 } from './components';
-
 import {
   LoginPage,
   RegisterPage,
@@ -20,16 +19,16 @@ import {
   ResetPasswordRequestPage,
   VerifyAccountPage,
 } from './pages';
-
 import { AuthenticationRoutingModule } from './authentication-routing.module';
 
 @NgModule({
   imports: [
     NgCommon,
     CommonModule,
-    FormComponentsModule,
-    AuthenticationRoutingModule,
     UiComponentsModule,
+    FormComponentsModule,
+    DomainModule,
+    AuthenticationRoutingModule,
   ],
   declarations: [
     OtpFormComponent,
@@ -42,6 +41,7 @@ import { AuthenticationRoutingModule } from './authentication-routing.module';
     VerifyAccountPage,
     ResetPasswordPage,
     ResetPasswordRequestPage,
+    LoginFormComponent,
   ],
   exports: [
     LoginPage,

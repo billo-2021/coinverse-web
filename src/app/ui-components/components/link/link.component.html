@@ -1,7 +1,3 @@
-<a
-  [mode]="isDisabled ? 'negative' : null"
-  [routerLink]="[to]"
-  routerLinkActive="active-link"
-  tuiLink>
+<a [mode]="disabled ? 'negative' : null" [routerLink]="[to]" routerLinkActive="active-link" tuiLink>
   {{ text }}
 </a>

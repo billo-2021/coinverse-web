@@ -1,13 +1,4 @@
-import { getMenuItems } from './menu-items.util';
-import { getUpdatedChanges, SimpleChangesTyped } from './changes-utils';
-import { isKnownError, isKnownErrorLog } from './error.utils';
-import { MapperUtils } from './mapper.utils';
-
-export {
-  getMenuItems,
-  getUpdatedChanges,
-  SimpleChangesTyped,
-  isKnownError,
-  isKnownErrorLog,
-  MapperUtils,
-};
+export { getMenuItems } from './menu-items.util';
+export { getUpdatedChanges, SimpleChangesTyped } from './changes-utils';
+export { getErrorMessage, isKnownError, isKnownErrorLog } from './error.utils';
+export { MapperUtils } from './mapper.utils';

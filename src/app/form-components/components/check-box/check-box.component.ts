@@ -7,9 +7,15 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { SizeL } from '../../../common';
 
-export type SizeType = 'm' | 'l';
+export type CheckBoxSize = SizeL;
+
+export interface CheckBoxComponentInput {
+  size: CheckBoxSize;
+  name: string;
+  label: string;
+}
 
 @Component({
   selector: 'app-check-box',
@@ -18,27 +24,16 @@ export type SizeType = 'm' | 'l';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CheckBoxComponent {
-  @Input() size: SizeType = 'm';
+export class CheckBoxComponent implements CheckBoxComponentInput {
+  @Input() size: CheckBoxSize = 'm';
   @Input() public name = '';
   @Input() public label = '';
-
-  private _disabled = new BehaviorSubject<boolean>(false);
 
   @HostBinding('class') private _classes = 'block';
 
   public constructor(@Optional() private _formGroupDirective: FormGroupDirective) {}
 
-  @Input()
-  public set isDisabled(value: boolean) {
-    this._disabled.next(value);
-  }
-
   protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
     return this._formGroupDirective?.form || null;
-  }
-
-  protected get formControl(): AbstractControl<unknown> | null {
-    return this.formGroup?.controls[this.name] || null;
   }
 }

@@ -1,11 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { MappingPair } from '@dynamic-mapper/mapper';
+import { Mapper } from '@dynamic-mapper/angular';
 
-import { ApiResponseMapperError, HttpCrudService, PageRequest, PageResponse } from '../../../core';
+import { Filter, HttpCrudService, PageRequest, PageResponse } from '../../../core';
 
+import { apiPageRequestToken, apiRoutesConfig } from '../../config';
+import { ApiRoutesConfigType } from '../../types';
 import { MapperUtils } from '../../utils';
-import { apiPageRequestToken } from '../../config';
-import { ApiResponseMapper, ApiRoutesConfigType } from '../../types';
 
 @Injectable({
   providedIn: 'root',
@@ -13,93 +15,191 @@ import { ApiResponseMapper, ApiRoutesConfigType } from '../../types';
 export class ApiCrudClient {
   constructor(
     private readonly _httpService: HttpCrudService,
-    @Inject(apiPageRequestToken) private readonly _pageRequestToken: PageRequest
+    @Inject(apiPageRequestToken) private readonly _pageRequestToken: PageRequest,
+    private readonly _mapper: Mapper
   ) {}
 
-  public find<TDto, TResponse = TDto>(
-    path: ApiRoutesConfigType,
-    mapper?: ApiResponseMapper<TDto, TResponse>
+  public find<TDto = unknown, TResponse = TDto>(
+    pathName: ApiRoutesConfigType,
+    mappingPair?: MappingPair<TDto, TResponse>
   ): Observable<TResponse> {
     return this._httpService
-      .find(path)
-      .pipe(map((response) => this.mapApiResponse(response, mapper)));
+      .find<TDto>(apiRoutesConfig[pathName])
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
   }
 
   public findOne<TDto extends object | string | number | boolean, TResponse = TDto>(
-    path: ApiRoutesConfigType,
+    pathName: ApiRoutesConfigType,
     id: string,
-    mapper?: ApiResponseMapper<TDto, TResponse>
+    mappingPair?: MappingPair<TDto, TResponse>
   ): Observable<TResponse> {
     return this._httpService
-      .find(this.withId(path, id))
-      .pipe(map((response) => this.mapApiResponse(response, mapper)));
+      .find<TDto>(this.withId(pathName, id))
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
   }
 
-  public findMany<
-    TDto extends Array<unknown> | PageResponse<unknown>,
-    TResponse extends Array<unknown> | PageResponse<unknown> = TDto,
-  >(
-    path: ApiRoutesConfigType,
-    pageRequest: PageRequest = this._pageRequestToken,
-    mapper?: ApiResponseMapper<TDto, TResponse>
+  public findOneBy<TDto extends object | string | number | boolean, TResponse = TDto>(
+    pathName: ApiRoutesConfigType,
+    filter: Filter,
+    mappingPair?: MappingPair<TDto, TResponse>
   ): Observable<TResponse> {
     return this._httpService
-      .find(this.withPageRequest(path, pageRequest))
-      .pipe(map((response) => this.mapApiResponse(response, mapper)));
+      .find<TDto>(this.withFilter(pathName, filter))
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
+  }
+
+  public findMany<TDto, TResponse = TDto>(
+    pathName: ApiRoutesConfigType,
+    pageRequest: PageRequest = this._pageRequestToken,
+    mappingPair?: MappingPair<PageResponse<TDto>, PageResponse<TResponse>>
+  ): Observable<PageResponse<TResponse>> {
+    return this._httpService
+      .find<PageResponse<TDto>>(this.withPageRequest(pathName, pageRequest))
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
+  }
+
+  public findManyBy<TDto, TResponse = TDto>(
+    pathName: ApiRoutesConfigType,
+    filters: Filter[],
+    pageRequest: PageRequest = this._pageRequestToken,
+    mappingPair?: MappingPair<PageResponse<TDto>, PageResponse<TResponse>>
+  ): Observable<PageResponse<TResponse>> {
+    return this._httpService
+      .find<PageResponse<TDto>>(this.withFiltersPageRequest(pathName, filters, pageRequest))
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
+  }
+
+  public findAll<TDto, TResponse = TDto>(
+    pathName: ApiRoutesConfigType,
+    mappingPair?: MappingPair<TDto, TResponse>
+  ): Observable<TResponse[]> {
+    return this._httpService
+      .find<TDto[]>(apiRoutesConfig[pathName])
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
+  }
+
+  public findAllBy<TDto, TResponse>(
+    pathName: ApiRoutesConfigType,
+    filter: Filter,
+    mappingPair?: MappingPair<TDto, TResponse>
+  ): Observable<TResponse[]> {
+    return this._httpService
+      .find<TDto[]>(this.withFilter(pathName, filter))
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
+  }
+
+  public create<TRequest, TDto = unknown, TResponse = TDto>(
+    pathName: ApiRoutesConfigType,
+    data?: TRequest,
+    mappingPair?: MappingPair<TDto, TResponse>
+  ): Observable<TResponse> {
+    return this._httpService
+      .create<TRequest, TDto>(apiRoutesConfig[pathName], data)
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
   }
 
   public update<TRequest, TDto, TResponse = TDto>(
-    path: ApiRoutesConfigType,
+    pathName: ApiRoutesConfigType,
     data?: TRequest,
-    mapper?: ApiResponseMapper<TDto, TResponse>
+    mappingPair?: MappingPair<TDto, TResponse>
   ): Observable<TResponse> {
     return this._httpService
-      .update(path, data)
-      .pipe(map((response) => this.mapApiResponse(response, mapper)));
+      .update<TRequest, TDto>(apiRoutesConfig[pathName], data)
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
   }
 
   public patch<TRequest, TDto, TResponse = TDto>(
-    path: ApiRoutesConfigType,
+    pathName: ApiRoutesConfigType,
     data?: TRequest,
-    mapper?: ApiResponseMapper<TDto, TResponse>
-  ): Observable<unknown> {
+    mappingPair?: MappingPair<TDto, TResponse>
+  ): Observable<TResponse> {
     return this._httpService
-      .patch(path, data)
-      .pipe(map((response) => this.mapApiResponse(response, mapper)));
+      .patch<TRequest, TDto>(apiRoutesConfig[pathName], data)
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
+  }
+
+  public patchBy<TRequest, TDto, TResponse = TDto>(
+    pathName: ApiRoutesConfigType,
+    id: string,
+    data?: TRequest,
+    mappingPair?: MappingPair<TDto, TResponse>
+  ): Observable<TResponse> {
+    return this._httpService
+      .patch<TRequest, TDto>(this.withId(pathName, id), data)
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
   }
 
   public remove<TDto, TResponse = TDto>(
-    path: ApiRoutesConfigType,
+    pathName: ApiRoutesConfigType,
     id: string,
-    mapper?: ApiResponseMapper<TDto, TResponse>
-  ): Observable<unknown> {
+    mappingPair?: MappingPair<TDto, TResponse>
+  ): Observable<TResponse> {
     return this._httpService
-      .remove(this.withId(path, id))
-      .pipe(map((response) => this.mapApiResponse(response, mapper)));
+      .remove<TDto>(this.withId(pathName, id))
+      .pipe(map((response) => this.mapApiResponse(response, mappingPair)));
   }
 
-  private withId(path: ApiRoutesConfigType, id: string): string {
-    return `${path}/${id}`;
+  private withId(pathName: ApiRoutesConfigType, id: string): string {
+    return `${apiRoutesConfig[pathName]}/${id}`;
   }
 
-  private withPageRequest(path: ApiRoutesConfigType, pageRequest: PageRequest): string {
-    return `${path}?pageNumber=${pageRequest.page}&pageSize=${pageRequest.size}`;
+  private withPageRequest(pathName: ApiRoutesConfigType, pageRequest: PageRequest): string {
+    return `${apiRoutesConfig[pathName]}?${this.getQueryFromPageRequest(pageRequest)}`;
+  }
+
+  private withFiltersPageRequest(
+    pathName: ApiRoutesConfigType,
+    filters: Filter[],
+    pageRequest: PageRequest
+  ): string {
+    return `${apiRoutesConfig[pathName]}?${this.getFilterQueryFromFilters(
+      filters
+    )}&${this.getQueryFromPageRequest(pageRequest)}`;
+  }
+
+  private withFilter(pathName: ApiRoutesConfigType, filter: Filter): string {
+    return `${apiRoutesConfig[pathName]}?${this.getQueryFromFilter(filter)}`;
+  }
+
+  private getQueryFromPageRequest(pageRequest: PageRequest): string {
+    return `pageNumber=${pageRequest.page}&pageSize=${pageRequest.size}`;
+  }
+
+  private getFilterQueryFromFilters(filters: Filter[]): string {
+    return filters.map((filter) => this.getQueryFromFilter(filter)).join('&');
+  }
+
+  private getQueryFromFilter(filter: Filter): string {
+    return (Object.keys(filter) as Array<keyof Filter>).reduce(
+      (acc: string, key, index) =>
+        index === 0 ? `${String(key)}=${filter[key]}` : `${acc}&${String(key)}=${filter[key]}`,
+      ''
+    );
   }
 
   private mapApiResponse<TDto, TResponse>(
-    response: unknown,
-    mapper: ApiResponseMapper<TDto, TResponse> = MapperUtils.apiResponseMapper<TDto, TResponse>()
-  ): TResponse {
-    if (!mapper.validate) {
-      return mapper.map(response);
+    response: TDto,
+    mappingPair?: MappingPair<TDto, TResponse>
+  ): TResponse;
+
+  private mapApiResponse<TDto, TResponse>(
+    response: TDto[],
+    mappingPair?: MappingPair<TDto, TResponse>
+  ): TResponse[];
+
+  private mapApiResponse<TDto, TResponse>(
+    response: PageResponse<TDto>,
+    mappingPair?: MappingPair<PageResponse<TDto>, PageResponse<TResponse>>
+  ): PageResponse<TResponse>;
+
+  private mapApiResponse<TDto, TResponse>(
+    response: TDto | TDto[] | PageResponse<TDto>,
+    mappingPair?: MappingPair<TDto | PageResponse<TDto>, TResponse | PageResponse<TResponse>>
+  ): TResponse | TResponse[] | PageResponse<TResponse> {
+    if (!mappingPair) {
+      return MapperUtils.apiResponseMapper(response);
     }
 
-    const validationResult = mapper.validate(response);
-
-    if (!validationResult.isValid) {
-      throw new ApiResponseMapperError(validationResult.expected, JSON.stringify(response));
-    }
-
-    return mapper.map(validationResult.response);
+    return this._mapper.map(mappingPair, response);
   }
 }

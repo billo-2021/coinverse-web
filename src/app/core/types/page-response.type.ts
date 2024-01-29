@@ -1,5 +1,5 @@
 export type PageResponse<T> = {
-  count: number;
-  total: number;
-  data: T[];
+  readonly count: number;
+  readonly total: number;
+  readonly data: T[];
 };

@@ -8,6 +8,11 @@ import {
 } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 
+export interface LabelComponentInput {
+  for: string;
+  label: string;
+}
+
 @Component({
   selector: 'app-label',
   templateUrl: './label.component.html',
@@ -15,9 +20,9 @@ import { FormGroup, FormGroupDirective } from '@angular/forms';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LabelComponent {
-  @Input() public labelFor = '';
-  @Input() public text = '';
+export class LabelComponent implements LabelComponentInput {
+  @Input() public for = '';
+  @Input() public label = '';
 
   @HostBinding('class') private _classes = 'block';
 

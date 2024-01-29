@@ -1,3 +1,1 @@
-import { MappingProfile } from './mapping.profile';
-
-export { MappingProfile };
+export { MappingProfile } from './mapping.profile';

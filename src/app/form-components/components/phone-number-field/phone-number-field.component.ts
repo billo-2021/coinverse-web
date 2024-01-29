@@ -6,11 +6,18 @@ import {
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
-
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { InputFieldSize } from '../../types';
 
-export type SizeType = 's' | 'm' | 'l';
+export interface PhoneNumberComponentInput {
+  size: InputFieldSize;
+  name: string;
+  label: string;
+  placeholder: string;
+  countryCode: string;
+  phoneMaskAfterCountryCode: string;
+  hasClear: boolean;
+}
 
 @Component({
   selector: 'app-phone-number-field',
@@ -19,8 +26,8 @@ export type SizeType = 's' | 'm' | 'l';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhoneNumberFieldComponent {
-  @Input() public size: SizeType = 'm';
+export class PhoneNumberFieldComponent implements PhoneNumberComponentInput {
+  @Input() public size: InputFieldSize = 'm';
   @Input() public name = '';
   @Input() public label = '';
   @Input() public placeholder = '';
@@ -29,20 +36,10 @@ export class PhoneNumberFieldComponent {
   @Input() public hasClear = true;
 
   @HostBinding('class') private _classes = 'block input-text-field-wrapper';
-  private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
 
-  @Input()
-  public set isDisabled(value: boolean) {
-    this._disabled.next(value);
-  }
-
   protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
     return this._formGroupDirective?.form || null;
-  }
-
-  protected get formControl(): AbstractControl<unknown> | null {
-    return this.formGroup?.controls[this.name] || null;
   }
 }

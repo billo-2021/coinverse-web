@@ -1,9 +1,9 @@
 <app-form
   (saveClicked)="onSaveClicked()"
-  [formGroup]="form"
-  [isValid]="form.valid"
+  [class]="'max-w-md' + formClasses"
+  [formGroup]="formGroup"
   [saveText]="saveText"
-  class="max-w-md m-auto"
+  [valid]="form.valid"
   subtitle="It's free to sign up and only takes a minute."
   title="Create new Account">
   <app-text-field
@@ -13,7 +13,7 @@
     placeholder="john@gmail.com"
     type="email">
   </app-text-field>
-
+  <app-combo-box *ngIf="!hideRole" [options]="roleOptions" label="Role" name="role"></app-combo-box>
   <app-password-field
     autocomplete="new-password"
     label="Password"

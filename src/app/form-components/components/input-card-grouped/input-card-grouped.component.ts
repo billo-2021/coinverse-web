@@ -6,11 +6,12 @@ import {
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
-
 import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
 
-import { DestroyService } from '../../../core';
+export interface InputCardGroupedComponentInput {
+  name: string;
+  label: string;
+}
 
 @Component({
   selector: 'app-input-card-grouped',
@@ -18,21 +19,14 @@ import { DestroyService } from '../../../core';
   styleUrls: ['./input-card-grouped.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DestroyService],
 })
-export class InputCardGroupedComponent {
+export class InputCardGroupedComponent implements InputCardGroupedComponentInput {
   @Input() public name = '';
   @Input() public label = '';
 
   @HostBinding('class') private _classes = 'block';
-  private _disabled = new BehaviorSubject<boolean>(false);
 
   public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
-
-  @Input()
-  public set isDisabled(value: boolean) {
-    this._disabled.next(value);
-  }
 
   protected get formGroup(): FormGroup | null {
     return this._formGroupDirective?.form || null;

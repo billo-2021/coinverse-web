@@ -1,7 +1,7 @@
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { Provider } from '@angular/core';
-import { TUI_INPUT_CARD_GROUPED_TEXTS } from '@taiga-ui/addon-commerce';
 import { of } from 'rxjs';
+import { TUI_INPUT_CARD_GROUPED_TEXTS } from '@taiga-ui/addon-commerce';
 
 export const FORM_PROVIDERS: Provider[] = [
   {

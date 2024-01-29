@@ -7,6 +7,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+export interface CardComponentInput {
+  title?: string;
+  subtitle?: string;
+  actionsContent: TemplateRef<unknown | null> | null;
+}
+
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
@@ -14,7 +20,7 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CardComponent {
+export class CardComponent implements CardComponentInput {
   @Input() public title?: string;
   @Input() public subtitle?: string;
   @Input() public actionsContent: TemplateRef<unknown> | null = null;

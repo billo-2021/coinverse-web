@@ -1,5 +1,3 @@
-import { CurrencyTransactionDto } from './currency-transaction-dto';
-import { CurrencyTransactionResponse } from './currency-transaction-response';
-import { TradeRequest } from './trade-request';
-
-export { CurrencyTransactionDto, CurrencyTransactionResponse, TradeRequest };
+export { CurrencyTransactionDto } from './currency-transaction-dto';
+export { CurrencyTransaction } from './currency-transaction';
+export { TradeRequest } from './trade-request';

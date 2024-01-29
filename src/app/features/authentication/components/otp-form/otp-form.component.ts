@@ -2,23 +2,58 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
   Inject,
+  Injectable,
   Input,
-  OnInit,
+  Optional,
   Output,
   Self,
   SkipSelf,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { debounce, filter, interval, takeUntil, tap } from 'rxjs';
+import { FormControl, FormGroup } from '@angular/forms';
+import { debounce, distinctUntilChanged, filter, interval, takeUntil, tap } from 'rxjs';
+import {
+  DestroyService,
+  MessagingChannel,
+  otpLengthToken,
+  verificationMethodToken,
+} from '../../../../core';
+import { FormBase, OtpLength } from '../../../../common';
+import { OtpInputComponent } from '../../../../form-components';
 
-import { DestroyService, MessagingChannel, otpLengthToken } from '../../../../core';
-import { OtpInputComponent } from '../../../../form-components/components/otp-input/otp-input.component';
+export interface OtpForm {
+  readonly otp: FormControl<string>;
+}
 
-import { OtpForm } from '../../models';
-import { OtpFormService } from '../../services';
+export interface OtpFormComponentInput {
+  saveText: string;
+  cancelText: string;
+  otpRecipient: string;
+  otpLength: number;
+  verificationMethod: MessagingChannel;
+  autoSave: boolean;
+}
+
+export interface OtpFormComponentOutput {
+  saveClicked: EventEmitter<FormBase<OtpForm>>;
+  cancelClicked: EventEmitter<void>;
+}
+
+export function getOtpForm(otpLength: number): OtpForm {
+  return {
+    otp: new FormControl<string>('', OtpLength(otpLength)),
+  };
+}
+
+@Injectable()
+export class OtpFormService extends FormBase<OtpForm> {
+  public constructor(@Inject(otpLengthToken) private readonly _otpLengthToken: number) {
+    super(getOtpForm(_otpLengthToken));
+  }
+}
 
 @Component({
   selector: 'app-otp-form',
@@ -28,41 +63,46 @@ import { OtpFormService } from '../../services';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DestroyService],
 })
-export class OtpFormComponent implements OnInit {
+export class OtpFormComponent implements OtpFormComponentInput, OtpFormComponentOutput {
   @Input() public saveText = 'Submit';
   @Input() public cancelText = 'Resend OTP';
   @Input() public otpRecipient = '';
   @Input() public autoSave = false;
-  @Input() public verificationMethod: MessagingChannel = 'email';
+  @Input() public verificationMethod: MessagingChannel = this._verificationMethodToken;
+  @Input() public otpLength: number = this._otpLengthToken;
 
-  @Output() public saveClicked = new EventEmitter<FormGroup<OtpForm>>();
+  @Output() public saveClicked = new EventEmitter<FormBase<OtpForm>>();
   @Output() public cancelClicked = new EventEmitter<void>();
-  @Input() public otpLength: number;
-  protected readonly form: FormGroup<OtpForm>;
+
+  public readonly form: FormBase<OtpForm> =
+    this._otpForm ?? new FormBase<OtpForm>(getOtpForm(this.otpLength));
+
   @ViewChild('otpInput') private otpInputRef?: OtpInputComponent;
+  @HostBinding('class') private _classes = 'block';
+
+  private readonly _effects$ = this.form.statusChanges.pipe(
+    debounce(() => interval(250)),
+    filter((status) => status === 'VALID'),
+    distinctUntilChanged(),
+    tap(() => {
+      if (this.autoSave) {
+        this.onSaveClicked();
+      }
+    }),
+    takeUntil(this._destroy$)
+  );
 
   public constructor(
     @Inject(otpLengthToken) private readonly _otpLengthToken: number,
-    @SkipSelf() private readonly _otpForm$: OtpFormService,
+    @Inject(verificationMethodToken) private readonly _verificationMethodToken: MessagingChannel,
+    @Optional() @SkipSelf() private readonly _otpForm: OtpFormService | null,
     @Self() private readonly _destroy$: DestroyService
   ) {
-    this.otpLength = _otpLengthToken;
-    this.form = _otpForm$.value;
+    this._effects$.subscribe();
   }
 
-  public ngOnInit(): void {
-    if (!this.autoSave || !this.form) {
-      return;
-    }
-
-    this.form.statusChanges
-      .pipe(
-        debounce(() => interval(250)),
-        filter((status) => status === 'VALID'),
-        tap(() => this.onSaveClicked()),
-        takeUntil(this._destroy$)
-      )
-      .subscribe();
+  protected get formGroup(): FormGroup<OtpForm> {
+    return this.form;
   }
 
   public onSaveClicked(): void {

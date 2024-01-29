@@ -1,4 +1,6 @@
 export type PageRequest = {
-  page: number;
-  size: number;
+  readonly page: number;
+  readonly size: number;
+  readonly sortBy?: string;
+  readonly sortDirection?: 'asc' | 'desc';
 };

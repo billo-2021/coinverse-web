@@ -3,14 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TuiLoaderModule } from '@taiga-ui/core';
 import { TuiTableModule, TuiTablePaginationModule } from '@taiga-ui/addon-table';
-
-import { FormComponentsModule } from '../../form-components/form-components.module';
 import { UiComponentsModule } from '../../ui-components';
-
+import { FormComponentsModule } from '../../form-components';
 import { TransactRoutingModule } from './transact-routing.module';
-
 import {
-  ExchangeRateComponent,
   TransactBankDetailsFormComponent,
   TransactConfirmationComponent,
   TransactExchangeRateComponent,
@@ -19,7 +15,6 @@ import {
   TransactQuoteComponent,
   TransactResultComponent,
 } from './components';
-
 import { ManageTransactionsPage, TransactPage } from './pages';
 
 @NgModule({
@@ -30,7 +25,6 @@ import { ManageTransactionsPage, TransactPage } from './pages';
     TransactFormComponent,
     TransactQuoteComponent,
     TransactResultComponent,
-    ExchangeRateComponent,
     TransactConfirmationComponent,
     TransactExchangeRateComponent,
     TransactBankDetailsFormComponent,

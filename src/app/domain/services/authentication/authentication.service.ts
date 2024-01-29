@@ -1,79 +1,70 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
-
-import { HttpCrudService } from '../../../core';
-
-import { apiRoutesConfig } from '../../config';
-import { loginDtoToLoginResponse, userDtoToUserResponse } from '../../mappers';
-import { AccountVerificationStoreService, UserPrincipalStoreService } from '../../services';
-import { UserAccessCredentials, UserDto, UserPrincipal, UserResponse } from '../../domain-models';
-
+import { Observable, tap } from 'rxjs';
+import { Mapper } from '@dynamic-mapper/angular';
+import {
+  AccountVerificationStoreService,
+  UserAccessCredentials,
+  UserPrincipal,
+  UserPrincipalStoreService,
+} from '../../../core';
+import { ApiCrudClient } from '../../../common';
+import { MappingProfile } from '../../config';
 import {
   LoginDto,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
-} from '../../domain-models/authentication';
+  User,
+  UserDto,
+} from '../../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  public readonly BASE_PATH = apiRoutesConfig.authentication.root;
-  public readonly LOGIN_PATH = apiRoutesConfig.authentication.login;
-  public readonly REGISTER_PATH = apiRoutesConfig.authentication.register;
-
   constructor(
-    private readonly _httpService: HttpCrudService,
+    private readonly _apiCrudClient: ApiCrudClient,
+    private readonly _mapper: Mapper,
     private readonly _userPrincipalStore: UserPrincipalStoreService,
     private readonly _accountVerificationStore: AccountVerificationStoreService
   ) {}
 
-  public register(registerRequest: RegisterRequest): Observable<UserResponse> {
-    return this._httpService
-      .create<RegisterRequest, UserDto>(this.getFullPath(this.REGISTER_PATH), registerRequest)
-      .pipe(
-        map(userDtoToUserResponse),
-        tap((userResponse) => {
-          this.addAccountVerification(userResponse);
-        })
-      );
+  public register(registerRequest: RegisterRequest): Observable<User> {
+    return this._apiCrudClient
+      .create<RegisterRequest, UserDto, User>(
+        'register',
+        registerRequest,
+        MappingProfile.UserDtoToUser
+      )
+      .pipe(tap((user) => this.addAccountVerification(user)));
   }
 
   public login(loginRequest: LoginRequest): Observable<LoginResponse> {
-    return this._httpService
-      .create<LoginRequest, LoginDto>(this.getFullPath(this.LOGIN_PATH), loginRequest)
-      .pipe(
-        map(loginDtoToLoginResponse),
-        tap((loginResponse) => {
-          this.addUserLogin(loginResponse);
-        })
-      );
-  }
-
-  private getFullPath(path: string): string {
-    return `${this.BASE_PATH}${path}`;
+    return this._apiCrudClient
+      .create<LoginRequest, LoginDto, LoginResponse>(
+        'login',
+        loginRequest,
+        MappingProfile.LoginDtoToLoginResponse
+      )
+      .pipe(tap((loginResponse) => this.addUserLogin(loginResponse)));
   }
 
   private addUserLogin(userLogin: LoginResponse) {
     const user = userLogin.user;
 
-    const userPrincipal: UserPrincipal = {
-      ...user,
-    };
+    const userPrincipal: UserPrincipal = this._mapper.map(MappingProfile.UserToUserPrincipal, user);
 
-    const accessCredentials: UserAccessCredentials = {
-      username: user.username,
-      accessToken: userLogin.accessToken,
-      refreshToken: userLogin.refreshToken,
-    };
+    const accessCredentials: UserAccessCredentials = this._mapper.map(
+      MappingProfile.LoginResponseToUserAccessCredentials,
+      userLogin
+    );
 
     this._userPrincipalStore.next(userPrincipal);
     this._userPrincipalStore.accessCredentials = accessCredentials;
     this.addAccountVerification(user);
   }
 
-  private addAccountVerification(user: UserResponse): void {
+  private addAccountVerification(user: User): void {
     const isVerified = user.isVerified;
 
     if (isVerified) {

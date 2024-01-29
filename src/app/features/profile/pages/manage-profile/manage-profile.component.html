@@ -1,41 +1,61 @@
-<div
-  *ngIf="userProfileResponse$ | async as userProfileResponse"
-  class="mb-10 border-bottom pb-4 row items-center justify-space-between">
-  <app-header [subtitle]="subtitle" [title]="title"></app-header>
-  <div class="row-nowrap col-spacing-sm mb-6">
-    <app-avatar
-      [text]="userProfileResponse.firstName + ' ' + userProfileResponse.lastName"
-      size="m"></app-avatar>
-    <div>
-      <p class="tui-text_body-s">
-        {{ userProfileResponse.firstName + ' ' }}{{ userProfileResponse.lastName }}
-      </p>
-      <p class="tui-text_body-s tui-island__paragraph">{{ userProfileResponse.emailAddress }}</p>
+<ng-container *ngIf="viewModel$ | async as viewModel">
+  <div class="mb-10 border-bottom pb-4 row items-center justify-space-between">
+    <app-header [subtitle]="subtitle" [title]="title"></app-header>
+    <div class="row-nowrap col-spacing-sm mb-6">
+      <app-avatar
+        [text]="viewModel.userProfile.firstName + ' ' + viewModel.userProfile.lastName"
+        size="m"></app-avatar>
+      <div>
+        <p class="tui-text_body-s">
+          {{ viewModel.userProfile.firstName + ' ' }}{{ viewModel.userProfile.lastName }}
+        </p>
+        <p class="tui-text_body-s tui-island__paragraph">
+          {{ viewModel.userProfile.emailAddress }}
+        </p>
+      </div>
     </div>
   </div>
-</div>
-<app-tabs [(activeItemIndex)]="activeTabIndex" [tabs]="tabs">
-  <div *ngIf="activeTabIndex === TABS.Profile" class="mt-12 col max-w-lg">
-    <app-profile-form (saveClicked)="onSaveClicked()"></app-profile-form>
-    <app-button appearance="outline" class="mt-6" text="Delete my Account"></app-button>
-  </div>
+  <app-tabs
+    (activeItemIndexChange)="activeTabIndexChanged($event)"
+    [activeItemIndex]="viewModel.activeTabIndex"
+    [tabs]="ProfileTabs">
+    <div *ngIf="viewModel.activeTabIndex === ProfileTabType.Profile" class="mt-12 col max-w-lg">
+      <app-profile-form
+        (saveClicked)="updateUserPersonalInformation($event)"
+        [error]="viewModel.profileError"
+        [userProfile]="viewModel.userProfile"></app-profile-form>
+      <app-button appearance="outline" class="mt-6" text="Delete my Account"></app-button>
+    </div>
 
-  <app-address-details-form
-    (saveClicked)="onSaveClicked()"
-    *ngIf="activeTabIndex === TABS.AddressDetails"
-    class="mt-12 col max-w-lg">
-  </app-address-details-form>
-  <app-preference-details-form
-    (saveClicked)="onSaveClicked()"
-    *ngIf="activeTabIndex === TABS.Preferences"
-    class="mt-12 col max-w-lg">
-  </app-preference-details-form>
-  <app-change-password-form
-    (passwordChanged)="onSaveClicked()"
-    *ngIf="activeTabIndex === TABS.ChangePassword"
-    class="mt-12 col max-w-lg">
-  </app-change-password-form>
-  <app-account-activity
-    *ngIf="activeTabIndex === TABS.AccountActivity"
-    class="mt-12 col max-w-lg"></app-account-activity>
-</app-tabs>
+    <app-address-details-form
+      (saveClicked)="updateProfileAddress($event)"
+      *ngIf="viewModel.activeTabIndex === ProfileTabType.AddressDetails"
+      [countryOptions]="viewModel.countryOptions"
+      [error]="viewModel.addressDetailsError"
+      [userProfileAddress]="viewModel.userProfile.address"
+      class="mt-12 col max-w-lg">
+    </app-address-details-form>
+    <app-preference-details-form
+      (saveClicked)="updateProfilePreference($event)"
+      *ngIf="viewModel.activeTabIndex === ProfileTabType.Preferences"
+      [currencyOptions]="viewModel.currencyOptions"
+      [error]="viewModel.preferenceDetailsError"
+      [userProfilePreference]="viewModel.userProfile.preference"
+      class="mt-12 col max-w-lg">
+    </app-preference-details-form>
+    <app-change-password-form
+      (saveClicked)="changePassword($event)"
+      *ngIf="viewModel.activeTabIndex === ProfileTabType.ChangePassword"
+      [error]="viewModel.changePasswordError"
+      class="mt-12 col max-w-lg">
+    </app-change-password-form>
+    <app-account-activity
+      (paginationChanged)="onUserAccountPagination($event)"
+      (reportActivityClicked)="reportActivity()"
+      *ngIf="viewModel.activeTabIndex === ProfileTabType.AccountActivity"
+      [pagination]="viewModel.userAccountEventsPagination"
+      [total]="viewModel.userAccountEventPage.total"
+      [userAccountEvents]="viewModel.userAccountEventPage.data"
+      class="mt-12 col max-w-5xl"></app-account-activity>
+  </app-tabs>
+</ng-container>

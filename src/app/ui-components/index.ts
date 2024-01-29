@@ -1,5 +1,6 @@
 export * from './components';
 export * from './config';
+export * from './constants';
 export * from './providers';
 export * from './types';
-export * from './ui-components.module';
+export { UiComponentsModule } from './ui-components.module';

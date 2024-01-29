@@ -1,12 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-import { ObjectUtils } from '../../utils';
-import { HttpOptions, HttpOptionsBuilder } from '../../types';
 import { apiBaseUrlToken, httpHeadersConfigToken } from '../../config';
-import { LocalStorageService } from '../local-storage/local-storage.service';
 import { StorageKey } from '../../constants';
+import { HttpOptions, HttpOptionsBuilder } from '../../types';
+import { ObjectUtils } from '../../utils';
+import { LocalStorageService } from '../local-storage/local-storage.service';
 
 interface Credentials {
   accessToken: string;
@@ -20,17 +19,17 @@ export class HttpCrudService {
 
   constructor(
     private httpClient: HttpClient,
-    @Inject(apiBaseUrlToken) private readonly baseUrl: string,
+    @Inject(apiBaseUrlToken) private readonly _baseUrlToken: string,
     @Inject(httpHeadersConfigToken)
-    private readonly httpHeadersConfig: Record<string, string | number>,
+    private readonly _httpHeadersConfig: Record<string, string | number>,
     @Inject(LocalStorageService)
-    private readonly localStorage: LocalStorageService
+    private readonly _localStorage: LocalStorageService
   ) {
-    this.headers = new HttpHeaders(httpHeadersConfig);
+    this.headers = new HttpHeaders(_httpHeadersConfig);
   }
 
   public buildOptions(params?: HttpParams): HttpOptions {
-    const credentials = this.localStorage.get<Credentials>(StorageKey.USER_CREDENTIALS);
+    const credentials = this._localStorage.get<Credentials>(StorageKey.USER_CREDENTIALS);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${credentials?.accessToken}`,
@@ -46,42 +45,42 @@ export class HttpCrudService {
     return httpOptionsBuilder.build();
   }
 
-  public find(path: string): Observable<unknown> {
+  public find<TResponse = unknown>(path: string): Observable<TResponse> {
     const url = this.getUrl(path);
     const options = this.buildOptions();
 
-    return this.httpClient.get<unknown>(url, options);
+    return this.httpClient.get<TResponse>(url, options);
   }
 
-  public create<TRequest>(path: string, data?: TRequest): Observable<unknown> {
+  public create<TRequest, TResponse = void>(path: string, data?: TRequest): Observable<TResponse> {
     const url = this.getUrl(path);
     const options = this.buildOptions();
 
-    return this.httpClient.post<unknown>(url, data, options);
+    return this.httpClient.post<TResponse>(url, data, options);
   }
 
-  public update<TRequest>(path: string, data?: TRequest): Observable<unknown> {
+  public update<TRequest, TResponse = void>(path: string, data?: TRequest): Observable<TResponse> {
     const url = this.getUrl(path);
     const options = this.buildOptions();
 
-    return this.httpClient.put<unknown>(url, data, options);
+    return this.httpClient.put<TResponse>(url, data, options);
   }
 
-  public patch<TRequest>(path: string, data?: TRequest): Observable<unknown> {
+  public patch<TRequest, TResponse = void>(path: string, data?: TRequest): Observable<TResponse> {
     const url = this.getUrl(path);
     const options = this.buildOptions();
 
-    return this.httpClient.patch<unknown>(url, data, options);
+    return this.httpClient.patch<TResponse>(url, data, options);
   }
 
-  public remove(path: string): Observable<unknown> {
+  public remove<TResponse = void>(path: string): Observable<TResponse> {
     const url = this.getUrl(path);
     const options = this.buildOptions();
 
-    return this.httpClient.delete<unknown>(url, options);
+    return this.httpClient.delete<TResponse>(url, options);
   }
 
   private getUrl(path: string): string {
-    return `${this.baseUrl}${path}`;
+    return `${this._baseUrlToken}${path}`;
   }
 }

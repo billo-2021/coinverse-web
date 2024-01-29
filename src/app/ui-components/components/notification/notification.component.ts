@@ -7,7 +7,17 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { StatusType } from './notification.type';
+
+export type NotificationStatus = 'error' | 'info' | 'success' | 'warning';
+
+export interface NotificationComponentInput {
+  status: NotificationStatus;
+  hasIcon: boolean;
+}
+
+export interface NotificationComponentOutput {
+  closeClicked: EventEmitter<void>;
+}
 
 @Component({
   selector: 'app-notification',
@@ -16,12 +26,14 @@ import { StatusType } from './notification.type';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationComponent {
-  @Input() public status: StatusType = 'info';
+export class NotificationComponent
+  implements NotificationComponentInput, NotificationComponentOutput
+{
+  @Input() public status: NotificationStatus = 'info';
   @Input() public hasIcon = false;
   @Output() public closeClicked = new EventEmitter<void>();
 
-  @HostBinding('class') private _classes = 'block max-w-md m-auto mb-6';
+  @HostBinding('class') private _classes = 'block mb-6';
 
   public onClose() {
     this.closeClicked.emit();

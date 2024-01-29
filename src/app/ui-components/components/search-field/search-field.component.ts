@@ -8,6 +8,16 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+export interface SearchFieldComponentInput {
+  value: string;
+  placeholder: string;
+  disabled: boolean;
+}
+
+export interface SearchFieldComponentOutput {
+  valueChange: EventEmitter<string>;
+}
+
 @Component({
   selector: 'app-search-field',
   templateUrl: './search-field.component.html',
@@ -15,10 +25,10 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchFieldComponent {
+export class SearchFieldComponent implements SearchFieldComponentInput, SearchFieldComponentOutput {
   @Input() public value = '';
   @Input() public placeholder = 'Type to search';
-  @Input() public isDisabled = false;
+  @Input() public disabled = false;
 
   @Output() public valueChange = new EventEmitter<string>();
 

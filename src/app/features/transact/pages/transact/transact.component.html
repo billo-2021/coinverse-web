@@ -9,28 +9,31 @@
       text="View History"></app-button>
   </div>
   <app-card
-    *ngIf="viewModel.currentStepIndex !== TRANSACT_STEPS.TRANSACT_CONFIRMATION"
+    *ngIf="viewModel.currentStepIndex !== TransactStep.TRANSACT_CONFIRMATION"
     class="max-w-md">
     <app-stepper
-      (currentStepIndexChange)="onStepChanged($event)"
-      [currentStepIndex]="viewModel.currentStepIndex"
-      [steps]="transactSteps"
+      (activeStepIndexChange)="onStepChanged($event)"
+      [activeStepIndex]="viewModel.currentStepIndex"
+      [steps]="TransactSteps"
       class="mt-6">
     </app-stepper>
     <app-transact-form
       (activeTabIndexChange)="onActiveTabIndexChange($event)"
       (submitClicked)="onRequestTransaction($event)"
-      *ngIf="viewModel.currentStepIndex === TRANSACT_STEPS.TRANSACT_REQUEST"
+      *ngIf="viewModel.currentStepIndex === TransactStep.TRANSACT_REQUEST"
       [activeTabIndex]="viewModel.activeTabIndex"
-      [currencyCode]="viewModel.currencyCode">
+      [currencyCode]="viewModel.currencyCode"
+      [currencyOptions]="viewModel.currencyOptions"
+      [paymentMethodOptions]="viewModel.paymentMethodOptions"
+      [walletOptions]="viewModel.walletOptions">
     </app-transact-form>
     <app-transact-bank-details-form
-      (saveClicked)="viewModel.activeTabIndex === TABS.DEPOSIT ? onDeposit() : onWithDraw()"
-      *ngIf="viewModel.currentStepIndex === TRANSACT_STEPS.BANK_DETAILS">
+      (saveClicked)="viewModel.activeTabIndex === TransactTabType.DEPOSIT ? onDeposit() : onWithDraw()"
+      *ngIf="viewModel.currentStepIndex === TransactStep.BANK_DETAILS">
     </app-transact-bank-details-form>
   </app-card>
   <app-card
-    *ngIf="viewModel.currentStepIndex === TRANSACT_STEPS.TRANSACT_CONFIRMATION"
+    *ngIf="viewModel.currentStepIndex === TransactStep.TRANSACT_CONFIRMATION"
     class="max-w-md">
     <app-transact-confirmation
       (payAgainClicked)="onPayAgain()"

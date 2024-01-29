@@ -7,10 +7,15 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-
 import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
 import { NgOtpInputComponent } from 'ng-otp-input';
+
+export interface OtpInputComponentInput {
+  name: string;
+  label: string;
+  length: number;
+  allowNumbersOnly: boolean;
+}
 
 @Component({
   selector: 'app-otp-input',
@@ -19,23 +24,17 @@ import { NgOtpInputComponent } from 'ng-otp-input';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OtpInputComponent {
+export class OtpInputComponent implements OtpInputComponentInput {
   @Input() public name = '';
   @Input() public label = '';
   @Input() public length = 8;
   @Input() public allowNumbersOnly = true;
-  @ViewChild('ngOtpInput') ngOtpInputRef?: NgOtpInputComponent;
 
-  private _disabled = new BehaviorSubject<boolean>(false);
+  @ViewChild('ngOtpInput') ngOtpInputRef?: NgOtpInputComponent;
 
   @HostBinding('class') private _classes = 'block';
 
   public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
-
-  @Input()
-  public set isDisabled(value: boolean) {
-    this._disabled.next(value);
-  }
 
   protected get formGroup(): FormGroup | null {
     return this._formGroupDirective?.form || null;
