@@ -11,6 +11,7 @@ import {
   CryptoCurrency,
   CryptoCurrencyDto,
   UpdateCryptoCurrency,
+  UpdateUserAccountEnabled,
 } from '../../models';
 
 @Injectable({
@@ -56,17 +57,17 @@ export class AdministrationService {
   }
 
   public disableAccount(username: string): Observable<HttpMessage> {
-    return this._apiCrudClient.patch<string, HttpMessageDto, HttpMessage>(
-      'adminUsersDisableAccount',
-      username,
+    return this._apiCrudClient.patch<UpdateUserAccountEnabled, HttpMessageDto, HttpMessage>(
+      'adminUsersAccountEnabled',
+      { username, isEnabled: false },
       MappingProfile.HttpMessageDtoToHttpMessage
     );
   }
 
   public enableAccount(username: string): Observable<HttpMessage> {
-    return this._apiCrudClient.patch<string, HttpMessageDto, HttpMessage>(
-      'adminUsersEnableAccount',
-      username,
+    return this._apiCrudClient.patch<UpdateUserAccountEnabled, HttpMessageDto, HttpMessage>(
+      'adminUsersAccountEnabled',
+      { username, isEnabled: true },
       MappingProfile.HttpMessageDtoToHttpMessage
     );
   }

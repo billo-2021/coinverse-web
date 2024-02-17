@@ -10,3 +10,4 @@ export { UserAccountRequest } from './user-account-request';
 export { UserPreferenceRequest } from './user-preference-request';
 export { UserAddressRequest } from './user-address-request';
 export { AddUser } from './add-user';
+export { UpdateUserAccountEnabled } from './update-user-account-enabled';

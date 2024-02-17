@@ -41,8 +41,8 @@ export class ManageUsersComponent implements Page {
   private readonly _reload$ = new ReplaySubject<void>();
   private readonly _usersPagination$ = new BehaviorSubject<Pagination>(this._paginationToken);
 
-  private readonly _userPage$ = combineLatest([this._usersPagination$]).pipe(
-    switchMap((query) => this._administrationService.getUsers(...query).pipe(shareReplay(1))),
+  private readonly _userPage$ = combineLatest([this._reload$, this._usersPagination$]).pipe(
+    switchMap(({ 1: query }) => this._administrationService.getUsers(query).pipe(shareReplay(1))),
     startWith<PageResponse<AdminUser>>(PAGE_OPTIONS)
   );
 
@@ -56,7 +56,9 @@ export class ManageUsersComponent implements Page {
     private readonly _navigationService: NavigationService,
     private readonly _alertService: AlertService,
     private readonly _administrationService: AdministrationService
-  ) {}
+  ) {
+    this._reload$.next();
+  }
 
   public set usersPagination(pagination: Pagination) {
     this._usersPagination$.next(pagination);
