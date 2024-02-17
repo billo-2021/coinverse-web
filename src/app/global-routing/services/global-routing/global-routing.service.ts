@@ -1,5 +1,15 @@
 import { Injectable, Self } from '@angular/core';
-import { distinctUntilChanged, filter, map, merge, Observable, switchMap, tap, timer } from 'rxjs';
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  merge,
+  Observable,
+  skip,
+  switchMap,
+  tap,
+  timer,
+} from 'rxjs';
 import {
   AccountVerificationStoreService,
   DestroyService,
@@ -62,6 +72,7 @@ export class GlobalRoutingService extends Observable<void> {
 
   private get _isLoggedIn$(): Observable<true> {
     return this._userPrincipalStore$.userLoggedIn$.pipe(
+      skip(1),
       distinctUntilChanged(),
       filter((userLoggedIn): userLoggedIn is true => userLoggedIn)
     );
