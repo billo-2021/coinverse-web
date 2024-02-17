@@ -1,17 +1,12 @@
 import { Injectable, Self } from '@angular/core';
-import { combineLatest, filter, map, merge, Observable, switchMap, tap, timer } from 'rxjs';
+import { distinctUntilChanged, filter, map, merge, Observable, switchMap, tap, timer } from 'rxjs';
 import {
   AccountVerificationStoreService,
   DestroyService,
   UserAccessCredentials,
   UserPrincipalStoreService,
 } from '../../../core';
-import {
-  NavigationParam,
-  NavigationService,
-  RedirectService,
-  UserPermissionsService,
-} from '../../../common';
+import { NavigationService, RedirectService, UserPermissionsService } from '../../../common';
 import { AccountVerification } from '../../../domain';
 
 @Injectable({ providedIn: 'root' })
@@ -21,12 +16,12 @@ export class GlobalRoutingService extends Observable<void> {
     this._redirectService.pipe(),
     this.missingVerification$.pipe(tap(() => this._navigationService.to('verifyAccount').then())),
     this.verification$.pipe(tap(() => this._navigationService.to('root').then())),
-    this.login$.pipe(tap(() => this._redirectService.redirect('dashboard'))),
-    this.autoLogoutTimer$.pipe(
-      tap(() => {
-        this._userPrincipalStore$.logOut();
-        this._navigationService.to('login').then();
-      })
+    this._isLoggedIn$.pipe(tap(() => this._redirectService.redirect('dashboard'))),
+    this.autoLogoutTimer$.pipe(tap(() => this._userPrincipalStore$.logOut())),
+    this._userPrincipalStore$.userLoggedIn$.pipe(
+      distinctUntilChanged(),
+      filter((userLoggedIn) => !userLoggedIn),
+      tap(() => this._navigationService.to('login').then())
     )
   ).pipe(switchMap(() => new Observable<void>((observer) => observer.next())));
 
@@ -52,16 +47,6 @@ export class GlobalRoutingService extends Observable<void> {
     return this._verification$.pipe(filter((userVerification) => userVerification.isVerified));
   }
 
-  public get login$(): Observable<NavigationParam[]> {
-    return combineLatest([this._isLoggedIn$, this._navigationService.history$]).pipe(
-      filter(
-        ([isLoggedIn, history]) =>
-          isLoggedIn && history.length > 0 && history[history.length - 1] === 'login'
-      ),
-      map(({ 1: history }) => history)
-    );
-  }
-
   public get autoLogoutTimer$(): Observable<0> {
     return this._userPrincipalStore$.accessCredentials$.pipe(
       filter(
@@ -77,6 +62,7 @@ export class GlobalRoutingService extends Observable<void> {
 
   private get _isLoggedIn$(): Observable<true> {
     return this._userPrincipalStore$.userLoggedIn$.pipe(
+      distinctUntilChanged(),
       filter((userLoggedIn): userLoggedIn is true => userLoggedIn)
     );
   }

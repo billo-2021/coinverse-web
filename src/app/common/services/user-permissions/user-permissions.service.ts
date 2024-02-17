@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { combineLatest, map, Observable, shareReplay } from 'rxjs';
+import { combineLatest, map, Observable, startWith } from 'rxjs';
 import {
   AccountVerification,
   AccountVerificationStoreService,
@@ -26,8 +26,8 @@ export class UserPermissionsService extends Observable<UserPermissions> {
     private readonly _accountVerificationStore$: AccountVerificationStoreService,
     @Inject(menuItemsToken) private readonly _menuItems: MenuItem[]
   ) {
-    super((subscriber) => {
-      return combineLatest([
+    super((subscriber) =>
+      combineLatest([
         this.userLoggedIn$,
         this.userPrincipal$,
         this.isAdmin$,
@@ -41,27 +41,25 @@ export class UserPermissionsService extends Observable<UserPermissions> {
             isAdmin,
             isMenuShown: isMenuShown,
             menuItems,
-          })),
-          shareReplay(1)
+          }))
         )
-        .subscribe(subscriber);
-    });
+        .subscribe(subscriber)
+    );
 
     this.userPrincipal$ = this._userPrincipalStore$.asObservable();
-    this.userLoggedIn$ = this._userPrincipalStore$.userLoggedIn$.pipe();
-    this.isAdmin$ = this._userPrincipalStore$.isAdmin$.pipe();
+    this.userLoggedIn$ = this._userPrincipalStore$.userLoggedIn$;
+    this.isAdmin$ = this._userPrincipalStore$.isAdmin$;
 
     this.isMenuShown$ = combineLatest([this.userLoggedIn$, this.userPrincipal$]).pipe(
       map(
         ([userLoggedIn, userPrincipal]) =>
           userLoggedIn && !!userPrincipal && userPrincipal.isVerified
       ),
-      shareReplay(1)
+      startWith(false)
     );
 
     this.menuItems$ = this.isAdmin$.pipe(
-      map((isAdmin) => this.getMenuItems(isAdmin ? 'admin' : 'customer')),
-      shareReplay(1)
+      map((isAdmin) => this.getMenuItems(isAdmin ? 'admin' : 'customer'))
     );
   }
 

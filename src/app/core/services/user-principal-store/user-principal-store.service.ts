@@ -1,21 +1,9 @@
-import { Injectable, Self } from '@angular/core';
-import {
-  BehaviorSubject,
-  combineLatest,
-  map,
-  Observable,
-  shareReplay,
-  skip,
-  takeUntil,
-  tap,
-} from 'rxjs';
-
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { DateTime } from 'luxon';
 import { JwtHelperService } from '@auth0/angular-jwt';
-
 import { StorageKey } from '../../constants';
 import { UserAccessCredentials, UserPrincipal } from '../../models';
-import { DestroyService } from '../destroy/destroy.service';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { UserAccessCredentialsStoreService } from '../user-access-credentials-store/user-access-credentials-store.service';
 
@@ -31,24 +19,31 @@ export const TOKEN_EXPIRY_OFFSET: TokenExpiryOffset = {
   providedIn: 'root',
 })
 export class UserPrincipalStoreService extends BehaviorSubject<UserPrincipal | null> {
-  public readonly userLoggedIn$: Observable<boolean>;
-  public readonly isAdmin$: Observable<boolean>;
-  public readonly accessCredentials$: Observable<UserAccessCredentials | null>;
+  public readonly accessCredentials$: Observable<UserAccessCredentials | null> =
+    this._userAccessCredentialsStore$;
+
+  public readonly userLoggedIn$: Observable<boolean> = combineLatest([
+    this.pipe(),
+    this.accessCredentials$,
+  ]).pipe(
+    map(([userPrincipal, userCredentials]) =>
+      this._isUserAccessCredentialsValid(userPrincipal, userCredentials)
+    )
+  );
+
+  public readonly isAdmin$: Observable<boolean> = this.pipe(
+    map(
+      (userPrincipal) =>
+        !!userPrincipal && userPrincipal.roles.some((role) => role.toLowerCase().includes('admin'))
+    )
+  );
 
   constructor(
     private readonly _localStorageService: LocalStorageService,
     private readonly _jwtHelperService: JwtHelperService,
-    private readonly _userAccessCredentialsStore$: UserAccessCredentialsStoreService,
-    @Self() private readonly _destroy$: DestroyService
+    private readonly _userAccessCredentialsStore$: UserAccessCredentialsStoreService
   ) {
     super(_localStorageService.get<UserPrincipal>(StorageKey.USER));
-    this.pipe(
-      skip(1),
-      tap((userPrincipal) => this.updateStorage(userPrincipal)),
-      takeUntil(this._destroy$)
-    ).subscribe();
-
-    this.accessCredentials$ = this._userAccessCredentialsStore$.pipe(shareReplay(1));
 
     const userPrincipal = this.getValue();
     const userAccessCredentials = this.accessCredentials;
@@ -57,22 +52,6 @@ export class UserPrincipalStoreService extends BehaviorSubject<UserPrincipal | n
       this.next(null);
       this.accessCredentials = null;
     }
-
-    this.userLoggedIn$ = combineLatest([this.pipe(), this.accessCredentials$]).pipe(
-      map(([userPrincipal, userCredentials]) =>
-        this.isUserAccessCredentialsValid(userPrincipal, userCredentials)
-      ),
-      shareReplay(1)
-    );
-
-    this.isAdmin$ = this.pipe(
-      map(
-        (userPrincipal) =>
-          !!userPrincipal &&
-          userPrincipal.roles.some((role) => role.toLowerCase().includes('admin'))
-      ),
-      shareReplay(1)
-    );
   }
 
   public get accessCredentials(): UserAccessCredentials | null {
@@ -91,17 +70,13 @@ export class UserPrincipalStoreService extends BehaviorSubject<UserPrincipal | n
     );
   }
 
-  public updateStorage(userPrincipal: UserPrincipal | null): void {
-    if (userPrincipal == null) {
-      this._localStorageService.remove(StorageKey.USER);
-      return;
-    }
-
-    this._localStorageService.set(StorageKey.USER, userPrincipal);
+  public override next(value: UserPrincipal | null): void {
+    super.next(value);
+    this._updateUserPrincipalStorage(value);
   }
 
   public isLoggedIn(): boolean {
-    return this.isUserAccessCredentialsValid(this.getValue(), this.accessCredentials);
+    return this._isUserAccessCredentialsValid(this.getValue(), this.accessCredentials);
   }
 
   public logOut(): void {
@@ -109,7 +84,7 @@ export class UserPrincipalStoreService extends BehaviorSubject<UserPrincipal | n
     this.accessCredentials = null;
   }
 
-  public setLoggedInUser(loggedInUser: (UserPrincipal & UserAccessCredentials) | null) {
+  public setUserDetails(loggedInUser: (UserPrincipal & UserAccessCredentials) | null): void {
     if (loggedInUser === null) {
       this.next(null);
       this.accessCredentials = null;
@@ -136,7 +111,7 @@ export class UserPrincipalStoreService extends BehaviorSubject<UserPrincipal | n
     this.accessCredentials = userCredentials;
   }
 
-  public getLoggedInUser(): (UserPrincipal & UserAccessCredentials) | null {
+  public getUserDetails(): (UserPrincipal & UserAccessCredentials) | null {
     const userPrincipal = this.getValue();
     const userCredentials = this.accessCredentials;
 
@@ -152,11 +127,19 @@ export class UserPrincipalStoreService extends BehaviorSubject<UserPrincipal | n
 
   public getTokenExpiryDate(token: string): Date {
     const tokenExpiryDate = this._jwtHelperService.getTokenExpirationDate(token) || new Date();
-
     return DateTime.fromJSDate(tokenExpiryDate).minus(TOKEN_EXPIRY_OFFSET).toJSDate();
   }
 
-  private isUserAccessCredentialsValid(
+  private _updateUserPrincipalStorage(userPrincipal: UserPrincipal | null): void {
+    if (userPrincipal == null) {
+      this._localStorageService.remove(StorageKey.USER);
+      return;
+    }
+
+    this._localStorageService.set(StorageKey.USER, userPrincipal);
+  }
+
+  private _isUserAccessCredentialsValid(
     userPrincipal: UserPrincipal | null,
     userCredentials: UserAccessCredentials | null
   ): boolean {
@@ -165,13 +148,10 @@ export class UserPrincipalStoreService extends BehaviorSubject<UserPrincipal | n
     }
 
     const accessToken = userCredentials.accessToken;
-
-    const isTokenExpired = this.isTokenExpired(accessToken);
-
-    return !isTokenExpired;
+    return !this._isTokenExpired(accessToken);
   }
 
-  private isTokenExpired(token: string): boolean {
+  private _isTokenExpired(token: string): boolean {
     return this._jwtHelperService.isTokenExpired(token, TOKEN_EXPIRY_OFFSET.seconds);
   }
 }

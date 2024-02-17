@@ -1,5 +1,5 @@
 import { Injectable, Self } from '@angular/core';
-import { BehaviorSubject, skip, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { StorageKey } from '../../constants';
 import { UserAccessCredentials } from '../../models';
 import { DestroyService } from '../destroy/destroy.service';
@@ -14,15 +14,14 @@ export class UserAccessCredentialsStoreService extends BehaviorSubject<UserAcces
     @Self() private readonly _destroy$: DestroyService
   ) {
     super(_localStorageService.get<UserAccessCredentials>(StorageKey.USER_CREDENTIALS));
-
-    this.pipe(
-      skip(1),
-      tap((accessCredentials) => this.updateStorage(accessCredentials)),
-      takeUntil(this._destroy$)
-    ).subscribe();
   }
 
-  private updateStorage(userCredentials: UserAccessCredentials | null): void {
+  public override next(value: UserAccessCredentials | null): void {
+    super.next(value);
+    this._updateUserAccessCredentialsStorage(value);
+  }
+
+  private _updateUserAccessCredentialsStorage(userCredentials: UserAccessCredentials | null): void {
     if (userCredentials == null) {
       this._localStorageService.remove(StorageKey.USER_CREDENTIALS);
       return;

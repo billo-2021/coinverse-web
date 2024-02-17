@@ -87,7 +87,6 @@ export class AppComponent {
 
   public onSignOut(): void {
     this._userPrincipalStore$.logOut();
-    this._navigationService.to('root').then();
   }
 
   public onGotoProfile(): void {
