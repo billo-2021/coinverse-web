@@ -7,7 +7,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { SizeL, SizeS } from '../../../common';
+import { SizeL, SizeS } from '../../../shared';
 import { Status } from '../../types';
 
 export type LeftContentType = '' | 'Error icon';

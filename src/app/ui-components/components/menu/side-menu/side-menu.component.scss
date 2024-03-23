@@ -1,62 +1,54 @@
 @use '@taiga-ui/core/styles/mixins/mixins' as mixins;
 
-.box {
-  height: 100px;
-  @include mixins.shadow(6);
-  border-bottom: 1px solid var(--tui-base-02);
+$primary-clr: #6788ff;
+$side-menu-height: 3.5rem;
+$side-menu-width: 12rem;
+$side-menu-header-height: 3.5rem;
+$side-menu-border-width: 1px;
+$menu-item-height: 3.5rem;
+$side-menu-header-bg: linear-gradient(225deg, #3023ae, #c86dd7);
+$size-sm: 1px;
+
+@mixin border-right($color: $primary-clr, $width: $side-menu-border-width) {
+  border-left: $width solid $color;
 }
 
-.link {
-  padding: 1rem;
-  border-bottom: solid 1px var(--tui-base-01);
-  //background: var(--tui-base-02);
-}
-
-.side-menu-content {
-  margin-top: 1px;
-  row-gap: 1px;
-}
-
-.link.selected {
-  background: var(--tui-base-03);
-}
-
-.menu-toggle {
-  height: 3.4rem;
-  border-right: solid 1px var(--tui-primary);
-  background: var(--tui-primary);
-}
-
-.side-menu-header {
-  height: 3.4rem;
-  background: var(--tui-primary);
-}
-
-.side-menu-over {
-  width: 100%;
-  @include mixins.shadow(6);
-}
-
-.side-menu-push {
-  width: 12rem;
-}
-
-.logo {
+@mixin flex($direction: row, $align-items: center, $text-align: center) {
   display: flex;
-  align-items: center;
-  text-align: center;
-  height: 3.4rem;
-  color: var(--tui-base-01);
+  flex-direction: $direction;
+  align-items: $align-items;
+  text-align: $text-align;
 }
 
-.icon {
-  color: var(--tui-base-01);
+app-side-menu, .side-menu-mobile {
+  display: block;
+  height: 100%;
+
+  .side-menu-content {
+    margin-top: $size-sm;
+    row-gap: $size-sm;
+  }
+
+  .side-menu-header {
+    height: $side-menu-header-height;
+    @include border-right();
+    background-image: $side-menu-header-bg;
+  }
+
+  .logo {
+    @include flex($direction: column);
+    //$side-menu-header-height: 3.4rem;
+  }
+
+  .icon {
+    //color: var(--tui-base-01);
+  }
+
+  .side-menu-logo .t-content, .side-menu-logo .t-icon {
+    color: var(--tui-base-01);
+  }
 }
 
-.active {
-  color: var(--tui-primary) !important;
-}
-
-.side-menu-logo .t-content, .side-menu-logo .t-icon {
-  color: var(--tui-base-01);
+.side-menu-mobile {
+  width: 100%;
 }

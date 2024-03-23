@@ -8,7 +8,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { Pagination, paginationToken, TOTAL_ITEMS } from '../../../../ui-components';
+import { Pagination, PAGINATION_TOKEN, TOTAL_ITEMS } from '../../../../ui-components';
 import { Payment } from '../../../../domain';
 
 export const KEYS = {
@@ -43,7 +43,7 @@ export interface TransactionsComponentOutput {
 export class TransactionsComponent
   implements TransactionsComponentInput, TransactionsComponentOutput
 {
-  @Input() public pagination: Pagination = this._paginationToken;
+  @Input() public pagination: Pagination = this._pagination;
   @Input() public payments: readonly Payment[] = [];
   @Input() public total: number = TOTAL_ITEMS;
 
@@ -54,7 +54,7 @@ export class TransactionsComponent
 
   @HostBinding('class') private _classes = 'block';
 
-  public constructor(@Inject(paginationToken) private readonly _paginationToken: Pagination) {}
+  public constructor(@Inject(PAGINATION_TOKEN) private readonly _pagination: Pagination) {}
 
   public onPagination(page: Pagination): void {
     this.paginationChanged.next(page);

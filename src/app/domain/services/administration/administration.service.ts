@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpMessage, HttpMessageDto, PageRequest, PageResponse } from '../../../core';
-import { ApiCrudClient } from '../../../common';
+import {
+  ApiCrudClient,
+  ApiRoute,
+  HttpMessage,
+  HttpMessageDto,
+  PageRequest,
+  PageResponse,
+} from '../../../shared';
 import { MappingProfile } from '../../config';
 import {
   AddCryptoCurrency,
@@ -22,7 +28,7 @@ export class AdministrationService {
 
   public addCryptoCurrency(cryptoCurrencyRequest: AddCryptoCurrency): Observable<CryptoCurrency> {
     return this._apiCrudClient.create<AddCryptoCurrency, CryptoCurrencyDto, CryptoCurrency>(
-      'adminCryptoCurrencies',
+      ApiRoute.ADMIN_CRYPTO_CURRENCIES,
       cryptoCurrencyRequest,
       MappingProfile.CryptoCurrencyDtoToCryptoCurrency
     );
@@ -33,7 +39,7 @@ export class AdministrationService {
     cryptoCurrencyRequest: UpdateCryptoCurrency
   ): Observable<CryptoCurrency> {
     return this._apiCrudClient.patchBy<UpdateCryptoCurrency, CryptoCurrencyDto, CryptoCurrency>(
-      'adminCryptoCurrencies',
+      ApiRoute.ADMIN_CRYPTO_CURRENCIES,
       currencyCode,
       cryptoCurrencyRequest,
       MappingProfile.CryptoCurrencyDtoToCryptoCurrency
@@ -42,7 +48,7 @@ export class AdministrationService {
 
   public getUsers(pageRequest: PageRequest): Observable<PageResponse<AdminUser>> {
     return this._apiCrudClient.findMany<AdminUserDto, AdminUser>(
-      'adminUsers',
+      ApiRoute.ADMIN_USERS,
       pageRequest,
       MappingProfile.AdminUserDtoPageToAdminUserPage
     );
@@ -50,7 +56,7 @@ export class AdministrationService {
 
   public addUser(userRequest: AddUser): Observable<HttpMessage> {
     return this._apiCrudClient.create<AddUser, HttpMessageDto, HttpMessage>(
-      'adminUsers',
+      ApiRoute.ADMIN_USERS,
       userRequest,
       MappingProfile.HttpMessageDtoToHttpMessage
     );
@@ -58,7 +64,7 @@ export class AdministrationService {
 
   public disableAccount(username: string): Observable<HttpMessage> {
     return this._apiCrudClient.patch<UpdateUserAccountEnabled, HttpMessageDto, HttpMessage>(
-      'adminUsersAccountEnabled',
+      ApiRoute.ADMIN_USERS_ACCOUNT_ENABLED,
       { username, isEnabled: false },
       MappingProfile.HttpMessageDtoToHttpMessage
     );
@@ -66,7 +72,7 @@ export class AdministrationService {
 
   public enableAccount(username: string): Observable<HttpMessage> {
     return this._apiCrudClient.patch<UpdateUserAccountEnabled, HttpMessageDto, HttpMessage>(
-      'adminUsersAccountEnabled',
+      ApiRoute.ADMIN_USERS_ACCOUNT_ENABLED,
       { username, isEnabled: true },
       MappingProfile.HttpMessageDtoToHttpMessage
     );

@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   HostBinding,
+  Inject,
   Input,
   Optional,
   ViewChild,
@@ -10,6 +12,7 @@ import {
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { TuiInputPasswordComponent } from '@taiga-ui/kit';
 import { InputFieldSize } from '../../types';
+import { FOCUS_OPTIONS_TOKEN, FocusOptions } from '../../../shared';
 
 export interface PasswordFieldComponentInput {
   size: InputFieldSize;
@@ -38,13 +41,19 @@ export class PasswordFieldComponent implements PasswordFieldComponentInput {
   @ViewChild(TuiInputPasswordComponent) private _inputPasswordRef?: TuiInputPasswordComponent;
   @HostBinding('class') private _classes = 'block';
 
-  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
+  public constructor(
+    @Inject(FOCUS_OPTIONS_TOKEN) private readonly _focusOptionsToken: FocusOptions,
+    private readonly _changeDetectorRef: ChangeDetectorRef,
+    @Optional() private readonly _formGroupDirective: FormGroupDirective
+  ) {}
 
   protected get formGroup(): FormGroup<Record<string, AbstractControl<unknown, unknown>>> {
     return this._formGroupDirective?.form || null;
   }
 
-  public focusInput(preventScroll: boolean) {
+  public focus(options?: FocusOptions): void {
+    const { preventScroll } = options ?? this._focusOptionsToken;
     this._inputPasswordRef?.nativeFocusableElement?.focus({ preventScroll: preventScroll });
+    this._changeDetectorRef.detectChanges();
   }
 }

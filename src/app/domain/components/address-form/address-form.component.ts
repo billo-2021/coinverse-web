@@ -11,7 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormBase, Required } from '../../../common';
+import { FormBase, FormValidators } from '../../../shared';
 import { ListOption } from '../../../form-components';
 import { Country } from '../../models';
 
@@ -36,12 +36,12 @@ export interface AddressFormComponentOutput {
 
 export function getAddressForm(): AddressForm {
   return {
-    addressLine: new FormControl<string>('', Required),
-    street: new FormControl<string>('', Required),
-    country: new FormControl<ListOption<Country> | null>(null, Required),
-    province: new FormControl<string>('', Required),
-    city: new FormControl<string>('', Required),
-    postalCode: new FormControl<string>('', Required),
+    addressLine: new FormControl<string>('', FormValidators.Required),
+    street: new FormControl<string>('', FormValidators.Required),
+    country: new FormControl<ListOption<Country> | null>(null, FormValidators.Required),
+    province: new FormControl<string>('', FormValidators.Required),
+    city: new FormControl<string>('', FormValidators.Required),
+    postalCode: new FormControl<string>('', FormValidators.Required),
   };
 }
 

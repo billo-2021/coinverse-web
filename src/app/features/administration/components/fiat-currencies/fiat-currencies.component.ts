@@ -8,7 +8,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { Pagination, paginationToken, TOTAL_ITEMS } from '../../../../ui-components';
+import { Pagination, PAGINATION_TOKEN, TOTAL_ITEMS } from '../../../../ui-components';
 import { Currency } from '../../../../domain';
 
 export const KEYS = {
@@ -41,7 +41,7 @@ export interface FiatCurrenciesComponentOutput {
 export class FiatCurrenciesComponent
   implements FiatCurrenciesComponentInput, FiatCurrenciesComponentOutput
 {
-  @Input() public pagination: Pagination = this._paginationToken;
+  @Input() public pagination: Pagination = this._pagination;
   @Input() public currencies: readonly Currency[] = [];
   @Input() public total: number = TOTAL_ITEMS;
 
@@ -54,7 +54,7 @@ export class FiatCurrenciesComponent
 
   @HostBinding('class') private _classes = 'block';
 
-  public constructor(@Inject(paginationToken) private readonly _paginationToken: Pagination) {}
+  public constructor(@Inject(PAGINATION_TOKEN) private readonly _pagination: Pagination) {}
 
   public async onEditCurrency(currencyCode: string): Promise<void> {
     this.editCurrencyClicked.emit(currencyCode);

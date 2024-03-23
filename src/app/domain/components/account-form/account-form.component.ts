@@ -11,7 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormBase, Required } from '../../../common';
+import { FormBase, FormValidators } from '../../../shared';
 import { ListOption } from '../../../form-components';
 import { UserRole } from '../../models';
 
@@ -35,9 +35,9 @@ export interface AccountFormComponentOutput {
 
 export function getAccountForm(): AccountForm {
   return {
-    username: new FormControl<string>('', Required),
-    password: new FormControl<string>('', Required),
-    role: new FormControl<ListOption<UserRole> | null>(null, Required),
+    username: new FormControl<string>('', FormValidators.Required),
+    password: new FormControl<string>('', FormValidators.Required),
+    role: new FormControl<ListOption<UserRole> | null>(null, FormValidators.Required),
   };
 }
 

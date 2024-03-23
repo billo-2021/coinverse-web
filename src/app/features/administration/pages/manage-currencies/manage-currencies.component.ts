@@ -14,9 +14,8 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { PageResponse } from '../../../../core';
-import { NavigationService, ViewPage } from '../../../../common';
-import { PAGE_OPTIONS, Pagination, paginationToken, Tab } from '../../../../ui-components';
+import { NavigationController, PageResponse, ViewPage, WebRoute } from '../../../../shared';
+import { PAGE_OPTIONS, Pagination, PAGINATION_TOKEN, Tab } from '../../../../ui-components';
 import { CryptoCurrency, Currency, LookupService } from '../../../../domain';
 
 export enum CurrencyTab {
@@ -62,18 +61,14 @@ export class ManageCurrenciesComponent implements ViewPage<ManageCurrenciesViewM
     CurrencyTab.CryptoCurrencies
   );
 
-  private readonly _cryptoCurrenciesPagination$ = new BehaviorSubject<Pagination>(
-    this._paginationToken
-  );
+  private readonly _cryptoCurrenciesPagination$ = new BehaviorSubject<Pagination>(this._pagination);
 
   private readonly _cryptoCurrencyPage$ = combineLatest([this._cryptoCurrenciesPagination$]).pipe(
     switchMap((query) => this._lookupService.getCryptoCurrencies(...query).pipe(shareReplay(1))),
     startWith<PageResponse<CryptoCurrency>>(PAGE_OPTIONS)
   );
 
-  private readonly _fiatCurrenciesPagination$ = new BehaviorSubject<Pagination>(
-    this._paginationToken
-  );
+  private readonly _fiatCurrenciesPagination$ = new BehaviorSubject<Pagination>(this._pagination);
 
   private readonly _fiatCurrencyPage$ = combineLatest([this._fiatCurrenciesPagination$]).pipe(
     switchMap((query) =>
@@ -107,8 +102,8 @@ export class ManageCurrenciesComponent implements ViewPage<ManageCurrenciesViewM
   );
 
   public constructor(
-    @Inject(paginationToken) private readonly _paginationToken: Pagination,
-    private readonly _navigationService: NavigationService,
+    @Inject(PAGINATION_TOKEN) private readonly _pagination: Pagination,
+    private readonly _navigationController: NavigationController,
     private readonly _lookupService: LookupService
   ) {}
 
@@ -137,10 +132,12 @@ export class ManageCurrenciesComponent implements ViewPage<ManageCurrenciesViewM
   }
 
   public onEditCurrency(currencyCode: string): void {
-    this._navigationService.to({ route: 'manageCurrencies', routePath: currencyCode }).then();
+    this._navigationController
+      .to({ route: WebRoute.MANAGE_CURRENCIES, routePath: currencyCode })
+      .then();
   }
 
   public onAddCurrency(): void {
-    this._navigationService.to('newCurrency').then();
+    this._navigationController.to(WebRoute.NEW_CURRENCY).then();
   }
 }

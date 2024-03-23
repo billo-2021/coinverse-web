@@ -8,7 +8,10 @@
   subtitle="Please sign in to continue."
   title="Welcome back!">
   <app-text-field
-    (keydown.enter)="password.focusInput(false)"
+    #username
+    (keydown.enter)="password.focus()"
+    [itemToFocus]="username"
+    appAutoFocus
     label="Username"
     name="username"
     placeholder="john@gmail.com"

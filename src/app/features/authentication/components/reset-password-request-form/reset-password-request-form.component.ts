@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -10,12 +9,10 @@ import {
   Optional,
   Output,
   SkipSelf,
-  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormBase, RequiredEmail } from '../../../../common';
-import { TextFieldComponent } from '../../../../form-components';
+import { FormBase, FormValidators } from '../../../../shared';
 
 export interface ResetPasswordRequestForm {
   readonly username: FormControl<string>;
@@ -31,7 +28,7 @@ export interface ResetPasswordRequestFormComponentOutput {
 
 export function getResetPasswordRequestForm(): ResetPasswordRequestForm {
   return {
-    username: new FormControl<string>('', RequiredEmail),
+    username: new FormControl<string>('', FormValidators.RequiredEmail),
   };
 }
 
@@ -41,7 +38,7 @@ export class ResetPasswordRequestFormService extends FormBase<ResetPasswordReque
     super(getResetPasswordRequestForm());
   }
 
-  public resetForm() {
+  public resetForm(): void {
     this.controls.username.reset();
     this.markAsUntouched();
   }
@@ -55,10 +52,7 @@ export class ResetPasswordRequestFormService extends FormBase<ResetPasswordReque
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordRequestFormComponent
-  implements
-    ResetPasswordRequestFormComponentInput,
-    ResetPasswordRequestFormComponentOutput,
-    AfterViewInit
+  implements ResetPasswordRequestFormComponentInput, ResetPasswordRequestFormComponentOutput
 {
   @Input() public saveText = 'Reset password';
 
@@ -69,8 +63,6 @@ export class ResetPasswordRequestFormComponent
 
   @HostBinding('class') private _classes = 'block';
 
-  @ViewChild(TextFieldComponent) private readonly _usernameRef?: TextFieldComponent;
-
   public constructor(
     @Optional()
     @SkipSelf()
@@ -80,15 +72,6 @@ export class ResetPasswordRequestFormComponent
 
   protected get formGroup(): FormGroup<ResetPasswordRequestForm> {
     return this.form;
-  }
-
-  public ngAfterViewInit(): void {
-    if (!this._usernameRef) {
-      return;
-    }
-
-    this._usernameRef.focusInput(false);
-    this._changeDetectorRef.detectChanges();
   }
 
   public onSaveClicked(): void {

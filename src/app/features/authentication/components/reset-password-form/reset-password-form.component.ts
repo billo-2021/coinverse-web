@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostBinding,
@@ -14,7 +13,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormBase, Required } from '../../../../common';
+import { FormBase, FormValidators } from '../../../../shared';
 import { TextFieldComponent } from '../../../../form-components';
 
 export interface ResetPasswordForm {
@@ -31,7 +30,7 @@ export interface ResetPasswordComponentOutput {
 
 export function getResetPasswordForm(): ResetPasswordForm {
   return {
-    password: new FormControl<string>('', Required),
+    password: new FormControl<string>('', FormValidators.Required),
   };
 }
 
@@ -68,8 +67,7 @@ export class ResetPasswordFormComponent
   @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    @Optional() @SkipSelf() private readonly _resetPasswordForm: ResetPasswordFormService | null,
-    private readonly _changeDetectorRef: ChangeDetectorRef
+    @Optional() @SkipSelf() private readonly _resetPasswordForm: ResetPasswordFormService | null
   ) {}
 
   protected get formGroup(): FormGroup<ResetPasswordForm> {
@@ -81,8 +79,7 @@ export class ResetPasswordFormComponent
       return;
     }
 
-    this.passwordRef.focusInput(false);
-    this._changeDetectorRef.detectChanges();
+    this.passwordRef.focus();
   }
 
   public onSaveClicked(): void {

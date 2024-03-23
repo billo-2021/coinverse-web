@@ -1,28 +1,293 @@
-.app-bar-wrapper {
-  height: 3.4rem;
-  //border: solid var(--tui-base-01);
-  font-weight: bold;
-  color: var(--tui-text-01);
-  font: var(--tui-font-text-m);
+@use 'sass:map';
+
+$zaffre-color: #3023ae;
+$orchid-color: #c86dd7;
+
+$menu-header-bg: linear-gradient(225deg, $zaffre-color, $orchid-color);
+
+$units: (
+  '0': 0px,
+  '0.5': 0.125rem, /* 2px */
+  '1': 0.25rem, /* 4px */
+  '1.5': 0.375rem, /* 6px */
+  '2': 0.5rem, /* 8px */
+  '2.5': 0.625rem, /* 10px */
+  '3': 0.75rem, /* 12px */
+  '3.5': 0.875rem, /* 14px */
+  '4': 1rem, /* 16px */
+  '5': 1.25rem, /* 20px */
+  '6': 1.5rem, /* 24px */
+  '7': 1.75rem, /* 28px */
+  '8': 2rem, /* 32px */
+  '9': 2.25rem, /* 36px */
+  '10': 2.5rem, /* 40px */
+  '11': 2.75rem, /* 44px */
+  '12': 3rem, /* 48px */
+  '14': 3.5rem, /* 56px */
+  '16': 4rem, /* 64px */
+  '20': 5rem, /* 80px */
+  '24': 6rem, /* 96px */
+  '28': 7rem, /* 112px */
+  '32': 8rem, /* 128px */
+  '36': 9rem, /* 144px */
+  '40': 10rem, /* 160px */
+  '44': 11rem, /* 176px */
+  '48': 12rem, /* 192px */
+  '52': 13rem, /* 208px */
+  '56': 14rem, /* 224px */
+  '60': 15rem, /* 240px */
+  '64': 16rem, /* 256px */
+  '72': 18rem, /* 288px */
+  '80': 20rem, /* 320px */
+  '96': 24rem /* 384px */
+) !default;
+
+$dimensions: (
+  '1/2': 50%,
+  '1/3': 33.333333%,
+  '2/3': 66.666667%,
+  '1/4': 25%,
+  '2/4': 50%,
+  '3/4': 75%,
+  '1/5': 20%,
+  '2/5': 40%,
+  '3/5': 60%,
+  '4/5': 80%,
+  '1/6': 16.666667%,
+  '2/6': 33.333333%,
+  '3/6': 50%,
+  '4/6': 66.666667%,
+  '5/6': 83.333333%,
+  'full': 100%,
+  'screen': 100vw,
+  'svw': 100svw,
+  'lvw': 100lvw,
+  'dvw': 100dvw,
+  'min': min-content,
+  'max': max-content,
+  'fit': fit-conntent,
+);
+
+$grid-column-sizes: (
+  '1': 8.333333%,
+  '2': 16.666667%,
+  '3': 25%,
+  '4': 33.333333%,
+  '5': 41.666667%,
+  '6': 50%,
+  '7': 58.333333%,
+  '8': 66.666667%,
+  '9': 75%,
+  '10': 83.333333%,
+  '11': 91.666667%,
+  '12': map.get($dimensions, 'full')
+);
+
+$break-points: (
+  'sm': 576px,
+  'md': 768px,
+  'lg': 992px,
+  'xl': 1200px,
+  'xxl': 1400px,
+);
+
+@mixin heading-1() {
+
 }
 
-.app-bar-wrapper .custom {
-  background: var(--tui-clear);
+@mixin heading-2() {
+
 }
 
-//.custom .t-text {
-//  --tui-text-01: var(--tui-base-01);
-//}
+@mixin heading-3() {
 
-.gray {
-  border-bottom: solid 1px var(--tui-base-03);
-  //background: var(--tui-base-02);
 }
 
-.user-avatar {
-  cursor: pointer;
+@mixin body-1() {
+
 }
 
-.user-avatar:hover {
-  outline: 1px solid var(--tui-base-04);
+@mixin body-2() {
+
+}
+
+@mixin body-3() {
+
+}
+
+@mixin subtitle-1() {
+
+}
+
+@mixin subtitle-2() {
+
+}
+
+@mixin subtitle-3() {
+
+}
+
+@mixin card-title() {
+
+}
+
+@mixin card-subtitle() {
+
+}
+
+@mixin border-1() {
+
+}
+
+@mixin border-2() {
+
+}
+
+@mixin border-3() {
+
+}
+
+$menu-header-height: map.get($units, '14');
+$font-families: () !default;
+$columns: 12 !default;
+$column: 1 !default;
+$row-width: map.get($dimensions, 'full');
+$gutter-size: map.get($dimensions, '2');
+
+$gutter-map: (
+  'top': 0,
+  'right': 0,
+  'bottom': 0,
+  'left': 0
+);
+
+$font-sizes: (
+  'xs': 0.75rem, /* 12px */
+  'sm': 0.875rem, /* 14px */
+  'base': 1rem, /* 16px */
+  'lg': 1.125rem, /* 18px */
+  'xl': 1.25rem, /* 20px */
+  '2xl': 1.5rem, /* 24px */
+  '3xl': 1.875rem, /* 30px */
+  '4xl': 2.25rem, /* 36px */
+  '5xl': 3rem, /* 48px */
+  '6xl': 3.75rem, /* 60px */
+  '7xl': 4.5rem, /* 72px */
+  '8xl': 6rem, /* 96px */
+  '9xl': 8rem, /* 128px */
+);
+
+$line-heights: (
+  'xs': 1rem, /* 16px */
+  'sm': 1.25rem, /* 20px */
+  'base': 1.5rem, /* 24px */
+  'lg': 1.75rem, /* 28px */
+  'xl': 1.75rem, /* 28px */
+  '2xl': 2rem, /* 32px */
+  '3xl': 2.25rem, /* 36px */
+  '4xl': 2.5rem, /* 40px */
+  '5xl': 1,
+  '6xl': 1,
+  '7xl': 1,
+  '8xl': 1,
+  '9xl': 1
+);
+
+$font-weights: (
+  'thin': 100,
+  'extralight': 200,
+  'light': 300,
+  'normal': 400,
+  'medium': 500,
+  'semibold': 600,
+  'bold': 700,
+  'extrabold': 800,
+  'black': 900
+);
+
+@function to-gutter-map($top: map.get($gutter-map, 'top'), $right: map.get($gutter-map, 'right'), $bottom: map.get($gutter-map, 'bottom'), $left: map.get($gutter-map, 'left')) {
+  @return ('top': $top, 'right': $right, 'bottom': $bottom, 'left': $left);
+}
+
+@mixin generate-margin($gutter: $gutter-map) {
+  margin: map.get($gutter, 'top') map.get($gutter, 'right') map.get($gutter, 'bottom') map.get($gutter, 'left');
+}
+
+@mixin generate-padding($gutter: $gutter-map) {
+  margin: map.get($gutter, 'top'), map.get($gutter, 'right') map.get($gutter, 'bottom') map.get($gutter, 'left');
+}
+
+@function get-column-width($num_columns: $columns, $gap: $column-gap, $column-number: $column) {
+  @return ($column / $num_cols * 100) - $gap;
+}
+
+@mixin flex-row($margin: $gutter-map, $padding: $gutter-map) {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: row;
+  @include generate-margin($margin);
+  @include generate-padding($padding);
+  @content;
+}
+
+@mixin flex-col($margin: $gutter-map, $padding: $gutter-map) {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  @include generate-margin($margin);
+  @include generate-padding($padding);
+  @content;
+}
+
+@mixin centered($width: 2rem) {
+  width: $width;
+  margin: auto;
+}
+
+@mixin breakpoint($min-or-max: min, $modifier: 'sm') {
+  $break-point: map.get($break-points, $modifier);
+
+  @if ($break-point != null) {
+    @media screen and (#{$min-or-max}-width: $break-point) {
+      @content;
+    }
+  }
+}
+
+@mixin mobile() {
+  @include breakpoint(max, 'sm');
+}
+
+@mixin tablet() {
+  @include breakpoint($modifier: 'sm');
+}
+
+@mixin desktop() {
+  @include breakpoint($modifier: 'md');
+}
+
+app-menu-header {
+  height: $menu-header-height;
+  background-image: $menu-header-bg;
+  padding: map.get($dimensions, '0.5');
+  @include flex-row();
+  align-items: center;
+
+  .app-bar-wrapper {
+    font-weight: bold;
+    color: var(--tui-text-01);
+    font: var(--tui-font-text-m);
+  }
+
+  .app-bar-wrapper .custom {
+    background: var(--tui-base-01);
+  }
+
+  .user-avatar {
+    cursor: pointer;
+  }
+
+  .user-avatar:hover {
+    outline: 1px solid var(--tui-base-04);
+  }
 }

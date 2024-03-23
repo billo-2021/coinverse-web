@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import {
   TuiAlertModule,
   TuiDialogModule,
@@ -10,19 +9,13 @@ import {
   TuiRootModule,
   TuiThemeNightModule,
 } from '@taiga-ui/core';
-
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { MapperModule } from '@dynamic-mapper/angular';
-
-import { PROVIDERS as CORE_PROVIDERS } from './core';
-import { PROVIDERS as COMMON_PROVIDERS } from './common';
-import { PROVIDERS as UI_COMPONENTS_PROVIDERS, UiComponentsModule } from './ui-components';
+import { sharedConfig } from './shared';
+import { globalConfig, GlobalModule } from './global';
+import { UiComponentsModule, uiConfig } from './ui-components';
 import { MappingProfile } from './domain';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
-import { GlobalRoutingModule, GlobalRoutingService } from './global-routing';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,16 +30,10 @@ import { GlobalRoutingModule, GlobalRoutingService } from './global-routing';
     TuiModeModule,
     TuiThemeNightModule,
     HttpClientModule,
-    GlobalRoutingModule,
+    GlobalModule,
     MapperModule.withProfiles([MappingProfile]),
   ],
-  providers: [
-    ...CORE_PROVIDERS,
-    ...UI_COMPONENTS_PROVIDERS,
-    ...COMMON_PROVIDERS,
-    GlobalRoutingService,
-    JwtHelperService,
-  ],
+  providers: [...sharedConfig.providers, ...uiConfig.providers, ...globalConfig.providers],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

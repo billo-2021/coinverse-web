@@ -1,8 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { PageRequest, PageResponse } from '../../../core';
-import { ApiCrudClient, apiMaxPageRequestToken } from '../../../common';
-import { MappingProfile } from '../../config';
+import {
+  ApiCrudClient,
+  ApiRoute,
+  MAX_PAGE_REQUEST_TOKEN,
+  PageRequest,
+  PageResponse,
+} from '../../../shared';
 import {
   Country,
   CountryDto,
@@ -16,6 +20,7 @@ import {
   PaymentMethodDto,
   UserRole,
 } from '../../models';
+import { MappingProfile } from '../../config';
 
 @Injectable({
   providedIn: 'root',
@@ -23,42 +28,42 @@ import {
 export class LookupService {
   constructor(
     private readonly _apiCrudClient: ApiCrudClient,
-    @Inject(apiMaxPageRequestToken) private readonly _apiMaxPageRequestToken: PageRequest
+    @Inject(MAX_PAGE_REQUEST_TOKEN) private readonly _maxPageRequest: PageRequest
   ) {}
 
   public getAllCountries(): Observable<Country[]> {
     return this._apiCrudClient.findAll<CountryDto, Country>(
-      'allCountries',
+      ApiRoute.ALL_COUNTRIES,
       MappingProfile.CountryDtoToCountry
     );
   }
 
   public getCountries(): Observable<PageResponse<Country>> {
     return this._apiCrudClient.findMany<CountryDto, Country>(
-      'countries',
-      this._apiMaxPageRequestToken,
+      ApiRoute.COUNTRIES,
+      this._maxPageRequest,
       MappingProfile.CountryDtoPageToCountryPage
     );
   }
 
   public getAllCurrencies(): Observable<Currency[]> {
     return this._apiCrudClient.findAll<CurrencyDto, Currency>(
-      'allCurrencies',
+      ApiRoute.ALL_CURRENCIES,
       MappingProfile.CurrencyDtoToCurrency
     );
   }
 
   public getCurrencies(): Observable<PageResponse<Currency>> {
     return this._apiCrudClient.findMany<CurrencyDto, Currency>(
-      'currencies',
-      this._apiMaxPageRequestToken,
+      ApiRoute.CURRENCIES,
+      this._maxPageRequest,
       MappingProfile.CurrencyDtoPageToCurrencyPage
     );
   }
 
   public getAllCurrenciesByType(type: string): Observable<Currency[]> {
     return this._apiCrudClient.findAllBy<CurrencyDto, Currency>(
-      'allCurrencies',
+      ApiRoute.ALL_CURRENCIES,
       { type: type },
       MappingProfile.CurrencyDtoToCurrency
     );
@@ -69,7 +74,7 @@ export class LookupService {
     pageRequest: PageRequest
   ): Observable<PageResponse<Currency>> {
     return this._apiCrudClient.findManyBy<CurrencyDto, Currency>(
-      'currencies',
+      ApiRoute.CURRENCIES,
       [{ type: type }],
       pageRequest,
       MappingProfile.CurrencyDtoPageToCurrencyPage
@@ -78,14 +83,14 @@ export class LookupService {
 
   public getAllCryptoCurrencies(): Observable<CryptoCurrency[]> {
     return this._apiCrudClient.findAll<CryptoCurrencyDto, CryptoCurrency>(
-      'allCryptoCurrencies',
+      ApiRoute.ALL_CRYPTO_CURRENCIES,
       MappingProfile.CryptoCurrencyDtoToCryptoCurrency
     );
   }
 
   public getCryptoCurrencies(pageRequest: PageRequest): Observable<PageResponse<CryptoCurrency>> {
     return this._apiCrudClient.findMany<CryptoCurrencyDto, CryptoCurrency>(
-      'cryptoCurrencies',
+      ApiRoute.CRYPTO_CURRENCIES,
       pageRequest,
       MappingProfile.CryptoCurrencyDtoPageToCryptoCurrencyPage
     );
@@ -93,7 +98,7 @@ export class LookupService {
 
   public getCryptoCurrencyByCurrencyCode(currencyCode: string): Observable<CryptoCurrency> {
     return this._apiCrudClient.findOne<CryptoCurrencyDto, CryptoCurrency>(
-      'cryptoCurrencies',
+      ApiRoute.CRYPTO_CURRENCIES,
       currencyCode,
       MappingProfile.CryptoCurrencyDtoToCryptoCurrency
     );
@@ -101,14 +106,14 @@ export class LookupService {
 
   public getAllCurrencyPairs(): Observable<CurrencyPair[]> {
     return this._apiCrudClient.findAll<CurrencyPairDto, CurrencyPair>(
-      'allCurrencyPairs',
+      ApiRoute.ALL_CURRENCY_PAIRS,
       MappingProfile.CurrencyPairDtoToCurrencyPair
     );
   }
 
   public getCurrencyPairs(pageRequest: PageRequest): Observable<PageResponse<CurrencyPair>> {
     return this._apiCrudClient.findMany<CurrencyPairDto, CurrencyPair>(
-      'currencyPairs',
+      ApiRoute.CURRENCY_PAIRS,
       pageRequest,
       MappingProfile.CurrencyPairDtoPageToCurrencyPairPage
     );
@@ -116,14 +121,14 @@ export class LookupService {
 
   public getAllPaymentMethods(): Observable<PaymentMethod[]> {
     return this._apiCrudClient.findAll<PaymentMethodDto, PaymentMethod>(
-      'allPaymentMethods',
+      ApiRoute.ALL_PAYMENT_METHODS,
       MappingProfile.PaymentMethodDtoToPaymentMethod
     );
   }
 
   public getPaymentMethods(pageRequest: PageRequest): Observable<PageResponse<PaymentMethod>> {
     return this._apiCrudClient.findMany<PaymentMethodDto, PaymentMethod>(
-      'paymentMethods',
+      ApiRoute.PAYMENT_METHODS,
       pageRequest,
       MappingProfile.PaymentMethodDtoPageToPaymentMethodPage
     );

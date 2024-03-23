@@ -11,7 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormBase, Required } from '../../../../common';
+import { FormBase, FormValidators } from '../../../../shared';
 import { ChangePassword } from '../../../../domain';
 
 export interface ChangePasswordForm {
@@ -30,8 +30,8 @@ export interface ChangePasswordFormComponentOutput {
 
 export function getChangePasswordForm(): ChangePasswordForm {
   return {
-    currentPassword: new FormControl<string>('', Required),
-    newPassword: new FormControl<string>('', Required),
+    currentPassword: new FormControl<string>('', FormValidators.Required),
+    newPassword: new FormControl<string>('', FormValidators.Required),
   };
 }
 

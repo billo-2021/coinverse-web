@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiCrudClient } from '../../../common';
-import { MappingProfile } from '../../config';
+import { ApiCrudClient, ApiRoute } from '../../../shared';
 import {
   UpdateUserProfileAddress,
   UpdateUserProfilePersonalInformation,
@@ -9,6 +8,7 @@ import {
   UserProfile,
   UserProfileDto,
 } from '../../models';
+import { MappingProfile } from '../../config';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,7 @@ export class ProfileService {
 
   public getProfile(): Observable<UserProfile> {
     return this._apiCrudClient.find<UserProfileDto, UserProfile>(
-      'profile',
+      ApiRoute.PROFILE,
       MappingProfile.UserProfileDtoToUserProfile
     );
   }
@@ -27,7 +27,7 @@ export class ProfileService {
     userProfilePreferenceRequest: UpdateUserProfilePreference
   ): Observable<UserProfile> {
     return this._apiCrudClient.patch<UpdateUserProfilePreference, UserProfileDto, UserProfile>(
-      'profilePreference',
+      ApiRoute.PROFILE_PREFERENCE,
       userProfilePreferenceRequest,
       MappingProfile.UserProfileDtoToUserProfile
     );
@@ -37,7 +37,7 @@ export class ProfileService {
     userProfileAddressRequest: UpdateUserProfileAddress
   ): Observable<UserProfile> {
     return this._apiCrudClient.patch<UpdateUserProfileAddress, UserProfileDto, UserProfile>(
-      'profileAddress',
+      ApiRoute.PROFILE_ADDRESS,
       userProfileAddressRequest,
       MappingProfile.UserProfileDtoToUserProfile
     );
@@ -51,7 +51,7 @@ export class ProfileService {
       UserProfileDto,
       UserProfile
     >(
-      'profilePersonalInformation',
+      ApiRoute.PROFILE_PERSONAL_INFORMATION,
       userProfilePersonalInformationRequest,
       MappingProfile.UserProfileDtoToUserProfile
     );

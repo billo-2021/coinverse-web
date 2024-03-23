@@ -2,14 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  HostBinding,
   Inject,
   Input,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { UserPrincipal } from '../../../../core';
-import { appNameToken } from '../../../../common';
+import { UserPrincipal, WEB_CONFIG_TOKEN, WebConfig } from '../../../../shared';
 
 export interface MenuHeaderComponentInput {
   isMobile: boolean;
@@ -32,17 +30,15 @@ export interface MenuHeaderComponentOutput {
 export class MenuHeaderComponent implements MenuHeaderComponentInput, MenuHeaderComponentOutput {
   @Input() public isMobile = false;
   @Input() public user: UserPrincipal | null = null;
-
   @Output() public toggleMenuClicked = new EventEmitter<boolean>();
   @Output() public signOutClicked = new EventEmitter<void>();
   @Output() public gotoProfileClicked = new EventEmitter<void>();
+  private readonly _appName: string = this._webConfig.appName;
 
-  @HostBinding('class') private _classes = 'block header';
-
-  public constructor(@Inject(appNameToken) private readonly _appNameToken: string) {}
+  public constructor(@Inject(WEB_CONFIG_TOKEN) private readonly _webConfig: WebConfig) {}
 
   protected get appName(): string {
-    return this._appNameToken;
+    return this._appName;
   }
 
   public onMenuToggle(open: boolean): void {

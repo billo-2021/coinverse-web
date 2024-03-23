@@ -1,30 +1,32 @@
-<div class="col border-top pt-8">
-  <div class="row justify-space-between">
-    <p class="mr-4 col-8 row-item-title">Currency Pair</p>
-    <p class="col-3 row-item-description">{{ exchangeRate?.currencyPairName }}</p>
+<app-card class="max-w-md">
+  <div class="col pt-8">
+    <div class="row justify-space-between">
+      <p class="mr-4 col-8 row-item-title">Currency Pair</p>
+      <p class="col-3 row-item-description">{{ exchangeRate?.currencyPairName }}</p>
+    </div>
+    <div class="row justify-space-between">
+      <p class="mr-4 col-8 row-item-title">Currency Pair Type</p>
+      <p class="col-3 row-item-description">{{ exchangeRate?.currencyPairType }}</p>
+    </div>
+    <div class="row justify-space-between">
+      <p class="mr-4 col-8 row-item-title">Ask Rate</p>
+      <p class="col-3 row-item-description">{{ quote?.askRate }}</p>
+    </div>
+    <div class="row justify-space-between">
+      <p class="mr-4 col-8 row-item-title">Bid Rate</p>
+      <p class="col-3 row-item-description">{{ quote?.bidRate }}</p>
+    </div>
+    <div class="row justify-space-between">
+      <p class="mr-4 col-8 row-item-title">Time to Live</p>
+      <p class="col-3 row-item-description">{{ quote?.timeToLive }}</p>
+    </div>
+    <div class="row justify-space-between mt-2">
+      <app-button
+        (clicked)="onDeclineQuote()"
+        appearance="accent"
+        class="mr-4 grow"
+        text="Decline"></app-button>
+      <app-button (clicked)="onAcceptQuote()" class="grow" text="Accept"></app-button>
+    </div>
   </div>
-  <div class="row justify-space-between">
-    <p class="mr-4 col-8 row-item-title">Currency Pair Type</p>
-    <p class="col-3 row-item-description">{{ exchangeRate?.currencyPairType }}</p>
-  </div>
-  <div class="row justify-space-between">
-    <p class="mr-4 col-8 row-item-title">Ask Rate</p>
-    <p class="col-3 row-item-description">{{ quote?.askRate }}</p>
-  </div>
-  <div class="row justify-space-between">
-    <p class="mr-4 col-8 row-item-title">Bid Rate</p>
-    <p class="col-3 row-item-description">{{ quote?.bidRate }}</p>
-  </div>
-  <div class="row justify-space-between">
-    <p class="mr-4 col-8 row-item-title">Time to Live</p>
-    <p class="col-3 row-item-description">{{ quote?.timeToLive }}</p>
-  </div>
-  <div class="row justify-space-between mt-2">
-    <app-button
-      (clicked)="onDeclineQuote()"
-      appearance="accent"
-      class="mr-4 grow"
-      text="Decline"></app-button>
-    <app-button (clicked)="onAcceptQuote()" class="grow" text="Accept"></app-button>
-  </div>
-</div>
+</app-card>

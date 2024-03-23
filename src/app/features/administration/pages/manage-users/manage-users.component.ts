@@ -15,9 +15,16 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { AlertService, HttpMessage, PageResponse } from '../../../../core';
-import { getErrorMessage, NavigationService, Page } from '../../../../common';
-import { PAGE_OPTIONS, Pagination, paginationToken } from '../../../../ui-components';
+import {
+  AlertService,
+  ErrorUtils,
+  HttpMessage,
+  NavigationController,
+  Page,
+  PageResponse,
+  WebRoute,
+} from '../../../../shared';
+import { PAGE_OPTIONS, Pagination, PAGINATION_TOKEN } from '../../../../ui-components';
 import { AdministrationService, AdminUser } from '../../../../domain';
 
 interface ManageUsersViewModel {
@@ -39,7 +46,7 @@ export class ManageUsersComponent implements Page {
   @HostBinding('class') private _classes = 'block';
 
   private readonly _reload$ = new ReplaySubject<void>();
-  private readonly _usersPagination$ = new BehaviorSubject<Pagination>(this._paginationToken);
+  private readonly _usersPagination$ = new BehaviorSubject<Pagination>(this._pagination);
 
   private readonly _userPage$ = combineLatest([this._reload$, this._usersPagination$]).pipe(
     switchMap(({ 1: query }) => this._administrationService.getUsers(query).pipe(shareReplay(1))),
@@ -52,8 +59,8 @@ export class ManageUsersComponent implements Page {
   ]).pipe(map(([usersPagination, userPage]) => ({ usersPagination, userPage })));
 
   public constructor(
-    @Inject(paginationToken) private readonly _paginationToken: Pagination,
-    private readonly _navigationService: NavigationService,
+    @Inject(PAGINATION_TOKEN) private readonly _pagination: Pagination,
+    private readonly _navigationService: NavigationController,
     private readonly _alertService: AlertService,
     private readonly _administrationService: AdministrationService
   ) {
@@ -69,11 +76,11 @@ export class ManageUsersComponent implements Page {
   }
 
   public onViewUserDetails(username: string): void {
-    this._navigationService.to({ route: 'manageUsers', routePath: username }).then();
+    this._navigationService.to({ route: WebRoute.MANAGE_USERS, routePath: username }).then();
   }
 
   public onAddUser(): void {
-    this._navigationService.to('newUser').then();
+    this._navigationService.to(WebRoute.NEW_USER).then();
   }
 
   public onPagination(pagination: Pagination): void {
@@ -95,7 +102,7 @@ export class ManageUsersComponent implements Page {
         this.reload();
       },
       error: (error: unknown) => {
-        this._alertService.showErrorMessage(getErrorMessage(error));
+        this._alertService.showErrorMessage(ErrorUtils.getErrorMessage(error));
       },
     };
   }

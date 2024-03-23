@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Mapper } from '@dynamic-mapper/angular';
 import {
-  AccountVerificationStoreService,
+  AccountVerificationStore,
+  ApiCrudClient,
+  ApiRoute,
   UserAccessCredentials,
   UserPrincipal,
-  UserPrincipalStoreService,
-} from '../../../core';
-import { ApiCrudClient } from '../../../common';
-import { MappingProfile } from '../../config';
+  UserPrincipalStore,
+} from '../../../shared';
 import {
   LoginDto,
   LoginRequest,
@@ -17,6 +17,7 @@ import {
   User,
   UserDto,
 } from '../../models';
+import { MappingProfile } from '../../config';
 
 @Injectable({
   providedIn: 'root',
@@ -25,14 +26,14 @@ export class AuthenticationService {
   constructor(
     private readonly _apiCrudClient: ApiCrudClient,
     private readonly _mapper: Mapper,
-    private readonly _userPrincipalStore: UserPrincipalStoreService,
-    private readonly _accountVerificationStore: AccountVerificationStoreService
+    private readonly _userPrincipalStore: UserPrincipalStore,
+    private readonly _accountVerificationStore: AccountVerificationStore
   ) {}
 
   public register(registerRequest: RegisterRequest): Observable<User> {
     return this._apiCrudClient
       .create<RegisterRequest, UserDto, User>(
-        'register',
+        ApiRoute.REGISTER,
         registerRequest,
         MappingProfile.UserDtoToUser
       )
@@ -42,7 +43,7 @@ export class AuthenticationService {
   public login(loginRequest: LoginRequest): Observable<LoginResponse> {
     return this._apiCrudClient
       .create<LoginRequest, LoginDto, LoginResponse>(
-        'login',
+        ApiRoute.LOGIN,
         loginRequest,
         MappingProfile.LoginDtoToLoginResponse
       )

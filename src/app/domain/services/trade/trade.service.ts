@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PageRequest, PageResponse } from '../../../core';
-import { ApiCrudClient } from '../../../common';
-import { MappingProfile } from '../../config';
+import { ApiCrudClient, ApiRoute, PageRequest, PageResponse } from '../../../shared';
 import { CurrencyTransaction, CurrencyTransactionDto, TradeRequest } from '../../models';
+import { MappingProfile } from '../../config';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +12,7 @@ export class TradeService {
 
   public getTrades(pageRequest: PageRequest): Observable<PageResponse<CurrencyTransaction>> {
     return this._apiCrudClient.findMany<CurrencyTransactionDto, CurrencyTransaction>(
-      'trades',
+      ApiRoute.TRADES,
       pageRequest,
       MappingProfile.CurrencyTransactionDtoPageToCurrencyTransactionPage
     );
@@ -21,7 +20,7 @@ export class TradeService {
 
   public requestTrade(tradeRequest: TradeRequest): Observable<CurrencyTransaction> {
     return this._apiCrudClient.create<TradeRequest, CurrencyTransactionDto, CurrencyTransaction>(
-      'trades',
+      ApiRoute.TRADES,
       tradeRequest,
       MappingProfile.CurrencyTransactionDtoToCurrencyTransaction
     );

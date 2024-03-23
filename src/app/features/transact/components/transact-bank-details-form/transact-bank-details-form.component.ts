@@ -11,7 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { FormBase, Required } from '../../../../common';
+import { FormBase, FormValidators } from '../../../../shared';
 
 export interface TransactBankDetailsForm {
   readonly name: FormControl<string>;
@@ -30,10 +30,10 @@ export interface TransactionBankDetailsFormComponentOutput {
 
 export function getTransactBankDetailsForm(): TransactBankDetailsForm {
   return {
-    name: new FormControl<string>('', Required),
-    cardNumber: new FormControl<string>('', Required),
-    expiryDate: new FormControl<string>('', Required),
-    securityCode: new FormControl<string>('', Required),
+    name: new FormControl<string>('', FormValidators.Required),
+    cardNumber: new FormControl<string>('', FormValidators.Required),
+    expiryDate: new FormControl<string>('', FormValidators.Required),
+    securityCode: new FormControl<string>('', FormValidators.Required),
   };
 }
 

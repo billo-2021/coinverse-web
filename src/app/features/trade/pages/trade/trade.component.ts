@@ -18,7 +18,7 @@ import {
   tap,
 } from 'rxjs';
 import { tuiIsPresent } from '@taiga-ui/cdk';
-import { NavigationService, ParamsService, ViewPage } from '../../../../common';
+import { NavigationController, ParamsService, ViewPage, WebRoute } from '../../../../shared';
 import { ListOption } from '../../../../form-components';
 import {
   Currency,
@@ -31,8 +31,8 @@ import {
   TradeRequest,
   TradeService,
 } from '../../../../domain';
-import { TradeStep, TradeTab } from '../../enums';
 import { TradeModel } from '../../models';
+import { TradeStep, TradeTab } from '../../enums';
 import { TradeFormService } from '../../components';
 
 export type TradeStepsType = readonly [string, string, string];
@@ -176,7 +176,7 @@ export class TradeComponent implements TradeView {
 
   public constructor(
     @Self() private readonly _paramsService: ParamsService,
-    private readonly _navigationService: NavigationService,
+    private readonly _navigationService: NavigationController,
     @Self() private readonly _tradeForm: TradeFormService,
     private readonly _listOptionsService: ListOptionsService,
     private readonly _quoteService: QuoteService,
@@ -251,7 +251,7 @@ export class TradeComponent implements TradeView {
   }
 
   public onViewTradesClicked(): void {
-    this._navigationService.to('manageTrades').then();
+    this._navigationService.to(WebRoute.MANAGE_TRADES).then();
   }
 
   public onTradeAgainClicked(): void {
@@ -260,7 +260,7 @@ export class TradeComponent implements TradeView {
   }
 
   public onTradeHistory(): void {
-    this._navigationService.to('manageTrades').then();
+    this._navigationService.to(WebRoute.MANAGE_TRADES).then();
   }
 
   public onActiveTabIndexChanged(index: number): void {

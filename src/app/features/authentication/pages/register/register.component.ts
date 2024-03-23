@@ -7,8 +7,7 @@ import {
 } from '@angular/core';
 import { finalize } from 'rxjs';
 import { Mapper } from '@dynamic-mapper/angular';
-import { DestroyService } from '../../../../core';
-import { getErrorMessage } from '../../../../common';
+import { DestroyState, ErrorUtils } from '../../../../shared';
 import {
   AccountFormService,
   AddressFormService,
@@ -32,7 +31,7 @@ import {
     AddressFormService,
     PreferenceFormService,
     AccountFormService,
-    DestroyService,
+    DestroyState,
     UserFormController,
   ],
 })
@@ -86,7 +85,7 @@ export class RegisterComponent {
       .register(registerRequest)
       .pipe(finalize(() => this._userFormController.resetForms()))
       .subscribe({
-        error: (error) => (this._userFormController.formError = getErrorMessage(error)),
+        error: (error) => (this._userFormController.formError = ErrorUtils.getErrorMessage(error)),
       });
   }
 }

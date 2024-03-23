@@ -4,5 +4,8 @@
 
 .currency-avatar {
   --tui-avatar-background: var(--tui-clear);
-  //--tui-avatar-color: var(--tui-base-01);
+}
+
+.currency-code {
+  color: var(--tui-text-02);
 }

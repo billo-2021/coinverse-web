@@ -5,8 +5,7 @@ import {
   Inject,
   ViewEncapsulation,
 } from '@angular/core';
-
-import { appNameToken } from '../../../common';
+import { WEB_CONFIG_TOKEN, WebConfig } from '../../../shared';
 
 @Component({
   selector: 'app-logo',
@@ -16,11 +15,12 @@ import { appNameToken } from '../../../common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogoComponent {
+  private readonly _appName: string = this._webConfig.appName;
   @HostBinding('class') private _classes = 'block w-full p-8 mx-auto';
 
-  constructor(@Inject(appNameToken) private readonly _appNameToken: string) {}
+  constructor(@Inject(WEB_CONFIG_TOKEN) private readonly _webConfig: WebConfig) {}
 
   protected get appName(): string {
-    return this._appNameToken;
+    return this._appName;
   }
 }

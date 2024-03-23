@@ -1,7 +1,5 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostBinding,
@@ -14,7 +12,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormBase, Required, RequiredEmail } from '../../../../common';
+import { FocusOptions, FormBase, FormValidators } from '../../../../shared';
 import { PasswordFieldComponent, TextFieldComponent } from '../../../../form-components';
 
 export interface LoginForm {
@@ -35,9 +33,9 @@ export interface LoginFormComponentOutput {
 
 export function getLoginForm(): LoginForm {
   return {
-    username: new FormControl<string>('', RequiredEmail),
-    password: new FormControl<string>('', Required),
-    rememberMe: new FormControl<boolean>(false, Required),
+    username: new FormControl<string>('', FormValidators.RequiredEmail),
+    password: new FormControl<string>('', FormValidators.Required),
+    rememberMe: new FormControl<boolean>(false, FormValidators.Required),
   };
 }
 
@@ -59,9 +57,7 @@ export class LoginFormService extends FormBase<LoginForm> {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginFormComponent
-  implements LoginFormComponentInput, LoginFormComponentOutput, AfterViewInit
-{
+export class LoginFormComponent implements LoginFormComponentInput, LoginFormComponentOutput {
   @Input() public title = 'Welcome back!';
   @Input() public subtitle = 'Please sign in to continue.';
   @Input() public saveText = 'Sign in';
@@ -71,25 +67,30 @@ export class LoginFormComponent
   public readonly form: FormBase<LoginForm> =
     this._loginFormService ?? new FormBase<LoginForm>(getLoginForm());
 
-  @ViewChild(TextFieldComponent) public readonly usernameRef?: TextFieldComponent;
-  @ViewChild(PasswordFieldComponent) public readonly passwordRef?: PasswordFieldComponent;
+  @ViewChild(TextFieldComponent) private readonly _usernameRef?: TextFieldComponent;
+  @ViewChild(PasswordFieldComponent) private readonly _passwordRef?: PasswordFieldComponent;
   @HostBinding('class') private _classes = 'block col-12 col-md-10 m-auto';
 
   public constructor(
-    @SkipSelf() @Optional() private readonly _loginFormService: LoginFormService | null,
-    private readonly _changeDetectorRef: ChangeDetectorRef
+    @SkipSelf() @Optional() private readonly _loginFormService: LoginFormService | null
   ) {}
 
   public get formGroup(): FormGroup<LoginForm> {
     return this.form;
   }
 
-  public ngAfterViewInit() {
-    this.usernameRef?.focusInput(false);
-    this._changeDetectorRef.detectChanges();
-  }
-
   public onLogin(): void {
     this.saveClicked.emit(this.form);
+  }
+
+  public focus(fieldName: 'username' | 'password', options?: FocusOptions): void {
+    if (fieldName === 'username' && this._usernameRef) {
+      this._usernameRef.focus(options);
+      return;
+    }
+
+    if (fieldName === 'password' && this._passwordRef) {
+      this._passwordRef.focus(options);
+    }
   }
 }

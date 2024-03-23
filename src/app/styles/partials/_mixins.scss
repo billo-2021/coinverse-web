@@ -1,0 +1,110 @@
+@use '@taiga-ui/core/styles/mixins/mixins' as taiga-ui-mixins;
+@use '../variables/variables' as variables;
+
+@mixin col($width) {
+  width: $width;
+  flex-basis: $width;
+}
+
+@mixin create-break-point($break-point, $min-or-max) {
+  @if ($break-point == 0) {
+    @content;
+  } @else {
+    @media screen and (#{$min-or-max}-width: $break-point * 1px) {
+      @content;
+    }
+  }
+}
+
+@mixin create-col-class($modifier, $grid-cols) {
+  @for $i from 1 through $grid_cols {
+    $width: calc(100 / ($grid-cols / $i) * 1%);
+
+    &#{$modifier}-#{$i} {
+      width: $width;
+      flex-basis: $width;
+    }
+
+    &#{$modifier}-offset-#{$i} {
+      margin-left: $width;
+    }
+
+    &#{$modifier}-#{$i}-hidden {
+      display: none !important;
+    }
+  }
+}
+
+@mixin create-col-classes($modifier, $grid-cols, $break-point) {
+  $min-or-max: 'min';
+
+  @if ($modifier == '') {
+    @include create-col-class($modifier, $grid-cols);
+  } @else {
+    @include create-break-point($break-point, $min-or-max) {
+      @include create-col-class($modifier, $grid-cols);
+    }
+  }
+}
+
+@mixin add-table-styles {
+  td,
+  th {
+    white-space: nowrap;
+    border-color: transparent;
+  }
+
+  tr td:first-child {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+
+  tr td:last-child {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+
+
+  .alive:before {
+    background: var(--tui-success-fill);
+  }
+
+  .table {
+    width: 100%;
+    margin-top: 1rem;
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+  }
+
+  th,
+  td {
+    padding: 0 0.75rem;
+    height: var(--tui-height-m);
+  }
+
+  tr td {
+    border-top: solid 1px var(--tui-base-03);
+    border-bottom: solid 1px var(--tui-base-03);
+  }
+
+  tr td:first-child {
+    border-left: solid 1px var(--tui-base-03);
+  }
+
+  tr td:last-child {
+    border-right: solid 1px var(--tui-base-03);
+  }
+
+  tr th {
+    border-bottom: solid 1px var(--tui-base-03);
+  }
+
+  .table-actions-data {
+    @include taiga-ui-mixins.transition(opacity);
+    opacity: 0;
+
+    tr:hover &, tr:focus & {
+      opacity: 1;
+    }
+  }
+}

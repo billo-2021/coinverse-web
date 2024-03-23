@@ -11,7 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormBase, Required } from '../../../common';
+import { FormBase, FormValidators } from '../../../shared';
 import { ListOption } from '../../../form-components';
 import { Currency } from '../../models';
 import { ListOptionsService } from '../../services';
@@ -39,14 +39,14 @@ export interface PreferenceFormComponentOutput {
 
 export function getNotificationMethodsForm(): NotificationMethodsForm {
   return {
-    sms: new FormControl<boolean>(false, Required),
-    email: new FormControl<boolean>(true, Required),
+    sms: new FormControl<boolean>(false, FormValidators.Required),
+    email: new FormControl<boolean>(true, FormValidators.Required),
   };
 }
 
 export function getPreferenceForm(): PreferenceForm {
   return {
-    currency: new FormControl<ListOption<Currency> | null>(null, Required),
+    currency: new FormControl<ListOption<Currency> | null>(null, FormValidators.Required),
     notificationMethods: new FormBase<NotificationMethodsForm>(getNotificationMethodsForm()),
   };
 }

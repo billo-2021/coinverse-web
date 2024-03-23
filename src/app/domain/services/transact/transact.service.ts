@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ObjectUtils, PageRequest, PageResponse } from '../../../core';
-import { ApiCrudClient, apiRoutesConfig } from '../../../common';
-import { MappingProfile } from '../../config';
+import { ApiCrudClient, ApiRoute, PageRequest, PageResponse } from '../../../shared';
 import { Payment, PaymentDto, PaymentRequest } from '../../models';
+import { MappingProfile } from '../../config';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +12,7 @@ export class TransactService {
 
   public getTransactions(pageRequest: PageRequest): Observable<PageResponse<Payment>> {
     return this._apiCrudClient.findMany<PaymentDto, Payment>(
-      ObjectUtils.nameof(apiRoutesConfig, 'transactions'),
+      ApiRoute.TRANSACTIONS,
       pageRequest,
       MappingProfile.PaymentDtoPageToPaymentPage
     );
@@ -21,7 +20,7 @@ export class TransactService {
 
   public deposit(depositRequest: PaymentRequest): Observable<Payment> {
     return this._apiCrudClient.create<PaymentRequest, PaymentDto, Payment>(
-      ObjectUtils.nameof(apiRoutesConfig, 'deposit'),
+      ApiRoute.DEPOSIT,
       depositRequest,
       MappingProfile.PaymentDtoToPayment
     );
@@ -29,7 +28,7 @@ export class TransactService {
 
   public withdraw(paymentRequest: PaymentRequest): Observable<Payment> {
     return this._apiCrudClient.create<PaymentRequest, PaymentDto, Payment>(
-      ObjectUtils.nameof(apiRoutesConfig, 'withdraw'),
+      ApiRoute.WITHDRAW,
       paymentRequest,
       MappingProfile.PaymentDtoToPayment
     );

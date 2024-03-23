@@ -8,7 +8,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { Pagination, paginationToken, TOTAL_ITEMS } from '../../../../ui-components';
+import { Pagination, PAGINATION_TOKEN, TOTAL_ITEMS } from '../../../../ui-components';
 import { CurrencyTransaction } from '../../../../domain';
 
 export const KEYS = {
@@ -42,7 +42,7 @@ export interface TradesComponentOutput {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TradesComponent implements TradesComponentInput, TradesComponentOutput {
-  @Input() public pagination: Pagination = this._paginationToken;
+  @Input() public pagination: Pagination = this._pagination;
   @Input() public trades: readonly CurrencyTransaction[] = [];
   @Input() public total: number = TOTAL_ITEMS;
 
@@ -53,7 +53,7 @@ export class TradesComponent implements TradesComponentInput, TradesComponentOut
 
   @HostBinding('class') private _classes = 'block';
 
-  public constructor(@Inject(paginationToken) private readonly _paginationToken: Pagination) {}
+  public constructor(@Inject(PAGINATION_TOKEN) private readonly _pagination: Pagination) {}
 
   protected onPagination(value: Pagination): void {
     this.paginationChanged.emit(value);

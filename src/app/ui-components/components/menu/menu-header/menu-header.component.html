@@ -1,4 +1,7 @@
-<div *ngIf="user" class="app-bar-wrapper p-2 row-nowrap middle color gray">
+<ng-container
+  *ngIf="user"
+  [tuiMode]="'onDark'"
+  class="app-bar-wrapper p-2 row-nowrap middle color gray">
   <tui-marker-icon
     (click)="onMenuToggle(true)"
     *ngIf="isMobile"
@@ -26,7 +29,7 @@
       class="custom user-avatar my-auto mr-5"
       size="s"></tui-avatar>
   </div>
-</div>
+</ng-container>
 
 <ng-template #tooltip>
   <div *ngIf="user" class="col">

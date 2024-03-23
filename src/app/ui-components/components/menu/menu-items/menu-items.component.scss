@@ -1,0 +1,33 @@
+$side-menu-border-width: 2px;
+$primary-color: #6788ff;
+$link-hover-color: var(--tui-link-hover);
+$link-padding: 1rem;
+
+@mixin border-left($color: $primary-color, $width: $side-menu-border-width) {
+  border-left: $width solid $color;
+}
+
+app-menu-items {
+  display: block;
+
+  .menu-items {
+    &__menu-item {
+      &__link {
+        display: block;
+        @include border-left(transparent);
+        padding: $link-padding;
+
+        &--active {
+          display: block;
+          @include border-left();
+          padding: $link-padding;
+          --tui-text-02: var(--tui-link);
+
+          &:hover {
+            --tui-text-01: $link-hover-color;
+          }
+        }
+      }
+    }
+  }
+}

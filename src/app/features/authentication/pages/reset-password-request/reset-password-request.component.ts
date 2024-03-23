@@ -7,8 +7,16 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
-import { AlertService, MessagingChannel, messagingChannelToken } from '../../../../core';
-import { ApiError, apiErrorCodes, FormBase, View } from '../../../../common';
+import {
+  AlertService,
+  ApiError,
+  apiErrorCodes,
+  AUTH_CONFIG_TOKEN,
+  AuthConfig,
+  FormBase,
+  MessagingChannel,
+  View,
+} from '../../../../shared';
 import { PasswordResetService, PasswordResetTokenRequest } from '../../../../domain';
 import { ResetPasswordRequestForm, ResetPasswordRequestFormService } from '../../components';
 
@@ -49,7 +57,7 @@ export class ResetPasswordRequestComponent implements ResetPasswordRequestView {
   public readonly ResetPasswordFormStepType: ResetPasswordFormStepType =
     ResetPasswordRequestFormStep;
   public readonly ResetPasswordFormSteps: ResetPasswordFormStepsType = RESET_PASSWORD_FORM_STEPS;
-  public readonly messagingChannel: MessagingChannel = this._messagingChannelToken;
+  public readonly messagingChannel: MessagingChannel = this._authConfig.messagingChannel;
   protected readonly resetPasswordRequestForm: FormBase<ResetPasswordRequestForm> =
     this._resetPasswordRequestForm;
   @HostBinding('class') private _classes = 'block max-w-md m-auto';
@@ -75,7 +83,7 @@ export class ResetPasswordRequestComponent implements ResetPasswordRequestView {
 
   public constructor(
     @Self() private readonly _resetPasswordRequestForm: ResetPasswordRequestFormService,
-    @Inject(messagingChannelToken) private readonly _messagingChannelToken: MessagingChannel,
+    @Inject(AUTH_CONFIG_TOKEN) private readonly _authConfig: AuthConfig,
     private readonly _passwordResetService: PasswordResetService,
     private readonly _alertService: AlertService
   ) {}

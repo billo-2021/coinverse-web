@@ -15,7 +15,7 @@ import {
   startWith,
   tap,
 } from 'rxjs';
-import { NavigationService, ParamsService, ViewPage } from '../../../../common';
+import { NavigationController, ParamsService, ViewPage, WebRoute } from '../../../../shared';
 import { ListOption } from '../../../../form-components';
 import {
   Currency,
@@ -145,7 +145,7 @@ export class TransactComponent implements TransactView {
 
   public constructor(
     @Self() private readonly _paramsService: ParamsService,
-    private readonly _navigationService: NavigationService,
+    private readonly _navigationService: NavigationController,
     private readonly _listOptionsService: ListOptionsService,
     @Self() private readonly _transactForm: TransactFormService,
     @Self() private readonly _transactBankDetailsForm: TransactBankDetailsFormService,
@@ -248,11 +248,11 @@ export class TransactComponent implements TransactView {
   }
 
   public onViewPayments(): void {
-    this._navigationService.to('manageTransactions').then();
+    this._navigationService.to(WebRoute.MANAGE_TRANSACTIONS).then();
   }
 
   public onViewTransactions(): void {
-    this._navigationService.to('manageTransactions').then();
+    this._navigationService.to(WebRoute.MANAGE_TRANSACTIONS).then();
   }
 
   public onActiveTabIndexChange(index: TransactTab) {

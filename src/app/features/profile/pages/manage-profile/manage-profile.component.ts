@@ -17,9 +17,8 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { AlertService, PageResponse } from '../../../../core';
-import { getErrorMessage, ViewPage } from '../../../../common';
-import { PAGE_OPTIONS, Pagination, paginationToken, Tab } from '../../../../ui-components';
+import { AlertService, ErrorUtils, PageResponse, ViewPage } from '../../../../shared';
+import { PAGE_OPTIONS, Pagination, PAGINATION_TOKEN, Tab } from '../../../../ui-components';
 import { ListOption } from '../../../../form-components';
 import {
   ChangePassword,
@@ -172,7 +171,7 @@ export class ManageProfileComponent implements ManageProfileView {
   );
 
   public constructor(
-    @Inject(paginationToken) private readonly _paginationToken: Pagination,
+    @Inject(PAGINATION_TOKEN) private readonly _paginationToken: Pagination,
     @Self() private readonly _userProfileForm: UserProfileFormService,
     @Self() private readonly _addressDetailsForm: AddressDetailsFormService,
     @Self() private readonly _changePasswordForm: ChangePasswordFormService,
@@ -232,7 +231,7 @@ export class ManageProfileComponent implements ManageProfileView {
       .subscribe({
         next: () => this.save('Personal Information Updated'),
         error: (error) => {
-          this.profileError = getErrorMessage(error);
+          this.profileError = ErrorUtils.getErrorMessage(error);
           this.reload();
         },
       });
@@ -245,7 +244,7 @@ export class ManageProfileComponent implements ManageProfileView {
       .subscribe({
         next: () => this.save('Address Updated'),
         error: (error) => {
-          this.addressDetailsError = getErrorMessage(error);
+          this.addressDetailsError = ErrorUtils.getErrorMessage(error);
           this.reload();
         },
       });
@@ -258,7 +257,7 @@ export class ManageProfileComponent implements ManageProfileView {
       .subscribe({
         next: () => this.save('Preferences Updated'),
         error: (error) => {
-          this.preferenceDetailsError = getErrorMessage(error);
+          this.preferenceDetailsError = ErrorUtils.getErrorMessage(error);
           this.reload();
         },
       });
@@ -275,7 +274,7 @@ export class ManageProfileComponent implements ManageProfileView {
       )
       .subscribe({
         next: (response) => this.save(response.message),
-        error: (error) => (this.changePasswordError = getErrorMessage(error)),
+        error: (error) => (this.changePasswordError = ErrorUtils.getErrorMessage(error)),
       });
   }
 

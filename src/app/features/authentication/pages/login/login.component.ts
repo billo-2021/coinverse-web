@@ -8,7 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { finalize, Subject, timer } from 'rxjs';
-import { FormBase, getErrorMessage } from '../../../../common';
+import { ErrorUtils, FormBase } from '../../../../shared';
 import { AuthenticationService, LoginRequest } from '../../../../domain';
 import { LoginForm, LoginFormComponent, LoginFormService } from '../../components';
 
@@ -48,13 +48,12 @@ export class LoginComponent {
           this._loginForm.resetForm();
 
           timer(0).subscribe(() => {
-            this._loginFormRef?.passwordRef?.focusInput(false);
-            this._changeDetectorRef.detectChanges();
+            this._loginFormRef?.focus('password');
           });
         })
       )
       .subscribe({
-        error: (error) => this.formError$.next(getErrorMessage(error)),
+        error: (error) => this.formError$.next(ErrorUtils.getErrorMessage(error)),
       });
   }
 }

@@ -8,7 +8,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { Pagination, paginationToken, TOTAL_ITEMS } from '../../../../ui-components';
+import { Pagination, PAGINATION_TOKEN, TOTAL_ITEMS } from '../../../../ui-components';
 import { Wallet } from '../../../../domain';
 
 export const KEYS = {
@@ -58,7 +58,7 @@ export class WalletsComponent implements WalletsComponentInput, WalletsComponent
 
   @HostBinding('class') private _classes = 'block';
 
-  public constructor(@Inject(paginationToken) private readonly _paginationToken: Pagination) {}
+  public constructor(@Inject(PAGINATION_TOKEN) private readonly _paginationToken: Pagination) {}
 
   public onPagination(pagination: Pagination): void {
     this.paginationChanged.emit(pagination);

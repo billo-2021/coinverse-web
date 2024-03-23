@@ -1,2 +1,2 @@
-export { TradeTab } from './trade-tab.enum';
-export { TradeStep } from './trade-step.enum';
+export { TradeTab } from './trade-tab';
+export { TradeStep } from './trade-step';

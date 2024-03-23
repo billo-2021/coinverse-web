@@ -1,4 +1,4 @@
-import { CurrencyQuote } from './currency-quote.model';
+import { CurrencyQuote } from './currency-quote';
 
 export interface CurrencyExchangeRate {
   readonly currencyPairName: string;

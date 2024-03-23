@@ -11,7 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormBase, Required } from '../../../../common';
+import { FormBase, FormValidators } from '../../../../shared';
 
 export interface CurrencyForm {
   readonly code: FormControl<string>;
@@ -31,10 +31,10 @@ export interface CurrencyFormComponentOutput {
 
 export function getCurrencyForm(): CurrencyForm {
   return {
-    code: new FormControl<string>('', Required),
-    name: new FormControl<string>('', Required),
-    symbol: new FormControl<string>('', Required),
-    circulatingSupply: new FormControl<number>(0, Required),
+    code: new FormControl<string>('', FormValidators.Required),
+    name: new FormControl<string>('', FormValidators.Required),
+    symbol: new FormControl<string>('', FormValidators.Required),
+    circulatingSupply: new FormControl<number>(0, FormValidators.Required),
   };
 }
 

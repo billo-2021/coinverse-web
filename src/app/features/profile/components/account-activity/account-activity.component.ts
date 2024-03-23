@@ -8,8 +8,8 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { Page } from '../../../../common';
-import { Pagination, paginationToken, TOTAL_ITEMS } from '../../../../ui-components';
+import { Page } from '../../../../shared';
+import { Pagination, PAGINATION_TOKEN, TOTAL_ITEMS } from '../../../../ui-components';
 import { UserAccountEvent } from '../../../../domain';
 
 export const KEYS = {
@@ -47,7 +47,7 @@ export class AccountActivityComponent
 {
   @Input() public title = 'Account Activities';
   @Input() public subtitle = 'Latest activities in your account.';
-  @Input() public pagination: Pagination = this._paginationToken;
+  @Input() public pagination: Pagination = this._pagination;
   @Input() public userAccountEvents: readonly UserAccountEvent[] = [];
   @Input() public total: number = TOTAL_ITEMS;
 
@@ -59,7 +59,7 @@ export class AccountActivityComponent
 
   @HostBinding('class') private _classes = 'block';
 
-  public constructor(@Inject(paginationToken) private readonly _paginationToken: Pagination) {}
+  public constructor(@Inject(PAGINATION_TOKEN) private readonly _pagination: Pagination) {}
 
   public paginate(pagination: Pagination): void {
     this.paginationChanged.emit(pagination);

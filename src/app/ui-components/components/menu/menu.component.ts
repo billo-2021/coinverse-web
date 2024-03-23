@@ -8,8 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { tuiWidthCollapse } from '@taiga-ui/core';
-import { UserPrincipal } from '../../../core';
-import { MenuItem } from '../../../common';
+import { MenuItem, UserPrincipal } from '../../../shared';
 
 export interface MenuComponentInput {
   user: UserPrincipal | null;

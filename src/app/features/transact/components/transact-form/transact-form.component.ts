@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Observable, startWith } from 'rxjs';
-import { FormBase, Required, RequiredAmount, SimpleChangesTyped } from '../../../../common';
+import { FormBase, FormValidators, SimpleChangesTyped } from '../../../../shared';
 import { Tab } from '../../../../ui-components';
 import { ListOption } from '../../../../form-components';
 import {
@@ -54,10 +54,10 @@ export interface TransactFormComponentOutput {
 
 export function getTransactForm(): TransactForm {
   return {
-    paymentMethod: new FormControl<ListOption<PaymentMethod> | null>(null, Required),
-    wallet: new FormControl<ListOption<Wallet> | null>(null, Required),
-    amountCurrency: new FormControl<ListOption<Currency> | null>(null, Required),
-    amount: new FormControl<number>(0, RequiredAmount()),
+    paymentMethod: new FormControl<ListOption<PaymentMethod> | null>(null, FormValidators.Required),
+    wallet: new FormControl<ListOption<Wallet> | null>(null, FormValidators.Required),
+    amountCurrency: new FormControl<ListOption<Currency> | null>(null, FormValidators.Required),
+    amount: new FormControl<number>(0, FormValidators.RequiredAmount()),
   };
 }
 

@@ -18,8 +18,7 @@ import {
   shareReplay,
   startWith,
 } from 'rxjs';
-import { DestroyService } from '../../../core';
-import { FormBase, FormStatus } from '../../../common';
+import { FormBase, FormStatus } from '../../../shared';
 import { StepOptions } from '../../../ui-components';
 import { ListOption } from '../../../form-components';
 import { Country, Currency, UserRole } from '../../models';
@@ -130,8 +129,7 @@ export class UserFormController {
     private readonly _addressFormService: AddressFormService,
     private readonly _preferenceFormService: PreferenceFormService,
     private readonly _accountFormService: AccountFormService,
-    private readonly _listOptionsService: ListOptionsService,
-    private readonly _destroy$: DestroyService
+    private readonly _listOptionsService: ListOptionsService
   ) {}
 
   public get currentStepIndex(): UserFormStep {

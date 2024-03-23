@@ -1,15 +1,13 @@
 import { MappingPair, Profile } from '@dynamic-mapper/mapper';
-
 import {
   HttpMessage,
   HttpMessageDto,
   PageResponse,
+  RawValue,
   UserAccessCredentials,
   UserPrincipal,
-} from '../../core';
-
+} from '../../shared';
 import { ListOption } from '../../form-components';
-
 import {
   AccountEvent,
   AccountEventDto,
@@ -66,7 +64,6 @@ import {
   Wallet,
   WalletDto,
 } from '../models';
-import { RawValue } from '../../common';
 import { FormGroup } from '@angular/forms';
 import { AccountForm, AddressForm, PersonalInformationForm, PreferenceForm } from '../components';
 

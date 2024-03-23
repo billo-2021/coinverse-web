@@ -11,7 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormBase, Required, RequiredEmail } from '../../../../common';
+import { FormBase, FormValidators } from '../../../../shared';
 import { UpdateUserProfilePersonalInformation, UserProfile } from '../../../../domain';
 
 export interface ProfileForm {
@@ -33,10 +33,10 @@ export interface ProfileFormComponentOutput {
 
 export function getProfileForm(): ProfileForm {
   return {
-    firstName: new FormControl<string>('', Required),
-    lastName: new FormControl<string>('', Required),
-    emailAddress: new FormControl<string>('', RequiredEmail),
-    phoneNumber: new FormControl<string>('', Required),
+    firstName: new FormControl<string>('', FormValidators.Required),
+    lastName: new FormControl<string>('', FormValidators.Required),
+    emailAddress: new FormControl<string>('', FormValidators.RequiredEmail),
+    phoneNumber: new FormControl<string>('', FormValidators.Required),
   };
 }
 

@@ -15,9 +15,8 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { PageResponse } from '../../../../core';
-import { NavigationService, View } from '../../../../common';
-import { PAGE_OPTIONS, Pagination, paginationToken } from '../../../../ui-components';
+import { NavigationController, PageResponse, View, WebRoute } from '../../../../shared';
+import { PAGE_OPTIONS, Pagination, PAGINATION_TOKEN } from '../../../../ui-components';
 import {
   CryptoCurrency,
   CurrencyQuote,
@@ -49,9 +48,7 @@ export class DashboardComponent implements View<DashboardViewModel> {
   @HostBinding('class') private _classes = 'block';
 
   private readonly _walletModel$ = this.getWalletModel();
-  private readonly _cryptoCurrencyPagination$ = new BehaviorSubject<Pagination>(
-    this._paginationToken
-  );
+  private readonly _cryptoCurrencyPagination$ = new BehaviorSubject<Pagination>(this._pagination);
 
   private _cryptoCurrencyPage$ = combineLatest([this._cryptoCurrencyPagination$]).pipe(
     switchMap((query) => this._lookupService.getCryptoCurrencies(...query).pipe(shareReplay(1))),
@@ -72,8 +69,8 @@ export class DashboardComponent implements View<DashboardViewModel> {
   );
 
   public constructor(
-    private readonly _navigationService: NavigationService,
-    @Inject(paginationToken) private readonly _paginationToken: Pagination,
+    private readonly _navigationService: NavigationController,
+    @Inject(PAGINATION_TOKEN) private readonly _pagination: Pagination,
     private readonly _walletService: WalletService,
     private readonly _lookupService: LookupService,
     private readonly _quoteService: QuoteService
@@ -90,7 +87,7 @@ export class DashboardComponent implements View<DashboardViewModel> {
   public onBuy(currencyPairName: string): void {
     this._navigationService
       .to({
-        route: 'trade',
+        route: WebRoute.TRADE,
         queryParams: { action: 'buy', currencyPairName },
       })
       .then();
@@ -99,7 +96,7 @@ export class DashboardComponent implements View<DashboardViewModel> {
   public onSell(currencyPairName: string): void {
     this._navigationService
       .to({
-        route: 'trade',
+        route: WebRoute.TRADE,
         queryParams: { action: 'sell', currencyPairName },
       })
       .then();
@@ -108,23 +105,7 @@ export class DashboardComponent implements View<DashboardViewModel> {
   public getCryptoCurrencyModelPage(
     cryptoCurrencyPage: PageResponse<CryptoCurrency>
   ): Observable<PageResponse<CryptoCurrencyModel>> {
-    return forkJoin(
-      cryptoCurrencyPage.data.map((currency) => {
-        return this.getCurrencyExchangeRate(currency).pipe(
-          map((currencyQuote) => {
-            const { askRate, bidRate } = currencyQuote;
-
-            return {
-              ...currency,
-              ...currencyQuote,
-              askRate,
-              bidRate,
-              change: 0,
-            };
-          })
-        );
-      })
-    ).pipe(
+    return forkJoin(this.cryptoCurrencyPageToCryptoCurrencyModels$(cryptoCurrencyPage)).pipe(
       map((cryptoCurrencies) => ({
         count: cryptoCurrencyPage.count,
         total: cryptoCurrencyPage.total,
@@ -138,6 +119,16 @@ export class DashboardComponent implements View<DashboardViewModel> {
     return this._quoteService
       .getCurrencyExchangeRateByCurrencyPairName(currencyPairName)
       .pipe(map((currencyExchangeRates) => currencyExchangeRates.quotes[0]));
+  }
+
+  private cryptoCurrencyPageToCryptoCurrencyModels$(
+    cryptoCurrencyPage: PageResponse<CryptoCurrency>
+  ): Observable<CryptoCurrencyModel>[] {
+    return cryptoCurrencyPage.data.map((currency) =>
+      this.getCurrencyExchangeRate(currency).pipe(
+        map((currencyQuote) => ({ ...currency, ...currencyQuote, change: 0 }))
+      )
+    );
   }
 
   private getWalletModel(): Observable<WalletModel> {

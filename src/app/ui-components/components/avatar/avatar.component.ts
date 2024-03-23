@@ -5,7 +5,7 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
-import { SizeXXL, SizeXXS } from '../../../common';
+import { SizeXXL, SizeXXS } from '../../../shared';
 
 export type AvatarSize = SizeXXL | SizeXXS;
 

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpMessage, HttpMessageDto } from '../../../core';
-import { ApiCrudClient } from '../../../common';
+import { ApiCrudClient, ApiRoute, HttpMessage, HttpMessageDto } from '../../../shared';
 import { MappingProfile } from '../../config';
 import {
   PasswordResetToken,
@@ -26,7 +25,7 @@ export class PasswordResetService {
       PasswordResetTokenDto,
       PasswordResetToken
     >(
-      'resetPassword',
+      ApiRoute.RESET_PASSWORD,
       passwordResetTokenRequest,
       MappingProfile.PasswordResetTokenDtoToPasswordResetToken
     );
@@ -34,7 +33,7 @@ export class PasswordResetService {
 
   public requestPasswordTokenUser(token: string): Observable<PasswordTokenUser> {
     return this._apiCrudClient.findOne<PasswordTokenUserDto, PasswordTokenUser>(
-      'resetPassword',
+      ApiRoute.RESET_PASSWORD,
       token,
       MappingProfile.PasswordTokenUserDtoToPasswordTokenUser
     );
@@ -42,7 +41,7 @@ export class PasswordResetService {
 
   public resetPassword(resetPasswordRequest: ResetPasswordRequest): Observable<HttpMessage> {
     return this._apiCrudClient.patch<ResetPasswordRequest, HttpMessageDto, HttpMessage>(
-      'resetPassword',
+      ApiRoute.RESET_PASSWORD,
       resetPasswordRequest,
       MappingProfile.HttpMessageDtoToHttpMessage
     );

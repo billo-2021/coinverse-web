@@ -1,6 +1,8 @@
 <button
   (click)="onClick()"
   [appearance]="appearance"
+  [class.tui-skeleton]="false"
+  [class.tui-skeleton_light]="true"
   [disabled]="disabled || loading"
   [icon]="icon"
   [shape]="shape"

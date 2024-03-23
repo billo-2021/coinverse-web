@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpMessage, HttpMessageDto, PageRequest, PageResponse } from '../../../core';
-import { ApiCrudClient } from '../../../common';
-import { MappingProfile } from '../../config';
+import {
+  ApiCrudClient,
+  ApiRoute,
+  HttpMessage,
+  HttpMessageDto,
+  PageRequest,
+  PageResponse,
+} from '../../../shared';
 import { ChangePassword, UserAccountEvent, UserAccountEventDto } from '../../models';
+import { MappingProfile } from '../../config';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +21,7 @@ export class UserAccountService {
     pageRequest: PageRequest
   ): Observable<PageResponse<UserAccountEvent>> {
     return this._apiCrudClient.findMany<UserAccountEventDto, UserAccountEvent>(
-      'accountActivity',
+      ApiRoute.ACCOUNT_ACTIVITY,
       pageRequest,
       MappingProfile.UserAccountEventDtoPageToUserAccountEventPage
     );
@@ -23,7 +29,7 @@ export class UserAccountService {
 
   public changePassword(changePasswordRequest: ChangePassword): Observable<HttpMessage> {
     return this._apiCrudClient.patch<ChangePassword, HttpMessageDto, HttpMessage>(
-      'accountChangePassword',
+      ApiRoute.ACCOUNT_CHANGE_PASSWORD,
       changePasswordRequest,
       MappingProfile.HttpMessageDtoToHttpMessage
     );

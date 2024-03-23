@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import {
-  AccountVerificationStoreService,
+  AccountVerificationStore,
+  ApiCrudClient,
+  ApiRoute,
   HttpMessage,
   HttpMessageDto,
-  UserPrincipalStoreService,
-} from '../../../core';
-import { ApiCrudClient, UserPermissionsService } from '../../../common';
+  UserPermissionsStore,
+  UserPrincipalStore,
+} from '../../../shared';
 import { MappingProfile } from '../../config';
 import { OtpTokenRequest, VerifyAccountRequest } from '../../models';
 
@@ -16,14 +18,14 @@ import { OtpTokenRequest, VerifyAccountRequest } from '../../models';
 export class AccountVerificationService {
   constructor(
     private readonly _apiCrudApiClient: ApiCrudClient,
-    private readonly _accountVerificationStore: AccountVerificationStoreService,
-    private readonly _userPrincipalStore: UserPrincipalStoreService,
-    private readonly _userPermissionsService: UserPermissionsService
+    private readonly _accountVerificationStore: AccountVerificationStore,
+    private readonly _userPrincipalStore: UserPrincipalStore,
+    private readonly _userPermissionsService: UserPermissionsStore
   ) {}
 
   public requestOtpToken(otpTokenRequest: OtpTokenRequest): Observable<HttpMessage> {
     return this._apiCrudApiClient.create<OtpTokenRequest, HttpMessageDto, HttpMessage>(
-      'requestToken',
+      ApiRoute.REQUEST_TOKEN,
       otpTokenRequest,
       MappingProfile.HttpMessageDtoToHttpMessage
     );
@@ -32,7 +34,7 @@ export class AccountVerificationService {
   public verifyAccount(verifyAccountRequest: VerifyAccountRequest): Observable<HttpMessage> {
     return this._apiCrudApiClient
       .create<VerifyAccountRequest, HttpMessageDto, HttpMessage>(
-        'verifyAccount',
+        ApiRoute.VERIFY_ACCOUNT,
         verifyAccountRequest,
         MappingProfile.HttpMessageDtoToHttpMessage
       )

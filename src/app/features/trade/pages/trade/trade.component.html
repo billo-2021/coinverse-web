@@ -9,16 +9,13 @@
       text="View History"></app-button>
   </div>
   <div class="col">
-    <app-card
-      *ngIf="viewModel.currentStepIndex !== TradeStepType.TRADE_CONFIRMATION"
-      class="max-w-md">
-      <div class="mt-6">
-        <app-stepper
-          (activeStepIndexChange)="onStepChanged($event)"
-          [activeStepIndex]="viewModel.currentStepIndex"
-          [steps]="TradeSteps">
-        </app-stepper>
-      </div>
+    <app-stepper
+      (activeStepIndexChange)="onStepChanged($event)"
+      [activeStepIndex]="viewModel.currentStepIndex"
+      [steps]="TradeSteps"
+      class="mt-6 mx-w-md">
+    </app-stepper>
+    <ng-container *ngIf="viewModel.currentStepIndex !== TradeStepType.TRADE_CONFIRMATION">
       <app-trade-form
         (actionClicked)="onRequestTrade($event)"
         (activeTabIndexChange)="onActiveTabIndexChanged($event)"
@@ -36,7 +33,7 @@
         [exchangeRate]="viewModel.currencyExchangeRate"
         [quote]="viewModel.currencyQuote"
         [tradeAction]="viewModel.tradeAction"></app-trade-quote>
-    </app-card>
+    </ng-container>
     <app-card
       *ngIf="viewModel.currentStepIndex === TradeStepType.TRADE_CONFIRMATION"
       class="col-sm-12 col-md-9 col-lg-5">

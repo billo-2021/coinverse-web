@@ -14,9 +14,8 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { PageResponse } from '../../../../core';
-import { NavigationService } from '../../../../common';
-import { PAGE_OPTIONS, Pagination, paginationToken } from '../../../../ui-components';
+import { NavigationController, PageResponse, WebRoute } from '../../../../shared';
+import { PAGE_OPTIONS, Pagination, PAGINATION_TOKEN } from '../../../../ui-components';
 import { Wallet, WalletService } from '../../../../domain';
 
 export interface ManageWalletsViewModel {
@@ -46,8 +45,8 @@ export class ManageWalletsComponent {
   @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    @Inject(paginationToken) private readonly _paginationToken: Pagination,
-    private readonly _navigationService: NavigationService,
+    @Inject(PAGINATION_TOKEN) private readonly _paginationToken: Pagination,
+    private readonly _navigationService: NavigationController,
     private readonly _walletService: WalletService
   ) {}
 
@@ -58,7 +57,7 @@ export class ManageWalletsComponent {
   public onWithdraw(currencyCode: string): void {
     this._navigationService
       .to({
-        route: 'transact',
+        route: WebRoute.TRANSACT,
         queryParams: { action: 'withdraw', currencyCode: currencyCode },
       })
       .then();
@@ -67,7 +66,7 @@ export class ManageWalletsComponent {
   public onDeposit(currencyCode: string): void {
     this._navigationService
       .to({
-        route: 'transact',
+        route: WebRoute.TRANSACT,
         queryParams: { action: 'deposit', currencyCode: currencyCode },
       })
       .then();

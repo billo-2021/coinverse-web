@@ -12,8 +12,8 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { Observable, takeUntil } from 'rxjs';
-import { DestroyService, LoadingService } from '../../../core';
-import { disableWhenLoading } from '../../utils';
+import { DestroyState, LoadingController } from '../../../shared';
+import { FormUtils } from '../../utils';
 
 export interface FormComponentInput {
   valid: boolean;
@@ -37,7 +37,7 @@ export interface FormComponentOutput {
   styleUrls: ['./form.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DestroyService],
+  providers: [DestroyState],
 })
 export class FormComponent implements FormComponentInput, FormComponentOutput, OnInit {
   @Input() public valid = false;
@@ -55,9 +55,9 @@ export class FormComponent implements FormComponentInput, FormComponentOutput, O
   @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    private readonly _loadingService: LoadingService,
+    private readonly _loadingService: LoadingController,
     @Optional() private _formGroupDirective: FormGroupDirective,
-    @Self() private readonly _destroy$: DestroyService
+    @Self() private readonly _destroy$: DestroyState
   ) {}
 
   protected get loading$(): Observable<boolean> {
@@ -69,7 +69,9 @@ export class FormComponent implements FormComponentInput, FormComponentOutput, O
   }
 
   public ngOnInit(): void {
-    disableWhenLoading(this.formGroup, this.loading$).pipe(takeUntil(this._destroy$)).subscribe();
+    FormUtils.disableWhenLoading(this.formGroup, this.loading$)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe();
   }
 
   public onCancelClicked(): void {

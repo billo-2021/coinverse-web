@@ -1,28 +1,47 @@
-<div class="col">
+<app-form
+  (saveClicked)="onAction()"
+  [formGroup]="formGroup"
+  [saveText]="TradeActions[activeTabIndex]"
+  [valid]="form.valid"
+  class="max-w-md">
   <app-tabs
     (activeItemIndexChange)="onActiveTabIndexChange($event)"
     [activeItemIndex]="activeTabIndex"
-    [tabs]="TradeTabs"></app-tabs>
-  <form [formGroup]="formGroup" class="flex-col mt-10">
-    <app-combo-box
-      [options]="currencyPairOptions"
-      label="Currency Pair"
-      name="currencyPair"></app-combo-box>
-    <div class="mb-4 row justify-space-between">
-      <app-combo-box
-        [options]="filteredCurrencyOptions"
-        class="col-12 col-sm-12 col-md-7"
-        label="Amount Currency"
-        name="amountCurrency"></app-combo-box>
-      <app-input-number
-        class="col-12 col-sm-12 col-md-4"
-        label="Amount"
-        name="amount"></app-input-number>
+    [tabs]="TradeTabs"
+    class="mb-10"></app-tabs>
+  <app-combo-box
+    [options]="currencyPairOptions"
+    label="Currency Pair"
+    name="currencyPair"></app-combo-box>
+  <app-card *ngIf="form.controls.currencyPair.value as selectedCurrencyPair" class="mb-4">
+    <div class="row justify-space-between">
+      <div class="col-5">
+        <div class="row items-center mb-4">
+          <app-avatar [text]="selectedCurrencyPair.value.baseCurrency.code"></app-avatar>
+          <p>{{selectedCurrencyPair.value.baseCurrency.code}}</p>
+        </div>
+        <div class="mb-4">BASE</div>
+        <div class="mb-4">CURRENCY</div>
+      </div>
+      <div class="col-5">
+        <div class="row items-center mb-4">
+          <app-avatar [text]="selectedCurrencyPair.value.quoteCurrency.code"></app-avatar>
+          <p>{{selectedCurrencyPair.value.quoteCurrency.code}}</p>
+        </div>
+        <div class="mb-4">QUOTE</div>
+        <div class="mb-4">CURRENCY</div>
+      </div>
     </div>
-    <app-button
-      (clicked)="onAction()"
-      [disabled]="!form.valid"
-      [text]="TradeActions[activeTabIndex]"
-      class="mt-4"></app-button>
-  </form>
-</div>
+  </app-card>
+  <div class="mb-4 row justify-space-between">
+    <app-combo-box
+      [options]="filteredCurrencyOptions"
+      class="col-12 col-sm-12 col-md-7"
+      label="Amount Currency"
+      name="amountCurrency"></app-combo-box>
+    <app-input-number
+      class="col-12 col-sm-12 col-md-4"
+      label="Amount"
+      name="amount"></app-input-number>
+  </div>
+</app-form>

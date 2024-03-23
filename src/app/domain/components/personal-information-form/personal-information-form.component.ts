@@ -11,7 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormBase, Required, RequiredEmail } from '../../../common';
+import { FormBase, FormValidators } from '../../../shared';
 
 export interface PersonalInformationForm {
   readonly firstName: FormControl<string>;
@@ -31,10 +31,10 @@ export interface PersonalInformationFormComponentOutput {
 
 export function getPersonalInformationForm(): PersonalInformationForm {
   return {
-    firstName: new FormControl<string>('', Required),
-    lastName: new FormControl<string>('', Required),
-    emailAddress: new FormControl<string>('', RequiredEmail),
-    phoneNumber: new FormControl<string>('', Required),
+    firstName: new FormControl<string>('', FormValidators.Required),
+    lastName: new FormControl<string>('', FormValidators.Required),
+    emailAddress: new FormControl<string>('', FormValidators.RequiredEmail),
+    phoneNumber: new FormControl<string>('', FormValidators.Required),
   };
 }
 

@@ -7,7 +7,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { LoadingService } from '../../../../core';
+import { LoadingController } from '../../../../shared';
 
 export interface ResetPasswordRequestResultComponentInput {
   passwordLinkRecipient: string;
@@ -33,7 +33,7 @@ export class ResetPasswordRequestResultComponent
   protected readonly loading$ = this.loadingService.loading$;
   @HostBinding('class') private _classes = 'block';
 
-  public constructor(private readonly loadingService: LoadingService) {}
+  public constructor(private readonly loadingService: LoadingController) {}
 
   public onResend(): void {
     this.resendClicked.emit();

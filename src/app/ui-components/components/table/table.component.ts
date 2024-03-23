@@ -8,8 +8,8 @@ import {
   Output,
   TemplateRef,
 } from '@angular/core';
-import { LoadingService } from '../../../core';
-import { paginationToken } from '../../config';
+import { LoadingController } from '../../../shared';
+import { PAGINATION_TOKEN } from '../../tokens';
 import { Pagination } from '../../types';
 
 export interface TableComponentInput<T extends object, K extends string | 'actions' | keyof T> {
@@ -39,7 +39,7 @@ export class TableComponent<T extends object, K extends string | 'actions' | key
   @Input() public keys: Record<K, string> | null = null;
   @Input() public data: readonly T[] = [];
   @Input() public rowDataTemplates: Partial<Record<K, TemplateRef<unknown>>> | null = null;
-  @Input() public pagination: Pagination = this._paginationToken;
+  @Input() public pagination: Pagination = this._pagination;
   @Input() public total = 1;
 
   @Output() public paginationChanged = new EventEmitter<Pagination>();
@@ -47,8 +47,8 @@ export class TableComponent<T extends object, K extends string | 'actions' | key
   @HostBinding('class') private _classes = 'block overflow-x-auto';
 
   public constructor(
-    @Inject(paginationToken) private readonly _paginationToken: Pagination,
-    private readonly _loadingService: LoadingService
+    @Inject(PAGINATION_TOKEN) private readonly _pagination: Pagination,
+    private readonly _loadingService: LoadingController
   ) {}
 
   public onPagination(pagination: Pagination): void {

@@ -14,15 +14,16 @@ import {
   tap,
 } from 'rxjs';
 import { tuiIsPresent } from '@taiga-ui/cdk';
-import { AlertService } from '../../../../core';
 import {
+  AlertService,
   CrudMode,
   CrudModeTitle,
+  ErrorUtils,
   FormBase,
-  getErrorMessage,
-  NavigationService,
+  NavigationController,
   ParamsService,
-} from '../../../../common';
+  WebRoute,
+} from '../../../../shared';
 import {
   AddCryptoCurrency,
   AdministrationService,
@@ -119,7 +120,7 @@ export class ManageCurrencyComponent {
   public constructor(
     private readonly _paramsService: ParamsService,
     private readonly _alertService: AlertService,
-    private readonly _navigationService: NavigationService,
+    private readonly _navigationController: NavigationController,
     private readonly _currencyForm: CurrencyFormService,
     private readonly _administrationService: AdministrationService,
     private readonly _lookupService: LookupService
@@ -154,10 +155,10 @@ export class ManageCurrencyComponent {
         })
       )
       .subscribe({
-        error: (error) => (this.error = getErrorMessage(error)),
+        error: (error) => (this.error = ErrorUtils.getErrorMessage(error)),
         next: () => {
           this._alertService.showMessage('Currency Added');
-          this._navigationService.to('manageCurrencies').then();
+          this._navigationController.to(WebRoute.MANAGE_CURRENCIES).then();
         },
       });
   }
@@ -176,10 +177,10 @@ export class ManageCurrencyComponent {
       .subscribe({
         next: () => {
           this._alertService.showMessage('Currency Updated');
-          this._navigationService.to('manageCurrencies').then();
+          this._navigationController.to(WebRoute.MANAGE_CURRENCIES).then();
         },
         error: (error) => {
-          this.error = getErrorMessage(error);
+          this.error = ErrorUtils.getErrorMessage(error);
           this.form.markAsPristine();
           this.reload();
         },

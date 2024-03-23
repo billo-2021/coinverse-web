@@ -7,8 +7,14 @@ import {
 } from '@angular/core';
 import { finalize } from 'rxjs';
 import { Mapper } from '@dynamic-mapper/angular';
-import { AlertService, DestroyService } from '../../../../core';
-import { getErrorMessage, NavigationService, Page } from '../../../../common';
+import {
+  AlertService,
+  DestroyState,
+  ErrorUtils,
+  NavigationController,
+  Page,
+  WebRoute,
+} from '../../../../shared';
 import {
   AccountFormService,
   AddressFormService,
@@ -33,7 +39,7 @@ import {
     AddressFormService,
     PreferenceFormService,
     AccountFormService,
-    DestroyService,
+    DestroyState,
   ],
 })
 export class ManageUserComponent implements Page {
@@ -47,7 +53,7 @@ export class ManageUserComponent implements Page {
     @Self() private readonly _preferenceFormService: PreferenceFormService,
     @Self() private readonly _accountFormService: AccountFormService,
     @Self() private readonly _userFormController: UserFormController,
-    private readonly _navigationService: NavigationService,
+    private readonly _navigationController: NavigationController,
     private readonly _alertService: AlertService,
     private readonly _administrationService: AdministrationService,
     private readonly _mapper: Mapper
@@ -92,9 +98,9 @@ export class ManageUserComponent implements Page {
       .subscribe({
         next: () => {
           this._alertService.showMessage('User added successfully');
-          this._navigationService.to('manageUsers').then();
+          this._navigationController.to(WebRoute.MANAGE_USERS).then();
         },
-        error: (error) => (this._userFormController.formError = getErrorMessage(error)),
+        error: (error) => (this._userFormController.formError = ErrorUtils.getErrorMessage(error)),
       });
   }
 }

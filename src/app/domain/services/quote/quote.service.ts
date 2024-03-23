@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiCrudClient } from '../../../common';
-import { MappingProfile } from '../../config';
+import { ApiCrudClient, ApiRoute } from '../../../shared';
 import { CurrencyExchangeRate, CurrencyExchangeRateDto } from '../../models';
+import { MappingProfile } from '../../config';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class QuoteService {
 
   public getCurrencyExchangeRateByCurrencyPairName(name: string): Observable<CurrencyExchangeRate> {
     return this._apiCrudClient.findOneBy<CurrencyExchangeRateDto, CurrencyExchangeRate>(
-      'quotesCurrencyPair',
+      ApiRoute.QUOTES_CURRENCY_PAIR,
       { name: name },
       MappingProfile.CurrencyExchangeRateDtoToCurrencyExchangeRate
     );

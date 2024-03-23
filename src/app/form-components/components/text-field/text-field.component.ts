@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   HostBinding,
+  Inject,
   Input,
   Optional,
   ViewChild,
@@ -9,6 +11,7 @@ import {
 } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { TuiInputComponent } from '@taiga-ui/kit';
+import { FOCUS_OPTIONS_TOKEN, FocusOptions } from '../../../shared';
 import { InputFieldSize } from '../../types';
 
 export type TextFieldType = 'text' | 'email';
@@ -42,13 +45,19 @@ export class TextFieldComponent implements TextFieldComponentInput {
   @ViewChild(TuiInputComponent) private _inputRef?: TuiInputComponent;
   @HostBinding('class') private _classes = 'block input-text-field-wrapper';
 
-  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
+  public constructor(
+    @Inject(FOCUS_OPTIONS_TOKEN) private readonly _focusOptionsToken: FocusOptions,
+    private readonly _changeDetectorRef: ChangeDetectorRef,
+    @Optional() private readonly _formGroupDirective: FormGroupDirective
+  ) {}
 
   protected get formGroup(): FormGroup | null {
     return this._formGroupDirective?.form || null;
   }
 
-  public focusInput(preventScroll: boolean) {
+  public focus(options?: FocusOptions): void {
+    const { preventScroll } = options ?? this._focusOptionsToken;
     this._inputRef?.nativeFocusableElement?.focus({ preventScroll: preventScroll });
+    this._changeDetectorRef.detectChanges();
   }
 }

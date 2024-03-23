@@ -14,9 +14,8 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { PageResponse } from '../../../../core';
-import { NavigationService, ViewPage } from '../../../../common';
-import { PAGE_OPTIONS, Pagination, paginationToken } from '../../../../ui-components';
+import { NavigationController, PageResponse, ViewPage, WebRoute } from '../../../../shared';
+import { PAGE_OPTIONS, Pagination, PAGINATION_TOKEN } from '../../../../ui-components';
 import { CurrencyTransaction, TradeService } from '../../../../domain';
 
 export interface ManageTradesViewModel {
@@ -58,8 +57,8 @@ export class ManageTradesComponent implements ManageTradesView {
   ]).pipe(map(([tradesPagination, tradePage]) => ({ tradesPagination, tradePage })));
 
   public constructor(
-    @Inject(paginationToken) private readonly _paginationToken: Pagination,
-    private readonly _navigationService: NavigationService,
+    @Inject(PAGINATION_TOKEN) private readonly _paginationToken: Pagination,
+    private readonly _navigationService: NavigationController,
     private readonly _tradeService: TradeService
   ) {}
 
@@ -68,7 +67,7 @@ export class ManageTradesComponent implements ManageTradesView {
   }
 
   public onTrade(): void {
-    this._navigationService.to('trade').then();
+    this._navigationService.to(WebRoute.TRADE).then();
   }
 
   public onPagination(pagination: Pagination): void {

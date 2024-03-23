@@ -61,6 +61,7 @@ import {
   MenuComponent,
   MenuFooterComponent,
   MenuHeaderComponent,
+  MenuItemsComponent,
   MoneyComponent,
   NotificationComponent,
   RingChartComponent,
@@ -71,6 +72,7 @@ import {
   TabsComponent,
   TagComponent,
 } from './components';
+import { MenuUserComponent } from './components/menu/menu-user/menu-user.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +87,8 @@ import {
     NotificationComponent,
     MenuComponent,
     MenuHeaderComponent,
+    MenuItemsComponent,
+    MenuUserComponent,
     SideMenuComponent,
     MenuFooterComponent,
     MoneyComponent,

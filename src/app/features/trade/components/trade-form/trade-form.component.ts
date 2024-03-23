@@ -15,8 +15,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { takeUntil, tap } from 'rxjs';
-import { DestroyService } from '../../../../core';
-import { FormBase, Required, RequiredAmount, SimpleChangesTyped } from '../../../../common';
+import { DestroyState, FormBase, FormValidators, SimpleChangesTyped } from '../../../../shared';
 import { Tab } from '../../../../ui-components';
 import { ListOption } from '../../../../form-components';
 import { Currency, CurrencyPair } from '../../../../domain';
@@ -53,9 +52,9 @@ export const TRADE_ACTIONS: TradeActionsType = ['Buy', 'Sell'];
 
 export function getTradeForm(): TradeForm {
   return {
-    currencyPair: new FormControl<ListOption<CurrencyPair> | null>(null, Required),
-    amountCurrency: new FormControl<ListOption<Currency> | null>(null, Required),
-    amount: new FormControl<number>(0, RequiredAmount()),
+    currencyPair: new FormControl<ListOption<CurrencyPair> | null>(null, FormValidators.Required),
+    amountCurrency: new FormControl<ListOption<Currency> | null>(null, FormValidators.Required),
+    amount: new FormControl<number>(0, FormValidators.RequiredAmount()),
   };
 }
 
@@ -72,7 +71,7 @@ export class TradeFormService extends FormBase<TradeForm> {
   styleUrls: ['./trade-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DestroyService],
+  providers: [DestroyState],
 })
 export class TradeFormComponent
   implements TradeFormComponentInput, TradeFormComponentOutput, OnInit, OnChanges
@@ -98,7 +97,7 @@ export class TradeFormComponent
 
   public constructor(
     @Optional() @SkipSelf() private readonly _tradeForm: TradeFormService | null,
-    @Self() private readonly _destroy$: DestroyService
+    @Self() private readonly _destroy$: DestroyState
   ) {}
 
   protected get formGroup(): FormGroup<TradeForm> {

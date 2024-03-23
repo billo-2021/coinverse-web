@@ -1,7 +1,12 @@
-import { InjectionToken } from '@angular/core';
+import { UiConfig } from '../types';
+import { PAGINATION } from '../constants';
+import { PAGINATION_TOKEN } from '../tokens';
 
-import { Pagination } from '../types';
-
-const paginationToken = new InjectionToken<Pagination>('pagination');
-
-export { paginationToken };
+export const uiConfig: UiConfig = {
+  providers: [
+    {
+      provide: PAGINATION_TOKEN,
+      useValue: PAGINATION,
+    },
+  ],
+};

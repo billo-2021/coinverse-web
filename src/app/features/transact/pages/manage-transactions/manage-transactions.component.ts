@@ -14,9 +14,8 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { PageResponse } from '../../../../core';
-import { NavigationService, Page } from '../../../../common';
-import { PAGE_OPTIONS, Pagination, paginationToken } from '../../../../ui-components';
+import { NavigationController, Page, PageResponse, WebRoute } from '../../../../shared';
+import { PAGE_OPTIONS, Pagination, PAGINATION_TOKEN } from '../../../../ui-components';
 import { Payment, TransactService } from '../../../../domain';
 
 export interface ManageTransactionsViewModel {
@@ -50,8 +49,8 @@ export class ManageTransactionsComponent implements Page {
   ]).pipe(map(([paymentsPagination, paymentsPage]) => ({ paymentsPagination, paymentsPage })));
 
   public constructor(
-    @Inject(paginationToken) private readonly _paginationToken: Pagination,
-    private readonly _navigationService: NavigationService,
+    @Inject(PAGINATION_TOKEN) private readonly _paginationToken: Pagination,
+    private readonly _navigationService: NavigationController,
     private readonly _transactService: TransactService
   ) {}
 
@@ -60,11 +59,15 @@ export class ManageTransactionsComponent implements Page {
   }
 
   public onWithdraw(): void {
-    this._navigationService.to({ route: 'transact', queryParams: { action: 'withdraw' } }).then();
+    this._navigationService
+      .to({ route: WebRoute.TRANSACT, queryParams: { action: 'withdraw' } })
+      .then();
   }
 
   public onDeposit(): void {
-    this._navigationService.to({ route: 'transact', queryParams: { action: 'deposit' } }).then();
+    this._navigationService
+      .to({ route: WebRoute.TRANSACT, queryParams: { action: 'deposit' } })
+      .then();
   }
 
   public onPagination(pagination: Pagination): void {

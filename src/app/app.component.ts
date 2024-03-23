@@ -1,21 +1,18 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  Inject,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation } from '@angular/core';
 import { combineLatest, map, merge, Observable, startWith, tap, throttleTime } from 'rxjs';
-import { AlertService, LoggingService, UserPrincipal, UserPrincipalStoreService } from './core';
 import {
-  appTitleToken,
-  isKnownErrorLog,
+  AlertService,
+  ErrorUtils,
+  LogState,
   MenuController,
   MenuItem,
-  NavigationService,
-  UserPermissionsService,
-} from './common';
-import { GlobalRoutingService } from './global-routing';
+  NavigationController,
+  UserPermissionsStore,
+  UserPrincipal,
+  UserPrincipalStore,
+  WebRoute,
+} from './shared';
+import { GlobalRoutingService } from './global';
 
 export interface AppViewModel {
   readonly userPrincipal: UserPrincipal | null;
@@ -39,7 +36,7 @@ export class AppComponent {
     this._log$.pipe(
       throttleTime(2000),
       tap((log) => {
-        if (isKnownErrorLog(log)) {
+        if (ErrorUtils.isKnownErrorLog(log)) {
           this._alertService.showErrorMessage(log.message);
           return;
         }
@@ -53,10 +50,10 @@ export class AppComponent {
 
   protected readonly viewModel$: Observable<AppViewModel> = combineLatest([
     this._userPermissions$,
-    this.menuController.isMobile$,
-    this.menuController.isMenuShown$,
-    this.menuController.isSideMenuShown$,
-    this.menuController.menuItems$,
+    this._menuController.isMobile$,
+    this._menuController.isMenuShown$,
+    this._menuController.isSideMenuShown$,
+    this._menuController.menuItems$,
     this._effects$,
   ]).pipe(
     map(([userPermissions, isMobile, isMenuShown, isSideMenuShown, menuItems]) => ({
@@ -72,17 +69,16 @@ export class AppComponent {
 
   public constructor(
     private readonly _globalRouting$: GlobalRoutingService,
-    @Inject(appTitleToken) protected readonly _appTitleToken: string,
-    private readonly _userPrincipalStore$: UserPrincipalStoreService,
-    private readonly _userPermissions$: UserPermissionsService,
-    private readonly menuController: MenuController,
-    private readonly _log$: LoggingService,
-    private readonly _navigationService: NavigationService,
+    private readonly _userPrincipalStore$: UserPrincipalStore,
+    private readonly _userPermissions$: UserPermissionsStore,
+    private readonly _menuController: MenuController,
+    private readonly _log$: LogState,
+    private readonly _navigationService: NavigationController,
     private readonly _alertService: AlertService
   ) {}
 
   public onToggleMenu(open: boolean): void {
-    this.menuController.setIsSideMenuShown(open);
+    this._menuController.setIsSideMenuShown(open);
   }
 
   public onSignOut(): void {
@@ -90,6 +86,6 @@ export class AppComponent {
   }
 
   public onGotoProfile(): void {
-    this._navigationService.to('profile').then();
+    this._navigationService.to(WebRoute.PROFILE).then();
   }
 }

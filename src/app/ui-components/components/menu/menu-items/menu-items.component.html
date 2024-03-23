@@ -1,0 +1,15 @@
+<ul class="menu-items col-12">
+  <li *ngFor="let menuItem of items" class="menu-items__menu-item">
+    <a
+      #rla="routerLinkActive"
+      [icon]="menuItem.icon"
+      [ngClass]="{'menu-items__menu-item__link': !rla.isActive}"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="menuItem.link"
+      iconAlign="left"
+      routerLinkActive="menu-items__menu-item__link--active"
+      tuiLink
+      >{{ menuItem.text }}</a
+    >
+  </li>
+</ul>

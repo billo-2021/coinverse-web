@@ -7,7 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { AbstractControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { SizeL } from '../../../common';
+import { SizeL } from '../../../shared';
 
 export type CheckBoxSize = SizeL;
 

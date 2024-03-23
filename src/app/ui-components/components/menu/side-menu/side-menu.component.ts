@@ -1,12 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  HostBinding,
   Inject,
   Input,
   ViewEncapsulation,
 } from '@angular/core';
-import { appNameToken, MenuItem } from '../../../../common';
+import { MenuItem, UserPrincipal, WEB_CONFIG_TOKEN, WebConfig } from '../../../../shared';
 
 export interface SideMenuComponentInput {
   isMobile: boolean;
@@ -22,15 +21,15 @@ export interface SideMenuComponentInput {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SideMenuComponent implements SideMenuComponentInput {
+  @Input() public user: UserPrincipal | null = null;
   @Input() public isMobile = false;
   @Input() public show = true;
   @Input() public menuItems: readonly MenuItem[] = [];
+  private readonly _appName: string = this._webConfig.appName;
 
-  @HostBinding('class') private _classes = 'block';
-
-  public constructor(@Inject(appNameToken) private readonly _appNameToken: string) {}
+  public constructor(@Inject(WEB_CONFIG_TOKEN) private readonly _webConfig: WebConfig) {}
 
   protected get appName(): string {
-    return this._appNameToken;
+    return this._appName;
   }
 }

@@ -1,13 +1,16 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   HostBinding,
+  Inject,
   Input,
   Optional,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
+import { FOCUS_OPTIONS_TOKEN, FocusOptions } from '../../../shared';
 import { NgOtpInputComponent } from 'ng-otp-input';
 
 export interface OtpInputComponentInput {
@@ -34,7 +37,11 @@ export class OtpInputComponent implements OtpInputComponentInput {
 
   @HostBinding('class') private _classes = 'block';
 
-  public constructor(@Optional() private readonly _formGroupDirective: FormGroupDirective) {}
+  public constructor(
+    @Inject(FOCUS_OPTIONS_TOKEN) private readonly _focusOptionsToken: FocusOptions,
+    private readonly _changeDetectorRef: ChangeDetectorRef,
+    @Optional() private readonly _formGroupDirective: FormGroupDirective
+  ) {}
 
   protected get formGroup(): FormGroup | null {
     return this._formGroupDirective?.form || null;
@@ -54,12 +61,19 @@ export class OtpInputComponent implements OtpInputComponentInput {
     this.ngOtpInputRef.focusTo(elementId);
   }
 
-  public focusInput(index: number): void {
-    if (!this.ngOtpInputRef || index < 0 || index >= this.length) {
+  public focus(options?: FocusOptions): void {
+    const { itemToFocusIndex } = options ?? this._focusOptionsToken;
+    if (
+      !this.ngOtpInputRef ||
+      typeof itemToFocusIndex === 'undefined' ||
+      itemToFocusIndex < 0 ||
+      itemToFocusIndex >= this.length
+    ) {
       return;
     }
 
-    const elementId = this.ngOtpInputRef.getBoxId(index);
+    const elementId = this.ngOtpInputRef.getBoxId(itemToFocusIndex);
     this.ngOtpInputRef.focusTo(elementId);
+    this._changeDetectorRef.detectChanges();
   }
 }

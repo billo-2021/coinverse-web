@@ -1,6 +1,6 @@
-export { CountryDto } from './country-dto.model';
+export { CountryDto } from './country-dto';
 export { Country } from './country';
-export { CurrencyDto } from './currency-dto.model';
+export { CurrencyDto } from './currency-dto';
 export { Currency } from './currency';
 export { CryptoCurrencyDto } from './crypto-currency-dto';
 export { CryptoCurrency } from './crypto-currency';
@@ -8,5 +8,5 @@ export { CurrencyPairDto } from './currency-pair-dto';
 export { CurrencyPair } from './currency-pair';
 export { PaymentMethodDto } from './payment-method-dto';
 export { PaymentMethod } from './payment-method';
-export { UserRoleDto } from './user-role-dto.model';
-export { UserRole } from './user-role.model';
+export { UserRoleDto } from './user-role-dto';
+export { UserRole } from './user-role';

@@ -15,7 +15,7 @@
 <ng-template #name let-currency>
   <div class="row-nowrap col-spacing-xs items-center">
     <app-avatar [text]="currency.code" class="currency-avatar" size="s"></app-avatar>
-    <p>{{ currency.name }}</p>
+    <p>{{ currency.name }} <span class="currency-code">({{ currency.code }})</span></p>
   </div>
 </ng-template>
 

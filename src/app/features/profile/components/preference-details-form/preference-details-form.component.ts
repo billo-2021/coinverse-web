@@ -12,7 +12,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormBase, Required, SimpleChangesTyped } from '../../../../common';
+import { FormBase, FormValidators, SimpleChangesTyped } from '../../../../shared';
 import { ListOption } from '../../../../form-components';
 import { Currency, UpdateUserProfilePreference, UserProfilePreference } from '../../../../domain';
 
@@ -39,14 +39,14 @@ export interface PreferenceDetailsFormComponentOutput {
 
 export function getNotificationMethodsForm(): NotificationMethodsForm {
   return {
-    sms: new FormControl<boolean>(false, Required),
-    email: new FormControl<boolean>(true, Required),
+    sms: new FormControl<boolean>(false, FormValidators.Required),
+    email: new FormControl<boolean>(true, FormValidators.Required),
   };
 }
 
 export function getPreferenceDetailsForm(): PreferenceDetailsForm {
   return {
-    currency: new FormControl<ListOption<Currency> | null>(null, Required),
+    currency: new FormControl<ListOption<Currency> | null>(null, FormValidators.Required),
     notificationMethods: new FormBase<NotificationMethodsForm>(getNotificationMethodsForm()),
   };
 }

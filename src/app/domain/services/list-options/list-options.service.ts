@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Mapper } from '@dynamic-mapper/angular';
-import { PageRequest } from '../../../core';
-import { apiMaxPageRequestToken } from '../../../common';
+import { MAX_PAGE_REQUEST_TOKEN, PageRequest } from '../../../shared';
 import { ListOption } from '../../../form-components';
-import { MappingProfile } from '../../config';
 import { Country, Currency, CurrencyPair, PaymentMethod, UserRole, Wallet } from '../../models';
+import { MappingProfile } from '../../config';
 import { LookupService, WalletService } from '../../services';
 
 @Injectable({
@@ -14,7 +13,7 @@ import { LookupService, WalletService } from '../../services';
 export class ListOptionsService {
   constructor(
     private readonly _mapper: Mapper,
-    @Inject(apiMaxPageRequestToken) private readonly _apiMaxPageRequestToken: PageRequest,
+    @Inject(MAX_PAGE_REQUEST_TOKEN) private readonly _maxPageRequest: PageRequest,
     private readonly _lookupService: LookupService,
     private readonly _walletService: WalletService
   ) {}
@@ -86,7 +85,7 @@ export class ListOptionsService {
 
   public getWalletOptions(): Observable<ListOption<Wallet>[]> {
     return this._walletService
-      .getBalances(this._apiMaxPageRequestToken)
+      .getBalances(this._maxPageRequest)
       .pipe(
         map((walletPage) =>
           walletPage.data.map((wallet) =>

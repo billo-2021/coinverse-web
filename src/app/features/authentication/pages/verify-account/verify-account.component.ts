@@ -12,12 +12,17 @@ import {
 import { BehaviorSubject, combineLatest, finalize, map, Observable, tap } from 'rxjs';
 import {
   AccountVerification,
-  AccountVerificationStoreService,
+  AccountVerificationStore,
   AlertService,
+  AUTH_CONFIG_TOKEN,
+  AuthConfig,
+  ErrorUtils,
+  FormBase,
   MessagingChannel,
-  verificationMethodToken,
-} from '../../../../core';
-import { FormBase, getErrorMessage, NavigationService, View } from '../../../../common';
+  NavigationController,
+  View,
+  WebRoute,
+} from '../../../../shared';
 import {
   AccountVerificationService,
   OtpTokenRequest,
@@ -39,7 +44,7 @@ export interface VerifyAccountViewModel {
   providers: [OtpFormService],
 })
 export class VerifyAccountComponent implements View<VerifyAccountViewModel>, AfterViewInit {
-  protected readonly verificationMethod: MessagingChannel = this._verificationMethodToken;
+  protected readonly verificationMethod: MessagingChannel = this._authConfig.verificationMethod;
   protected readonly otpForm: FormBase<OtpForm> = this._otpFormService;
 
   @HostBinding('class') private _classes = 'block col-12 col-md-10 m-auto';
@@ -52,7 +57,7 @@ export class VerifyAccountComponent implements View<VerifyAccountViewModel>, Aft
     this._accountVerificationStore$.pipe(
       tap((accountVerification) => {
         if (!accountVerification) {
-          this._navigationService.to('root').then();
+          this._navigationService.to(WebRoute.ROOT).then();
           return;
         }
 
@@ -70,11 +75,11 @@ export class VerifyAccountComponent implements View<VerifyAccountViewModel>, Aft
 
   public constructor(
     private readonly _changeDetectorRef: ChangeDetectorRef,
-    @Inject(verificationMethodToken) private readonly _verificationMethodToken: MessagingChannel,
+    @Inject(AUTH_CONFIG_TOKEN) private readonly _authConfig: AuthConfig,
     @Self() private readonly _otpFormService: OtpFormService,
-    private readonly _navigationService: NavigationService,
+    private readonly _navigationService: NavigationController,
     private readonly _accountVerificationService: AccountVerificationService,
-    private readonly _accountVerificationStore$: AccountVerificationStoreService,
+    private readonly _accountVerificationStore$: AccountVerificationStore,
     private readonly _alertService: AlertService
   ) {}
 
@@ -95,7 +100,7 @@ export class VerifyAccountComponent implements View<VerifyAccountViewModel>, Aft
       return;
     }
 
-    this.otpFormRef.focusInput(0);
+    this.otpFormRef.focus(0);
     this._changeDetectorRef.detectChanges();
   }
 
@@ -114,7 +119,7 @@ export class VerifyAccountComponent implements View<VerifyAccountViewModel>, Aft
       .pipe(finalize(() => this.resetOtpForm()))
       .subscribe({
         next: (response) => this._alertService.showMessage(response.message),
-        error: (error) => (this.formError = getErrorMessage(error)),
+        error: (error) => (this.formError = ErrorUtils.getErrorMessage(error)),
       });
   }
 

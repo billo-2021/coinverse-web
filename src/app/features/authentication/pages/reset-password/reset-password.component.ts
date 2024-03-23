@@ -21,14 +21,16 @@ import {
   throwError,
 } from 'rxjs';
 import { tuiIsPresent } from '@taiga-ui/cdk';
-import { AlertService, AppError } from '../../../../core';
 import {
+  AlertService,
+  AppError,
+  ErrorUtils,
   FormBase,
-  getErrorMessage,
-  NavigationService,
+  NavigationController,
   ParamsService,
   View,
-} from '../../../../common';
+  WebRoute,
+} from '../../../../shared';
 import { PasswordResetService, PasswordTokenUser, ResetPasswordRequest } from '../../../../domain';
 import { ResetPasswordForm, ResetPasswordFormService } from '../../components';
 
@@ -101,7 +103,7 @@ export class ResetPasswordComponent implements ResetPasswordView {
       ),
       catchError(() => {
         const message = 'Invalid password token';
-        this._navigationService.to('login').then();
+        this._navigationService.to(WebRoute.LOGIN).then();
         return throwError(() => new AppError(message));
       }),
       tap((passwordTokenUser) => this._passwordTokenUser$.next(passwordTokenUser))
@@ -127,7 +129,7 @@ export class ResetPasswordComponent implements ResetPasswordView {
     private readonly _paramsService: ParamsService,
     private readonly _alertService: AlertService,
     private readonly _activatedRoute: ActivatedRoute,
-    private readonly _navigationService: NavigationService,
+    private readonly _navigationService: NavigationController,
     @Self() private readonly _resetPasswordForm: ResetPasswordFormService,
     private readonly _passwordResetService: PasswordResetService
   ) {}
@@ -178,7 +180,7 @@ export class ResetPasswordComponent implements ResetPasswordView {
       .pipe(finalize(() => this._resetPasswordForm.resetForm()))
       .subscribe({
         next: () => (this.currentStepIndex = ResetPasswordFormStep.PasswordResetResult),
-        error: (error) => (this.formError = getErrorMessage(error)),
+        error: (error) => (this.formError = ErrorUtils.getErrorMessage(error)),
       });
   }
 

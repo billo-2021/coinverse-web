@@ -8,9 +8,8 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { PageRequest } from '../../../../core';
-import { Page } from '../../../../common';
-import { Pagination, paginationToken, TOTAL_ITEMS } from '../../../../ui-components';
+import { Page, PageRequest } from '../../../../shared';
+import { Pagination, PAGINATION_TOKEN, TOTAL_ITEMS } from '../../../../ui-components';
 import { LookupService, QuoteService } from '../../../../domain';
 import { CryptoCurrencyModel } from '../../models';
 
@@ -48,7 +47,7 @@ export interface MarketsComponentOutput {
 export class MarketsComponent implements MarketsComponentInput, MarketsComponentOutput {
   @Input() public title = 'Markets';
   @Input() public subtitle = 'Latest market prices.';
-  @Input() public pagination: Pagination = this._paginationToken;
+  @Input() public pagination: Pagination = this._pagination;
   @Input() public currencies: readonly CryptoCurrencyModel[] = [];
   @Input() public total: number = TOTAL_ITEMS;
 
@@ -62,7 +61,7 @@ export class MarketsComponent implements MarketsComponentInput, MarketsComponent
   @HostBinding('class') private _classes = 'block';
 
   public constructor(
-    @Inject(paginationToken) private readonly _paginationToken: Pagination,
+    @Inject(PAGINATION_TOKEN) private readonly _pagination: Pagination,
     private readonly _lookupService: LookupService,
     private readonly _quoteService: QuoteService
   ) {}

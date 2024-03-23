@@ -1,20 +1,14 @@
-<div class="row middle menu-toggle">
-  <div *tuiSidebar="isMobile && show; direction: 'left'">
-    <ng-container
-      [ngTemplateOutletContext]="{ $implicit: menuItems }"
-      [ngTemplateOutlet]="menuContent"></ng-container>
-  </div>
-  <ng-container *ngIf="!isMobile">
-    <ng-container
-      [ngTemplateOutletContext]="{ $implicit: menuItems }"
-      [ngTemplateOutlet]="menuContent"></ng-container>
-  </ng-container>
+<div *tuiSidebar="isMobile && show; direction: 'left'" class="side-menu-mobile">
+  <ng-container [ngTemplateOutlet]="menuContent" />
 </div>
+<ng-container *ngIf="!isMobile">
+  <ng-container [ngTemplateOutlet]="menuContent" />
+</ng-container>
 
-<ng-template #menuContent let-data>
+<ng-template #menuContent>
   <div class="side-menu-header row middle w-full">
     <a
-      class="side-menu-logo ml-9"
+      class="side-menu-logo ml-9 side-menu-header__logo"
       icon="tuiIconApertureLarge"
       iconAlign="left"
       routerLink="dashboard"
@@ -22,18 +16,12 @@
       >{{ appName }}</a
     >
   </div>
-
-  <ul class="side-menu-content col-12">
-    <li *ngFor="let menuItem of data" class="link">
-      <a
-        [icon]="menuItem.icon"
-        [routerLinkActiveOptions]="{ exact: true }"
-        [routerLink]="menuItem.link"
-        iconAlign="left"
-        routerLinkActive="active"
-        tuiLink
-        >{{ menuItem.text }}</a
-      >
-    </li>
-  </ul>
+  <div *ngIf="user" class="col justify-center items-center mb-6 mt-6 w-full">
+    <app-avatar [text]="user.firstName + ' ' + user.lastName" size="m"></app-avatar>
+    <p class="tui-text_body-s">Hello, {{ user.firstName}}</p>
+    <p class="tui-text_body-s tui-island__paragraph">{{ user.emailAddress }}</p>
+  </div>
+  <section class="side-menu-content">
+    <app-menu-items [items]="menuItems" />
+  </section>
 </ng-template>

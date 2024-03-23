@@ -16,12 +16,13 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { debounce, distinctUntilChanged, filter, interval, takeUntil, tap } from 'rxjs';
 import {
-  DestroyService,
+  AUTH_CONFIG_TOKEN,
+  AuthConfig,
+  DestroyState,
+  FormBase,
+  FormValidators,
   MessagingChannel,
-  otpLengthToken,
-  verificationMethodToken,
-} from '../../../../core';
-import { FormBase, OtpLength } from '../../../../common';
+} from '../../../../shared';
 import { OtpInputComponent } from '../../../../form-components';
 
 export interface OtpForm {
@@ -44,14 +45,14 @@ export interface OtpFormComponentOutput {
 
 export function getOtpForm(otpLength: number): OtpForm {
   return {
-    otp: new FormControl<string>('', OtpLength(otpLength)),
+    otp: new FormControl<string>('', FormValidators.OtpLength(otpLength)),
   };
 }
 
 @Injectable()
 export class OtpFormService extends FormBase<OtpForm> {
-  public constructor(@Inject(otpLengthToken) private readonly _otpLengthToken: number) {
-    super(getOtpForm(_otpLengthToken));
+  public constructor(@Inject(AUTH_CONFIG_TOKEN) private readonly _authConfig: AuthConfig) {
+    super(getOtpForm(_authConfig.otpLength));
   }
 }
 
@@ -61,15 +62,15 @@ export class OtpFormService extends FormBase<OtpForm> {
   styleUrls: ['./otp-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DestroyService],
+  providers: [DestroyState],
 })
 export class OtpFormComponent implements OtpFormComponentInput, OtpFormComponentOutput {
   @Input() public saveText = 'Submit';
   @Input() public cancelText = 'Resend OTP';
   @Input() public otpRecipient = '';
   @Input() public autoSave = false;
-  @Input() public verificationMethod: MessagingChannel = this._verificationMethodToken;
-  @Input() public otpLength: number = this._otpLengthToken;
+  @Input() public verificationMethod: MessagingChannel = this._authConfig.verificationMethod;
+  @Input() public otpLength: number = this._authConfig.otpLength;
 
   @Output() public saveClicked = new EventEmitter<FormBase<OtpForm>>();
   @Output() public cancelClicked = new EventEmitter<void>();
@@ -89,14 +90,13 @@ export class OtpFormComponent implements OtpFormComponentInput, OtpFormComponent
         this.onSaveClicked();
       }
     }),
-    takeUntil(this._destroy$)
+    takeUntil(this.destroyState)
   );
 
   public constructor(
-    @Inject(otpLengthToken) private readonly _otpLengthToken: number,
-    @Inject(verificationMethodToken) private readonly _verificationMethodToken: MessagingChannel,
+    @Inject(AUTH_CONFIG_TOKEN) private readonly _authConfig: AuthConfig,
     @Optional() @SkipSelf() private readonly _otpForm: OtpFormService | null,
-    @Self() private readonly _destroy$: DestroyService
+    @Self() private readonly destroyState: DestroyState
   ) {
     this._effects$.subscribe();
   }
@@ -121,11 +121,11 @@ export class OtpFormComponent implements OtpFormComponentInput, OtpFormComponent
     this.otpInputRef.setValue(value);
   }
 
-  public focusInput(index: number): void {
+  public focus(index?: number): void {
     if (!this.otpInputRef) {
       return;
     }
 
-    this.otpInputRef.focusInput(index);
+    this.otpInputRef.focus({ itemToFocusIndex: index });
   }
 }
